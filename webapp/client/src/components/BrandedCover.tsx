@@ -5,11 +5,10 @@ interface BrandedCoverProps {
   entityType: string;
   specialty: string;
   className?: string;
-  /** square = badge style for detail page, banner = 16/10 for cards */
   variant?: "banner" | "square";
 }
 
-// Specialty icon glyphs (lucide-style minimal SVG paths)
+// Specialty icon paths (lucide-style)
 const SPECIALTY_ICONS: Record<string, string> = {
   "تواير وبنشر": "M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a6 6 0 110 12 6 6 0 010-12zm0 3a3 3 0 100 6 3 3 0 000-6z",
   "بطاريات": "M7 7h10v10H7zM10 4h4v3h-4zM11 11h2v2h-2z",
@@ -38,11 +37,15 @@ function specialtyIcon(spec: string): string {
   return SPECIALTY_ICONS[spec] || SPECIALTY_ICONS["صيانة عامة"];
 }
 
-// Generate a deterministic hash so each name gets a slightly different gradient angle
 function hashCode(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
+}
+
+// Detect if string contains Arabic chars
+function hasArabic(s: string): boolean {
+  return /[\u0600-\u06FF]/.test(s);
 }
 
 export function BrandedCover({
@@ -50,107 +53,108 @@ export function BrandedCover({
   entityType,
   specialty,
   className = "",
-  variant = "banner",
 }: BrandedCoverProps) {
   const color = entityColor(entityType);
-  const angle = (hashCode(name) % 60) + 110; // 110-170deg
-  const isSquare = variant === "square";
-  // SVG viewBox: banner 320x200 ; square 200x200
-  const w = isSquare ? 200 : 320;
-  const h = 200;
+  const id = hashCode(name);
+  const angle = (id % 60) + 110;
   const iconPath = specialtyIcon(specialty);
-
-  // Display up to ~28 chars on 2 lines for name
-  const displayName = name.length > 60 ? name.slice(0, 57) + "..." : name;
-  // Split name into 2 lines naturally on space
-  const words = displayName.split(/\s+/);
-  let line1 = "";
-  let line2 = "";
-  for (const w of words) {
-    if ((line1 + " " + w).trim().length <= 22 && !line2) {
-      line1 = (line1 + " " + w).trim();
-    } else {
-      line2 = (line2 + " " + w).trim();
-    }
-  }
-  if (line2.length > 28) line2 = line2.slice(0, 25) + "...";
+  const isAr = hasArabic(name);
+  // Clip very long names
+  const displayName = name.length > 70 ? name.slice(0, 67) + "…" : name;
 
   return (
-    <svg
-      viewBox={`0 0 ${w} ${h}`}
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid slice"
-      className={`h-full w-full ${className}`}
+    <div
+      className={`relative h-full w-full overflow-hidden ${className}`}
       role="img"
       aria-label={`${name} - ${specialty}`}
     >
-      <defs>
-        <linearGradient id={`g-${hashCode(name)}`} gradientTransform={`rotate(${angle})`}>
-          <stop offset="0%" stopColor="#0b0f1a" />
-          <stop offset="100%" stopColor="#1a2540" />
-        </linearGradient>
-        <pattern id={`p-${hashCode(name)}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-          <circle cx="10" cy="10" r="1" fill="#ffffff" fillOpacity="0.05" />
-        </pattern>
-      </defs>
-      {/* Background */}
-      <rect width={w} height={h} fill={`url(#g-${hashCode(name)})`} />
-      <rect width={w} height={h} fill={`url(#p-${hashCode(name)})`} />
-      {/* Accent bar bottom */}
-      <rect x="0" y={h - 6} width={w} height="6" fill={color} />
-      {/* Specialty icon, top-right, faint */}
-      <g transform={`translate(${w - 70}, 18) scale(2.2)`} fill="none" stroke={color} strokeOpacity="0.5" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path d={iconPath} />
-      </g>
-      {/* degself wordmark, top-left */}
-      <g transform="translate(16, 24)">
-        <circle cx="6" cy="6" r="6" fill={color} />
-        <text x="20" y="11" fill="#ffffff" fontSize="13" fontWeight="700" fontFamily="system-ui,sans-serif" letterSpacing="0.5">
-          degself
-        </text>
-      </g>
-      {/* Name (Arabic-aware, RTL) */}
-      <text
-        x={w - 16}
-        y={line2 ? h - 56 : h - 42}
-        fill="#ffffff"
-        fontSize="16"
-        fontWeight="700"
-        fontFamily="system-ui,'Tajawal','Cairo',sans-serif"
-        textAnchor="end"
-        direction="rtl"
+      {/* Background SVG: gradient + dots pattern + accent bar + faint icon */}
+      <svg
+        viewBox="0 0 320 200"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 h-full w-full"
       >
-        {line1}
-      </text>
-      {line2 && (
-        <text
-          x={w - 16}
-          y={h - 36}
-          fill="#ffffff"
-          fontSize="14"
-          fontWeight="600"
-          fontFamily="system-ui,'Tajawal','Cairo',sans-serif"
-          textAnchor="end"
-          direction="rtl"
-          opacity="0.85"
+        <defs>
+          <linearGradient id={`g-${id}`} gradientTransform={`rotate(${angle})`}>
+            <stop offset="0%" stopColor="#0b0f1a" />
+            <stop offset="60%" stopColor="#131b30" />
+            <stop offset="100%" stopColor="#1a2540" />
+          </linearGradient>
+          <pattern
+            id={`p-${id}`}
+            x="0"
+            y="0"
+            width="22"
+            height="22"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="11" cy="11" r="1" fill="#ffffff" fillOpacity="0.06" />
+          </pattern>
+        </defs>
+        <rect width="320" height="200" fill={`url(#g-${id})`} />
+        <rect width="320" height="200" fill={`url(#p-${id})`} />
+        {/* Large faint icon on the left */}
+        <g
+          transform="translate(-10, 30) scale(7)"
+          fill="none"
+          stroke={color}
+          strokeOpacity="0.08"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          {line2}
-        </text>
-      )}
-      {/* Type + specialty pill */}
-      <text
-        x={w - 16}
-        y={h - 16}
-        fill={color}
-        fontSize="11"
-        fontWeight="600"
-        fontFamily="system-ui,'Tajawal',sans-serif"
-        textAnchor="end"
-        direction="rtl"
-        opacity="0.95"
-      >
-        {entityType} · {specialty}
-      </text>
-    </svg>
+          <path d={iconPath} />
+        </g>
+        {/* Accent bar bottom */}
+        <rect x="0" y="194" width="320" height="6" fill={color} />
+      </svg>
+
+      {/* HTML overlay for proper text wrapping & RTL */}
+      <div className="absolute inset-0 flex flex-col justify-between p-3">
+        {/* Top: degself wordmark + entity color dot */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span
+              className="inline-block h-2.5 w-2.5 rounded-full"
+              style={{ background: color }}
+            />
+            <span className="text-[11px] font-bold tracking-wide text-white/90">
+              degself
+            </span>
+          </div>
+          {/* Specialty icon top-right (visible) */}
+          <svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke={color}
+            strokeOpacity="0.75"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d={iconPath} />
+          </svg>
+        </div>
+
+        {/* Bottom: name + type/specialty */}
+        <div className="flex flex-col gap-1" dir={isAr ? "rtl" : "ltr"}>
+          <h4
+            className="clamp-2 text-[15px] font-extrabold leading-tight text-white drop-shadow-sm"
+            style={{ textAlign: isAr ? "right" : "left" }}
+          >
+            {displayName}
+          </h4>
+          <div
+            className="text-[11px] font-semibold"
+            style={{ color, textAlign: isAr ? "right" : "left" }}
+          >
+            {entityType} · {specialty}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
