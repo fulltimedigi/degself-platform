@@ -1,4 +1,11 @@
-import { apiRequest } from "./queryClient";
+// Public data API for the app.
+//
+// In the fully-static build there is NO backend. Each function below resolves
+// from the in-memory data store (client/src/lib/dataStore.ts), which loads
+// /data/workshops.json exactly once via React Query. The function signatures
+// and return types are unchanged so pages do not need to be modified.
+
+import * as store from "./dataStore";
 import type {
   WorkshopsResponse,
   WorkshopDetail,
@@ -20,6 +27,8 @@ export interface WorkshopFilters {
   offset?: number;
 }
 
+// Kept for backwards compatibility / potential deep-link building. No longer
+// used to hit a network endpoint, but harmless and side-effect free.
 export function buildQuery(f: WorkshopFilters): string {
   const p = new URLSearchParams();
   if (f.q) p.set("q", f.q);
@@ -35,37 +44,32 @@ export function buildQuery(f: WorkshopFilters): string {
   return s ? `?${s}` : "";
 }
 
-export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsResponse> {
-  const res = await apiRequest("GET", `/api/workshops${buildQuery(f)}`);
-  return res.json();
+export function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsResponse> {
+  return store.fetchWorkshops(f);
 }
 
-export async function fetchWorkshop(placeId: string): Promise<WorkshopDetail> {
-  const res = await apiRequest("GET", `/api/workshops/${encodeURIComponent(placeId)}`);
-  return res.json();
+export function fetchWorkshop(placeId: string): Promise<WorkshopDetail> {
+  return store.fetchWorkshop(placeId);
 }
 
-export async function fetchMapPoints(f: WorkshopFilters): Promise<{ total: number; results: MapPoint[] }> {
-  const res = await apiRequest("GET", `/api/workshops/map${buildQuery(f)}`);
-  return res.json();
+export function fetchMapPoints(
+  f: WorkshopFilters
+): Promise<{ total: number; results: MapPoint[] }> {
+  return store.fetchMapPoints(f);
 }
 
-export async function fetchStats(): Promise<Stats> {
-  const res = await apiRequest("GET", "/api/stats");
-  return res.json();
+export function fetchStats(): Promise<Stats> {
+  return store.fetchStats();
 }
 
-export async function fetchSpecialties(): Promise<CountItem[]> {
-  const res = await apiRequest("GET", "/api/specialties");
-  return res.json();
+export function fetchSpecialties(): Promise<CountItem[]> {
+  return store.fetchSpecialties();
 }
 
-export async function fetchEntityTypes(): Promise<CountItem[]> {
-  const res = await apiRequest("GET", "/api/entity-types");
-  return res.json();
+export function fetchEntityTypes(): Promise<CountItem[]> {
+  return store.fetchEntityTypes();
 }
 
-export async function fetchGovernorates(): Promise<GovernorateItem[]> {
-  const res = await apiRequest("GET", "/api/governorates");
-  return res.json();
+export function fetchGovernorates(): Promise<GovernorateItem[]> {
+  return store.fetchGovernorates();
 }

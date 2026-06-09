@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, ChevronLeft, MapPinned, Building2, Wrench, Sparkles } from "lucide-react";
+import { Search, ChevronLeft, Sparkles } from "lucide-react";
 import { Layout } from "@/components/Layout";
-import { LogoEn, TAGLINE } from "@/components/Brand";
+import { LogoHero, TAGLINE } from "@/components/Brand";
 import { HashLink } from "@/components/SearchLink";
 import { WorkshopCard, WorkshopCardSkeleton } from "@/components/WorkshopCard";
-import { fetchStats, fetchGovernorates, fetchWorkshops } from "@/lib/api";
+import { fetchGovernorates, fetchWorkshops } from "@/lib/api";
 import { TOP_SPECIALTIES } from "@/lib/brand";
-import type { Stats, GovernorateItem, WorkshopsResponse } from "@/lib/types";
+import type { GovernorateItem, WorkshopsResponse } from "@/lib/types";
 
 export default function Home() {
   const [q, setQ] = useState("");
 
-  const stats = useQuery<Stats>({ queryKey: ["/api/stats"], queryFn: fetchStats });
   const govs = useQuery<GovernorateItem[]>({
     queryKey: ["/api/governorates"],
     queryFn: fetchGovernorates,
@@ -43,10 +42,10 @@ export default function Home() {
           }}
         />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 pb-12 pt-16 text-center md:pt-24">
-          <LogoEn className="h-16 md:h-24" />
+          <LogoHero className="h-40 md:h-56" />
           <p className="mt-5 text-2xl font-extrabold text-primary md:text-4xl">{TAGLINE}</p>
           <p className="mt-3 max-w-lg text-sm text-muted-foreground md:text-base">
-            دليلك الموثوق لكل كراج، مركز صيانة، ومحل قطع غيار في الكويت — في مكان واحد.
+            دليلك لكل كراج، مركز صيانة، ومحل قطع غيار في الكويت — في مكان واحد.
           </p>
 
           <form onSubmit={submitSearch} className="mt-8 w-full">
@@ -85,22 +84,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats strip */}
-        <div className="relative border-t border-border bg-card/30">
-          <div className="mx-auto grid max-w-3xl grid-cols-3 divide-x divide-x-reverse divide-border px-4">
-            {[
-              { v: stats.data ? stats.data.total.toLocaleString("en-US") : "1,799", l: "منشأة موثّقة", i: Building2 },
-              { v: "6", l: "محافظات", i: MapPinned },
-              { v: "26", l: "تخصّص", i: Wrench },
-            ].map((s, i) => (
-              <div key={i} className="flex flex-col items-center gap-1 py-5" data-testid={`stat-${i}`}>
-                <s.i size={18} className="text-primary" />
-                <div className="font-en text-xl font-extrabold md:text-2xl">{s.v}</div>
-                <div className="text-xs text-muted-foreground">{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* BROWSE BY GOVERNORATE */}
@@ -130,8 +113,8 @@ export default function Home() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="text-lg font-bold">{g.name}</h3>
-                    <p className="mt-0.5 font-en text-sm text-primary">
-                      {g.count.toLocaleString("en-US")} منشأة
+                    <p className="mt-0.5 text-sm text-muted-foreground">
+                      اضغط للتصفّح
                     </p>
                   </div>
                   <ChevronLeft size={20} className="text-muted-foreground transition-transform group-hover:-translate-x-1" />
@@ -139,7 +122,7 @@ export default function Home() {
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {g.areas.slice(0, 4).map((a) => (
                     <span key={a.area} className="rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
-                      {a.area} · {a.count}
+                      {a.area}
                     </span>
                   ))}
                 </div>
@@ -155,8 +138,8 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Sparkles size={22} className="text-primary" />
             <div>
-              <h2 className="text-xl font-extrabold md:text-2xl">أعلى التقييمات</h2>
-              <p className="mt-1 text-sm text-muted-foreground">الأكثر ثقةً من السائقين في الكويت</p>
+              <h2 className="text-xl font-extrabold md:text-2xl">الأعلى تقييمًا</h2>
+              <p className="mt-1 text-sm text-muted-foreground">اختيارات السائقين الموثوقة</p>
             </div>
           </div>
           <HashLink to="/search?min_rating=4.8" className="text-sm font-semibold text-primary hover:underline" testid="link-see-all-top">

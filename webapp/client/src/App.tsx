@@ -13,6 +13,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { BootGate } from "@/components/BootGate";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import SearchPage from "@/pages/Search";
@@ -38,9 +39,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router hook={useHashLocationNoQuery}>
-          <AppRouter />
-        </Router>
+        <BootGate>
+          <Router hook={useHashLocationNoQuery}>
+            <AppRouter />
+          </Router>
+        </BootGate>
       </TooltipProvider>
     </QueryClientProvider>
   );

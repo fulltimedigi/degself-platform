@@ -81,8 +81,8 @@ function Footer() {
           <LogoEn className="h-9" />
           <p className="text-sm font-bold text-primary">{TAGLINE}</p>
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-            منصة كويتية تربط السائقين بأكثر من 1800 كراج ومركز صيانة ومحل قطع غيار
-            موثّق في جميع محافظات الكويت.
+            منصة كويتية تربط السائقين بالكراجات ومراكز الصيانة ومحلات قطع الغيار
+            في جميع محافظات الكويت.
           </p>
         </div>
 
@@ -104,11 +104,11 @@ function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-bold">البيانات</h4>
+          <h4 className="mb-3 text-sm font-bold">تواصل معنا</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>1,802 منشأة موثّقة</li>
-            <li>6 محافظات · 26 تخصّص</li>
-            <li>تغطية GPS بنسبة 100%</li>
+            <li>للورش والكراجات</li>
+            <li>أضف منشأتك للمنصة</li>
+            <li>تحديث بيانات</li>
           </ul>
         </div>
       </div>
