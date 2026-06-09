@@ -270,6 +270,42 @@ function toCard(w: Workshop): WorkshopCard {
   };
 }
 
+// ========================================================================
+// Arabic-aware text normalization for search
+// ========================================================================
+// Handles common Kuwaiti/Arabic spelling variations so users can find places
+// regardless of how they type the query. Examples this fixes:
+//   - "اوتوماك" finds "أوتوماك" (hamza variants on alif)
+//   - "جراج" finds "كراج" (Kuwaiti káf/jeem swap)
+//   - "تاير" finds "تواير" / "تايرات" (loose root matching)
+//   - "سياره" finds "سيارة" (ta marbuta vs ha)
+//   - multiple spaces / tashkeel / tatweel — all stripped
+function normalizeArabic(s: string): string {
+  if (!s) return "";
+  return s
+    .toLowerCase()
+    // remove tashkeel (ً-ْ) and tatweel (ـ)
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, "")
+    // unify alif variants أ إ آ ٱ ٰ → ا
+    .replace(/[\u0623\u0625\u0622\u0671\u0670]/g, "ا")
+    // unify ya: ى ي ی → ي
+    .replace(/[\u0649\u06cc]/g, "ي")
+    // unify ta marbuta ة → ه
+    .replace(/\u0629/g, "ه")
+    // unify hamza on waw / ya: ؤ → و ; ئ → ي
+    .replace(/\u0624/g, "و")
+    .replace(/\u0626/g, "ي")
+    // standalone hamza removed
+    .replace(/\u0621/g, "")
+    // unify kaf variants ک → ك
+    .replace(/\u06a9/g, "ك")
+    // Kuwaiti dialect: جراج ↔ كراج (people use both); normalize جراج → كراج
+    .replace(/جراج/g, "كراج")
+    // collapse multiple spaces
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function clamp(n: number, lo: number, hi: number): number {
   if (Number.isNaN(n)) return lo;
   return Math.max(lo, Math.min(hi, n));
@@ -293,7 +329,9 @@ function countBy<T>(arr: T[], key: (t: T) => string | undefined): Record<string,
 export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsResponse> {
   const all = await ensureWorkshops();
 
-  const q = f.q?.trim().toLowerCase();
+  const qRaw = f.q?.trim();
+  const q = qRaw ? normalizeArabic(qRaw) : "";
+  const qTokens = q ? q.split(" ").filter(Boolean) : [];
   const govs = f.governorate ?? [];
   const specs = f.specialty ?? [];
   const types = f.entity_type ?? [];
@@ -314,20 +352,22 @@ export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsRespo
   }
   if (q) {
     rows = rows.filter((w) => {
-      const hay = [
-        w.name,
-        w.specialty,
-        w.entity_type,
-        w.governorate,
-        w.area,
-        w.address,
-        w.category_raw,
-        ...(w.specialty_hints || []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(q);
+      const hay = normalizeArabic(
+        [
+          w.name,
+          w.specialty,
+          w.entity_type,
+          w.governorate,
+          w.area,
+          w.address,
+          w.category_raw,
+          ...(w.specialty_hints || []),
+        ]
+          .filter(Boolean)
+          .join(" ")
+      );
+      // every token must appear somewhere in the haystack (AND semantics)
+      return qTokens.every((t) => hay.includes(t));
     });
   }
 
@@ -383,7 +423,9 @@ export async function fetchMapPoints(
   const types = f.entity_type ?? [];
   const minRating = f.min_rating ?? 0;
   const openNow = !!f.open_now;
-  const q = f.q?.trim().toLowerCase();
+  const qRaw = f.q?.trim();
+  const q = qRaw ? normalizeArabic(qRaw) : "";
+  const qTokens = q ? q.split(" ").filter(Boolean) : [];
 
   let rows = all;
   if (govs.length) rows = rows.filter((w) => govs.includes(w.governorate));
@@ -395,13 +437,14 @@ export async function fetchMapPoints(
     rows = rows.filter((w) => isOpenNow(w, now));
   }
   if (q) {
-    rows = rows.filter((w) =>
-      [w.name, w.specialty, w.area, w.governorate]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(q)
-    );
+    rows = rows.filter((w) => {
+      const hay = normalizeArabic(
+        [w.name, w.specialty, w.area, w.governorate, w.address]
+          .filter(Boolean)
+          .join(" ")
+      );
+      return qTokens.every((t) => hay.includes(t));
+    });
   }
 
   return {
