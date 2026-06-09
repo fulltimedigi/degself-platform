@@ -74,38 +74,20 @@ function emitProgress(loaded: number, total: number) {
 }
 
 async function loadFromNetwork(): Promise<Workshop[]> {
-  // Use fetch with a streaming reader so we can report real progress.
+  // Simple fetch — Brotli/gzip from Netlify makes this ~350KB on the wire and
+  // typically completes in <1s on 4G. The browser handles decompression.
+  emitProgress(0, 0);
   const res = await fetch(WORKSHOPS_URL);
   if (!res.ok) {
     throw new Error(`Failed to load workshops data: ${res.status}`);
   }
-  const contentLength = Number(res.headers.get("Content-Length") || 0);
-  let raw: Workshop[];
-  if (res.body && contentLength > 0 && typeof (res.body as any).getReader === "function") {
-    const reader = (res.body as ReadableStream<Uint8Array>).getReader();
-    const chunks: Uint8Array[] = [];
-    let received = 0;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) {
-        chunks.push(value);
-        received += value.length;
-        emitProgress(received, contentLength);
-      }
-    }
-    const merged = new Uint8Array(received);
-    let offset = 0;
-    for (const chunk of chunks) {
-      merged.set(chunk, offset);
-      offset += chunk.length;
-    }
-    raw = JSON.parse(new TextDecoder("utf-8").decode(merged)) as Workshop[];
-  } else {
-    raw = (await res.json()) as Workshop[];
-  }
+  // Indeterminate progress — we cannot reliably know decompressed size up front.
+  emitProgress(50, 100);
+  const raw = (await res.json()) as Workshop[];
+  emitProgress(95, 100);
   // Keep only active records; ensure place_id exists (mirrors server/data.ts).
   const active = raw.filter((w) => w.active !== false && !!w.place_id);
+  emitProgress(100, 100);
   // eslint-disable-next-line no-console
   console.log(`[data] loaded ${active.length} active workshops into memory`);
   return active;
