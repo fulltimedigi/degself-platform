@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * degself — DARK BRAND (always-on dark). Premium Yellow on Jet Black.
+ * Ported from v1 (webapp/client/src/index.css) to Tailwind v4 theme syntax.
+ * Official colors per brand/BRAND_GUIDE.md:
+ *   Premium Yellow #FFD60A · Jet Black #0A0A0A · White #FFFFFF · Light Gray #9CA3AF
+ */
+@theme {
+  --color-background: #0a0a0a; /* Jet Black */
+  --color-foreground: #ffffff; /* Pure White */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-primary: #ffd60a; /* Premium Yellow — buttons & accents */
+  --color-primary-foreground: #0a0a0a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent: #ffd60a;
+  --color-accent-foreground: #0a0a0a;
+
+  --color-card: #141414;
+  --color-card-foreground: #ffffff;
+
+  --color-muted: #262626;
+  --color-muted-foreground: #9ca3af; /* Light Gray — secondary text */
+
+  --color-border: #2e2e2e;
+  --color-ring: #ffd60a;
+
+  --color-destructive: #ef4444;
+
+  --font-sans: var(--font-cairo), "Inter", system-ui, sans-serif;
+
+  --radius: 0.75rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Yellow focus ring for accessibility (ported from v1) */
+*:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions baseline (ported from v1) */
+a,
+button {
+  transition: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* line-clamp helpers used by BrandedCover (ported from v1) */
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
