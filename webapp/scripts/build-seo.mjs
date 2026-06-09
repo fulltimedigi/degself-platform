@@ -252,13 +252,16 @@ function hubHtml({ pathName, title, description, h1, intro, jsonLd }) {
     .replace('<div id="root"></div>', `<div id="root"></div>${seoBody}`);
 }
 
-// ----- write workshop pages -----
+// ----- write workshop pages as <id>.html (preserves case-sensitive place_ids) -----
+const workshopDir = path.join(DIST, "workshop");
+fs.mkdirSync(workshopDir, { recursive: true });
 let written = 0;
 for (const w of active) {
-  const p = workshopPath(w); // /workshop/<placeId>
-  const dir = path.join(DIST, ...p.split("/").filter(Boolean));
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "index.html"), workshopHtml(w), "utf8");
+  fs.writeFileSync(
+    path.join(workshopDir, `${w.place_id}.html`),
+    workshopHtml(w),
+    "utf8"
+  );
   written++;
 }
 console.log(`[seo] wrote ${written} workshop pages`);
@@ -340,9 +343,9 @@ for (const page of hubPages) {
   if (page.pathName === "/") {
     fs.writeFileSync(INDEX_HTML, hubHtml(page), "utf8");
   } else {
-    const dir = path.join(DIST, ...page.pathName.split("/").filter(Boolean));
-    fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, "index.html"), hubHtml(page), "utf8");
+    // Write as <name>.html (e.g. /search → search.html), matching Netlify rewrite rules.
+    const name = page.pathName.replace(/^\//, "");
+    fs.writeFileSync(path.join(DIST, `${name}.html`), hubHtml(page), "utf8");
   }
 }
 console.log(`[seo] wrote ${hubPages.length} hub pages`);
@@ -358,9 +361,9 @@ for (const g of GOVERNORATES) {
     intro: `${items.length} كراج ومركز صيانة في محافظة ${g.ar}.`,
     jsonLd: orgJsonLd,
   };
-  const dir = path.join(DIST, "governorate", g.slug);
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "index.html"), hubHtml(page), "utf8");
+  const govDir = path.join(DIST, "governorate");
+  fs.mkdirSync(govDir, { recursive: true });
+  fs.writeFileSync(path.join(govDir, `${g.slug}.html`), hubHtml(page), "utf8");
 }
 console.log(`[seo] wrote ${GOVERNORATES.length} governorate hubs`);
 

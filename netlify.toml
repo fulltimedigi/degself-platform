@@ -11,8 +11,52 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Pretty URLs — Netlify auto-serves <path>/index.html when present (prerendered SEO pages).
-# Only paths WITHOUT a matching prerendered file fall back to /index.html (SPA shell).
+# Disable Netlify's auto pretty-URLs (which lowercases paths and adds trailing
+# slashes). place_ids from Google Maps are CASE-SENSITIVE — lowercase breaks them.
+[build.processing]
+  skip_processing = false
+[build.processing.html]
+  pretty_urls = false
+
+# Serve prerendered pages directly. /workshop/<id> → /workshop/<id>.html
+# We use 200 (rewrite, not redirect) so the URL stays clean and Google sees the same URL.
+[[redirects]]
+  from = "/workshop/:id"
+  to = "/workshop/:id.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/governorate/:slug"
+  to = "/governorate/:slug.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/search"
+  to = "/search.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/map"
+  to = "/map.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/emergency"
+  to = "/emergency.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/about"
+  to = "/about.html"
+  status = 200
+  force = true
+
+# SPA fallback for anything else — unmatched paths boot the React app
 [[redirects]]
   from = "/*"
   to = "/index.html"
