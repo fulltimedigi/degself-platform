@@ -6,7 +6,7 @@
 [build]
   base = "webapp"
   command = "npm install && npm run build:static"
-  publish = "webapp/dist/public"
+  publish = "dist/public"
 
 [build.environment]
   NODE_VERSION = "20"
