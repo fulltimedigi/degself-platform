@@ -335,6 +335,7 @@ export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsRespo
   const govs = f.governorate ?? [];
   const specs = f.specialty ?? [];
   const types = f.entity_type ?? [];
+  const modes = f.service_mode ?? [];
   const minRating = f.min_rating ?? 0;
   const openNow = !!f.open_now;
   const sort = f.sort || "rating";
@@ -345,6 +346,7 @@ export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsRespo
   if (govs.length) rows = rows.filter((w) => govs.includes(w.governorate));
   if (specs.length) rows = rows.filter((w) => specs.includes(w.specialty));
   if (types.length) rows = rows.filter((w) => types.includes(w.entity_type));
+  if (modes.length) rows = rows.filter((w) => modes.includes((w as any).service_mode));
   if (minRating > 0) rows = rows.filter((w) => (w.rating ?? 0) >= minRating);
   if (openNow) {
     const now = new Date();
@@ -421,6 +423,7 @@ export async function fetchMapPoints(
   const govs = f.governorate ?? [];
   const specs = f.specialty ?? [];
   const types = f.entity_type ?? [];
+  const modes = f.service_mode ?? [];
   const minRating = f.min_rating ?? 0;
   const openNow = !!f.open_now;
   const qRaw = f.q?.trim();
@@ -431,6 +434,7 @@ export async function fetchMapPoints(
   if (govs.length) rows = rows.filter((w) => govs.includes(w.governorate));
   if (specs.length) rows = rows.filter((w) => specs.includes(w.specialty));
   if (types.length) rows = rows.filter((w) => types.includes(w.entity_type));
+  if (modes.length) rows = rows.filter((w) => modes.includes((w as any).service_mode));
   if (minRating > 0) rows = rows.filter((w) => (w.rating ?? 0) >= minRating);
   if (openNow) {
     const now = new Date();

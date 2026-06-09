@@ -20,6 +20,7 @@ export interface WorkshopFilters {
   governorate?: string[];
   specialty?: string[];
   entity_type?: string[];
+  service_mode?: string[];
   min_rating?: number;
   open_now?: boolean;
   sort?: string;

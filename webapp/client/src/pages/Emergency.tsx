@@ -10,16 +10,16 @@ import type { WorkshopsResponse, GovernorateItem } from "@/lib/types";
 
 type Mode = "tow" | "mobile";
 
-const MODES: Record<Mode, { label: string; specialty: string; icon: typeof Truck; tagline: string }> = {
+const MODES: Record<Mode, { label: string; service_mode: string; icon: typeof Truck; tagline: string }> = {
   tow: {
     label: "سطحة / ونش",
-    specialty: "ونش وسحب",
+    service_mode: "tow",
     icon: Truck,
     tagline: "نقل سيارتك المعطلة لأقرب كراج",
   },
   mobile: {
     label: "كراج متنقل",
-    specialty: "كراج متنقل",
+    service_mode: "mobile",
     icon: Wrench,
     tagline: "تصليح / بنشر / بطارية في موقعك",
   },
@@ -56,7 +56,7 @@ export default function Emergency() {
     queryKey: ["/api/workshops", "emergency", mode, gov],
     queryFn: () =>
       fetchWorkshops({
-        specialty: [MODES[mode].specialty],
+        service_mode: [MODES[mode].service_mode],
         governorate: gov ? [gov] : undefined,
         sort: "rating",
         limit: 60,
