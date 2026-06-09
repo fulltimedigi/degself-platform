@@ -62,12 +62,48 @@ export const WORKSHOPS_QUERY_KEY = ["__workshops_master__"] as const;
 // In-memory cache of active workshops (filtered once on load).
 let _cache: Workshop[] | null = null;
 
+// Progress reporting for boot splash.
+export type ProgressListener = (loaded: number, total: number) => void;
+const _progressListeners = new Set<ProgressListener>();
+export function onLoadProgress(fn: ProgressListener): () => void {
+  _progressListeners.add(fn);
+  return () => _progressListeners.delete(fn);
+}
+function emitProgress(loaded: number, total: number) {
+  _progressListeners.forEach((fn) => fn(loaded, total));
+}
+
 async function loadFromNetwork(): Promise<Workshop[]> {
+  // Use fetch with a streaming reader so we can report real progress.
   const res = await fetch(WORKSHOPS_URL);
   if (!res.ok) {
     throw new Error(`Failed to load workshops data: ${res.status}`);
   }
-  const raw = (await res.json()) as Workshop[];
+  const contentLength = Number(res.headers.get("Content-Length") || 0);
+  let raw: Workshop[];
+  if (res.body && contentLength > 0 && typeof (res.body as any).getReader === "function") {
+    const reader = (res.body as ReadableStream<Uint8Array>).getReader();
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        chunks.push(value);
+        received += value.length;
+        emitProgress(received, contentLength);
+      }
+    }
+    const merged = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.length;
+    }
+    raw = JSON.parse(new TextDecoder("utf-8").decode(merged)) as Workshop[];
+  } else {
+    raw = (await res.json()) as Workshop[];
+  }
   // Keep only active records; ensure place_id exists (mirrors server/data.ts).
   const active = raw.filter((w) => w.active !== false && !!w.place_id);
   // eslint-disable-next-line no-console
@@ -82,6 +118,11 @@ async function loadFromNetwork(): Promise<Workshop[]> {
  * React Query deduplicates concurrent calls so even with many components
  * mounting at once the network request happens only one time.
  */
+// Expose helper for detail page
+export function getOpeningRows(w: Workshop): OpeningHour[] {
+  return getOpeningHoursRows(w);
+}
+
 export async function ensureWorkshops(): Promise<Workshop[]> {
   if (_cache) return _cache;
   const data = await queryClient.fetchQuery({
@@ -278,7 +319,19 @@ export async function fetchWorkshop(placeId: string): Promise<WorkshopDetail> {
   if (!w) {
     throw new Error("404: Workshop not found");
   }
-  return { ...(w as unknown as WorkshopDetail), open_now: isOpenNow(w) };
+  // Reconstruct fields that were stripped from the JSON to keep payload small
+  const opening_hours_raw = getOpeningHoursRows(w);
+  const google_url = w.place_id
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(w.name)}&query_place_id=${w.place_id}`
+    : (w.latitude && w.longitude
+        ? `https://www.google.com/maps/search/?api=1&query=${w.latitude},${w.longitude}`
+        : undefined);
+  return {
+    ...(w as unknown as WorkshopDetail),
+    opening_hours_raw,
+    google_url,
+    open_now: isOpenNow(w),
+  };
 }
 
 /** Mirrors GET /api/workshops/map — lightweight list for map */
