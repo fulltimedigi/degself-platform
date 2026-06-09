@@ -20,6 +20,7 @@ import SearchPage from "@/pages/Search";
 import WorkshopDetail from "@/pages/WorkshopDetail";
 import MapView from "@/pages/MapView";
 import About from "@/pages/About";
+import Emergency from "@/pages/Emergency";
 
 function AppRouter() {
   return (
@@ -28,6 +29,7 @@ function AppRouter() {
       <Route path="/search" component={SearchPage} />
       <Route path="/workshop/:place_id" component={WorkshopDetail} />
       <Route path="/map" component={MapView} />
+      <Route path="/emergency" component={Emergency} />
       <Route path="/about" component={About} />
       <Route component={NotFound} />
     </Switch>

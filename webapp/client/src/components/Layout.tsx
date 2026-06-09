@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, Map, Info, Home, Menu, X } from "lucide-react";
+import { Search, Map, Info, Home, Menu, X, Siren } from "lucide-react";
 import { LogoEn, TAGLINE } from "./Brand";
 
 const NAV = [
   { href: "/", label: "الرئيسية", icon: Home },
   { href: "/search", label: "تصفّح", icon: Search },
   { href: "/map", label: "الخريطة", icon: Map },
+  { href: "/emergency", label: "طوارئ", icon: Siren },
   { href: "/about", label: "عن المنصة", icon: Info },
 ];
 

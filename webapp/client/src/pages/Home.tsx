@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, ChevronLeft, Sparkles } from "lucide-react";
+import { Search, ChevronLeft, Sparkles, Truck, Wrench } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { LogoHero, TAGLINE } from "@/components/Brand";
 import { HashLink } from "@/components/SearchLink";
@@ -84,6 +84,42 @@ export default function Home() {
           </div>
         </div>
 
+      </section>
+
+      {/* EMERGENCY BANNER */}
+      <section className="mx-auto max-w-7xl px-4 pt-8 md:px-6">
+        <div className="overflow-hidden rounded-2xl border border-destructive/30 bg-gradient-to-l from-destructive/10 via-destructive/5 to-transparent p-5 md:p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-destructive" />
+              </span>
+              <div>
+                <h2 className="text-lg font-extrabold md:text-xl">سيارتك عطلانة الحين؟</h2>
+                <p className="text-sm text-muted-foreground">سطحة أو كراج متنقل يجي عندك</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
+              <HashLink
+                to="/emergency?mode=tow"
+                className="flex items-center justify-center gap-2 rounded-xl border border-destructive bg-destructive px-4 py-2.5 text-sm font-bold text-destructive-foreground hover-elevate active-elevate-2"
+                testid="link-emergency-tow"
+              >
+                <Truck size={18} />
+                سطحة
+              </HashLink>
+              <HashLink
+                to="/emergency?mode=mobile"
+                className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-bold hover-elevate active-elevate-2"
+                testid="link-emergency-mobile"
+              >
+                <Wrench size={18} />
+                كراج متنقل
+              </HashLink>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* BROWSE BY GOVERNORATE */}
