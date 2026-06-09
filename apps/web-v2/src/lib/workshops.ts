@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server";
+import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
 import type { Workshop } from "@/lib/types";
 
@@ -39,7 +39,7 @@ export async function searchWorkshops(
     offset = 0,
   } = params;
 
-  const supabase = await createServerClient();
+  const supabase = supabasePublic;
 
   let q = supabase
     .from("workshops")
@@ -68,7 +68,7 @@ export async function searchWorkshops(
 
 /** Single workshop by place_id. ⚠️ place_id is case-sensitive — never transform it. */
 export async function getWorkshop(placeId: string): Promise<Workshop | null> {
-  const supabase = await createServerClient();
+  const supabase = supabasePublic;
   const { data, error } = await supabase
     .from("workshops")
     .select("*")
@@ -80,7 +80,7 @@ export async function getWorkshop(placeId: string): Promise<Workshop | null> {
 
 /** Top-rated live workshops for the homepage. */
 export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
-  const supabase = await createServerClient();
+  const supabase = supabasePublic;
   const { data, error } = await supabase
     .from("workshops")
     .select("*")
@@ -99,7 +99,7 @@ export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
  * popular N at build time (the rest render on-demand via ISR).
  */
 export async function getAllPlaceIds(limit?: number): Promise<string[]> {
-  const supabase = await createServerClient();
+  const supabase = supabasePublic;
   let q = supabase
     .from("workshops")
     .select("place_id")
@@ -111,4 +111,26 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
   const { data, error } = await q;
   if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
   return (data ?? []).map((r) => (r as { place_id: string }).place_id);
+}
+
+/**
+ * Distinct area names for the Search filter dropdown (live workshops only).
+ * Fetches the area column and dedupes in JS — fine at this scale (~1801 short
+ * strings). Can be swapped for a Postgres view/RPC later if needed.
+ */
+export async function getDistinctAreas(): Promise<string[]> {
+  const { data, error } = await supabasePublic
+    .from("workshops")
+    .select("area")
+    .eq("active", true)
+    .eq("permanently_closed", false)
+    .not("area", "is", null);
+  if (error) throw new Error(`getDistinctAreas failed: ${error.message}`);
+
+  const set = new Set<string>();
+  for (const r of data ?? []) {
+    const a = (r as { area: string | null }).area;
+    if (a) set.add(a);
+  }
+  return [...set].sort((a, b) => a.localeCompare(b, "ar"));
 }
