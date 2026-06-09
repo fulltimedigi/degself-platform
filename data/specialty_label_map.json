@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "description": "Maps each specialty to the most natural Kuwaiti term for the establishment",
+    "logic": "Based on actual workshop name analysis (1802 records) + Kuwaiti dialect conventions",
+    "rules": [
+      "كراج = manual repair work (mechanic with hands-on tools)",
+      "ورشة = specialized workshop (skilled craft, often used in classical/formal Arabic)",
+      "مركز = service center (multi-service, retail-feel)",
+      "محل = small shop (retail accessories, parts)",
+      "شركة = company (formal business, often imports/wholesale)"
+    ]
+  },
+  "labels": {
+    "صيانة عامة": "كراج",
+    "ميكانيكا": "كراج",
+    "كمبيوتر وتشخيص": "مركز",
+    "بودي وصبغ": "كراج",
+    "قير وفتيس": "كراج",
+    "كهرباء سيارات": "كراج",
+    "ونش وسحب": "خدمة",
+    "تواير وبنشر": "مركز",
+    "إكسسوارات": "محل",
+    "زيوت وصيانة": "مركز",
+    "غسيل وتلميع": "مركز",
+    "تكييف": "كراج",
+    "دواسر وفرش": "محل",
+    "بطاريات": "محل",
+    "قطع غيار": "محل",
+    "تظليل وزجاج": "مركز",
+    "فرامل": "كراج",
+    "وكيل": "وكيل",
+    "فحص فني": "مركز",
+    "دراجات وقوارب": "ورشة",
+    "شاحنات وتجاري": "كراج",
+    "خراطة": "ورشة",
+    "بيع وشراء": "معرض",
+    "حماية وطلاء سيراميك": "مركز",
+    "صندوق ودرفات": "ورشة",
+    "رادياتير": "ورشة"
+  }
+}
