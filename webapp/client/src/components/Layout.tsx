@@ -76,17 +76,17 @@ function Header() {
 function Footer() {
   return (
     <footer className="border-t border-border bg-card/40">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-3 md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-2 md:px-6">
         <div className="space-y-3">
-          <LogoEn className="h-9" />
+          <LogoEn className="h-8" />
           <p className="text-sm font-bold text-primary">{TAGLINE}</p>
-          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-            منصة كويتية تربط السائقين بالكراجات ومراكز الصيانة ومحلات قطع الغيار
-            في جميع محافظات الكويت.
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+            دليل كويتي للكراجات ومراكز الصيانة ومحلات قطع الغيار
+            في كل محافظات الكويت.
           </p>
         </div>
 
-        <div>
+        <div className="md:text-end">
           <h4 className="mb-3 text-sm font-bold">روابط سريعة</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {NAV.map((n) => (
@@ -100,15 +100,6 @@ function Footer() {
                 </Link>
               </li>
             ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-3 text-sm font-bold">تواصل معنا</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>للورش والكراجات</li>
-            <li>أضف منشأتك للمنصة</li>
-            <li>تحديث بيانات</li>
           </ul>
         </div>
       </div>

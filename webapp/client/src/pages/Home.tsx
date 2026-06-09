@@ -45,7 +45,7 @@ export default function Home() {
           <LogoHero className="h-40 md:h-56" />
           <p className="mt-5 text-2xl font-extrabold text-primary md:text-4xl">{TAGLINE}</p>
           <p className="mt-3 max-w-lg text-sm text-muted-foreground md:text-base">
-            دليلك لكل كراج، مركز صيانة، ومحل قطع غيار في الكويت — في مكان واحد.
+            كراجات ومراكز صيانة ومحلات قطع غيار في كل محافظات الكويت، في مكان واحد.
           </p>
 
           <form onSubmit={submitSearch} className="mt-8 w-full">
@@ -54,7 +54,7 @@ export default function Home() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="ابحث عن كراج، مركز، تخصص، أو منطقة..."
+                placeholder="ابحث عن كراج أو تخصص..."
                 className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
                 aria-label="بحث"
                 data-testid="input-hero-search"

@@ -197,7 +197,7 @@ export default function SearchPage() {
             <input
               value={qInput}
               onChange={(e) => onQChange(e.target.value)}
-              placeholder="ابحث عن كراج، مركز، تخصص، أو منطقة..."
+              placeholder="ابحث عن كراج أو تخصص..."
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               data-testid="input-search"
             />

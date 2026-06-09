@@ -12,8 +12,8 @@ export default function About() {
           <LogoHero className="mx-auto h-32 md:h-44" />
           <p className="mt-4 text-2xl font-extrabold text-primary md:text-3xl">{TAGLINE}</p>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-            <span className="font-en font-bold text-foreground">degself</span> (دق سلف) منصة كويتية
-            تربط السائقين بالكراجات ومراكز الصيانة ومحلات قطع الغيار — بدون عناء البحث.
+            <span className="font-en font-bold text-foreground">degself</span> (دق سلف) دليل
+            كويتي يجمع كراجات ومراكز صيانة ومحلات قطع غيار السيارات في مكان واحد — بدون عناء البحث.
           </p>
         </div>
       </section>
