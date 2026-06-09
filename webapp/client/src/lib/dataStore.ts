@@ -112,13 +112,20 @@ let _inflight: Promise<Workshop[]> | null = null;
 export async function ensureWorkshops(): Promise<Workshop[]> {
   if (_cache) return _cache;
   if (_inflight) return _inflight;
+  // eslint-disable-next-line no-console
+  console.log("[ensureWorkshops] starting");
   _inflight = (async () => {
     try {
       const data = await loadFromNetwork();
       _cache = data;
-      // Seed React Query cache so any hooks watching the key get the data too.
       queryClient.setQueryData(WORKSHOPS_QUERY_KEY, data);
+      // eslint-disable-next-line no-console
+      console.log(`[ensureWorkshops] resolved with ${data.length} workshops`);
       return data;
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[ensureWorkshops] FAILED:", err);
+      throw err;
     } finally {
       _inflight = null;
     }
@@ -305,8 +312,14 @@ export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsRespo
 
 /** Mirrors GET /api/workshops/:place_id — single workshop (full) */
 export async function fetchWorkshop(placeId: string): Promise<WorkshopDetail> {
+  // eslint-disable-next-line no-console
+  console.log(`[fetchWorkshop] called with placeId="${placeId}"`);
   const all = await ensureWorkshops();
+  // eslint-disable-next-line no-console
+  console.log(`[fetchWorkshop] dataset has ${all.length} records`);
   const w = all.find((x) => x.place_id === placeId);
+  // eslint-disable-next-line no-console
+  console.log(`[fetchWorkshop] match found: ${!!w}`);
   if (!w) {
     throw new Error("404: Workshop not found");
   }
