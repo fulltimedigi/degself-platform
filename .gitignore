@@ -32,3 +32,4 @@ yarn-debug.log*
 # Temp files
 *.tmp
 .cache/
+webapp/qa/
