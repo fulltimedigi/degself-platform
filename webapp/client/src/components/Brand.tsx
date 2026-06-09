@@ -86,26 +86,26 @@ export function LogoAr({ className = "h-9" }: { className?: string }) {
 }
 
 /**
- * LogoHero: لوجو عمودي كبير لصفحات Hero - يستخدم PNG عالي الجودة
+ * LogoHero: لوجو عمودي كبير لصفحات Hero — مفتاح + نص متوازنين
  */
-export function LogoHero({ className = "h-32" }: { className?: string }) {
+export function LogoHero({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`inline-flex flex-col items-center gap-3 ${className}`}
+      className={`inline-flex flex-col items-center gap-4 ${className}`}
       data-testid="img-logo-hero"
     >
       <img
         src={logoKey}
         alt="degself"
-        className="h-3/4 w-auto drop-shadow-[0_8px_24px_rgba(255,214,10,0.25)]"
+        className="h-24 w-24 drop-shadow-[0_8px_24px_rgba(255,214,10,0.35)] md:h-28 md:w-28"
         draggable={false}
       />
-      <span
-        className="font-en font-extrabold leading-none tracking-tight"
-        style={{ fontSize: "0.22em" }}
-      >
+      <span className="font-en text-4xl font-extrabold leading-none tracking-tight md:text-5xl">
         <span className="text-foreground">deg</span>
         <span className="text-primary">self</span>
+      </span>
+      <span className="font-ar text-lg font-bold leading-none text-muted-foreground md:text-xl">
+        دق <span className="text-primary">سلف</span>
       </span>
     </div>
   );
