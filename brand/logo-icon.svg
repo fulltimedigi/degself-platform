@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="degself logo">
+  <title>degself - Kuwait Auto Workshops Platform</title>
+
+  <!-- Black rounded square background -->
+  <rect width="240" height="240" rx="56" fill="#0A0A0A"/>
+
+  <!-- Smart key body (the rounded rectangle key fob) -->
+  <g transform="translate(120, 120)">
+    <!-- Key fob outline - rounded rectangle tilted slightly -->
+    <g transform="rotate(-15)">
+      <!-- Main fob body -->
+      <rect x="-46" y="-72" width="92" height="120" rx="22" fill="#FFD60A" stroke="#FFD60A" stroke-width="2"/>
+
+      <!-- Inner darker accent (depth) -->
+      <rect x="-40" y="-66" width="80" height="108" rx="18" fill="none" stroke="#0A0A0A" stroke-width="2" opacity="0.15"/>
+
+      <!-- The "start" circular button - the heart of "دق سلف" -->
+      <circle cx="0" cy="-20" r="22" fill="#0A0A0A"/>
+      <circle cx="0" cy="-20" r="22" fill="none" stroke="#FFD60A" stroke-width="3" opacity="0.4"/>
+
+      <!-- Power/start icon inside button (circle with vertical line - universal start symbol) -->
+      <g stroke="#FFD60A" stroke-width="3" stroke-linecap="round" fill="none">
+        <path d="M -8 -28 A 11 11 0 1 0 8 -28" />
+        <line x1="0" y1="-32" x2="0" y2="-18"/>
+      </g>
+
+      <!-- Two small function buttons below -->
+      <rect x="-28" y="14" width="22" height="10" rx="5" fill="#0A0A0A" opacity="0.75"/>
+      <rect x="6" y="14" width="22" height="10" rx="5" fill="#0A0A0A" opacity="0.75"/>
+
+      <!-- Key shaft (the metal part) - extends down-right -->
+      <g transform="translate(0, 48)">
+        <!-- Shaft base attachment -->
+        <rect x="-6" y="0" width="12" height="14" fill="#FFD60A"/>
+        <!-- Main key shaft -->
+        <rect x="-4" y="12" width="8" height="42" rx="2" fill="#E5E7EB"/>
+        <!-- Key teeth -->
+        <path d="M -4 38 L -4 54 L -8 54 L -8 50 L -4 50 L -4 46 L -10 46 L -10 42 L -4 42 Z" fill="#E5E7EB"/>
+        <!-- Shaft highlight -->
+        <rect x="-2" y="14" width="2" height="38" fill="#FFFFFF" opacity="0.4"/>
+      </g>
+    </g>
+  </g>
+</svg>
