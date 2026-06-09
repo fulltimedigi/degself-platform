@@ -1,8 +1,9 @@
 import { Link } from "wouter";
-import { MapPin, Phone, ImageOff } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import type { WorkshopCard as TCard } from "@/lib/types";
 import { EntityBadge } from "./EntityBadge";
 import { RatingStars } from "./RatingStars";
+import { BrandedCover } from "./BrandedCover";
 
 export function WorkshopCard({ w }: { w: TCard }) {
   const tel = w.phone_intl ? w.phone_intl.replace(/\s/g, "") : null;
@@ -13,21 +14,12 @@ export function WorkshopCard({ w }: { w: TCard }) {
     >
       <Link href={`/workshop/${w.place_id}`} className="block">
         <div className="relative aspect-[16/10] overflow-hidden bg-secondary">
-          {w.main_image ? (
-            <img
-              src={w.main_image}
-              alt={w.name}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-              <ImageOff size={28} />
-            </div>
-          )}
+          <BrandedCover
+            name={w.name}
+            entityType={w.entity_type}
+            specialty={w.specialty}
+            variant="banner"
+          />
           <div className="absolute top-2 right-2">
             <EntityBadge type={w.entity_type} className="backdrop-blur-sm" />
           </div>

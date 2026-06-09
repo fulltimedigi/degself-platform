@@ -6,7 +6,6 @@ import {
   Navigation,
   Globe,
   ChevronRight,
-  ImageOff,
   CheckCircle2,
   CreditCard,
 } from "lucide-react";
@@ -14,6 +13,7 @@ import { SiWhatsapp } from "react-icons/si";
 import { Layout } from "@/components/Layout";
 import { EntityBadge } from "@/components/EntityBadge";
 import { RatingStars } from "@/components/RatingStars";
+import { BrandedCover } from "@/components/BrandedCover";
 import { ErrorState } from "@/components/States";
 import { fetchWorkshop } from "@/lib/api";
 import type { WorkshopDetail as TDetail } from "@/lib/types";
@@ -56,13 +56,12 @@ export default function WorkshopDetail() {
           <div className="space-y-6">
             {/* Hero image */}
             <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-card-border bg-secondary md:aspect-[21/9]">
-              {data.main_image ? (
-                <img src={data.main_image} alt={data.name} className="h-full w-full object-cover" data-testid="img-hero" />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                  <ImageOff size={40} />
-                </div>
-              )}
+              <BrandedCover
+                name={data.name}
+                entityType={data.entity_type}
+                specialty={data.specialty}
+                variant="banner"
+              />
               <div className="absolute bottom-3 right-3">
                 <EntityBadge type={data.entity_type} className="backdrop-blur-sm" />
               </div>
