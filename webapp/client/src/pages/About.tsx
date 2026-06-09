@@ -24,7 +24,7 @@ export default function About() {
         <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
             كل سائق في الكويت مرّ بنفس التجربة: سيارة تحتاج صيانة، وحيرة في اختيار الكراج المناسب.
-            من نسأل؟ هل الأسعار عادلة؟ هل الكراج موثوق؟
+            من نسأل؟ هل الأسعار عادلة؟ هل الكراج فعلاً يعرف شغله؟
           </p>
           <p>
             <span className="font-en font-bold text-foreground">degself</span> وُلدت لتحل هذه المشكلة —

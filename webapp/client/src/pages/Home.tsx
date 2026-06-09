@@ -139,7 +139,7 @@ export default function Home() {
             <Sparkles size={22} className="text-primary" />
             <div>
               <h2 className="text-xl font-extrabold md:text-2xl">الأعلى تقييمًا</h2>
-              <p className="mt-1 text-sm text-muted-foreground">اختيارات السائقين الموثوقة</p>
+              <p className="mt-1 text-sm text-muted-foreground">حسب تقييمات Google Maps</p>
             </div>
           </div>
           <HashLink to="/search?min_rating=4.8" className="text-sm font-semibold text-primary hover:underline" testid="link-see-all-top">
