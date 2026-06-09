@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { MapPin, Phone, Search } from "lucide-react";
 import { Layout } from "@/components/Layout";
-import { LogoEn, LogoAr, LogoHero, TAGLINE } from "@/components/Brand";
+import { LogoEn, LogoAr, LogoHero, TAGLINE, SUBTITLE_AR } from "@/components/Brand";
 
 export default function About() {
   return (
@@ -9,8 +9,9 @@ export default function About() {
       {/* Hero */}
       <section className="border-b border-border">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center md:px-6">
-          <LogoHero className="mx-auto h-32 md:h-44" />
-          <p className="mt-4 text-2xl font-extrabold text-primary md:text-3xl">{TAGLINE}</p>
+          <LogoHero className="mx-auto" />
+          <p className="mt-3 text-base font-bold text-muted-foreground md:text-lg">{SUBTITLE_AR}</p>
+          <p className="mt-6 text-lg font-extrabold text-primary md:text-2xl">{TAGLINE}</p>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
             <span className="font-en font-bold text-foreground">degself</span> (دق سلف) دليل
             كويتي يجمع كراجات ومراكز صيانة ومحلات قطع غيار السيارات في مكان واحد — بدون عناء البحث.

@@ -26,16 +26,26 @@ const MODES: Record<Mode, { label: string; specialty: string; icon: typeof Truck
 };
 
 export default function Emergency() {
-  const { params } = useHashQuery();
-  const initialMode = (params.get("mode") === "mobile" ? "mobile" : "tow") as Mode;
+  const { params, setParams } = useHashQuery();
+  const urlMode = params.get("mode");
+  const initialMode = (urlMode === "mobile" ? "mobile" : "tow") as Mode;
   const [mode, setMode] = useState<Mode>(initialMode);
   const [gov, setGov] = useState<string>("");
 
-  // Sync mode with URL when user clicks the home banner buttons after page load
+  // Sync mode FROM the URL whenever it changes (e.g. clicking the home banner)
   useEffect(() => {
-    const next = (params.get("mode") === "mobile" ? "mobile" : "tow") as Mode;
+    const next = (urlMode === "mobile" ? "mobile" : "tow") as Mode;
     setMode(next);
-  }, [params]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlMode]);
+
+  // Reflect mode TO the URL when user clicks toggle
+  const selectMode = (m: Mode) => {
+    setMode(m);
+    const next = new URLSearchParams(params);
+    next.set("mode", m);
+    setParams(next, true);
+  };
 
   const govs = useQuery<GovernorateItem[]>({
     queryKey: ["/api/governorates"],
@@ -84,7 +94,7 @@ export default function Emergency() {
               return (
                 <button
                   key={k}
-                  onClick={() => setMode(k)}
+                  onClick={() => selectMode(k)}
                   data-testid={`btn-mode-${k}`}
                   className={`flex items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition ${
                     active

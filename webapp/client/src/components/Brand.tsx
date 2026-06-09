@@ -62,7 +62,7 @@ export function LogoAr({ className = "h-8" }: { className?: string }) {
 export function LogoHero({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`inline-flex flex-col items-center gap-4 ${className}`}
+      className={`flex flex-col items-center ${className}`}
       data-testid="img-logo-hero"
     >
       <img
@@ -71,12 +71,9 @@ export function LogoHero({ className = "" }: { className?: string }) {
         className="h-24 w-24 drop-shadow-[0_8px_24px_rgba(255,214,10,0.35)] md:h-28 md:w-28"
         draggable={false}
       />
-      <span className="font-en text-4xl font-extrabold leading-none tracking-tight md:text-5xl">
+      <span className="mt-4 font-en text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
         <span className="text-foreground">deg</span>
         <span className="text-primary">self</span>
-      </span>
-      <span className="font-ar text-lg font-bold leading-none text-muted-foreground md:text-xl">
-        دق <span className="text-primary">سلف</span>
       </span>
     </div>
   );
@@ -99,3 +96,4 @@ export function LogoKey({ className = "h-9" }: { className?: string }) {
 }
 
 export const TAGLINE = "لا تحاتي، بنصلحها";
+export const SUBTITLE_AR = "دق سلف";

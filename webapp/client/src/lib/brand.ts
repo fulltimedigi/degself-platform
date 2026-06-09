@@ -25,6 +25,21 @@ export function entityColor(type: string): string {
   return ENTITY_COLORS[type] || "#9CA3AF";
 }
 
+// Single-character glyph shown inside the map pin per entity type
+export const ENTITY_GLYPHS: Record<string, string> = {
+  كراج: "ك",
+  مركز: "م",
+  محل: "ش",
+  خدمة: "خ",
+  وكيل: "و",
+  ورشة: "و",
+  معرض: "ع",
+};
+
+export function entityGlyph(type: string): string {
+  return ENTITY_GLYPHS[type] || "·";
+}
+
 // English transliteration for type (used in subtle labels)
 export const ENTITY_EN: Record<string, string> = {
   كراج: "Garage",

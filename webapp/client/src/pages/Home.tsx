@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, ChevronLeft, Sparkles, Truck, Wrench } from "lucide-react";
 import { Layout } from "@/components/Layout";
-import { LogoHero, TAGLINE } from "@/components/Brand";
+import { LogoHero, TAGLINE, SUBTITLE_AR } from "@/components/Brand";
 import { HashLink } from "@/components/SearchLink";
 import { WorkshopCard, WorkshopCardSkeleton } from "@/components/WorkshopCard";
 import { fetchGovernorates, fetchWorkshops } from "@/lib/api";
@@ -42,8 +42,9 @@ export default function Home() {
           }}
         />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 pb-12 pt-16 text-center md:pt-24">
-          <LogoHero className="h-40 md:h-56" />
-          <p className="mt-5 text-2xl font-extrabold text-primary md:text-4xl">{TAGLINE}</p>
+          <LogoHero />
+          <p className="mt-3 text-base font-bold text-muted-foreground md:text-lg">{SUBTITLE_AR}</p>
+          <p className="mt-6 max-w-lg text-lg font-extrabold text-primary md:text-2xl">{TAGLINE}</p>
           <p className="mt-3 max-w-lg text-sm text-muted-foreground md:text-base">
             كراجات ومراكز صيانة ومحلات قطع غيار في كل محافظات الكويت، في مكان واحد.
           </p>

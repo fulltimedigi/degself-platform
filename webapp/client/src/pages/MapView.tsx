@@ -6,7 +6,7 @@ import { fetchMapPoints } from "@/lib/api";
 import type { MapPoint, CountItem, GovernorateItem } from "@/lib/types";
 import { fetchSpecialties, fetchGovernorates } from "@/lib/api";
 import { useHashQuery, paramList } from "@/lib/useHashQuery";
-import { ENTITY_TYPES, ENTITY_COLORS, entityColor, KUWAIT_CENTER } from "@/lib/brand";
+import { ENTITY_TYPES, ENTITY_COLORS, entityColor, entityGlyph, KUWAIT_CENTER } from "@/lib/brand";
 import { loadLeaflet } from "@/lib/leaflet-loader";
 import { Loader2 } from "lucide-react";
 
@@ -50,11 +50,31 @@ export default function MapView() {
           KUWAIT_CENTER,
           11
         );
-        L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        // Lighter, more colorful basemap (similar to Kuwait Finder)
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
           attribution: '&copy; OpenStreetMap &copy; CARTO',
           maxZoom: 19,
+          subdomains: 'abcd',
         }).addTo(map);
-        const cluster = L.markerClusterGroup({ maxClusterRadius: 50, chunkedLoading: true });
+        // Cluster with custom icon per size
+        const cluster = L.markerClusterGroup({
+          maxClusterRadius: 60,
+          chunkedLoading: true,
+          showCoverageOnHover: false,
+          spiderfyOnMaxZoom: true,
+          iconCreateFunction: (c: any) => {
+            const count = c.getChildCount();
+            // Size + color tiers
+            let size = 36;
+            let bg = "#FFD60A"; // yellow base
+            let ring = "rgba(255, 214, 10, 0.25)";
+            if (count >= 100) { size = 56; bg = "#EF4444"; ring = "rgba(239,68,68,0.30)"; }
+            else if (count >= 25) { size = 48; bg = "#F97316"; ring = "rgba(249,115,22,0.30)"; }
+            else if (count >= 10) { size = 42; bg = "#FBBF24"; ring = "rgba(251,191,36,0.30)"; }
+            const html = `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-family:Cairo,sans-serif;font-weight:800;color:#0A0A0A;font-size:${count>99?12:14}px;box-shadow:0 0 0 6px ${ring},0 2px 8px rgba(0,0,0,0.4);border:2px solid #fff">${count}</div>`;
+            return L.divIcon({ html, className: "degself-cluster", iconSize: [size, size] });
+          },
+        });
         map.addLayer(cluster);
         mapRef.current = map;
         clusterRef.current = cluster;
@@ -76,11 +96,20 @@ export default function MapView() {
     for (const p of points.data.results) {
       if (!p.latitude || !p.longitude) continue;
       const color = entityColor(p.entity_type);
+      const glyph = entityGlyph(p.entity_type);
+      // Teardrop pin with glyph inside (Kuwait Finder style)
       const icon = L.divIcon({
-        className: "",
-        html: `<span style="display:block;width:16px;height:16px;border-radius:50%;background:${color};border:2px solid #0A0A0A;box-shadow:0 0 0 1px ${color}80"></span>`,
-        iconSize: [16, 16],
-        iconAnchor: [8, 8],
+        className: "degself-pin",
+        html: `<div style="position:relative;width:32px;height:40px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4))">
+          <svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 0C7.16 0 0 7.16 0 16c0 12 16 24 16 24s16-12 16-24C32 7.16 24.84 0 16 0z" fill="${color}" stroke="#fff" stroke-width="2"/>
+            <circle cx="16" cy="16" r="9" fill="#fff"/>
+          </svg>
+          <div style="position:absolute;top:7px;left:0;right:0;text-align:center;font-family:Cairo,sans-serif;font-weight:800;font-size:14px;color:${color};line-height:18px">${glyph}</div>
+        </div>`,
+        iconSize: [32, 40],
+        iconAnchor: [16, 40],
+        popupAnchor: [0, -36],
       });
       const m = L.marker([p.latitude, p.longitude], { icon });
       const rating = p.rating != null ? `★ ${p.rating.toFixed(1)}` : "بدون تقييم";
