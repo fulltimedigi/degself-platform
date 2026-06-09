@@ -100,7 +100,55 @@ async function loadFromNetwork(): Promise<Workshop[]> {
  * React Query deduplicates concurrent calls so even with many components
  * mounting at once the network request happens only one time.
  */
-// Expose helper for detail page
+// ------------------------------------------------------------------
+// Opening hours reconstruction
+// ------------------------------------------------------------------
+// The compact workshops.json stores `opening_hours` as a string like
+// "Sunday: 8 AM to 8 PM | Monday: ..." to save bytes. The detail page
+// needs an array of {day, hours}. We reconstruct it lazily and cache
+// per-workshop via WeakMap so repeated calls are O(1).
+
+const _hoursCache = new WeakMap<Workshop, OpeningHour[]>();
+
+// Map Arabic day names back to English (the canonical key used by DAY_ORDER)
+const AR_TO_EN_DAY: Record<string, string> = {
+  "السبت": "Saturday",
+  "الأحد": "Sunday",
+  "الإثنين": "Monday",
+  "الاثنين": "Monday",
+  "الثلاثاء": "Tuesday",
+  "الأربعاء": "Wednesday",
+  "الخميس": "Thursday",
+  "الجمعة": "Friday",
+};
+
+function parseOpeningHoursString(s: string): OpeningHour[] {
+  if (!s) return [];
+  // Accept separators: ' | ', newline, or ' ; '
+  const parts = s.split(/\s*\|\s*|\s*\n\s*|\s*;\s*/).filter(Boolean);
+  const out: OpeningHour[] = [];
+  for (const part of parts) {
+    const m = part.match(/^([A-Za-z\u0600-\u06FF]+)\s*:\s*(.+)$/);
+    if (!m) continue;
+    const rawDay = m[1].trim();
+    const day = AR_TO_EN_DAY[rawDay] || rawDay;
+    out.push({ day, hours: m[2].trim() });
+  }
+  return out;
+}
+
+export function getOpeningHoursRows(w: Workshop): OpeningHour[] {
+  if (Array.isArray(w.opening_hours_raw) && w.opening_hours_raw.length) {
+    return w.opening_hours_raw;
+  }
+  const cached = _hoursCache.get(w);
+  if (cached) return cached;
+  const rows = w.opening_hours ? parseOpeningHoursString(w.opening_hours) : [];
+  _hoursCache.set(w, rows);
+  return rows;
+}
+
+// Backwards-compat alias
 export function getOpeningRows(w: Workshop): OpeningHour[] {
   return getOpeningHoursRows(w);
 }
@@ -112,20 +160,12 @@ let _inflight: Promise<Workshop[]> | null = null;
 export async function ensureWorkshops(): Promise<Workshop[]> {
   if (_cache) return _cache;
   if (_inflight) return _inflight;
-  // eslint-disable-next-line no-console
-  console.log("[ensureWorkshops] starting");
   _inflight = (async () => {
     try {
       const data = await loadFromNetwork();
       _cache = data;
       queryClient.setQueryData(WORKSHOPS_QUERY_KEY, data);
-      // eslint-disable-next-line no-console
-      console.log(`[ensureWorkshops] resolved with ${data.length} workshops`);
       return data;
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error("[ensureWorkshops] FAILED:", err);
-      throw err;
     } finally {
       _inflight = null;
     }
@@ -312,14 +352,8 @@ export async function fetchWorkshops(f: WorkshopFilters): Promise<WorkshopsRespo
 
 /** Mirrors GET /api/workshops/:place_id — single workshop (full) */
 export async function fetchWorkshop(placeId: string): Promise<WorkshopDetail> {
-  // eslint-disable-next-line no-console
-  console.log(`[fetchWorkshop] called with placeId="${placeId}"`);
   const all = await ensureWorkshops();
-  // eslint-disable-next-line no-console
-  console.log(`[fetchWorkshop] dataset has ${all.length} records`);
   const w = all.find((x) => x.place_id === placeId);
-  // eslint-disable-next-line no-console
-  console.log(`[fetchWorkshop] match found: ${!!w}`);
   if (!w) {
     throw new Error("404: Workshop not found");
   }
