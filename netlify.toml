@@ -11,11 +11,26 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA fallback — all routes resolve to index.html (hash routing handles the rest)
+# Pretty URLs — Netlify auto-serves <path>/index.html when present (prerendered SEO pages).
+# Only paths WITHOUT a matching prerendered file fall back to /index.html (SPA shell).
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
+
+# Sitemap and robots — explicit MIME hints
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
 
 # Cache hashed static assets aggressively (filenames are content-hashed by Vite)
 [[headers]]
