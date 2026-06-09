@@ -105,16 +105,25 @@ export function getOpeningRows(w: Workshop): OpeningHour[] {
   return getOpeningHoursRows(w);
 }
 
+// In-flight promise to dedupe concurrent calls without going through React Query
+// (which can self-recurse if a useQuery hook also calls ensureWorkshops).
+let _inflight: Promise<Workshop[]> | null = null;
+
 export async function ensureWorkshops(): Promise<Workshop[]> {
   if (_cache) return _cache;
-  const data = await queryClient.fetchQuery({
-    queryKey: WORKSHOPS_QUERY_KEY,
-    queryFn: loadFromNetwork,
-    staleTime: Infinity,
-    gcTime: Infinity,
-  });
-  _cache = data;
-  return data;
+  if (_inflight) return _inflight;
+  _inflight = (async () => {
+    try {
+      const data = await loadFromNetwork();
+      _cache = data;
+      // Seed React Query cache so any hooks watching the key get the data too.
+      queryClient.setQueryData(WORKSHOPS_QUERY_KEY, data);
+      return data;
+    } finally {
+      _inflight = null;
+    }
+  })();
+  return _inflight;
 }
 
 /** Synchronous accessor — only valid after ensureWorkshops() has resolved. */
