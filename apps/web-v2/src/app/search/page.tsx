@@ -31,6 +31,7 @@ export default async function SearchPage({
       query: sp.q,
       area: sp.area,
       governorate: sp.governorate,
+      specialty: sp.specialty,
       service_mode: sp.service_mode,
       limit: PAGE_SIZE,
       offset,
@@ -46,6 +47,7 @@ export default async function SearchPage({
     if (sp.q) params.set("q", sp.q);
     if (sp.area) params.set("area", sp.area);
     if (sp.governorate) params.set("governorate", sp.governorate);
+    if (sp.specialty) params.set("specialty", sp.specialty);
     if (sp.service_mode) params.set("service_mode", sp.service_mode);
     if (p > 1) params.set("page", String(p));
     const qs = params.toString();
