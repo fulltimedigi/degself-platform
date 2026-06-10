@@ -111,18 +111,35 @@ export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
  * popular N at build time (the rest render on-demand via ISR).
  */
 export async function getAllPlaceIds(limit?: number): Promise<string[]> {
-  const supabase = supabasePublic;
-  let q = supabase
-    .from("workshops")
-    .select("place_id")
-    .eq("active", true)
-    .eq("permanently_closed", false)
-    .order("google_reviews_count", { ascending: false, nullsFirst: false });
-  if (limit) q = q.limit(limit);
+  // With a limit → single ordered query (used by generateStaticParams).
+  if (limit) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("place_id")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .order("google_reviews_count", { ascending: false, nullsFirst: false })
+      .limit(limit);
+    if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
+    return (data ?? []).map((r) => (r as { place_id: string }).place_id);
+  }
 
-  const { data, error } = await q;
-  if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
-  return (data ?? []).map((r) => (r as { place_id: string }).place_id);
+  // No limit → paginate ALL (sitemap needs every place_id, past the 1000 cap).
+  const PAGE = 1000;
+  const all: string[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("place_id")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
+    const batch = (data ?? []) as { place_id: string }[];
+    all.push(...batch.map((r) => r.place_id));
+    if (batch.length < PAGE) break;
+  }
+  return all;
 }
 
 export interface MapPoint {
