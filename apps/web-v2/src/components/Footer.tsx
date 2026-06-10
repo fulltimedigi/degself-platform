@@ -25,11 +25,11 @@ export function Footer() {
           <Link href="/search" className="text-sm text-muted-foreground hover:text-primary">
             البحث
           </Link>
-          <Link
-            href="/search?service_mode=tow"
-            className="text-sm text-muted-foreground hover:text-primary"
-          >
+          <Link href="/emergency" className="text-sm text-muted-foreground hover:text-primary">
             سطحة وكراج متنقل
+          </Link>
+          <Link href="/about" className="text-sm text-muted-foreground hover:text-primary">
+            عن دق سلف
           </Link>
         </div>
 
