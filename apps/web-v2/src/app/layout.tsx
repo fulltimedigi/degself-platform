@@ -16,6 +16,21 @@ export const metadata: Metadata = {
   description:
     "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليل شامل لمنشآت صيانة السيارات.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://degself.com"),
+  openGraph: {
+    type: "website",
+    locale: "ar_KW",
+    siteName: "دق سلف",
+    title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
+    description:
+      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. لا تحاتي، بنصلحها.",
+    images: ["/brand/logo-arabic.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "دق سلف — دليلك لكراجات وخدمات السيارات في الكويت",
+    description: "ابحث عن كراج أو خدمة سيارات في الكويت. لا تحاتي، بنصلحها.",
+    images: ["/brand/logo-arabic.png"],
+  },
 };
 
 export default function RootLayout({
