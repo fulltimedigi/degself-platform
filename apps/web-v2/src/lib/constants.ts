@@ -8,6 +8,7 @@
 export const SPECIALTIES = [
   { label: "صيانة عامة", q: "صيانة عامة", icon: "Settings" },
   { label: "ميكانيكا", q: "ميكانيكا", icon: "Wrench" },
+  { label: "كهرباء سيارات", q: "كهرباء", icon: "Zap" },
   { label: "تواير وبنشر", q: "تواير", icon: "CircleDot" },
   { label: "بودي وصبغ", q: "بودي", icon: "Brush" },
   { label: "قير", q: "قير", icon: "Cog" },

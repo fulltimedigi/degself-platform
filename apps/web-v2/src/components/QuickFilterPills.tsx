@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Settings, Wrench, CircleDot, Brush, Cog, Droplet } from "lucide-react";
+import { Settings, Wrench, Zap, CircleDot, Brush, Cog, Droplet } from "lucide-react";
 import { SPECIALTIES } from "@/lib/constants";
 
-const ICONS = { Settings, Wrench, CircleDot, Brush, Cog, Droplet } as const;
+const ICONS = { Settings, Wrench, Zap, CircleDot, Brush, Cog, Droplet } as const;
 
 export function QuickFilterPills() {
   return (

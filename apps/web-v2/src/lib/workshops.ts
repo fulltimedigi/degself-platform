@@ -164,18 +164,21 @@ export async function getMapPoints(): Promise<MapPoint[]> {
  * strings). Can be swapped for a Postgres view/RPC later if needed.
  */
 export async function getDistinctAreas(): Promise<string[]> {
-  const { data, error } = await supabasePublic
-    .from("workshops")
-    .select("area")
-    .eq("active", true)
-    .eq("permanently_closed", false)
-    .not("area", "is", null);
-  if (error) throw new Error(`getDistinctAreas failed: ${error.message}`);
-
+  // Paginated past the 1000-row cap so NO areas are silently dropped.
+  const PAGE = 1000;
   const set = new Set<string>();
-  for (const r of data ?? []) {
-    const a = (r as { area: string | null }).area;
-    if (a) set.add(a);
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("area")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .not("area", "is", null)
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`getDistinctAreas failed: ${error.message}`);
+    const batch = (data ?? []) as { area: string | null }[];
+    for (const r of batch) if (r.area) set.add(r.area);
+    if (batch.length < PAGE) break;
   }
   return [...set].sort((a, b) => a.localeCompare(b, "ar"));
 }
