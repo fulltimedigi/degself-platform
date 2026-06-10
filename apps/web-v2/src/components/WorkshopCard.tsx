@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandedCover } from "@/components/BrandedCover";
 import { StarRating } from "@/components/StarRating";
+import { OpenNowBadge } from "@/components/OpenNowBadge";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { truncate } from "@/lib/utils";
 import type { Workshop } from "@/lib/types";
@@ -15,6 +16,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
     service_mode,
     google_rating,
     google_reviews_count,
+    opening_hours,
   } = workshop;
 
   const volume = reviewVolumeLabel(google_reviews_count);
@@ -40,9 +42,10 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
 
         {location && <p className="text-xs text-muted-foreground">{location}</p>}
 
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
           {google_rating != null && <StarRating rating={google_rating} />}
           {volume && <span className="text-muted-foreground">{volume}</span>}
+          <OpenNowBadge openingHours={opening_hours} />
         </div>
       </div>
     </Link>

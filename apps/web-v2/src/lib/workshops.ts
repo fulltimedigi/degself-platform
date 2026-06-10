@@ -10,6 +10,7 @@ export interface SearchParams {
   entity_type?: string;
   service_mode?: string;
   min_rating?: number;
+  sort?: string; // "top-rated" (default) | "most-reviews" | "az"
   limit?: number;
   offset?: number;
 }
@@ -35,6 +36,7 @@ export async function searchWorkshops(
     entity_type,
     service_mode,
     min_rating,
+    sort,
     limit = 24,
     offset = 0,
   } = params;
@@ -45,10 +47,7 @@ export async function searchWorkshops(
     .from("workshops")
     .select("*", { count: "exact" })
     .eq("active", true)
-    .eq("permanently_closed", false)
-    .order("google_rating", { ascending: false, nullsFirst: false })
-    .order("google_reviews_count", { ascending: false, nullsFirst: false })
-    .range(offset, offset + limit - 1);
+    .eq("permanently_closed", false);
 
   if (query) {
     const tokens = normalizeArabic(query).split(" ").filter(Boolean);
@@ -60,6 +59,19 @@ export async function searchWorkshops(
   if (entity_type) q = q.eq("entity_type", entity_type);
   if (service_mode) q = q.eq("service_mode", service_mode);
   if (min_rating) q = q.gte("google_rating", min_rating);
+
+  // sort
+  if (sort === "most-reviews") {
+    q = q.order("google_reviews_count", { ascending: false, nullsFirst: false });
+  } else if (sort === "az") {
+    q = q.order("name", { ascending: true });
+  } else {
+    q = q
+      .order("google_rating", { ascending: false, nullsFirst: false })
+      .order("google_reviews_count", { ascending: false, nullsFirst: false });
+  }
+
+  q = q.range(offset, offset + limit - 1);
 
   const { data, count, error } = await q;
   if (error) throw new Error(`searchWorkshops failed: ${error.message}`);

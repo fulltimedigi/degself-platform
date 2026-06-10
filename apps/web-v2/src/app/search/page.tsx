@@ -33,6 +33,8 @@ export default async function SearchPage({
       governorate: sp.governorate,
       specialty: sp.specialty,
       service_mode: sp.service_mode,
+      sort: sp.sort,
+      min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
       limit: PAGE_SIZE,
       offset,
     }),
@@ -49,6 +51,8 @@ export default async function SearchPage({
     if (sp.governorate) params.set("governorate", sp.governorate);
     if (sp.specialty) params.set("specialty", sp.specialty);
     if (sp.service_mode) params.set("service_mode", sp.service_mode);
+    if (sp.sort) params.set("sort", sp.sort);
+    if (sp.min_rating) params.set("min_rating", sp.min_rating);
     if (p > 1) params.set("page", String(p));
     const qs = params.toString();
     return qs ? `/search?${qs}` : "/search";

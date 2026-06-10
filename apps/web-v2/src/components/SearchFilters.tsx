@@ -9,6 +9,12 @@ const SERVICE_MODES = [
   { value: "tow", label: "سطحة" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "top-rated", label: "الأعلى تقييماً" },
+  { value: "most-reviews", label: "الأكثر مراجعات" },
+  { value: "az", label: "أبجدي (أ-ي)" },
+];
+
 interface SearchFiltersProps {
   areas: string[];
   governorates: string[];
@@ -21,7 +27,10 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
 
   // local state for the debounced text input
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const [rating, setRating] = useState(Number(searchParams.get("min_rating") ?? 0));
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const sortValue = searchParams.get("sort") ?? "top-rated";
 
   // Build a new URL with one param changed (empty value removes it), reset paging.
   const updateParam = useCallback(
@@ -51,10 +60,13 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
     !!searchParams.get("q") ||
     !!searchParams.get("area") ||
     !!searchParams.get("governorate") ||
-    !!searchParams.get("service_mode");
+    !!searchParams.get("service_mode") ||
+    !!searchParams.get("min_rating") ||
+    !!searchParams.get("sort");
 
   function clearAll() {
     setQuery("");
+    setRating(0);
     router.push(pathname, { scroll: false });
   }
 
@@ -98,6 +110,42 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
             </option>
           ))}
         </select>
+
+        {/* sort */}
+        <select
+          value={sortValue}
+          onChange={(e) =>
+            updateParam("sort", e.target.value === "top-rated" ? "" : e.target.value)
+          }
+          className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+        >
+          {SORT_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* min-rating slider */}
+      <div className="flex items-center gap-3">
+        <label className="whitespace-nowrap text-sm text-muted-foreground">
+          التقييم الأدنى: {rating > 0 ? `${rating}+ ★` : "الكل"}
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={5}
+          step={1}
+          value={rating}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            setRating(v);
+            updateParam("min_rating", v ? String(v) : "");
+          }}
+          className="flex-1 accent-primary"
+          aria-label="التقييم الأدنى"
+        />
       </div>
 
       {/* service mode buttons */}
