@@ -125,6 +125,39 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
   return (data ?? []).map((r) => (r as { place_id: string }).place_id);
 }
 
+export interface MapPoint {
+  place_id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  entity_type: string;
+}
+
+/**
+ * Minimal fields for every live, geocoded workshop — for the /map page.
+ * Paginated: PostgREST caps a single response at 1000 rows, so we loop to fetch
+ * ALL points (never silently drop markers — data-accuracy rule).
+ */
+export async function getMapPoints(): Promise<MapPoint[]> {
+  const PAGE = 1000;
+  const all: MapPoint[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("place_id, name, lat, lng, entity_type")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .not("lat", "is", null)
+      .not("lng", "is", null)
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`getMapPoints failed: ${error.message}`);
+    const batch = (data ?? []) as MapPoint[];
+    all.push(...batch);
+    if (batch.length < PAGE) break;
+  }
+  return all;
+}
+
 /**
  * Distinct area names for the Search filter dropdown (live workshops only).
  * Fetches the area column and dedupes in JS — fine at this scale (~1801 short

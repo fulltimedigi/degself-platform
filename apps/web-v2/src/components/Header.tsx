@@ -7,6 +7,7 @@ import Image from "next/image";
 const NAV = [
   { href: "/", label: "الرئيسية" },
   { href: "/search", label: "البحث" },
+  { href: "/map", label: "الخريطة" },
   { href: "#footer", label: "تواصل" },
 ];
 

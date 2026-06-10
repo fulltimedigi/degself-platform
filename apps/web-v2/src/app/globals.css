@@ -74,3 +74,38 @@ button {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Leaflet dark theming + branded clusters (ported from v1) */
+.leaflet-container {
+  background: #0a0a0a;
+  font-family: var(--font-sans);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #111;
+  color: #fff;
+}
+.leaflet-popup-content a {
+  color: #ffd60a;
+  font-weight: 700;
+}
+.leaflet-bar a {
+  background: #111;
+  color: #fff;
+  border-color: #333;
+}
+.leaflet-bar a:hover {
+  background: #1c1c1c;
+}
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: rgba(255, 214, 10, 0.85);
+  color: #0a0a0a;
+  font-weight: 700;
+}
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: rgba(255, 214, 10, 0.35);
+}
