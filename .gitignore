@@ -33,3 +33,4 @@ yarn-debug.log*
 *.tmp
 .cache/
 webapp/qa/
+.vercel
