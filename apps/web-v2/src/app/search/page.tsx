@@ -2,6 +2,7 @@ import Link from "next/link";
 import { searchWorkshops, getDistinctAreas } from "@/lib/workshops";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { SearchFilters } from "@/components/SearchFilters";
+import { SearchTracker } from "@/components/SearchTracker";
 
 export const dynamic = "force-dynamic"; // results depend on the query — never cached
 
@@ -60,6 +61,7 @@ export default async function SearchPage({
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-8">
+      <SearchTracker query={sp.q ?? ""} />
       <h1 className="mb-4 text-2xl font-extrabold">نتائج البحث</h1>
 
       <SearchFilters areas={areas} governorates={GOVERNORATES} />
