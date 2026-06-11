@@ -57,6 +57,8 @@ async function fetchSearchTexts(): Promise<string[]> {
       .select("search_text")
       .eq("active", true)
       .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
       .range(from, from + PAGE - 1);
     if (error) throw new Error(`fetchSearchTexts failed: ${error.message}`);
     const batch = (data ?? []) as { search_text: string | null }[];
@@ -103,7 +105,9 @@ export async function getLandingWorkshops(
     .from("workshops")
     .select("*", { count: "exact" })
     .eq("active", true)
-    .eq("permanently_closed", false);
+    .eq("permanently_closed", false)
+    .eq("is_automotive", true)
+    .eq("out_of_scope", false);
 
   for (const tok of [normalizeArabic(sp.q), normalizeArabic(area)]) {
     q = q.ilike("search_text", `%${tok}%`);

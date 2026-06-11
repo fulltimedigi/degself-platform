@@ -42,7 +42,7 @@ function removalReason(enrEntry: any): string {
   return "non_automotive";
 }
 
-async function chunked<T>(items: T[], size: number, fn: (item: T) => Promise<any>) {
+async function chunked<T>(items: T[], size: number, fn: (item: T) => PromiseLike<any>) {
   let done = 0, failed = 0;
   for (let i = 0; i < items.length; i += size) {
     const results = await Promise.all(items.slice(i, i + size).map(fn));

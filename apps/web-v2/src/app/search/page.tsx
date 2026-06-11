@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { searchWorkshops, getDistinctAreas } from "@/lib/workshops";
+import {
+  searchWorkshops,
+  getDistinctAreas,
+  getDistinctNeighborhoods,
+  getDistinctSpecialties,
+} from "@/lib/workshops";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { SearchTracker } from "@/components/SearchTracker";
@@ -27,20 +32,24 @@ export default async function SearchPage({
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
   const offset = (page - 1) * PAGE_SIZE;
 
-  const [{ workshops, total }, areas] = await Promise.all([
-    searchWorkshops({
-      query: sp.q,
-      area: sp.area,
-      governorate: sp.governorate,
-      specialty: sp.specialty,
-      service_mode: sp.service_mode,
-      sort: sp.sort,
-      min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
-      limit: PAGE_SIZE,
-      offset,
-    }),
-    getDistinctAreas(),
-  ]);
+  const [{ workshops, total }, areas, neighborhoods, specialties] =
+    await Promise.all([
+      searchWorkshops({
+        query: sp.q,
+        area: sp.area,
+        neighborhood: sp.neighborhood,
+        governorate: sp.governorate,
+        specialty: sp.specialty,
+        service_mode: sp.service_mode,
+        sort: sp.sort,
+        min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
+        limit: PAGE_SIZE,
+        offset,
+      }),
+      getDistinctAreas(),
+      getDistinctNeighborhoods(),
+      getDistinctSpecialties(),
+    ]);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -49,6 +58,7 @@ export default async function SearchPage({
     const params = new URLSearchParams();
     if (sp.q) params.set("q", sp.q);
     if (sp.area) params.set("area", sp.area);
+    if (sp.neighborhood) params.set("neighborhood", sp.neighborhood);
     if (sp.governorate) params.set("governorate", sp.governorate);
     if (sp.specialty) params.set("specialty", sp.specialty);
     if (sp.service_mode) params.set("service_mode", sp.service_mode);
@@ -64,7 +74,12 @@ export default async function SearchPage({
       <SearchTracker query={sp.q ?? ""} />
       <h1 className="mb-4 text-2xl font-extrabold">نتائج البحث</h1>
 
-      <SearchFilters areas={areas} governorates={GOVERNORATES} />
+      <SearchFilters
+        areas={areas}
+        governorates={GOVERNORATES}
+        specialties={specialties}
+        neighborhoods={neighborhoods}
+      />
 
       <div className="mt-8">
         {workshops.length === 0 ? (
