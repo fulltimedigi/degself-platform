@@ -1,0 +1,303 @@
+﻿verdict,suggested_specialty,basis,name,area,current_specialty,google_category_raw,rating,reviews,website,place_id
+REMOVE,-,google_category,ايكيا,الري,كمبيوتر وتشخيص,متجر أثاث,4.5,16662,https://www.ikea.com/kw/en/?utm_source=gmblisting&utm_medium=Organic&utm_campaign=ikea-avenue-mall-gmb,ChIJyUrdj-ybzz8Rd7awdT8GMqw
+REMOVE,-,google_category,لولو هايبرماركت,الضجيج,كمبيوتر وتشخيص,سوق ضخمة,4.3,8732,https://www.luluhypermarket.com/en-kw/,ChIJga1zcHmZzz8RZq42keAbXVw
+REMOVE,-,google_category,اكس سايت,الفحيحيل,بطاريات,متجر أجهزة إلكترونية,4.2,5998,http://www.xcite.com/,ChIJvW5RNl0Gzz8Rdo5LyeKjyR8
+REMOVE,-,google_category,Xcite,حولي,كهرباء سيارات,متجر أجهزة إلكترونية,4.2,4901,http://www.xcite.com/,ChIJ9UkIdZSczz8RhSULb5xhP1w
+REMOVE,-,google_category,اكس سايت الغانم - الفروانية,Farwaniya,كهرباء سيارات,متجر أجهزة إلكترونية,4.2,4346,https://www.xcite.com/,ChIJIdFN2dKbzz8Rj35eaRZNYyE
+REMOVE,-,name_brand,اكسايت الغانم - الورشة,الري,قير وفتيس,خدمة إصلاح أجهزة,3.6,3589,http://www.xcite.com/,ChIJvbEAy5Cazz8RifLRrIjpetw
+REMOVE,-,google_category,يوريكا,الفروانية,كهرباء سيارات,متجر أجهزة إلكترونية,4.2,3280,,ChIJDbjCyNKbzz8RnEVT_uQosOI
+REMOVE,-,google_category,True Value,الري (قريب من الشويخ),بودي وصبغ,متجر سلع منزلية,4.3,2708,https://truevalue.com.kw/,ChIJezCBD46azz8RCoEOudsplf0
+REMOVE,-,google_category,يوريكا,الفحيحيل,كهرباء سيارات,متجر أجهزة إلكترونية,4.0,2310,,ChIJCYVn1VMGzz8RO8Yv-QTWRVw
+REMOVE,-,google_category,Spa Corner Men Spa,المنقف,ونش وسحب,مساج وسبا,4.9,2142,https://thespacorner.com/?utm_source=google&utm_medium=google-business-profile&utm_campaign=organic&utm_term=mangaf,ChIJ370EVNAHzz8RiLaL0hEDEvk
+REMOVE,-,google_category,اكسايت,الري,كهرباء سيارات,متجر أجهزة إلكترونية,4.2,1880,http://www.xcite.com/,ChIJmavAkpaazz8RHXabg-ALoDQ
+REMOVE,-,name_brand,ورشة باناسونيك - اليوسفي,العارضية 6,صيانة عامة,خدمة إصلاح أجهزة,3.9,1606,https://best.com.kw/,ChIJOTrXyH-Qzz8R7_uF41CfwAs
+REMOVE,-,google_category,MAD Recovery Center,السالمية,ونش وسحب,مركز الحفاظ على الصحة,4.9,1210,http://www.mad-rc.com/,ChIJxUMD5Et3zz8RqtL0621jwFI
+REMOVE,-,google_category,اكس سايت الغانم للأجهزة الالكترونية,القرين,بطاريات,متجر أجهزة إلكترونية,4.0,1202,http://www.xcite.com/,ChIJpxN2PZygzz8RTWYmjrz9nXo
+REMOVE,-,google_category,Britco & Bridco Kuwait Communications Equipment Repair Co. W.L.L,حولي,ونش وسحب,خدمة إصلاح الهاتف,5.0,903,https://www.britcokuwait.com/,ChIJE7kjtt-dzz8RWhDcKYFo-qA
+REMOVE,-,google_category,وكالة سامسونج - شركة البابطين للالكترونيات,حولي,كهرباء سيارات,متجر أجهزة إلكترونية,3.8,858,,ChIJVxOxXZmczz8R5M8REOcTzu4
+REMOVE,-,google_category,اكسايت الغانم - خيطان,خيطان,كهرباء سيارات,متجر أجهزة إلكترونية,4.1,770,http://www.xcite.com/,ChIJbbZ7_7Obzz8RYAbBxSgMvjc
+REMOVE,-,google_category,مركز النخيل النسيجي,الري,إكسسوارات,مشتل,4.1,698,https://gulfpalms.com/,ChIJJS_Xje6azz8RJN_rASOHwRM
+REMOVE,-,google_category,لولو هايبرماركت,الخيران,دواسر وفرش,سوق ضخمة,4.5,543,https://www.luluhypermarket.com/en-kw,ChIJb5EKEByVzj8RrespGKNtvdw
+REMOVE,-,google_category,ميداس - الري,الري,دواسر وفرش,متجر أثاث,4.0,513,http://www.midasfurniture.com/kuwait,ChIJdXpBaIWazz8RLi-pRkDbtEY
+REMOVE,-,google_category,ونش الفروانية,الفروانية,ونش وسحب,خدمة أخبار,4.8,440,https://www.winchkwd.com/,ChIJSz6wuF-bzz8RxVM6xrVQiyo
+REMOVE,-,google_category,FIXITQ8,حولي,كمبيوتر وتشخيص,متجر أجهزة كمبيوتر,4.9,376,http://www.fixitq8.com/,ChIJs8TrclOdzz8RF7gJpbEvsx8
+REMOVE,-,google_category,شركة سيتي جروب - الرئيسي,الصليبية الصناعية 2,ونش وسحب,شركة الحافلات,3.9,368,http://www.citygroupco.com/,ChIJxzXIyYmRzz8R0Ixle2CnwTU
+REMOVE,-,google_category,Trolley - ترولي,الشهداء,بطاريات,سوپر مارکت,4.2,343,https://trolley.com.kw/,ChIJozOvneWezz8RvGI1A7fBRyk
+REMOVE,-,google_category,السكراب النعايم,الكويت,كهرباء سيارات,متجر أجهزة إلكترونية,3.8,324,,ChIJYzhzarMJ0D8R0j2nuoSdMKE
+REMOVE,-,name_brand,شركه وذر فورد كويت للخدمات البتروليه,الأحمدي,ونش وسحب,إصلاحات,4.3,285,http://www.weatherford.com/,ChIJjWJ8FaUAzz8RnyZNC8jsBPo
+REMOVE,-,name_brand,Q8Vapes,صباح السالم,بطاريات,متجر,4.8,267,https://q8vapes.com/,ChIJBQavbpN1zz8RsgMLx9arEng
+REMOVE,-,google_category,SESC مركز الطب الرياضي,المهبولة,ونش وسحب,عيادة للطب الرياضي,4.9,236,https://sesc.net/,ChIJP3_jLBsJzz8ROgHY1oPkC9E
+REMOVE,-,google_category,Xcite,الفحيحيل,كهرباء سيارات,متجر أجهزة إلكترونية,4.1,228,http://www.xcite.com/,ChIJZeb2X9cHzz8RjnCnCTDLPyc
+REMOVE,-,google_category,زهرة النسيم لأدوات زينة السيارات,الشويخ الصناعية 2,إكسسوارات,مركز تسوق,4.0,225,,ChIJu4PpQMGazz8Rupo2Aj_AVqM
+REMOVE,-,google_category,تعليم قيادة السيارات,خيطان,كمبيوتر وتشخيص,مدرسة تعليم القيادة,4.9,225,,ChIJlTPX-vabzz8RlO_8XxrrkzA
+REMOVE,-,google_category,Diamond protection,الري (قريب من الشويخ),غسيل وتلميع,دائرة إدارة مركبات,4.9,193,http://diamondpkw.com/,ChIJCbYe8q2bzz8RKfZQHOKbIJg
+REMOVE,-,google_category,A2Z megastore Gaming Computer store,حولي,كمبيوتر وتشخيص,متجر أجهزة كمبيوتر,5.0,174,https://www.a2zmegastore.com/,ChIJ7051L-udzz8RzXXta5gxg0k
+REMOVE,-,google_category,Kuwait Computer Repair on Call,حولي,ونش وسحب,خدمة إصلاح أجهزة كمبيوتر,4.9,151,https://www.computerrepairkuwait.com/,ChIJzapykEqbzz8RZsrwoaORhjY
+REMOVE,-,google_category,NEXT STORE,حولي,كمبيوتر وتشخيص,متجر أجهزة كمبيوتر,4.2,150,https://www.nextstore.com.kw/,ChIJJfX42RQJzz8Rn9NQU5mW87c
+REMOVE,-,google_category,"Al Masiya Computers,fahaheel ( CCTV,Networking,Access Control,Pabx telephone,IP phone,Time attendance)",الفحيحيل,ونش وسحب,خدمة إصلاح أجهزة كمبيوتر,4.9,140,,ChIJ1yI0S10Gzz8RAD9R70djbZo
+REMOVE,-,google_category,شركة نور الكويت لاجهزة الكمبيوتر,Kuwait,كمبيوتر وتشخيص,خدمة إصلاح أجهزة كمبيوتر,4.7,112,http://www.noor-alkuwait.com/,ChIJy76GSgObzz8R9Ezucv-bZqc
+REMOVE,-,google_category,Fawzia Sultan Healthcare Network (FSHN) Rehabilitation - Sabah Al Salem,صباح السالم,ونش وسحب,مركز طبي,4.3,103,https://www.fshnrehab.org/,ChIJHaaUm6Odzz8Ru4QtqTmPKv4
+REMOVE,-,google_category,شركة ناصر محمد الساير - كَانون Canon,الري (قريب من الشويخ),ميكانيكا,خدمة إصلاح الطابعات,3.9,97,https://www.instagram.com/canonkuw/,ChIJM5MIGJCazz8RDmsRAoJNX2o
+REMOVE,-,google_category,PROPRINT SOLUTION,الضجيج,ونش وسحب,خدمة إصلاح أجهزة كمبيوتر,3.3,96,http://www.proprintsolutions.com/,ChIJaWfvAoqZzz8RZywFCxFvVHU
+REMOVE,-,google_category,شركة العريمان لاجهزة كشف الذهب والمعادن والمياه الجوفية,حولي,كمبيوتر وتشخيص,مورّد أجهزة كشف معادن,4.1,94,https://www.alareeman.com/,ChIJl_5Hkoqczz8RLUMVNLVW_Ic
+REMOVE,-,name_brand,تصليح تكييفات تصليح ثلاجات صيانة غسالات صيانة نشافات AL-RABIA EST,الفروانية,تكييف,خدمة إصلاح أجهزة,4.9,92,,ChIJeQgII7Cbzz8R9SfKMTpWZYM
+REMOVE,غير سيارات,web_search,Alhasawi Headquarter,الري,تكييف,مصنع,4.0,92,http://alhasawi.com/,ChIJ57upPpeazz8R4elEKKeCvOs
+REMOVE,-,google_category,Micron Data Recovery Kuwait,حولي,ونش وسحب,خدمة استعادة بيانات,4.9,91,https://www.datarecovery-kw.com/,ChIJkdq6W5eczz8RJCx6RDqyIGw
+REMOVE,-,google_category,الخبيزي لتنجيد السيارات,الشويخ الصناعية,دواسر وفرش,مركز تسوق,3.7,82,,ChIJ63BhPhebzz8RyQKXULNm_3o
+REMOVE,-,name_brand,ACE Hardware,khairan,دواسر وفرش,متجر خردوات,4.4,78,https://acekuwait.com/,ChIJWd1_JPmVzj8R-aiPlJHPO1s
+REMOVE,-,google_category,ستائر المنار تفصيل كنب وستائر,حولي,دواسر وفرش,متجر أثاث,4.9,76,https://www.furniturekuwait.com/,ChIJBdpjyuKdzz8Rj0yD2uFjeyk
+REMOVE,-,google_category,Kuwait Data Recovery,Kuwait,ونش وسحب,خدمة استعادة بيانات,4.6,74,http://www.unixgtc.com/,ChIJoTgniZmczz8RJFL6F5QehzM
+REMOVE,-,google_category,سطحة الكويت السالمية الجابرية الرميثية بيان شركة وسام الخليج لإنقاذ السيارات,حولي,ونش وسحب,مكتب الشركات,4.9,73,https://xn----zmcegl9a2a4hi5bw.com/,ChIJaSYESyudzz8RKmNLZiXii2g
+REMOVE,-,google_category,شركة الخبيزي للدراجات النارية,شويخ الصناعية 3,إكسسوارات,متجر إكسسوارات رياضية بالجملة,3.9,73,http://www.alkhubaizi.com.kw/,ChIJT-bLUMeazz8R2CUoHoC5kfs
+REMOVE,-,google_category,كاميرات مراقبه شركه الوفاق العالميه للاجهزه والانظمه الأمنيه,حولي,كمبيوتر وتشخيص,متجر كاميرات,4.7,64,https://camera-kw.net/,ChIJpbPaNQCdzz8RGQu74TOzp2U
+REMOVE,-,google_category,كراج الضامن الرئيسي,الشويخ الصناعية,قير وفتيس,مكتب الشركات,3.9,63,,ChIJVRi6gNabzz8RNP0_NhcAxJA
+REMOVE,-,google_category,اجهزة كشف الذهب والمعادن شركة المجموعة الألمانية GERMAN GROUP COMPANY,الفروانية,كمبيوتر وتشخيص,مورّد أجهزة كشف معادن,4.2,58,https://www.german-group.com/,ChIJG_fGzTKazz8RmjYY5IfQeus
+REMOVE,-,google_category,Recovery Spa,الجابرية,ونش وسحب,أخصائي معالجة بالتدليك,3.9,57,,ChIJq2nbS1yczz8RDClOLalFgTM
+REMOVE,-,google_category,اكسايت,الري (قريب من الشويخ),كهرباء سيارات,متجر أجهزة إلكترونية,3.8,53,http://www.xcite.com/,ChIJcYun5bmbzz8RWmnSgPmrWdk
+REMOVE,-,name_brand,شركة الخنيني للتجارة العامة و المقاولات,الشويخ الصناعية 1,غسيل وتلميع,شركة إنشاء,4.2,52,http://www.alkhonaini.com/,ChIJVc-OD0uFzz8RfEWB8pu7HpI
+REMOVE,-,google_category,شركة الوان الطيف للطاقه الشمسية مولدات كهربائيه فرع اسواق القرين,غرب ابو فطيرة الحرفية,بطاريات,مورد معدّات الطاقة الشمسية,3.6,52,http://www.alwansolar.com/,ChIJMcOU_U6gzz8RQdzlzgL6voA
+REMOVE,-,name_brand,شركة عربي ذ.م.م. Arabi Company W.L.L Projects & Workshop,صبحان الصناعية,زيوت وصيانة,شركة إنشاء,4.3,51,https://arabicompany.net/,ChIJI8EM3Cyfzz8RSnx0PwBBSUc
+REMOVE,-,name_brand,ستائر وتنجيد البطل,السالمية,دواسر وفرش,متجر مستلزمات تنجيد,4.9,49,,ChIJT5l_jr2dzz8RM5ilBmBqt0Q
+REMOVE,-,google_category,Liqui Moly - Shuwaikh,شويخ الصناعية 1,زيوت وصيانة,تاجر جملة,4.8,49,,ChIJ-StxRuiEzz8RGHmbQuXmWLk
+REMOVE,-,google_category,شركة جامبو العالمية لاجهزة الكمبيوتر فرع حولي,حولي,كهرباء سيارات,متجر أجهزة إلكترونية,4.0,47,,ChIJD5McALedzz8RacSrfL0_CVE
+REMOVE,-,google_category,الحساوي لصناعة التبريد والتدفئة,صباح السالم,تكييف,مورّد أجهزة التدفئة,4.0,47,,ChIJrakRmzafzz8R6dOm5QC9U2g
+REMOVE,-,google_category,بطاريات موتركرفت + تركيب سفايف,الشويخ الصناعية,بطاريات,متجر أجهزة إلكترونية,3.9,44,,ChIJafb-pAibzz8RGdmH2-5kDds
+REMOVE,-,google_category,فتح سيارات,خيطان,كمبيوتر وتشخيص,خدمة التسويق عبر الهاتف,4.9,42,,ChIJgR5sqJ-bzz8RsuoYxC9XDHI
+REMOVE,-,google_category,الكحلاوي للطاقه الشمسيه,غرب ابو فطيرة الحرفية,بطاريات,شركة طاقة شمسية,4.4,41,,ChIJo6EUUUWgzz8RANCw9QJFo9s
+REMOVE,-,google_category,IT PARASOL KWT - Computer Repair & Sales plus Accessories Store,الرقعي,كمبيوتر وتشخيص,متجر أجهزة كمبيوتر,4.9,38,https://m.facebook.com/100064160104029/,ChIJzZa-MrmRzz8RJeMCmPeVU1Q
+REMOVE,-,google_category,شركة الأندلس التجارية قطع غيار,الري,قطع غيار,سوق,3.4,36,,ChIJaePyUDqbzz8RyMmu4Uog9tA
+REMOVE,-,google_category,توب سكورتي كاميرات مراقبة وانتركم,حولي,كمبيوتر وتشخيص,متجر كاميرات,4.6,36,https://topsecurity-kw.com/,ChIJD0tpFvmdzz8RI5iQz_IMiPc
+REMOVE,-,google_category,Cure Recovery,بنيد القار,ونش وسحب,صالة رياضة,4.9,34,http://trycure.net/,ChIJgTUYzaWDzz8Ro1WA8Ml5ghs
+REMOVE,-,google_category,ورشة إصلاح وصيانة صبحان - الداخلية,صباح السالم,زيوت وصيانة,جمعية / منظمة,3.8,33,http://www.moi.gov.kw/,ChIJlYxFvDOfzz8RMc2r5iupbM4
+REMOVE,-,google_category,مركز قصار لوجي الفنطاس,الفنطاس,ونش وسحب,ممارس طب بديل,3.4,32,,ChIJsX13jioKzz8R5hMAitkjXsk
+REMOVE,-,google_category,Xcite,الشويخ الصناعية 3,كهرباء سيارات,متجر أجهزة إلكترونية,4.2,29,https://www.xcite.com/,ChIJQXnyGamFzz8RqMNeUKVWfB8
+REMOVE,غير سيارات,web_search,صباح الاحمد السكنية,صباح الأحمد,ونش وسحب,خدمة وسائل النقل,4.3,28,,ChIJkyIfrKZXzj8R282rU7S5Nzo
+REMOVE,-,google_category,Cloud Vape Store كلود فيب المهبولة,المهبولة,كمبيوتر وتشخيص,متجر للمبخرات,4.4,27,,ChIJcTH-rAcJzz8R0lLryyJh-7M
+REMOVE,-,google_category,Pakistan krag,الكويت,كهرباء سيارات,متجر أجهزة إلكترونية,3.8,27,,ChIJJ_kEHbQJ0D8RHSgLwR2Kt_4
+REMOVE,-,google_category,Arduino - Electronics in Touch - Eitkw,شويخ الصناعية 1,كهرباء سيارات,متجر أجهزة إلكترونية,4.7,26,http://www.eitkw.com/,ChIJo4OfeNubzz8RzrwJiMMgfkY
+REMOVE,-,google_category,ترولي,شرق الأحمدي,بطاريات,سوپر مارکت,4.2,26,https://trolley.com.kw/,ChIJCS19hU0Hzz8RecuoPcrYY1g
+REMOVE,-,google_category,Legend PPF & Concept Chemicals - Kuwait,الشويخ الصناعية 1,غسيل وتلميع,مورّد منتجات التنظيف,4.8,25,http://conceptchemicalskw.com/,ChIJIzE5al-bzz8Rwo4xlHqK4Mk
+REMOVE,-,google_category,Gold Star - Barcode Labels,mezzanine,كهرباء سيارات,متجر أجهزة إلكترونية,4.8,25,https://www.gsq8.com/,ChIJLWnYY5aczz8R-IG3BVesJAk
+REMOVE,-,google_category,كمبيوتر الفنطاس Fintas Computer,الفنطاس,كمبيوتر وتشخيص,دعم الكمبيوتر والخدمات,3.9,22,,ChIJn5uEgYAJzz8RKOTpet8QOpA
+REMOVE,-,name_brand,beach Public Parking,الشويخ,صيانة عامة,,4.5,16,,ChIJH8_89iKFzz8RcHf12NgNxY0
+REMOVE,-,google_category,AlMailem Garage Equipment,الشويخ الصناعية,كمبيوتر وتشخيص,مورد معدات صناعية,4.9,16,https://www.almailemgroup.com/product/garage-equipments/,ChIJNYg3waGbzz8RhDz42Mc3ZpI
+REMOVE,-,google_category,فريق الإنقاذ الكويتي صقور صباح,الكويت,كمبيوتر وتشخيص,مؤسسة تطوعية,4.7,16,https://www.instagram.com/kuwait.rescue.team/,ChIJwTswZkGTzz8RnbOtp2k2JWo
+REMOVE,-,name_brand,AC maintenance Service (Indian),الفروانية,تكييف,خدمة صيانة,4.6,16,,ChIJ5fh1ZYybzz8RGkK3wkmiHCQ
+REMOVE,-,google_category,مركز حولي لتصليح الإطارات وكهرباء السيارات,حولي,تواير وبنشر,سكن,4.6,15,,ChIJA7vCIbudzz8REqVLNQiJVG0
+REMOVE,-,google_category,Movewell Recovery,دسمان,ونش وسحب,مركز الحفاظ على الصحة,4.9,14,https://www.movewellrecovery.com/,ChIJ-9dPWrSFzz8RKHth3gtxa_Y
+REMOVE,-,google_category,Gulf Secure Track company,الضجيج,ونش وسحب,دعم الكمبيوتر والخدمات,3.4,14,https://www.securetrack-kw.com/,ChIJp8e8WnRWC6wRA8s42NGGc7I
+REMOVE,-,name_brand,Kuwait Lube Oil Company,الشعيبة الصناعية الغربية,زيوت وصيانة,مصنع,2.9,14,http://www.kuwaitlube.com/,ChIJXYB5_wcBzz8ROA3zNCZGk-k
+REMOVE,-,google_category,شركة فورسيل العالمية,قبلة,دواسر وفرش,مكتب الشركات,2.4,13,http://www.q84sale.com/,ChIJYd6HB3qFzz8R5fhY9OrrX2w
+REMOVE,-,google_category,ونش سريع,2،,ونش وسحب,مكتب الشركات,5.0,13,https://wenth.online/,ChIJ-4uCkKGbzz8RijfdsPhimCw
+REMOVE,-,google_category,مزرعة النويران,العبدلي,فرامل,فنان ترفيهي,4.8,13,,ChIJcVz3BNbhxD8RCsaOlTk0qHw
+REMOVE,-,google_category,شركة فاست سيرفس لإصلاح وصيانة الأجهزه الكهربائية والالكترونية,غرب ابو فطيرة الحرفية,كهرباء سيارات,خدمة إصلاح أفران,3.5,11,https://fastservices.com.kw/,ChIJG2quk3Ohzz8RZ9nJJ5KJYEE
+REMOVE,-,google_category,تبديل زجاج السيارات امام المنزل,الكويت,تظليل وزجاج,مكتب الشركات,4.9,11,,ChIJ11WW9GCczz8RJAP1OwwkqN4
+REMOVE,-,name_brand,شركة جيسكو | لخدمات صيانة الاجهزة الكهربائية والبوردات | فني تكييف - مركزي ووحدات | Jescookw Co,حولى,كهرباء سيارات,خدمة صيانة,3.7,11,,ChIJQ5UO3Yp24iIRCBOgga75Q-c
+REMOVE,-,google_category,Fixstorekw,السالمية,قير وفتيس,خدمة إصلاح الهاتف,3.7,10,,ChIJQazxPbCdzz8R1uHAi_6EjNU
+REMOVE,-,google_category,هدية للأدوات الزينة للسيارات,الفحيحيل,كهرباء سيارات,متجر أجهزة إلكترونية,4.3,10,,ChIJt1QDLbIHzz8RPZMEK4Ahu2g
+REMOVE,-,google_category,West Kuwait Mega Complex (KOC),الكويت,زيوت وصيانة,مكتب حكومي,4.3,9,https://www.kockw.com/,ChIJ5xfeP2LPzz8RwoTSzbMxG_U
+REMOVE,-,google_category,RFI,الكويت,قير وفتيس,الخدمات اللوجستية,3.6,8,,ChIJbZGG-vDM2j8ROTsEapgraTo
+REMOVE,-,google_category,Star Computer Farwaniya,الفروانية,ونش وسحب,خدمة إصلاح أجهزة كمبيوتر,4.8,8,https://broviunlock.com/,ChIJj8mMQgCbzz8R9OuLH0LSQcM
+REMOVE,-,google_category,مخفر شرطة الزور,الزور,ونش وسحب,مكتب حكومي,4.4,8,http://www.moi.gov.kw/,ChIJSyBxhjWVzj8RPJhPAlU-2Xs
+REMOVE,-,google_category,Zajil Datacentre,كيفان,ونش وسحب,خدمة استعادة بيانات,4.0,7,,ChIJt5TcZzOFzz8Ri31-681RlZw
+REMOVE,-,name_brand,تنجيد الاثاث,القادسية,دواسر وفرش,متجر مستلزمات تنجيد,4.6,7,,ChIJGbn6dqGczz8RJbkcd8NVynI
+REMOVE,-,name_brand,Rc car zone,المنطقة الحرة,صيانة عامة,,4.8,6,,ChIJqf2YOhKPzz8RLF7IHmVpy-A
+REMOVE,-,google_category,وردة العيون لاصلاح السيارات حداد وصبغ فرن,الجهراء المنطقة الصناعية قطعه 1,بودي وصبغ,مركز تسوق,3.8,6,,ChIJTcqsbQn3zz8RoqVMX60f1FE
+REMOVE,-,google_category,تصليح ايفون,حولي,قير وفتيس,خدمة إصلاح الهاتف,4.7,6,http://phonaty.com/,ChIJ9c32Inadzz8RcRTMgSefmgQ
+REMOVE,-,google_category,@Winch_bentley ونش مركز بنتلي للسيارات,مدينة الكويت,ونش وسحب,وكيل شحن المركبات,5.0,6,https://instagram.com/winch_bentley?igshid=Y2I2MzMwZWM3ZA==,ChIJJ5W5Vq6dzz8RqeeoV8OxnQE
+REMOVE,-,google_category,Al Hasawi Industrial Group,الصليبية الصناعية 1,تكييف,مورّد معدات المصانع,5.0,6,,ChIJmagy2ASSzz8RvALdn9JM1gA
+REMOVE,-,name_brand,تنجيد كنب تنجيد قنفات,الضجيج,دواسر وفرش,متجر مستلزمات تنجيد,4.8,6,https://www.instagram.com/tangedq8?igsh=M3NmMzhnY3B6ZG84,ChIJfx95MCP3zz8RT8vKJnpKopU
+REMOVE,-,google_category,Next Oil Solutions | Oil Field Equipment Suppliers in Kuwait,الفحيحيل,زيوت وصيانة,مورد معدات حقول النفط,5.0,6,https://www.noskwt.com/,ChIJYeUBBQAHzz8Rnnseqkl54fs
+REMOVE,-,google_category,اسرع ونش سيارات,المهبولة,ونش وسحب,مكتب الشركات,4.4,5,,ChIJF-hILwoJzz8Rj2SDKh9rCKk
+REMOVE,-,google_category,Warba Electrical &Electronics cont.co.,شرق الأحمدي,بطاريات,تاجر جملة,4.8,4,,ChIJpc7nRQAHzz8Rp7I64LZRDcU
+REMOVE,-,name_brand,شمس الصباح للطاقه الشمسيه,غرب ابو فطيرة الحرفية,بطاريات,متجر مستلزمات كهربائية,5.0,4,,ChIJAcQX9F-hzz8RNrkayPleFys
+REMOVE,-,google_category,Fantasy World Toys Al Khiran,الخيران,دواسر وفرش,متجر ألعاب,4.0,4,http://fantasyworldtoys.com/,ChIJD9Mgb_aVzj8R1xH59tu8S-o
+REMOVE,-,google_category,Indian car seat work,الفحيحيل,دواسر وفرش,متجر أجهزة إلكترونية,5.0,4,,ChIJW_LGxh4Hzz8Rq1mUmbTJzbs
+REMOVE,-,google_category,مكتب تيتانيوم بيع السيارات,العارضية الحرفية,صيانة عامة,مكتب الشركات,2.7,3,,ChIJz3gqimSQzz8RHDQw9MqcmoY
+REMOVE,-,google_category,تلميع و تصليح ليتات السيارات,شويخ الصناعية 1,غسيل وتلميع,مركز تسوق,5.0,3,,ChIJ_aEfVSSbzz8RV6NTjRPXFsQ
+REMOVE,-,google_category,Crony,شويخ الصناعية 3,كهرباء سيارات,متجر أجهزة إلكترونية,5.0,3,http://cronykwt.com/,ChIJ4UwV_Uyhzz8RayHehylu1co
+REMOVE,-,google_category,Battery's & Axle shop,جليب الشيوخ,بطاريات,مكتب الشركات,4.3,3,,ChIJk6KBYACZzz8RBZGSZmpY8Lo
+REMOVE,-,google_category,تلبيس كشنات,الشويخ الصناعية,دواسر وفرش,تاجر جملة,3.7,3,,ChIJCWsTotebzz8Re5JMWPVN_lY
+REMOVE,-,google_category,مركز اوتار الخليج لتلميع السيارات,الري (قريب من الشويخ),غسيل وتلميع,خدمة إصلاح الغسالات والمجففات,5.0,2,,ChIJ3WHy1E-bzz8R3H6HqGEZcfE
+REMOVE,-,name_brand,مصنع ستيل يونايتد لاعمال خراطة المعادن,الشويخ الصناعية 3,بودي وصبغ,حداد,5.0,2,,ChIJeV9bqxCbzz8RZru6SRA63F8
+REMOVE,-,name_brand,"Modayan Elevators Store, Shuwaikh",الشويخ الصناعية 3,صيانة عامة,,5.0,2,,ChIJA2f_EACFzz8RJGGEHehFJm4
+REMOVE,-,google_category,ورشه تصليح الاندلس,الري,صيانة عامة,متجر إصلاح هواتف الجوّال,2.5,2,,ChIJUwvC-JCbzz8Rnus5bMPnizo
+REMOVE,-,google_category,بدالة الونشات جميع منطقة الكويت,مدينة الكويت,ونش وسحب,مكتب الشركات,3.0,2,,ChIJIYk2_VSdzz8R4JufZDNewRY
+REMOVE,غير سيارات,web_search,دوار دسمان,الوفرة,ونش وسحب,خدمة وسائل النقل,3.5,2,,ChIJVTJHuAJhzj8RmLh_FW0Oesc
+REMOVE,-,google_category,هلال الربيع لزينة السيارات,الفحيحيل,كهرباء سيارات,متجر أجهزة إلكترونية,5.0,2,,ChIJ52uuxCAHzz8Ru3c-LY0b9-U
+REMOVE,-,name_brand,Kuwait National Lube Oil Mfg.Co.(KNLOC),الشعيبة قطعه 1,زيوت وصيانة,مصنع,3.0,2,http://www.knloc.com/,ChIJK1CToOEHzz8RbBIGFAMDOWY
+REMOVE,-,name_brand,Isotech Insulation Technology,الشويخ الصناعية 3,صيانة عامة,,5.0,1,,ChIJJeZkQ0mFzz8RrNB835YfV4w
+REMOVE,-,google_category,Marafie IT Services & Consultations Co (MRAFIEKW),فنيطيس,ونش وسحب,دعم الكمبيوتر والخدمات,1.0,1,http://www.mrafie.com/,ChIJH3eGyBULzz8R6-GH0CQKFxs
+REMOVE,-,google_category,كرين سحب تريلات ونسافات وتناكر,جليب الشيوخ,ونش وسحب,شركة نقل الشاحنات,5.0,1,,ChIJ3QoRNmmbzz8Rz9INm256q-0
+REMOVE,-,google_category,ونش الاندلس السريع,الأندلس,ونش وسحب,المساعدة المنزلية,5.0,1,,ChIJcQ4bK_uRzz8RrIB3CPRlyy4
+REMOVE,-,google_category,الجزيرة لتنجيد السيارات,شويخ الصناعية 3,دواسر وفرش,مكتب الشركات,1.0,1,,ChIJnRmaZfGbzz8RlAtOFdNAv80
+REMOVE,-,google_category,FUCHS Lubricants Germany - Authorized Partner in Kuwait,شويخ الصناعية 1,زيوت وصيانة,تاجر جملة,1.0,1,http://www.aagroup.com.kw/fuchs-oil.aspx,ChIJ2ZzT14iFzz8RrASsAPL0zkE
+REMOVE,-,name_brand,Bosch Power Tools Kuwait,الشويخ,صيانة عامة,,3.8,0,https://almutawaboschtools.com/,ChIJo2m7f-aFzz8Rt787lZ4qc3Q
+REMOVE,غير سيارات,web_search,Naseer center,الشويخ الصناعية 1,صيانة عامة,,,0,,ChIJa6_LXgCFzz8RmTICdQsO73Q
+REMOVE,غير سيارات,web_search,صناعية خيران,الشويخ الصناعية,صيانة عامة,,,0,,ChIJSYKaIgCFzz8R-MHMoAvas94
+REMOVE,-,name_brand,NASR AL-OMAR & SONS CYCLE AND TOYS STORE,الشويخ الصناعية,صيانة عامة,,,0,,ChIJccFHZwCFzz8R0a88fHT3GdM
+REMOVE,-,name_brand,租车公司,الشويخ الصناعية,صيانة عامة,,,0,,ChIJCXMSQwCFzz8RmBJmtgPnktg
+REMOVE,غير سيارات,location_name,Shuwaik,الشويخ,صيانة عامة,,,0,,ChIJOS4ePwCFzz8R0h8lDEON8jM
+REMOVE,غير سيارات,location_name,Kuwait shuwaikh industrial block 1 street 9,الشويخ الصناعية 1,صيانة عامة,,5.0,0,,ChIJyYLHbgCFzz8RVpvIVI_8eww
+REMOVE,-,name_brand,AIEE - MOTOROLA SOLUTIONS JOINT VENTURE,المنطقة الحرة,ميكانيكا,,4.4,0,,ChIJKcHsg5iPzz8RW3M6pNfOlbA
+REMOVE,-,name_brand,Alghanim Engineering - Home and Commercial Solutions | Air Conditioning and Elevators,الشويخ الصناعية 1,تكييف,,4.2,0,https://www.alghanimeg.com/?utm_source=Google&utm_medium=GMB&utm_campaign=GMB,ChIJB_MjZpePzz8Rs4EabFEWUE8
+REMOVE,-,name_brand,Ali Abdulwahab Al Mutawa Commercial Co,الشويخ الصناعية 2,صيانة عامة,,4.2,0,https://www.aawkitchens.com/,ChIJ20uMqUuFzz8RlUz124F6PYQ
+REMOVE,-,name_brand,BOSCH,الشويخ,صيانة عامة,,4.2,0,http://aaalmutawa.com/,ChIJax4-9kuFzz8RFlp-SuvxZVk
+REMOVE,-,name_brand,HOT Engineering & Construction Co.,المنطقة الحرة,ميكانيكا,,4.2,0,http://www.hotecc.com/,ChIJyR_0FqKPzz8RvzR6HXvfNCA
+REMOVE,-,name_brand,alpha store - Shuwaikh (Apple Authorised Service Provider) | آلفا ستور - شويخ,الشويخ الصناعية 2,صيانة عامة,,3.9,0,https://www.alphastore.com.kw/,ChIJbVWlhEqFzz8R0QKAcIDFATE
+REMOVE,-,name_brand,Mobile 2000,الشويخ,كراج متنقل,,3.8,0,,ChIJZy3bk0qFzz8R4fYjXMayaoc
+REMOVE,-,name_brand,JUNAH SUNGLASSES جونة للنظارات الشمسية,الشويخ,تظليل وزجاج,,3.7,0,https://junah.store/,ChIJc2K8wnCFzz8RHc9MO4VDfFg
+REMOVE,-,name_brand,The Bedroom By Intercoil,الشويخ الصناعية 2,زيوت وصيانة,,3.4,0,https://thebedroom.com/,ChIJHy0lmEqFzz8Ru_bisJ_4ynE
+REMOVE,-,name_brand,TNT,المنطقة الحرة,صيانة عامة,,2.9,0,https://www.tnt.com/express/en_kw/site/home.html?utm_medium=mybusiness&utm_source=yext,ChIJV4R-KpqPzz8R7N1CbGcUM5Q
+REMOVE,-,google_category,Metaronik,المرقاب,كمبيوتر وتشخيص,مورد معدات,0.0,0,https://www.metaronik.com/,ChIJT5WBOqWFzz8RSxgnUAcfPpk
+REMOVE,-,google_category,غيار,الكويت,كهرباء سيارات,وكالة تجارة إلكترونية,0.0,0,https://www.getgayar.com/,ChIJG7VJ0EMunIMR80o6IQFpcZI
+REMOVE,-,google_category,ونش الري السريع,الري,ونش وسحب,صيانة الممتلكات,0.0,0,,ChIJFe6nVVabzz8RDjUU1WBTWxg
+OUT_OF_SCOPE,(مش سيارات),name_brand,Harley-Davidson Kuwait,المنطقة الحرة,صيانة عامة,,4.3,471,http://www.harley-davidson-kw.com/,ChIJP1Kt5buazz8RWiBcvGSZlWw
+OUT_OF_SCOPE,(مش سيارات),google_category,شركة الصبيح للمعدات البحرية,الشويخ الصناعية 3,إكسسوارات,متجر المستلزمات البحرية,4.4,226,https://www.alsabihmarine.com/,ChIJbYdmXkqFzz8RqJHaJkRW7ow
+OUT_OF_SCOPE,(مش سيارات),google_category,RV Way Caravan,غرب ابو فطيرة الحرفية,بيع وشراء,تاجر مركبات استجمام,4.4,85,,ChIJ4xV5znWhzz8RaMgINHXRiLc
+OUT_OF_SCOPE,(مش سيارات),google_category,MAN Truck & Bus,الري,ونش وسحب,تاجر شاحنات,4.4,78,http://www.man-kuwait.com/,ChIJ2SWDLeyazz8RtdxfymuCKB0
+OUT_OF_SCOPE,(مش سيارات),google_category,شركة بريفورمنس مشين للدراجات النارية والأدوات,الري (قريب من الشويخ),قطع غيار,متجر دراجات بخارية,4.0,45,,ChIJ60LCSo6azz8RjauTuH_TiAw
+OUT_OF_SCOPE,(مش سيارات),google_category,POWERBOAT&SAFARI,شويخ الصناعية 3,إكسسوارات,تاجر قوارب,4.2,42,http://www.powerboatkw.store/,ChIJJd-aFpaazz8R6itwdc_TrDw
+OUT_OF_SCOPE,(مش سيارات),google_category,PRORIDER,الري (قريب من الشويخ),ميكانيكا,تصليح دراجات نارية,4.2,33,http://www.proriderkw.com/,ChIJh_Tlz42azz8RVbm3BNEmyfQ
+OUT_OF_SCOPE,غير سيارات,web_search,Rv.Zone,بيان,ونش وسحب,خدمة صيانة,4.5,31,https://www.instagram.com/rv.zone/,ChIJ62S2UJ-fzz8Rv86Ap0cn4RY
+OUT_OF_SCOPE,(مش سيارات),google_category,بيت خيطان قطعه 8,خيطان,قطع غيار,تصليح دراجات نارية,5.0,12,,ChIJD2-dKQCbzz8Rx-Mb59aPFvo
+OUT_OF_SCOPE,(مش سيارات),google_category,TechnoSat For Receivers,حولي,دراجات وقوارب,متجر لإصلاح الدراجات الرباعية,4.0,5,,ChIJb5uHTIyczz8RvRad5tzriKc
+OUT_OF_SCOPE,(مش سيارات),name_brand,تاكسي الأندلس,الأندلس,صيانة عامة,خدمة وسائل النقل,3.7,3,,ChIJi5WpZwCRzz8RIYkJFEqwnVg
+OUT_OF_SCOPE,(مش سيارات),google_category,Performance machine two wheeler work shop,حولي,تواير وبنشر,تصليح دراجات نارية,4.5,2,,ChIJ_bx8-I-dzz8Rgk7y7_A5oSU
+OUT_OF_SCOPE,(مش سيارات),google_category,مخرطة القصر الاحمر,الجهراء المنطقة الصناعية قطعه 1,دراجات وقوارب,متجر لإصلاح الدراجات الرباعية,4.0,2,,ChIJ57VPVK33zz8RN0xkZTmdz7s
+OUT_OF_SCOPE,(مش سيارات),google_category,محل مقصود تصليح قوارب,الشويخ الصناعية,ميكانيكا,تصليح دراجات نارية,5.0,1,,ChIJZwjDUQCbzz8RK5RcBZuapBE
+OUT_OF_SCOPE,(مش سيارات),google_category,KW_GolfCart,العبدلي,فرامل,تاجر عربات الغولف,5.0,1,,ChIJNToCdKnfxD8RHiNBme_LXXQ
+OUT_OF_SCOPE,غير سيارات,web_search,بورنان لغبار الشاحنات,المنطقة الحرة,صيانة عامة,,,0,,ChIJhQfzMACPzz8ReGT7zcAkZDo
+OUT_OF_SCOPE,(مش سيارات),name_brand,TVS Kuwait,الشويخ الصناعية,صيانة عامة,,4.6,0,http://www.mutawaalkazi.com/,ChIJ25CjbOiFzz8RcVOlAMzfOIs
+OUT_OF_SCOPE,(مش سيارات),name_brand,Yamaha Kuwait,الشويخ الصناعية,صيانة عامة,,4.0,0,http://www.yamahakuwait.com/,ChIJ2Yl5bkuFzz8RX4QLPXs8suA
+OUT_OF_SCOPE,(مش سيارات),google_category,قطع غيار سيدو,الري (قريب من الشويخ),قطع غيار,تصليح دراجات نارية,,0,,ChIJI5VuJgCbzz8RmlmN1p1TrS0
+OUT_OF_SCOPE,(مش سيارات),google_category,غيار زيت,الفروانية,زيوت وصيانة,تصليح دراجات نارية,0.0,0,,ChIJTVjoXwCbzz8REAoJgC9IVmU
+OUT_OF_SCOPE,(مش سيارات),google_category,كراج البديع,شرق الأحمدي,بودي وصبغ,تصليح دراجات نارية,0.0,0,,ChIJ7S1adEsHzz8RH5JrB44p-Y8
+OUT_OF_SCOPE,(مش سيارات),google_category,مركز قوندل,العبدلي,فرامل,مورد كامبر شل,0.0,0,,ChIJi5AyK0ExxT8RRupfBbLi5Jc
+OUT_OF_SCOPE,(مش سيارات),google_category,ونش الكويت خدمة 24 ساعة,جنوب الأحمدي,ونش وسحب,تاجر شاحنات,0.0,0,https://google.com/business,ChIJxa9CmqOpzz8REH1m2YxfFIk
+NEEDS_REVIEW,?,none,الخرينج للتنجيد,الفحيحيل,دواسر وفرش,متجر مستلزمات تنجيد,3.8,4,,ChIJC-iszgQHzz8RnVt6TPpYI78
+NEEDS_REVIEW,?,none,JTC Workshop,المنطقة الحرة,صيانة عامة,,5.0,1,,ChIJLW-IfQCPzz8ROnN9Z2dyg24
+NEEDS_REVIEW,?,none,Quality Care,الشويخ الصناعية,غسيل وتلميع,,4.3,0,https://poplme.co/quality-care,ChIJ_1curdObzz8RrcsreZU0jhk
+NEEDS_REVIEW,?,none,Foil Art,الشويخ الصناعية,زيوت وصيانة,,4.7,0,https://instagram.com/foilart,ChIJf-i1qU6Fzz8RGsbDp-JiFPA
+NEEDS_REVIEW,?,none,Al Mutawa Certified,الشويخ الصناعية,صيانة عامة,,4.4,0,http://almutawacertified.com/,ChIJJzUMiGmbzz8R6FmE96VaXeQ
+KEEP,فحص فني,google_category,برايم للفحص الفني,الري,كمبيوتر وتشخيص,خدمة فحص المركبات,4.1,419,,ChIJc7mhKZuazz8Rj08nHU7QVCs
+KEEP,تظليل وزجاج,google_category,SunLess EST,الشويخ الصناعية 3,تظليل وزجاج,خدمة تلوين النوافذ,4.9,261,,ChIJiyputb2azz8RJrkrqd9UwTo
+KEEP,فحص فني,google_category,الفحص الفني مرور مبارك الكبير,صبحان الصناعية,زيوت وصيانة,خدمة فحص المركبات,4.2,155,,ChIJlwglydaYzz8RFY8NehLI2-E
+KEEP,تواير وبنشر,google_category,مركز الدالي للاطارات - Aldalli centr- الشويخ الصناعيه,الشويخ الصناعية,تواير وبنشر,متجر عجلات,4.1,127,,ChIJ-x9e7dabzz8RpfmgYa5TuhI
+KEEP,وكيل,google_category,"Al Zayani Tata Service Centre, Ahmadi",شرق الأحمدي,قير وفتيس,وكالة تاتا موتورز,3.7,94,https://al-zayani.lianacms.com/tata.html,ChIJD2WcE_cHzz8RMFQCExbLTYw
+KEEP,تواير وبنشر,google_category,Autodynamics,الشويخ الصناعية 3,إكسسوارات,متجر عجلات,4.5,82,https://www.instagram.com/autodynamicskw?igsh=YW1ldWVnMjFmbTYx,ChIJe4fpL9qbzz8RwucU7PJ5MSo
+KEEP,تظليل وزجاج,google_category,V-KOOL Kuwait - في كول الكويت,الشويخ الصناعية 1,تظليل وزجاج,خدمة تلوين النوافذ,4.4,81,,ChIJNz8a2seazz8R2xDiV2r1QCE
+KEEP,صيانة عامة,name_brand,Honda Service,الشويخ الصناعية 3,صيانة عامة,,4.1,73,,ChIJtaaVqs-azz8RCBUi0-9eXpU
+KEEP,كمبيوتر وتشخيص,name_brand,شركة القفل الكويتي فتح سيارات الكويت صب مفاتيح الكويت فتح ابواب,خيطان,بطاريات,متجر خردوات,3.8,62,https://www.kuwaiti-lock.com/,ChIJGy6fs4qczz8RZmYzDE8g8T0
+KEEP,تظليل وزجاج,google_category,روك شيلد,الشويخ الصناعية 3,تظليل وزجاج,خدمة تلوين النوافذ,4.7,61,https://www.rockshieldkw.com/,ChIJ_cCFTWabzz8RBP9Q_tEr73s
+KEEP,وكيل,google_category,مرسيدس الملا - معرض افنيوز,الري (قريب من الشويخ),وكيل,موزع مرسيدس بنز,4.5,59,https://www.mercedes-benz-mena.com/kuwait/ar/?utm_source=GMB&utm_medium=organic&utm_campaign=GS0092425,ChIJ8afRMFCFzz8R9vS2pGXwG2s
+KEEP,تظليل وزجاج,google_category,"Tint My Ride, Kuwait",الشويخ الصناعية 1,تظليل وزجاج,خدمة تلوين النوافذ,4.5,55,https://www.instagram.com/tintmyridekuwait,ChIJ39e89-Obzz8R34iDQhKdN9E
+KEEP,بودي وصبغ,google_category,A Plus Car Care,الري (قريب من الشويخ),دواسر وفرش,خدمة تغليف المركبات,4.8,53,,ChIJ-dlIXambzz8RkOUdzBffVyE
+KEEP,ونش وسحب,name_brand,ونش سيارات الكويت,الفروانية,ونش وسحب,خدمة وسائل النقل,5.0,41,https://kwwinch.com/,ChIJb9BeluiZzz8RO7U3obReVDU
+KEEP,فحص فني,google_category,Al Khaldiya Car Inspection الخالدية للفحص الفني للسيارات,شرق الأحمدي,فحص فني,خدمة فحص المركبات,4.8,37,http://www.instagram.com/alkhaldiya.inspection/,ChIJa4N0qMEHzz8RxTT8LC3Magk
+KEEP,تظليل وزجاج,google_category,Supreme protection,الشويخ الصناعية 3,تظليل وزجاج,خدمة تلوين النوافذ,4.4,36,https://www.instagram.com/supremeprotection,ChIJNwtkANWbzz8RgQQlrMvse20
+KEEP,صيانة عامة,name_brand,مشتاق لتنجيد مقاعد السيارات,المرقاب,دواسر وفرش,متجر مستلزمات تنجيد,3.8,36,,ChIJl0zmlbqEzz8RtJPektyt9S0
+KEEP,ونش وسحب,name_brand,ونش سطحه عبد الله المبارك,الشدادية,ونش وسحب,خدمة وسائل النقل,4.6,30,,ChIJoVYS0AObzz8RiHYd4L7nU_0
+KEEP,ونش وسحب,name_brand,شركة الشام الدولية للمساعدة على الطريق,الضجيج,ونش وسحب,خدمات السلامة على الطرق,5.0,26,,ChIJ4ULYgNqZzz8RDw9lk9eLPK8
+KEEP,ونش وسحب,name_brand,ونش الجهراء السريع,الجهراء,ونش وسحب,خدمة وسائل النقل,4.6,21,https://wnsh-kw.com/,ChIJB4hY9s73zz8RvtIbjdwhCh0
+KEEP,صيانة عامة,name_brand,مركز لاهور للتنجيد وتلبيس السيارات,شرق,دواسر وفرش,متجر مستلزمات تنجيد,3.4,20,,ChIJefdAqZCEzz8R52lmRYIwgeY
+KEEP,زيوت وصيانة,name_brand,ماس لزيوت التشحيم,الجهراء المنطقة الصناعية قطعه 1,زيوت وصيانة,متجر,4.4,20,https://kuwaitmas.com/,ChIJQXcneFLxzz8RUfEd2bO2uco
+KEEP,صيانة عامة,name_brand,MG Adel Alghanim Service Centre,الشويخ الصناعية,صيانة عامة,,2.2,19,,ChIJx4OrZd2Fzz8RCE6zMFJWbyI
+KEEP,صيانة عامة,name_brand,Elders Company - examined the Garage,الشويخ الصناعية,صيانة عامة,,3.6,18,,ChIJ0bHq7UmFzz8R-WdobKVpqeg
+KEEP,تواير وبنشر,google_category,Fix Car ميزان فكس كار,الشويخ الصناعية 1,تكييف,خدمة ضبط العجلات ومحاذاتها,4.7,15,,ChIJ69pz7p6bzz8RL2FZg0dZB-I
+KEEP,ونش وسحب,name_brand,ونش 66600410,الكويت,ونش وسحب,خدمات السلامة على الطرق,5.0,14,,ChIJwWs5RU6Zzz8R6TueIxg2k6U
+KEEP,تواير وبنشر,google_category,ميزان ابو شنب الارمني,الشويخ الصناعية 3,تواير وبنشر,خدمة ضبط العجلات ومحاذاتها,4.9,13,https://www.instagram.com/abushanab66?igsh=OGQ5ZDc2ODk2ZA%3D%3D&utm_source=qr,ChIJq0OmZaKbzz8RX8mu5sAnRwg
+KEEP,صيانة عامة,name_brand,SKYLINE GARAGE / كراج سكاي لاين,الجهراء,ونش وسحب,خدمة صيانة,4.8,13,,ChIJL-jYSLDzzz8RWItl2uQwWQs
+KEEP,غسيل وتلميع,name_brand,Oula Car Wash,الشويخ الصناعية,غسيل وتلميع,,3.8,12,,ChIJSTwyw_aFzz8Red6IDPrK1DM
+KEEP,دواسر وفرش,web_search,Faylika upholstery shop,الشويخ الصناعية,دواسر وفرش,متجر مستلزمات تنجيد,4.4,10,,ChIJMWrJOceazz8RECCokUpsA0s
+KEEP,تظليل وزجاج,google_category,VIPER Protection فايبر بروتيكشن,الشويخ الصناعية 3,تظليل وزجاج,خدمة تلوين النوافذ,4.6,9,,ChIJ95wa3TKbzz8RtuFA_dJMH0s
+KEEP,كمبيوتر وتشخيص,name_brand,فتح سيارات,غرب ابو فطيرة الحرفية,كمبيوتر وتشخيص,خدمة نسخ المفاتيح,4.9,7,https://opencars.kw-garage.com/,ChIJv6xuTwCbzz8Rf6Yi3sSWKGo
+KEEP,ونش وسحب,name_brand,سطحه كرين ونش جابر الاحمد,قطعة 5,ونش وسحب,خدمة وسائل النقل,4.7,7,,ChIJeVu-gs31zz8REUzykvYf3bs
+KEEP,تواير وبنشر,google_category,ميزان الخرينج اصغر عاطف,الفحيحيل,بطاريات,خدمة ضبط العجلات ومحاذاتها,4.3,6,,ChIJEwhEpsEHzz8RNcVujB5n8zA
+KEEP,وكيل,web_search,GBS AL-SAYER,الشويخ الصناعية,صيانة عامة,,3.3,6,,ChIJx6pmIwCFzz8RJiQ3of68XF4
+KEEP,ونش وسحب,name_brand,ونش سطحه الاحمدي,الرقة,ونش وسحب,خدمة وسائل النقل,4.0,6,,ChIJ4-MYSs4Jzz8RYa9DKIDqLV8
+KEEP,تظليل وزجاج,google_category,SAIF PROTECTIONS s KUWAIT,الشويخ الصناعية 2,دواسر وفرش,خدمة تلوين النوافذ,5.0,5,,ChIJacnGhvmbzz8RQLcRzhm21CU
+KEEP,تظليل وزجاج,google_category,Abraj Al-Khaleej,الشويخ الصناعية 3,تظليل وزجاج,خدمة تلوين النوافذ,5.0,4,https://www.instagram.com/abraj_alkhaleej?igsh=MWNkM3B2N21rY2c4Zw%3D%3D&utm_source=qr,ChIJlQ4iBtabzz8RCtg-bme2oIo
+KEEP,وكيل,web_search,الساير حياك,الشويخ,صيانة عامة,,5.0,4,,ChIJ9ZYxMcuPzz8RUjjSVtgUyaE
+KEEP,كمبيوتر وتشخيص,name_brand,القفل الخليجي | فتح باب سيارة شقة غرفة محل نسخ مفتاح فتح أقفال رقمية وعادية صب وبرمجة مفتاح فتح تجوري برمجة ريموت عمل ماستركي,خيطان,كمبيوتر وتشخيص,صانع أقفال,3.8,4,https://gulf-lock.com/,ChIJv1LAx9ybzz8RJpYisR-ctVw
+KEEP,ونش وسحب,name_brand,ونش سطحه الجهراء,الجهراء,ونش وسحب,خدمات السلامة على الطرق,5.0,4,,ChIJzzmjKgD1zz8RKfq59yL9KU8
+KEEP,بودي وصبغ,name_brand,لكزس الشويخ - صبغ وحدادة,الشويخ الصناعية 3,بودي وصبغ,,4.3,3,,ChIJreZqVQCFzz8RpKgmX4BOcQU
+KEEP,صيانة عامة,name_brand,G force autoworx,المنطقة الحرة,ونش وسحب,,3.3,3,https://m.facebook.com/gforce.ax,ChIJgz4Tbg6Pzz8RtLU7yJSvy6I
+KEEP,بطاريات,name_brand,Amaron,المرقاب,بطاريات,Smart shop,5.0,3,,ChIJT95OrmeFzz8RsIPddqjQpBg
+KEEP,ونش وسحب,name_brand,Winch_peter transport servic car ونش خدمه طريق أبوريتا,شرق,ونش وسحب,خدمة رافعات,4.7,3,,ChIJE_XBYJaFzz8RnGfglTvGQ80
+KEEP,تظليل وزجاج,google_category,اوتو كير,الشويخ الصناعية 1,تظليل وزجاج,خدمة تلوين النوافذ,5.0,2,,ChIJ3xiKb6ibzz8RMm2wFjtDs1Q
+KEEP,تظليل وزجاج,web_search,Defend shield ديفند شيلد,الشويخ الصناعية 2,حماية وطلاء سيراميك,,5.0,2,,ChIJ6dqBcACFzz8R1wYCpAx3OcM
+KEEP,كهرباء سيارات,name_brand,تبديل سفايف,الشويخ الصناعية,قير وفتيس,خدمة وسائل النقل,4.5,2,,ChIJk0hyzx-bzz8R6Qsr2ipf3-o
+KEEP,ميكانيكا,google_category,Noor express garage Kuwait,الشويخ الصناعية,قير وفتيس,خدمة إعادة بناء المحرك,5.0,2,,ChIJn1L5fACbzz8RGV5O8Xa8QQM
+KEEP,قير وفتيس,google_category,كراج التنيب - أخصائيين جيرات او,شويخ الصناعية 3,قير وفتيس,متجر متخصص في مجموعات نقل الحركة,5.0,2,,ChIJJXX3XVybzz8RhTZJ639QvGc
+KEEP,ونش وسحب,name_brand,ونش ونشصبحى أل أحمد winch,صباح الأحمد,ونش وسحب,خدمة وسائل النقل,5.0,2,,ChIJaTmkEgBXzj8RnJ0ZQxTUNtA
+KEEP,وكيل,name_brand,Al Aqeeq United Co. Ahmadi Showroom,شرق الأحمدي,زيوت وصيانة,مورّد الخراطيم,5.0,2,http://aqeequnited.com/,ChIJO8mkXdcHzz8R2MXYo7K0cqk
+KEEP,تظليل وزجاج,google_category,Marina al shuwaikh,الشويخ الصناعية,تظليل وزجاج,خدمة تلوين النوافذ,4.0,1,,ChIJfdIzZwCbzz8RYJpPl5ixWUQ
+KEEP,صيانة عامة,name_brand,Chery Exeed Spareparts,المنطقة الحرة,قطع غيار,,5.0,1,,ChIJ96osbACPzz8Re60tRGqEKsI
+KEEP,وكيل,name_brand,SWM SHOWROOM,الشويخ الصناعية,وكيل,,5.0,1,,ChIJjxK1LwCFzz8RLYol_RBq-sU
+KEEP,قطع غيار,name_brand,قطع غيار فولفو الشويخ,الشويخ الصناعية,قطع غيار,,2.0,1,,ChIJ2XmNZQCFzz8RU4k2c4H23Zw
+KEEP,صيانة عامة,name_brand,Mobile Car Repair Kuwait,مبارك الكبير,كمبيوتر وتشخيص,خدمة صيانة,5.0,1,https://mobilecarrepairkuwait.com/,ChIJib4d2BoYn48Rw0840Cvk2ZI
+KEEP,ونش وسحب,name_brand,ونش,الأندلس,ونش وسحب,خدمات السلامة على الطرق,5.0,1,,ChIJjyZ9EwCRzz8RLAUF3fS0pbw
+KEEP,ونش وسحب,name_brand,ونش راجو,الرقعي,ونش وسحب,خدمة وسائل النقل,1.0,1,,ChIJRQ8HCgCRzz8RVB3EDlWjtKk
+KEEP,ونش وسحب,name_brand,ونش سطحه كرين الجهراء,الجهراء,ونش وسحب,خدمات السلامة على الطرق,5.0,1,,ChIJ10BvVJr1zz8RrDakvotJdD8
+KEEP,ونش وسحب,name_brand,ونش كرين حولي,حولي,ونش وسحب,خدمة وسائل النقل,5.0,1,https://wa.me/96599723375,ChIJoRw4EACdzz8RdqvM6PALjuA
+KEEP,صيانة عامة,name_brand,كراج نجم الفتوح ميزان وبريك,الشويخ الصناعية,فرامل,,,0,,ChIJofBcWACPzz8R9Yvs4NYOvog
+KEEP,صيانة عامة,name_brand,New Hyundai & Genesis showrooms & Service center,الشويخ الصناعية 2,زيوت وصيانة,,4.0,0,http://www.hyundai.com/kw,ChIJ5dq1WSKFzz8RusDHK9Cucfk
+KEEP,صيانة عامة,name_brand,كراج فاست 965,الشويخ الصناعية 2,صيانة عامة,,,0,,ChIJx_FuRgCFzz8RottE1cTXQ9I
+KEEP,صيانة عامة,name_brand,GARAJ IMTIAZ,الشويخ الصناعية,صيانة عامة,,,0,,ChIJX4gkMa2Pzz8RqxBL6EQMezM
+KEEP,بودي وصبغ,name_brand,يامن ابو زيد لدهان السيارت الشحن,المنطقة الحرة,بودي وصبغ,,,0,,ChIJE7KhZgCPzz8RpZ2XBxzGapM
+KEEP,وكيل,name_brand,MHero showroom,الشويخ,وكيل,,,0,https://mherokwt.com/,ChIJNcqhhz-Fzz8RqAdTXn_VIdY
+KEEP,وكيل,name_brand,Cadillac,الشويخ,تكييف,,,0,,ChIJ47nNbwCbzz8RlUGFYXgs8bI
+KEEP,وكيل,name_brand,Lexus Certified Used Cars Showroom - Shuwaikh,الشويخ الصناعية,وكيل,,5.0,0,https://www.lexus.com.kw/ar/used-stock/,ChIJtdINkBybzz8RfQjMP1vXH44
+KEEP,قطع غيار,name_brand,AL JAZEERA AUTOPARTS CO.,الشويخ الصناعية 3,قطع غيار,,5.0,0,,ChIJ610UqxuPzz8RHdU6TtZ8agg
+KEEP,صيانة عامة,name_brand,Kuwait Auto Service,الشويخ الصناعية 2,كمبيوتر وتشخيص,,5.0,0,https://www.kuwaitautoservice.com/,ChIJp6_fdH6Fzz8Rqxfdz2y0Zok
+KEEP,وكيل,name_brand,Al Sayer Car World - Toyota Used Cars showroom - Shuwaikh,الشويخ الصناعية,وكيل,,5.0,0,https://www.alsayercarworld.com/,ChIJtTpupGmFzz8RRApJxdiNsz8
+KEEP,صيانة عامة,name_brand,iCaur Shuwaikh Showroom & Service Center,الشويخ الصناعية 3,زيوت وصيانة,,4.8,0,https://www.icauralghanim.com/en,ChIJ4aYfmvKbzz8Ru968wTPQl90
+KEEP,صيانة عامة,name_brand,Volvo Cars Showroom and Service Center,الشويخ الصناعية 3,زيوت وصيانة,,4.7,0,http://volvocars.com/en-kw,ChIJEWxXdbebzz8RH5OgoDFcveg
+KEEP,وكيل,name_brand,Chery Alghanim Shuwaikh Showroom - معرض شيري الغانم الشويخ,الشويخ,وكيل,,4.6,0,https://www.cheryalghanim.com/,ChIJjXaNHaubzz8RSUvuPGaKXPs
+KEEP,صيانة عامة,name_brand,HongQi Alghanim (Showroom & Service Center),الشويخ الصناعية 1,زيوت وصيانة,,4.5,0,https://hongqialghanim.com/,ChIJU7aqE36bzz8REcTuPzdy0-A
+KEEP,وكيل,name_brand,Polestar,الشويخ الصناعية,صيانة عامة,,4.5,0,https://www.polestar.com/en-kw/,ChIJQYdSFQCFzz8R6NbB9HzLMYI
+KEEP,صيانة عامة,name_brand,Cadillac Alghanim Service Center - Shuwaikh,الشويخ الصناعية 1,تكييف,,4.4,0,http://ar.cadillacalghanim.com/,ChIJm70Du8Oazz8RFdJJDLh5--U
+KEEP,وكيل,name_brand,Lexus New Vehicles Showroom - Shuwaikh,الشويخ الصناعية,وكيل,,4.3,0,https://www.lexus.com.kw/,ChIJOUn8PUuFzz8RklWVC4mhhr0
+KEEP,وكيل,name_brand,معرض بيت التمويل للسيارات,الشويخ الصناعية 1,وكيل,,4.3,0,https://www.kfh.com/,ChIJCzvFwSGFzz8Rc5zwCVJucUI
+KEEP,قطع غيار,name_brand,Lexus Genuine Parts - Shuwaikh,الشويخ الصناعية 3,قطع غيار,,4.3,0,https://www.lexus.com.kw/en/service/,ChIJ08GrDUuFzz8RvvMNEQI6Chk
+KEEP,وكيل,name_brand,Lamborghini Kuwait,الشويخ الصناعية,صيانة عامة,,4.3,0,https://www.lamborghini.com/en-en/dealerships/lamborghini-kuwait,ChIJSc-IYUqFzz8RvV3yHebao9Q
+KEEP,وكيل,name_brand,Lotus,الشويخ الصناعية 3,صيانة عامة,,4.3,0,https://www.lotuscars.com/en-KW,ChIJH-EfIMuazz8R4dgyrxxEExY
+KEEP,وكيل,name_brand,Hyundai Showroom,الشويخ الصناعية 2,وكيل,,4.2,0,http://www.hyundai.com/kw,ChIJc6sqZjWFzz8RmrneNYB62vg
+KEEP,وكيل,name_brand,Chevrolet Alghanim Showroom (Shuwaikh),الشويخ الصناعية 1,وكيل,,4.2,0,http://ar.chevroletalghanim.com/,ChIJ04zYRMuazz8ROkHtce79Kpo
+KEEP,وكيل,name_brand,Exeed Alghanim (Showroom),الشويخ الصناعية,وكيل,,4.2,0,http://www.exeedalghanimkw.com/,ChIJYWAqhqWbzz8RWiLf2q4JmjU
+KEEP,وكيل,name_brand,Lincoln Alghanim - Shuwaikh,الشويخ الصناعية,صيانة عامة,,4.2,0,https://www.lincolnalghanim.com/ar/,ChIJcXALIMebzz8RTctp2sSXGPk
+KEEP,وكيل,name_brand,Genesis Showroom,الشويخ الصناعية 2,وكيل,,4.2,0,http://www.genesis.com/kw,ChIJcdW1YDWFzz8ReKfeXHMLz-8
+KEEP,وكيل,name_brand,Cadillac Alghanim Shuwaikh Showroom,الشويخ الصناعية 1,تكييف,,4.2,0,https://www.cadillacalghanim.com/,ChIJBxGqGQCbzz8R0Xa0-a-IbDo
+KEEP,قطع غيار,name_brand,Ford Spare Parts Center,الشويخ,قطع غيار,,4.1,0,https://www.fordalghanim.com/en,ChIJ9U3gCsuazz8RAsKyGnt0jSg
+KEEP,صيانة عامة,name_brand,Motorcraft Alghanim,الشويخ الصناعية 1,فرامل,,4.1,0,https://fordalghanim.com/,ChIJC1Lx1mmbzz8Rjp4w4WxUC0Y
+KEEP,وكيل,name_brand,GAC Motor Showroom,الشويخ الصناعية,ميكانيكا,,4.1,0,http://www.gackuwait.com/,ChIJBzwWuUqFzz8R4ii7L0kAPVg
+KEEP,صيانة عامة,name_brand,Lexus Main Service Centre - Shuwaikh,الشويخ الصناعية 3,وكيل,,4.1,0,https://www.lexus.com.kw/en/service/,ChIJ0V7E0XWFzz8RyuvIuWQzJAA
+KEEP,صيانة عامة,name_brand,كراج اعيان للسيارات,الشويخ الصناعية,صيانة عامة,,4.1,0,http://www.aayanauto.com/,ChIJ49q660mFzz8Rquphx7BWsLo
+KEEP,قطع غيار,name_brand,Ford Alghanim Service & Spare Parts,الشويخ الصناعية,قطع غيار,,4.0,0,,ChIJfUDII8uazz8RH5EfrPm6K4Y
+KEEP,صيانة عامة,name_brand,Aayan Auto - Garage Aayen Al-Shuwaikh - أعيان أوتو - كراج عاين الشويخ,الشويخ الصناعية,صيانة عامة,,4.0,0,http://www.aayanauto.com/,ChIJSwBx7UmFzz8RrKWl-7978A4
+KEEP,قطع غيار,name_brand,"Honda Alghanim - Shuwaikh Service Center, Bodyshop and Spare Parts Center",الشويخ الصناعية 1,بودي وصبغ,,3.9,0,https://www.hondaalghanim.com/en,ChIJU8eP-8qazz8RB0Zn86L5zOw
+KEEP,تواير وبنشر,name_brand,فرع الكهرباء والبنشر جمعية الشامية والشويخ التعاونية,الشويخ,تواير وبنشر,,3.9,0,,ChIJr9YJAJ-Fzz8RnnnddYL4Jt4
+KEEP,وكيل,name_brand,FORTHING Showroom,الشويخ الصناعية,وكيل,,3.9,0,http://www.forthing.com.kw/,ChIJHSoNBJGbzz8R0YVjfq29mYI
+KEEP,وكيل,name_brand,Shuwaikh Kia,الشويخ,صيانة عامة,,3.8,0,http://www.aaalmutawa.com/,ChIJ11lL8UuFzz8RguZYCMtOd_k
+KEEP,صيانة عامة,name_brand,Kia Service Center,الشويخ الصناعية,زيوت وصيانة,,3.8,0,http://www.kia.com/,ChIJV-vG_UqFzz8RpIt3J1meElY
+KEEP,وكيل,name_brand,Honda Alghanim - Shuwaikh Showroom,الشويخ الصناعية,وكيل,,3.8,0,,ChIJsbMXjAKbzz8RczAy4IK6ktM
+KEEP,وكيل,name_brand,BAIC Motor Showroom,الشويخ,ميكانيكا,,3.7,0,http://baickuwait.com/,ChIJLRETnJSazz8RqmBFurYfptU
+KEEP,صيانة عامة,name_brand,Auto west company,الشويخ الصناعية,قطع غيار,,,0,,ChIJ43wirWNVxT8RK__1H57qvq8
+KEEP,صيانة عامة,name_brand,Noor Garage,الشويخ الصناعية,صيانة عامة,,,0,,ChIJwcfzqjmPzz8Ro09aszd1x9E
+KEEP,صيانة عامة,name_brand,كراج انوار كاظمه,الشويخ,صيانة عامة,,,0,,ChIJU0wp9yqPzz8REH1rlNB_0vU
+KEEP,تواير وبنشر,name_brand,شركة ستار سيرفس لإطارات السيارات محمد الصراف,الشويخ,تواير وبنشر,,,0,,ChIJV5cMLPmPzz8RyjNWDSdWxpA
+KEEP,قطع غيار,web_search,Topspeedcompany,الشويخ الصناعية 3,صيانة عامة,,,0,,ChIJSdRHMUGPzz8R-ryTm33Vo8s
+KEEP,تواير وبنشر,name_brand,الركيبي للاطارات,الشويخ,تواير وبنشر,,,0,,ChIJzc0dCACPzz8R8hE-6vmhu2M
+KEEP,صيانة عامة,name_brand,smoke garage,الشويخ,صيانة عامة,,,0,,ChIJiYT5e0CPzz8R5oqiTrTnfSs
+KEEP,صيانة عامة,name_brand,ملابس ومشدات مقابل كراج عادل الغانم للسيارات,الشويخ,صيانة عامة,,,0,,ChIJwwX7FgCPzz8RVaUXU_gBOJc
+KEEP,قطع غيار,name_brand,Obaids Auto Parts,الشويخ الصناعية 3,قطع غيار,,,0,,ChIJo3zhx2OPzz8RgIiPekP8C7k
+KEEP,قطع غيار,name_brand,TURBO INTERNATIONAL Auto Spare Parts Co.,المنطقة الحرة,قطع غيار,,,0,,ChIJQwXqagCPzz8RWoiYV49dkXc
+KEEP,قطع غيار,name_brand,Imdaad auto parts,المنطقة الحرة,قطع غيار,,,0,,ChIJYxXiHwCPzz8R3NkZ2ffQiT0
+KEEP,وكيل,name_brand,AlDabbous Motors,المنطقة الحرة,ميكانيكا,,,0,,ChIJ5SvDOPaPzz8RtcwHPxjevOA
+KEEP,وكيل,web_search,Alsadiq,المنطقة الحرة,صيانة عامة,,,0,,ChIJ3ZwbQQCPzz8RW8W611yATUM
+KEEP,صيانة عامة,name_brand,GORILLA CAR CAR,الشويخ,صيانة عامة,,,0,,ChIJm_Bjp2mPzz8RF3DPQajcajQ
+KEEP,قطع غيار,name_brand,القاهرة لقطع غيار السيارات,الشويخ الصناعية 3,قطع غيار,,,0,,ChIJUb887g-bzz8R3AjWFIqPjXE
+KEEP,صيانة عامة,name_brand,Al-Qurain Automotive Trading Co.,الشويخ الصناعية 3,صيانة عامة,,,0,,ChIJTQLNIGaFzz8Rgpuzp-vV-8E
+KEEP,قير وفتيس,google_category,Super speed transmission,شويخ الصناعية 3,قير وفتيس,متجر متخصص في مجموعات نقل الحركة,0.0,0,,ChIJo7i85oabzz8RssUxPP6os0U
+KEEP,ونش وسحب,name_brand,ونش المطلاع السريع,الجهراء,ونش وسحب,خدمة وسائل النقل,0.0,0,https://wnsh.online/,ChIJ0Thw5SE8CIMRif6ODUii2Lg

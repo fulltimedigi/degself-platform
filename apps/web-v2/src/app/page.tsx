@@ -1,4 +1,5 @@
 import { getFeaturedWorkshops } from "@/lib/workshops";
+import { GarageTranslator } from "@/components/GarageTranslator";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
 import { GovernorateGrid } from "@/components/GovernorateGrid";
@@ -33,6 +34,11 @@ export default async function Home() {
             ابحث
           </button>
         </form>
+      </section>
+
+      {/* مترجم الكراج — قسم بارز فوق */}
+      <section className="px-6 pb-4">
+        <GarageTranslator />
       </section>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pb-16">
