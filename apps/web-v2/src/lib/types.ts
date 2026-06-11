@@ -52,4 +52,17 @@ export interface Workshop {
 
   // Arabic-normalized search blob (filled by trigger) — internal use
   search_text: string | null;
+
+  // data-accuracy audit (migration 003) — the public site reads `reviewed_specialty`
+  // and lists only `is_automotive = true AND out_of_scope = false`.
+  reviewed_specialty: string | null;
+  is_automotive: boolean;
+  out_of_scope: boolean;
+  audit_confidence: string | null; // HIGH | MEDIUM | LOW | NON_CAR | OOS
+  audit_reviewed_at: string | null;
+
+  // Google Places enrichment + soft-removal (migration 004)
+  neighborhood: string | null; // الحي — authoritative neighborhood from Google
+  removal_reason: string | null;
+  removed_at: string | null;
 }

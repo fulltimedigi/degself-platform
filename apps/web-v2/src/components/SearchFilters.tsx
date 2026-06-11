@@ -18,17 +18,26 @@ const SORT_OPTIONS = [
 interface SearchFiltersProps {
   areas: string[];
   governorates: string[];
+  specialties: string[];
+  neighborhoods: string[];
 }
 
-export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
+export function SearchFilters({
+  areas,
+  governorates,
+  specialties,
+  neighborhoods,
+}: SearchFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // local state for the debounced text input
+  // local state for the debounced text inputs
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const [nbhd, setNbhd] = useState(searchParams.get("neighborhood") ?? "");
   const [rating, setRating] = useState(Number(searchParams.get("min_rating") ?? 0));
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const nbhdDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sortValue = searchParams.get("sort") ?? "top-rated";
 
@@ -55,10 +64,24 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
     };
   }, [query, searchParams, updateParam]);
 
+  // debounce the neighborhood (الحي) datalist input (300ms)
+  useEffect(() => {
+    if (nbhdDebounceRef.current) clearTimeout(nbhdDebounceRef.current);
+    nbhdDebounceRef.current = setTimeout(() => {
+      if (nbhd !== (searchParams.get("neighborhood") ?? ""))
+        updateParam("neighborhood", nbhd.trim());
+    }, 300);
+    return () => {
+      if (nbhdDebounceRef.current) clearTimeout(nbhdDebounceRef.current);
+    };
+  }, [nbhd, searchParams, updateParam]);
+
   const activeMode = searchParams.get("service_mode") ?? "";
   const hasFilters =
     !!searchParams.get("q") ||
     !!searchParams.get("area") ||
+    !!searchParams.get("neighborhood") ||
+    !!searchParams.get("specialty") ||
     !!searchParams.get("governorate") ||
     !!searchParams.get("service_mode") ||
     !!searchParams.get("min_rating") ||
@@ -66,6 +89,7 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
 
   function clearAll() {
     setQuery("");
+    setNbhd("");
     setRating(0);
     router.push(pathname, { scroll: false });
   }
@@ -107,6 +131,36 @@ export function SearchFilters({ areas, governorates }: SearchFiltersProps) {
           {areas.map((a) => (
             <option key={a} value={a}>
               {a}
+            </option>
+          ))}
+        </select>
+
+        {/* neighborhood (الحي) — 500+ values → datalist autocomplete */}
+        <input
+          type="search"
+          list="neighborhoods"
+          value={nbhd}
+          onChange={(e) => setNbhd(e.target.value)}
+          placeholder="الحي"
+          autoComplete="off"
+          className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+        />
+        <datalist id="neighborhoods">
+          {neighborhoods.map((n) => (
+            <option key={n} value={n} />
+          ))}
+        </datalist>
+
+        {/* specialty (التخصص) — from the audited reviewed_specialty */}
+        <select
+          value={searchParams.get("specialty") ?? ""}
+          onChange={(e) => updateParam("specialty", e.target.value)}
+          className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+        >
+          <option value="">كل التخصصات</option>
+          {specialties.map((s) => (
+            <option key={s} value={s}>
+              {s}
             </option>
           ))}
         </select>

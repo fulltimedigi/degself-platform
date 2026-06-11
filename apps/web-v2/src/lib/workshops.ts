@@ -5,8 +5,9 @@ import type { Workshop } from "@/lib/types";
 export interface SearchParams {
   query?: string;
   area?: string;
+  neighborhood?: string;
   governorate?: string;
-  specialty?: string;
+  specialty?: string; // matched against reviewed_specialty (the audited field)
   entity_type?: string;
   service_mode?: string;
   min_rating?: number;
@@ -31,6 +32,7 @@ export async function searchWorkshops(
   const {
     query,
     area,
+    neighborhood,
     governorate,
     specialty,
     entity_type,
@@ -47,15 +49,18 @@ export async function searchWorkshops(
     .from("workshops")
     .select("*", { count: "exact" })
     .eq("active", true)
-    .eq("permanently_closed", false);
+    .eq("permanently_closed", false)
+    .eq("is_automotive", true) // audit: hide non-automotive places
+    .eq("out_of_scope", false);
 
   if (query) {
     const tokens = normalizeArabic(query).split(" ").filter(Boolean);
     for (const t of tokens) q = q.ilike("search_text", `%${t}%`);
   }
   if (area) q = q.eq("area", area);
+  if (neighborhood) q = q.eq("neighborhood", neighborhood);
   if (governorate) q = q.eq("governorate", governorate);
-  if (specialty) q = q.eq("specialty", specialty);
+  if (specialty) q = q.eq("reviewed_specialty", specialty); // audited specialty
   if (entity_type) q = q.eq("entity_type", entity_type);
   if (service_mode) q = q.eq("service_mode", service_mode);
   if (min_rating) q = q.gte("google_rating", min_rating);
@@ -98,6 +103,8 @@ export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
     .select("*")
     .eq("active", true)
     .eq("permanently_closed", false)
+    .eq("is_automotive", true)
+    .eq("out_of_scope", false)
     .not("google_rating", "is", null)
     .order("google_rating", { ascending: false, nullsFirst: false })
     .order("google_reviews_count", { ascending: false, nullsFirst: false })
@@ -118,6 +125,8 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
       .select("place_id")
       .eq("active", true)
       .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
       .order("google_reviews_count", { ascending: false, nullsFirst: false })
       .limit(limit);
     if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
@@ -133,6 +142,8 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
       .select("place_id")
       .eq("active", true)
       .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
       .range(from, from + PAGE - 1);
     if (error) throw new Error(`getAllPlaceIds failed: ${error.message}`);
     const batch = (data ?? []) as { place_id: string }[];
@@ -164,6 +175,8 @@ export async function getMapPoints(): Promise<MapPoint[]> {
       .select("place_id, name, lat, lng, entity_type")
       .eq("active", true)
       .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
       .not("lat", "is", null)
       .not("lng", "is", null)
       .range(from, from + PAGE - 1);
@@ -176,26 +189,40 @@ export async function getMapPoints(): Promise<MapPoint[]> {
 }
 
 /**
- * Distinct area names for the Search filter dropdown (live workshops only).
- * Fetches the area column and dedupes in JS — fine at this scale (~1801 short
- * strings). Can be swapped for a Postgres view/RPC later if needed.
+ * Distinct non-null values of a text column across the live, in-scope set —
+ * used to populate the Search filter dropdowns. Dedupes in JS (fine at this
+ * scale; ~1753 short strings) and paginates past the 1000-row cap so NO value
+ * is silently dropped. Can be swapped for a Postgres view/RPC later if needed.
  */
-export async function getDistinctAreas(): Promise<string[]> {
-  // Paginated past the 1000-row cap so NO areas are silently dropped.
+async function distinctColumn(
+  col: "area" | "neighborhood" | "reviewed_specialty"
+): Promise<string[]> {
   const PAGE = 1000;
   const set = new Set<string>();
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabasePublic
       .from("workshops")
-      .select("area")
+      .select(col)
       .eq("active", true)
       .eq("permanently_closed", false)
-      .not("area", "is", null)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
+      .not(col, "is", null)
       .range(from, from + PAGE - 1);
-    if (error) throw new Error(`getDistinctAreas failed: ${error.message}`);
-    const batch = (data ?? []) as { area: string | null }[];
-    for (const r of batch) if (r.area) set.add(r.area);
+    if (error) throw new Error(`distinctColumn(${col}) failed: ${error.message}`);
+    const batch = (data ?? []) as Record<string, string | null>[];
+    for (const r of batch) {
+      const v = r[col];
+      if (v) set.add(v);
+    }
     if (batch.length < PAGE) break;
   }
   return [...set].sort((a, b) => a.localeCompare(b, "ar"));
 }
+
+/** Distinct area names for the Search filter dropdown. */
+export const getDistinctAreas = () => distinctColumn("area");
+/** Distinct neighborhoods (الحي) — 500+ values, use a datalist not a <select>. */
+export const getDistinctNeighborhoods = () => distinctColumn("neighborhood");
+/** Distinct audited specialties (~20 values) for the specialty <select>. */
+export const getDistinctSpecialties = () => distinctColumn("reviewed_specialty");

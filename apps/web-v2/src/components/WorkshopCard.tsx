@@ -12,6 +12,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
     name,
     entity_type,
     area,
+    neighborhood,
     governorate,
     service_mode,
     google_rating,
@@ -20,7 +21,8 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
   } = workshop;
 
   const volume = reviewVolumeLabel(google_reviews_count);
-  const location = [area, governorate].filter(Boolean).join(" · ");
+  // prefer the Google-authoritative neighborhood (الحي) over the free-text area
+  const location = [neighborhood ?? area, governorate].filter(Boolean).join(" · ");
 
   return (
     <Link
