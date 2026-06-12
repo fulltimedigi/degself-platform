@@ -1,0 +1,2189 @@
+{
+  "closedPerm": [
+    {
+      "pid": "ChIJHRJFDACbzz8RVNMcaXPVc4o",
+      "name": "ميزان أنور بابجي والإطارات",
+      "area": "الشويخ الصناعية 3",
+      "reviews": 58
+    }
+  ],
+  "closedTemp": [
+    {
+      "pid": "ChIJ5dq1WSKFzz8RusDHK9Cucfk",
+      "name": "New Hyundai & Genesis showrooms & Service center",
+      "area": "الشويخ الصناعية 2",
+      "reviews": 21
+    },
+    {
+      "pid": "ChIJb1TrQj-bzz8RxUenIIcbYic",
+      "name": "مؤسسة فل اتوماتيك لغسيل و تشحيم السيارات",
+      "area": "الشويخ الصناعية 3",
+      "reviews": 91
+    },
+    {
+      "pid": "ChIJWxqxQ9mbzz8RSFgrfzueXjw",
+      "name": "KEVLAR PPF",
+      "area": "الري (قريب من الشويخ)",
+      "reviews": 5
+    },
+    {
+      "pid": "ChIJAZzSAWShzz8RUzvDKH35br4",
+      "name": "شركة الضمان للفحص الفنى اسواق القرين",
+      "area": "غرب ابو فطيرة الحرفية",
+      "reviews": 650
+    },
+    {
+      "pid": "ChIJKfznWsfxzz8Ry5Egh-YQsbY",
+      "name": "مقبرة الاطارات",
+      "area": "الجهراء",
+      "reviews": 52
+    },
+    {
+      "pid": "ChIJx8R51Fugzz8REE1Edi2wG0I",
+      "name": "مركز مقدم موتورز لبيع وشراء السيارات",
+      "area": "غرب ابو فطيرة الحرفية",
+      "reviews": 31
+    },
+    {
+      "pid": "ChIJ0YQqT6abzz8RGRwf6oWz0B8",
+      "name": "شركة فيلكا اوف رود لبيع زينة و اكسسوارات السيارات",
+      "area": "الشويخ الصناعية",
+      "reviews": 1
+    }
+  ],
+  "nonCar": [
+    {
+      "pid": "ChIJyUrdj-ybzz8Rd7awdT8GMqw",
+      "name": "ايكيا",
+      "area": "الري",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 16673
+    },
+    {
+      "pid": "ChIJga1zcHmZzz8RZq42keAbXVw",
+      "name": "لولو هايبرماركت",
+      "area": "الضجيج",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 8742
+    },
+    {
+      "pid": "ChIJvW5RNl0Gzz8Rdo5LyeKjyR8",
+      "name": "اكس سايت",
+      "area": "الفحيحيل",
+      "specialty": "بطاريات",
+      "reviews": 6000
+    },
+    {
+      "pid": "ChIJ9UkIdZSczz8RhSULb5xhP1w",
+      "name": "Xcite",
+      "area": "حولي",
+      "specialty": "كهرباء سيارات",
+      "reviews": 4903
+    },
+    {
+      "pid": "ChIJIdFN2dKbzz8Rj35eaRZNYyE",
+      "name": "اكس سايت الغانم - الفروانية",
+      "area": "Farwaniya",
+      "specialty": "كهرباء سيارات",
+      "reviews": 4348
+    },
+    {
+      "pid": "ChIJvbEAy5Cazz8RifLRrIjpetw",
+      "name": "اكسايت الغانم - الورشة",
+      "area": "الري",
+      "specialty": "قير وفتيس",
+      "reviews": 3593
+    },
+    {
+      "pid": "ChIJDbjCyNKbzz8RnEVT_uQosOI",
+      "name": "يوريكا",
+      "area": "الفروانية",
+      "specialty": "كهرباء سيارات",
+      "reviews": 3284
+    },
+    {
+      "pid": "ChIJezCBD46azz8RCoEOudsplf0",
+      "name": "True Value",
+      "area": "الري (قريب من الشويخ)",
+      "specialty": "بودي وصبغ",
+      "reviews": 2709
+    },
+    {
+      "pid": "ChIJCYVn1VMGzz8RO8Yv-QTWRVw",
+      "name": "يوريكا",
+      "area": "الفحيحيل",
+      "specialty": "كهرباء سيارات",
+      "reviews": 2310
+    },
+    {
+      "pid": "ChIJ370EVNAHzz8RiLaL0hEDEvk",
+      "name": "Spa Corner Men Spa",
+      "area": "المنقف",
+      "specialty": "ونش وسحب",
+      "reviews": 2141
+    },
+    {
+      "pid": "ChIJmavAkpaazz8RHXabg-ALoDQ",
+      "name": "اكسايت",
+      "area": "الري",
+      "specialty": "كهرباء سيارات",
+      "reviews": 1881
+    },
+    {
+      "pid": "ChIJOTrXyH-Qzz8R7_uF41CfwAs",
+      "name": "ورشة باناسونيك - اليوسفي",
+      "area": "العارضية 6",
+      "specialty": "صيانة عامة",
+      "reviews": 1609
+    },
+    {
+      "pid": "ChIJxUMD5Et3zz8RqtL0621jwFI",
+      "name": "MAD Recovery Center",
+      "area": "السالمية",
+      "specialty": "ونش وسحب",
+      "reviews": 1210
+    },
+    {
+      "pid": "ChIJpxN2PZygzz8RTWYmjrz9nXo",
+      "name": "اكس سايت الغانم للأجهزة الالكترونية",
+      "area": "القرين",
+      "specialty": "بطاريات",
+      "reviews": 1205
+    },
+    {
+      "pid": "ChIJE7kjtt-dzz8RWhDcKYFo-qA",
+      "name": "Britco & Bridco Kuwait Communications Equipment Repair Co. W.L.L",
+      "area": "حولي",
+      "specialty": "ونش وسحب",
+      "reviews": 908
+    },
+    {
+      "pid": "ChIJVxOxXZmczz8R5M8REOcTzu4",
+      "name": "وكالة سامسونج - شركة البابطين للالكترونيات",
+      "area": "حولي",
+      "specialty": "كهرباء سيارات",
+      "reviews": 859
+    },
+    {
+      "pid": "ChIJbbZ7_7Obzz8RYAbBxSgMvjc",
+      "name": "اكسايت الغانم - خيطان",
+      "area": "خيطان",
+      "specialty": "كهرباء سيارات",
+      "reviews": 772
+    },
+    {
+      "pid": "ChIJJS_Xje6azz8RJN_rASOHwRM",
+      "name": "مركز النخيل النسيجي",
+      "area": "الري",
+      "specialty": "إكسسوارات",
+      "reviews": 699
+    },
+    {
+      "pid": "ChIJb5EKEByVzj8RrespGKNtvdw",
+      "name": "لولو هايبرماركت",
+      "area": "الخيران",
+      "specialty": "دواسر وفرش",
+      "reviews": 545
+    },
+    {
+      "pid": "ChIJdXpBaIWazz8RLi-pRkDbtEY",
+      "name": "ميداس - الري",
+      "area": "الري",
+      "specialty": "دواسر وفرش",
+      "reviews": 514
+    },
+    {
+      "pid": "ChIJSz6wuF-bzz8RxVM6xrVQiyo",
+      "name": "ونش الفروانية",
+      "area": "الفروانية",
+      "specialty": "ونش وسحب",
+      "reviews": 442
+    },
+    {
+      "pid": "ChIJB_MjZpePzz8Rs4EabFEWUE8",
+      "name": "Alghanim Engineering - Home and Commercial Solutions | Air Conditioning and Elevators",
+      "area": "الشويخ الصناعية 1",
+      "specialty": "تكييف",
+      "reviews": 394
+    },
+    {
+      "pid": "ChIJs8TrclOdzz8RF7gJpbEvsx8",
+      "name": "FIXITQ8",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 376
+    },
+    {
+      "pid": "ChIJ20uMqUuFzz8RlUz124F6PYQ",
+      "name": "Ali Abdulwahab Al Mutawa Commercial Co",
+      "area": "الشويخ الصناعية 2",
+      "specialty": "صيانة عامة",
+      "reviews": 368
+    },
+    {
+      "pid": "ChIJxzXIyYmRzz8R0Ixle2CnwTU",
+      "name": "شركة سيتي جروب - الرئيسي",
+      "area": "الصليبية الصناعية 2",
+      "specialty": "ونش وسحب",
+      "reviews": 368
+    },
+    {
+      "pid": "ChIJozOvneWezz8RvGI1A7fBRyk",
+      "name": "Trolley - ترولي",
+      "area": "الشهداء",
+      "specialty": "بطاريات",
+      "reviews": 343
+    },
+    {
+      "pid": "ChIJYzhzarMJ0D8R0j2nuoSdMKE",
+      "name": "السكراب النعايم",
+      "area": "الكويت",
+      "specialty": "كهرباء سيارات",
+      "reviews": 325
+    },
+    {
+      "pid": "ChIJjWJ8FaUAzz8RnyZNC8jsBPo",
+      "name": "شركه وذر فورد كويت للخدمات البتروليه",
+      "area": "الأحمدي",
+      "specialty": "ونش وسحب",
+      "reviews": 286
+    },
+    {
+      "pid": "ChIJBQavbpN1zz8RsgMLx9arEng",
+      "name": "Q8Vapes",
+      "area": "صباح السالم",
+      "specialty": "بطاريات",
+      "reviews": 267
+    },
+    {
+      "pid": "ChIJP3_jLBsJzz8ROgHY1oPkC9E",
+      "name": "SESC مركز الطب الرياضي",
+      "area": "المهبولة",
+      "specialty": "ونش وسحب",
+      "reviews": 237
+    },
+    {
+      "pid": "ChIJZeb2X9cHzz8RjnCnCTDLPyc",
+      "name": "Xcite",
+      "area": "الفحيحيل",
+      "specialty": "كهرباء سيارات",
+      "reviews": 229
+    },
+    {
+      "pid": "ChIJax4-9kuFzz8RFlp-SuvxZVk",
+      "name": "BOSCH",
+      "area": "الشويخ",
+      "specialty": "صيانة عامة",
+      "reviews": 227
+    },
+    {
+      "pid": "ChIJu4PpQMGazz8Rupo2Aj_AVqM",
+      "name": "زهرة النسيم لأدوات زينة السيارات",
+      "area": "الشويخ الصناعية 2",
+      "specialty": "إكسسوارات",
+      "reviews": 225
+    },
+    {
+      "pid": "ChIJlTPX-vabzz8RlO_8XxrrkzA",
+      "name": "تعليم قيادة السيارات",
+      "area": "خيطان",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 225
+    },
+    {
+      "pid": "ChIJV4R-KpqPzz8R7N1CbGcUM5Q",
+      "name": "TNT",
+      "area": "المنطقة الحرة",
+      "specialty": "صيانة عامة",
+      "reviews": 200
+    },
+    {
+      "pid": "ChIJCbYe8q2bzz8RKfZQHOKbIJg",
+      "name": "Diamond protection",
+      "area": "الري (قريب من الشويخ)",
+      "specialty": "غسيل وتلميع",
+      "reviews": 193
+    },
+    {
+      "pid": "ChIJ7051L-udzz8RzXXta5gxg0k",
+      "name": "A2Z megastore Gaming Computer store",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 174
+    },
+    {
+      "pid": "ChIJyR_0FqKPzz8RvzR6HXvfNCA",
+      "name": "HOT Engineering & Construction Co.",
+      "area": "المنطقة الحرة",
+      "specialty": "ميكانيكا",
+      "reviews": 164
+    },
+    {
+      "pid": "ChIJzapykEqbzz8RZsrwoaORhjY",
+      "name": "Kuwait Computer Repair on Call",
+      "area": "حولي",
+      "specialty": "ونش وسحب",
+      "reviews": 152
+    },
+    {
+      "pid": "ChIJJfX42RQJzz8Rn9NQU5mW87c",
+      "name": "NEXT STORE",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 150
+    },
+    {
+      "pid": "ChIJ1yI0S10Gzz8RAD9R70djbZo",
+      "name": "Al Masiya Computers,fahaheel ( CCTV,Networking,Access Control,Pabx telephone,IP phone,Time attendance)",
+      "area": "الفحيحيل",
+      "specialty": "ونش وسحب",
+      "reviews": 140
+    },
+    {
+      "pid": "ChIJbVWlhEqFzz8R0QKAcIDFATE",
+      "name": "alpha store - Shuwaikh (Apple Authorised Service Provider) | آلفا ستور - شويخ",
+      "area": "الشويخ الصناعية 2",
+      "specialty": "صيانة عامة",
+      "reviews": 136
+    },
+    {
+      "pid": "ChIJy76GSgObzz8R9Ezucv-bZqc",
+      "name": "شركة نور الكويت لاجهزة الكمبيوتر",
+      "area": "Kuwait",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 113
+    },
+    {
+      "pid": "ChIJHaaUm6Odzz8Ru4QtqTmPKv4",
+      "name": "Fawzia Sultan Healthcare Network (FSHN) Rehabilitation - Sabah Al Salem",
+      "area": "صباح السالم",
+      "specialty": "ونش وسحب",
+      "reviews": 101
+    },
+    {
+      "pid": "ChIJM5MIGJCazz8RDmsRAoJNX2o",
+      "name": "شركة ناصر محمد الساير - كَانون Canon",
+      "area": "الري (قريب من الشويخ)",
+      "specialty": "ميكانيكا",
+      "reviews": 97
+    },
+    {
+      "pid": "ChIJaWfvAoqZzz8RZywFCxFvVHU",
+      "name": "PROPRINT SOLUTION",
+      "area": "الضجيج",
+      "specialty": "ونش وسحب",
+      "reviews": 96
+    },
+    {
+      "pid": "ChIJl_5Hkoqczz8RLUMVNLVW_Ic",
+      "name": "شركة العريمان لاجهزة كشف الذهب والمعادن والمياه الجوفية",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 94
+    },
+    {
+      "pid": "ChIJ57upPpeazz8R4elEKKeCvOs",
+      "name": "Alhasawi Headquarter",
+      "area": "الري",
+      "specialty": "تكييف",
+      "reviews": 92
+    },
+    {
+      "pid": "ChIJeQgII7Cbzz8R9SfKMTpWZYM",
+      "name": "تصليح تكييفات تصليح ثلاجات صيانة غسالات صيانة نشافات AL-RABIA EST",
+      "area": "الفروانية",
+      "specialty": "تكييف",
+      "reviews": 92
+    },
+    {
+      "pid": "ChIJkdq6W5eczz8RJCx6RDqyIGw",
+      "name": "Micron Data Recovery Kuwait",
+      "area": "حولي",
+      "specialty": "ونش وسحب",
+      "reviews": 91
+    },
+    {
+      "pid": "ChIJ63BhPhebzz8RyQKXULNm_3o",
+      "name": "الخبيزي لتنجيد السيارات",
+      "area": "الشويخ الصناعية",
+      "specialty": "دواسر وفرش",
+      "reviews": 82
+    },
+    {
+      "pid": "ChIJWd1_JPmVzj8R-aiPlJHPO1s",
+      "name": "ACE Hardware",
+      "area": "khairan",
+      "specialty": "دواسر وفرش",
+      "reviews": 80
+    },
+    {
+      "pid": "ChIJBdpjyuKdzz8Rj0yD2uFjeyk",
+      "name": "ستائر المنار تفصيل كنب وستائر",
+      "area": "حولي",
+      "specialty": "دواسر وفرش",
+      "reviews": 76
+    },
+    {
+      "pid": "ChIJoTgniZmczz8RJFL6F5QehzM",
+      "name": "Kuwait Data Recovery",
+      "area": "Kuwait",
+      "specialty": "ونش وسحب",
+      "reviews": 74
+    },
+    {
+      "pid": "ChIJT-bLUMeazz8R2CUoHoC5kfs",
+      "name": "شركة الخبيزي للدراجات النارية",
+      "area": "شويخ الصناعية 3",
+      "specialty": "إكسسوارات",
+      "reviews": 73
+    },
+    {
+      "pid": "ChIJaSYESyudzz8RKmNLZiXii2g",
+      "name": "سطحة الكويت السالمية الجابرية الرميثية بيان شركة وسام الخليج لإنقاذ السيارات",
+      "area": "حولي",
+      "specialty": "ونش وسحب",
+      "reviews": 73
+    },
+    {
+      "pid": "ChIJpbPaNQCdzz8RGQu74TOzp2U",
+      "name": "كاميرات مراقبه شركه الوفاق العالميه للاجهزه والانظمه الأمنيه",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 64
+    },
+    {
+      "pid": "ChIJVRi6gNabzz8RNP0_NhcAxJA",
+      "name": "كراج الضامن الرئيسي",
+      "area": "الشويخ الصناعية",
+      "specialty": "قير وفتيس",
+      "reviews": 63
+    },
+    {
+      "pid": "ChIJG_fGzTKazz8RmjYY5IfQeus",
+      "name": "اجهزة كشف الذهب والمعادن شركة المجموعة الألمانية GERMAN GROUP COMPANY",
+      "area": "الفروانية",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 58
+    },
+    {
+      "pid": "ChIJq2nbS1yczz8RDClOLalFgTM",
+      "name": "Recovery Spa",
+      "area": "الجابرية",
+      "specialty": "ونش وسحب",
+      "reviews": 57
+    },
+    {
+      "pid": "ChIJcYun5bmbzz8RWmnSgPmrWdk",
+      "name": "اكسايت",
+      "area": "الري (قريب من الشويخ)",
+      "specialty": "كهرباء سيارات",
+      "reviews": 53
+    },
+    {
+      "pid": "ChIJMcOU_U6gzz8RQdzlzgL6voA",
+      "name": "شركة الوان الطيف للطاقه الشمسية مولدات كهربائيه فرع اسواق القرين",
+      "area": "غرب ابو فطيرة الحرفية",
+      "specialty": "بطاريات",
+      "reviews": 52
+    },
+    {
+      "pid": "ChIJVc-OD0uFzz8RfEWB8pu7HpI",
+      "name": "شركة الخنيني للتجارة العامة و المقاولات",
+      "area": "الشويخ الصناعية 1",
+      "specialty": "غسيل وتلميع",
+      "reviews": 52
+    },
+    {
+      "pid": "ChIJI8EM3Cyfzz8RSnx0PwBBSUc",
+      "name": "شركة عربي ذ.م.م. Arabi Company W.L.L Projects & Workshop",
+      "area": "صبحان الصناعية",
+      "specialty": "زيوت وصيانة",
+      "reviews": 51
+    },
+    {
+      "pid": "ChIJc2K8wnCFzz8RHc9MO4VDfFg",
+      "name": "JUNAH SUNGLASSES جونة للنظارات الشمسية",
+      "area": "الشويخ",
+      "specialty": "تظليل وزجاج",
+      "reviews": 49
+    },
+    {
+      "pid": "ChIJT5l_jr2dzz8RM5ilBmBqt0Q",
+      "name": "ستائر وتنجيد البطل",
+      "area": "السالمية",
+      "specialty": "دواسر وفرش",
+      "reviews": 49
+    },
+    {
+      "pid": "ChIJ-StxRuiEzz8RGHmbQuXmWLk",
+      "name": "Liqui Moly - Shuwaikh",
+      "area": "شويخ الصناعية 1",
+      "specialty": "زيوت وصيانة",
+      "reviews": 49
+    },
+    {
+      "pid": "ChIJD5McALedzz8RacSrfL0_CVE",
+      "name": "شركة جامبو العالمية لاجهزة الكمبيوتر فرع حولي",
+      "area": "حولي",
+      "specialty": "كهرباء سيارات",
+      "reviews": 47
+    },
+    {
+      "pid": "ChIJrakRmzafzz8R6dOm5QC9U2g",
+      "name": "الحساوي لصناعة التبريد والتدفئة",
+      "area": "صباح السالم",
+      "specialty": "تكييف",
+      "reviews": 47
+    },
+    {
+      "pid": "ChIJafb-pAibzz8RGdmH2-5kDds",
+      "name": "بطاريات موتركرفت + تركيب سفايف",
+      "area": "الشويخ الصناعية",
+      "specialty": "بطاريات",
+      "reviews": 44
+    },
+    {
+      "pid": "ChIJgR5sqJ-bzz8RsuoYxC9XDHI",
+      "name": "فتح سيارات",
+      "area": "خيطان",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 42
+    },
+    {
+      "pid": "ChIJo6EUUUWgzz8RANCw9QJFo9s",
+      "name": "الكحلاوي للطاقه الشمسيه",
+      "area": "غرب ابو فطيرة الحرفية",
+      "specialty": "بطاريات",
+      "reviews": 41
+    },
+    {
+      "pid": "ChIJzZa-MrmRzz8RJeMCmPeVU1Q",
+      "name": "IT PARASOL KWT - Computer Repair & Sales plus Accessories Store",
+      "area": "الرقعي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 38
+    },
+    {
+      "pid": "ChIJaePyUDqbzz8RyMmu4Uog9tA",
+      "name": "شركة الأندلس التجارية قطع غيار",
+      "area": "الري",
+      "specialty": "قطع غيار",
+      "reviews": 36
+    },
+    {
+      "pid": "ChIJD0tpFvmdzz8RI5iQz_IMiPc",
+      "name": "توب سكورتي كاميرات مراقبة وانتركم",
+      "area": "حولي",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 36
+    },
+    {
+      "pid": "ChIJgTUYzaWDzz8Ro1WA8Ml5ghs",
+      "name": "Cure Recovery",
+      "area": "بنيد القار",
+      "specialty": "ونش وسحب",
+      "reviews": 34
+    },
+    {
+      "pid": "ChIJlYxFvDOfzz8RMc2r5iupbM4",
+      "name": "ورشة إصلاح وصيانة صبحان - الداخلية",
+      "area": "صباح السالم",
+      "specialty": "زيوت وصيانة",
+      "reviews": 33
+    },
+    {
+      "pid": "ChIJsX13jioKzz8R5hMAitkjXsk",
+      "name": "مركز قصار لوجي الفنطاس",
+      "area": "الفنطاس",
+      "specialty": "ونش وسحب",
+      "reviews": 32
+    },
+    {
+      "pid": "ChIJQXnyGamFzz8RqMNeUKVWfB8",
+      "name": "Xcite",
+      "area": "الشويخ الصناعية 3",
+      "specialty": "كهرباء سيارات",
+      "reviews": 29
+    },
+    {
+      "pid": "ChIJkyIfrKZXzj8R282rU7S5Nzo",
+      "name": "صباح الاحمد السكنية",
+      "area": "صباح الأحمد",
+      "specialty": "ونش وسحب",
+      "reviews": 28
+    },
+    {
+      "pid": "ChIJcTH-rAcJzz8R0lLryyJh-7M",
+      "name": "Cloud Vape Store كلود فيب المهبولة",
+      "area": "المهبولة",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 27
+    },
+    {
+      "pid": "ChIJJ_kEHbQJ0D8RHSgLwR2Kt_4",
+      "name": "Pakistan krag",
+      "area": "الكويت",
+      "specialty": "كهرباء سيارات",
+      "reviews": 27
+    },
+    {
+      "pid": "ChIJZy3bk0qFzz8R4fYjXMayaoc",
+      "name": "Mobile 2000",
+      "area": "الشويخ",
+      "specialty": "كراج متنقل",
+      "reviews": 26
+    },
+    {
+      "pid": "ChIJCS19hU0Hzz8RecuoPcrYY1g",
+      "name": "ترولي",
+      "area": "شرق الأحمدي",
+      "specialty": "بطاريات",
+      "reviews": 26
+    },
+    {
+      "pid": "ChIJo4OfeNubzz8RzrwJiMMgfkY",
+      "name": "Arduino - Electronics in Touch - Eitkw",
+      "area": "شويخ الصناعية 1",
+      "specialty": "كهرباء سيارات",
+      "reviews": 26
+    },
+    {
+      "pid": "ChIJIzE5al-bzz8Rwo4xlHqK4Mk",
+      "name": "Legend PPF & Concept Chemicals - Kuwait",
+      "area": "الشويخ الصناعية 1",
+      "specialty": "غسيل وتلميع",
+      "reviews": 25
+    },
+    {
+      "pid": "ChIJLWnYY5aczz8R-IG3BVesJAk",
+      "name": "Gold Star - Barcode Labels",
+      "area": "mezzanine",
+      "specialty": "كهرباء سيارات",
+      "reviews": 25
+    },
+    {
+      "pid": "ChIJn5uEgYAJzz8RKOTpet8QOpA",
+      "name": "كمبيوتر الفنطاس Fintas Computer",
+      "area": "الفنطاس",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 22
+    },
+    {
+      "pid": "ChIJwTswZkGTzz8RnbOtp2k2JWo",
+      "name": "فريق الإنقاذ الكويتي صقور صباح",
+      "area": "الكويت",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 16
+    },
+    {
+      "pid": "ChIJNYg3waGbzz8RhDz42Mc3ZpI",
+      "name": "AlMailem Garage Equipment",
+      "area": "الشويخ الصناعية",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 16
+    },
+    {
+      "pid": "ChIJH8_89iKFzz8RcHf12NgNxY0",
+      "name": "beach Public Parking",
+      "area": "الشويخ",
+      "specialty": "صيانة عامة",
+      "reviews": 16
+    },
+    {
+      "pid": "ChIJ5fh1ZYybzz8RGkK3wkmiHCQ",
+      "name": "AC maintenance Service (Indian)",
+      "area": "الفروانية",
+      "specialty": "تكييف",
+      "reviews": 16
+    },
+    {
+      "pid": "ChIJ-9dPWrSFzz8RKHth3gtxa_Y",
+      "name": "Movewell Recovery",
+      "area": "دسمان",
+      "specialty": "ونش وسحب",
+      "reviews": 15
+    },
+    {
+      "pid": "ChIJA7vCIbudzz8REqVLNQiJVG0",
+      "name": "مركز حولي لتصليح الإطارات وكهرباء السيارات",
+      "area": "حولي",
+      "specialty": "تواير وبنشر",
+      "reviews": 15
+    },
+    {
+      "pid": "ChIJp8e8WnRWC6wRA8s42NGGc7I",
+      "name": "Gulf Secure Track company",
+      "area": "الضجيج",
+      "specialty": "ونش وسحب",
+      "reviews": 14
+    },
+    {
+      "pid": "ChIJXYB5_wcBzz8ROA3zNCZGk-k",
+      "name": "Kuwait Lube Oil Company",
+      "area": "الشعيبة الصناعية الغربية",
+      "specialty": "زيوت وصيانة",
+      "reviews": 14
+    },
+    {
+      "pid": "ChIJ-4uCkKGbzz8RijfdsPhimCw",
+      "name": "ونش سريع",
+      "area": "2،",
+      "specialty": "ونش وسحب",
+      "reviews": 13
+    },
+    {
+      "pid": "ChIJcVz3BNbhxD8RCsaOlTk0qHw",
+      "name": "مزرعة النويران",
+      "area": "العبدلي",
+      "specialty": "فرامل",
+      "reviews": 13
+    },
+    {
+      "pid": "ChIJYd6HB3qFzz8R5fhY9OrrX2w",
+      "name": "شركة فورسيل العالمية",
+      "area": "قبلة",
+      "specialty": "دواسر وفرش",
+      "reviews": 13
+    },
+    {
+      "pid": "ChIJQ5UO3Yp24iIRCBOgga75Q-c",
+      "name": "شركة جيسكو | لخدمات صيانة الاجهزة الكهربائية والبوردات | فني تكييف - مركزي ووحدات | Jescookw Co",
+      "area": "حولى",
+      "specialty": "كهرباء سيارات",
+      "reviews": 11
+    },
+    {
+      "pid": "ChIJG2quk3Ohzz8RZ9nJJ5KJYEE",
+      "name": "شركة فاست سيرفس لإصلاح وصيانة الأجهزه الكهربائية والالكترونية",
+      "area": "غرب ابو فطيرة الحرفية",
+      "specialty": "كهرباء سيارات",
+      "reviews": 11
+    },
+    {
+      "pid": "ChIJQazxPbCdzz8R1uHAi_6EjNU",
+      "name": "Fixstorekw",
+      "area": "السالمية",
+      "specialty": "قير وفتيس",
+      "reviews": 10
+    },
+    {
+      "pid": "ChIJt1QDLbIHzz8RPZMEK4Ahu2g",
+      "name": "هدية للأدوات الزينة للسيارات",
+      "area": "الفحيحيل",
+      "specialty": "كهرباء سيارات",
+      "reviews": 10
+    },
+    {
+      "pid": "ChIJj8mMQgCbzz8R9OuLH0LSQcM",
+      "name": "Star Computer Farwaniya",
+      "area": "الفروانية",
+      "specialty": "ونش وسحب",
+      "reviews": 9
+    },
+    {
+      "pid": "ChIJ5xfeP2LPzz8RwoTSzbMxG_U",
+      "name": "West Kuwait Mega Complex (KOC)",
+      "area": "الكويت",
+      "specialty": "زيوت وصيانة",
+      "reviews": 9
+    },
+    {
+      "pid": "ChIJo2m7f-aFzz8Rt787lZ4qc3Q",
+      "name": "Bosch Power Tools Kuwait",
+      "area": "الشويخ",
+      "specialty": "صيانة عامة",
+      "reviews": 9
+    },
+    {
+      "pid": "ChIJbZGG-vDM2j8ROTsEapgraTo",
+      "name": "RFI",
+      "area": "الكويت",
+      "specialty": "قير وفتيس",
+      "reviews": 8
+    },
+    {
+      "pid": "ChIJSyBxhjWVzj8RPJhPAlU-2Xs",
+      "name": "مخفر شرطة الزور",
+      "area": "الزور",
+      "specialty": "ونش وسحب",
+      "reviews": 8
+    },
+    {
+      "pid": "ChIJGbn6dqGczz8RJbkcd8NVynI",
+      "name": "تنجيد الاثاث",
+      "area": "القادسية",
+      "specialty": "دواسر وفرش",
+      "reviews": 7
+    },
+    {
+      "pid": "ChIJKcHsg5iPzz8RW3M6pNfOlbA",
+      "name": "AIEE - MOTOROLA SOLUTIONS JOINT VENTURE",
+      "area": "المنطقة الحرة",
+      "specialty": "ميكانيكا",
+      "reviews": 7
+    },
+    {
+      "pid": "ChIJt5TcZzOFzz8Ri31-681RlZw",
+      "name": "Zajil Datacentre",
+      "area": "كيفان",
+      "specialty": "ونش وسحب",
+      "reviews": 7
+    },
+    {
+      "pid": "ChIJTcqsbQn3zz8RoqVMX60f1FE",
+      "name": "وردة العيون لاصلاح السيارات حداد وصبغ فرن",
+      "area": "الجهراء المنطقة الصناعية قطعه 1",
+      "specialty": "بودي وصبغ",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJfx95MCP3zz8RT8vKJnpKopU",
+      "name": "تنجيد كنب تنجيد قنفات",
+      "area": "الضجيج",
+      "specialty": "دواسر وفرش",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJqf2YOhKPzz8RLF7IHmVpy-A",
+      "name": "Rc car zone",
+      "area": "المنطقة الحرة",
+      "specialty": "صيانة عامة",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJ9c32Inadzz8RcRTMgSefmgQ",
+      "name": "تصليح ايفون",
+      "area": "حولي",
+      "specialty": "قير وفتيس",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJJ5W5Vq6dzz8RqeeoV8OxnQE",
+      "name": "@Winch_bentley ونش مركز بنتلي للسيارات",
+      "area": "مدينة الكويت",
+      "specialty": "ونش وسحب",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJmagy2ASSzz8RvALdn9JM1gA",
+      "name": "Al Hasawi Industrial Group",
+      "area": "الصليبية الصناعية 1",
+      "specialty": "تكييف",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJYeUBBQAHzz8Rnnseqkl54fs",
+      "name": "Next Oil Solutions | Oil Field Equipment Suppliers in Kuwait",
+      "area": "الفحيحيل",
+      "specialty": "زيوت وصيانة",
+      "reviews": 6
+    },
+    {
+      "pid": "ChIJHy0lmEqFzz8Ru_bisJ_4ynE",
+      "name": "The Bedroom By Intercoil",
+      "area": "الشويخ الصناعية 2",
+      "specialty": "زيوت وصيانة",
+      "reviews": 5
+    },
+    {
+      "pid": "ChIJF-hILwoJzz8Rj2SDKh9rCKk",
+      "name": "اسرع ونش سيارات",
+      "area": "المهبولة",
+      "specialty": "ونش وسحب",
+      "reviews": 5
+    },
+    {
+      "pid": "ChIJpc7nRQAHzz8Rp7I64LZRDcU",
+      "name": "Warba Electrical &Electronics cont.co.",
+      "area": "شرق الأحمدي",
+      "specialty": "بطاريات",
+      "reviews": 4
+    },
+    {
+      "pid": "ChIJW_LGxh4Hzz8Rq1mUmbTJzbs",
+      "name": "Indian car seat work",
+      "area": "الفحيحيل",
+      "specialty": "دواسر وفرش",
+      "reviews": 4
+    },
+    {
+      "pid": "ChIJD9Mgb_aVzj8R1xH59tu8S-o",
+      "name": "Fantasy World Toys Al Khiran",
+      "area": "الخيران",
+      "specialty": "دواسر وفرش",
+      "reviews": 4
+    },
+    {
+      "pid": "ChIJAcQX9F-hzz8RNrkayPleFys",
+      "name": "شمس الصباح للطاقه الشمسيه",
+      "area": "غرب ابو فطيرة الحرفية",
+      "specialty": "بطاريات",
+      "reviews": 4
+    },
+    {
+      "pid": "ChIJ_aEfVSSbzz8RV6NTjRPXFsQ",
+      "name": "تلميع و تصليح ليتات السيارات",
+      "area": "شويخ الصناعية 1",
+      "specialty": "غسيل وتلميع",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJ4UwV_Uyhzz8RayHehylu1co",
+      "name": "Crony",
+      "area": "شويخ الصناعية 3",
+      "specialty": "كهرباء سيارات",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJCWsTotebzz8Re5JMWPVN_lY",
+      "name": "تلبيس كشنات",
+      "area": "الشويخ الصناعية",
+      "specialty": "دواسر وفرش",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJyYLHbgCFzz8RVpvIVI_8eww",
+      "name": "Kuwait shuwaikh industrial block 1 street 9",
+      "area": "الشويخ الصناعية 1",
+      "specialty": "صيانة عامة",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJz3gqimSQzz8RHDQw9MqcmoY",
+      "name": "مكتب تيتانيوم بيع السيارات",
+      "area": "العارضية الحرفية",
+      "specialty": "صيانة عامة",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJk6KBYACZzz8RBZGSZmpY8Lo",
+      "name": "Battery's & Axle shop",
+      "area": "جليب الشيوخ",
+      "specialty": "بطاريات",
+      "reviews": 3
+    },
+    {
+      "pid": "ChIJ3WHy1E-bzz8R3H6HqGEZcfE",
+      "name": "مركز اوتار الخليج لتلميع السيارات",
+      "area": "الري (قريب من الشويخ)",
+      "specialty": "غسيل وتلميع",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJA2f_EACFzz8RJGGEHehFJm4",
+      "name": "Modayan Elevators Store, Shuwaikh",
+      "area": "الشويخ الصناعية 3",
+      "specialty": "صيانة عامة",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJeV9bqxCbzz8RZru6SRA63F8",
+      "name": "مصنع ستيل يونايتد لاعمال خراطة المعادن",
+      "area": "الشويخ الصناعية 3",
+      "specialty": "بودي وصبغ",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJUwvC-JCbzz8Rnus5bMPnizo",
+      "name": "ورشه تصليح الاندلس",
+      "area": "الري",
+      "specialty": "صيانة عامة",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJIYk2_VSdzz8R4JufZDNewRY",
+      "name": "بدالة الونشات جميع منطقة الكويت",
+      "area": "مدينة الكويت",
+      "specialty": "ونش وسحب",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJVTJHuAJhzj8RmLh_FW0Oesc",
+      "name": "دوار دسمان",
+      "area": "الوفرة",
+      "specialty": "ونش وسحب",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJ52uuxCAHzz8Ru3c-LY0b9-U",
+      "name": "هلال الربيع لزينة السيارات",
+      "area": "الفحيحيل",
+      "specialty": "كهرباء سيارات",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJK1CToOEHzz8RbBIGFAMDOWY",
+      "name": "Kuwait National Lube Oil Mfg.Co.(KNLOC)",
+      "area": "الشعيبة قطعه 1",
+      "specialty": "زيوت وصيانة",
+      "reviews": 2
+    },
+    {
+      "pid": "ChIJ3QoRNmmbzz8Rz9INm256q-0",
+      "name": "كرين سحب تريلات ونسافات وتناكر",
+      "area": "جليب الشيوخ",
+      "specialty": "ونش وسحب",
+      "reviews": 1
+    },
+    {
+      "pid": "ChIJnRmaZfGbzz8RlAtOFdNAv80",
+      "name": "الجزيرة لتنجيد السيارات",
+      "area": "شويخ الصناعية 3",
+      "specialty": "دواسر وفرش",
+      "reviews": 1
+    },
+    {
+      "pid": "ChIJJeZkQ0mFzz8RrNB835YfV4w",
+      "name": "Isotech Insulation Technology",
+      "area": "الشويخ الصناعية 3",
+      "specialty": "صيانة عامة",
+      "reviews": 1
+    },
+    {
+      "pid": "ChIJH3eGyBULzz8R6-GH0CQKFxs",
+      "name": "Marafie IT Services & Consultations Co (MRAFIEKW)",
+      "area": "فنيطيس",
+      "specialty": "ونش وسحب",
+      "reviews": 1
+    },
+    {
+      "pid": "ChIJ2ZzT14iFzz8RrASsAPL0zkE",
+      "name": "FUCHS Lubricants Germany - Authorized Partner in Kuwait",
+      "area": "شويخ الصناعية 1",
+      "specialty": "زيوت وصيانة",
+      "reviews": 1
+    },
+    {
+      "pid": "ChIJSYKaIgCFzz8R-MHMoAvas94",
+      "name": "صناعية خيران",
+      "area": "الشويخ الصناعية",
+      "specialty": "صيانة عامة",
+      "reviews": 0
+    },
+    {
+      "pid": "ChIJFe6nVVabzz8RDjUU1WBTWxg",
+      "name": "ونش الري السريع",
+      "area": "الري",
+      "specialty": "ونش وسحب",
+      "reviews": 0
+    },
+    {
+      "pid": "ChIJa6_LXgCFzz8RmTICdQsO73Q",
+      "name": "Naseer center",
+      "area": "الشويخ الصناعية 1",
+      "specialty": "صيانة عامة",
+      "reviews": 0
+    },
+    {
+      "pid": "ChIJccFHZwCFzz8R0a88fHT3GdM",
+      "name": "NASR AL-OMAR & SONS CYCLE AND TOYS STORE",
+      "area": "الشويخ الصناعية",
+      "specialty": "صيانة عامة",
+      "reviews": 0
+    },
+    {
+      "pid": "ChIJOS4ePwCFzz8R0h8lDEON8jM",
+      "name": "Shuwaik",
+      "area": "الشويخ",
+      "specialty": "صيانة عامة",
+      "reviews": 0
+    },
+    {
+      "pid": "ChIJT5WBOqWFzz8RSxgnUAcfPpk",
+      "name": "Metaronik",
+      "area": "المرقاب",
+      "specialty": "كمبيوتر وتشخيص",
+      "reviews": 0
+    }
+  ],
+  "nameDups": [
+    [
+      {
+        "pid": "ChIJw3doUmybzz8R_8XXa5CGpYg",
+        "name": "FK Auto Parts - قطع غيار السيارات",
+        "area": "الشويخ الصناعية",
+        "reviews": 342,
+        "phone": "90971923"
+      },
+      {
+        "pid": "ChIJJTWN7pqFzz8R0yuYFLT6bXQ",
+        "name": "FK Auto Parts - قطع غيار السيارات",
+        "area": "المرقاب",
+        "reviews": 467,
+        "phone": "+965 9774 3054"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJcYun5bmbzz8RWmnSgPmrWdk",
+        "name": "اكسايت",
+        "area": "الري (قريب من الشويخ)",
+        "reviews": 53,
+        "phone": "9651803535"
+      },
+      {
+        "pid": "ChIJmavAkpaazz8RHXabg-ALoDQ",
+        "name": "اكسايت",
+        "area": "الري",
+        "reviews": 1881,
+        "phone": "+965 1803 535"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJ1ZbSTXabzz8RXwfNLkNXtFk",
+        "name": "اطارات الميلم",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 1,
+        "phone": ""
+      },
+      {
+        "pid": "ChIJe4B9fgebzz8Rkc4ohvcEd_w",
+        "name": "اطارات الميلم",
+        "area": "مدينة الكويت",
+        "reviews": 217,
+        "phone": "9651884737"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJJVd_YAB3zz8RH6EMpE8g614",
+        "name": "Farwaniya",
+        "area": "السالمية",
+        "reviews": 0,
+        "phone": ""
+      },
+      {
+        "pid": "ChIJ6X2PPwCbzz8R7PRW3LDHLTo",
+        "name": "Farwaniya",
+        "area": "العمرية",
+        "reviews": 0,
+        "phone": ""
+      }
+    ],
+    [
+      {
+        "pid": "ChIJgR5sqJ-bzz8RsuoYxC9XDHI",
+        "name": "فتح سيارات",
+        "area": "خيطان",
+        "reviews": 42,
+        "phone": "+965 9008 8244"
+      },
+      {
+        "pid": "ChIJv6xuTwCbzz8Rf6Yi3sSWKGo",
+        "name": "فتح سيارات",
+        "area": "غرب ابو فطيرة الحرفية",
+        "reviews": 7,
+        "phone": "+965 9913 0887"
+      },
+      {
+        "pid": "ChIJiSlp70Cbzz8RhCW7lEprg4w",
+        "name": "فتح سيارات",
+        "area": "الري",
+        "reviews": 1,
+        "phone": ""
+      }
+    ],
+    [
+      {
+        "pid": "ChIJga1zcHmZzz8RZq42keAbXVw",
+        "name": "لولو هايبرماركت",
+        "area": "الضجيج",
+        "reviews": 8742,
+        "phone": "+965 2291 0456"
+      },
+      {
+        "pid": "ChIJb5EKEByVzj8RrespGKNtvdw",
+        "name": "لولو هايبرماركت",
+        "area": "الخيران",
+        "reviews": 545,
+        "phone": "+965 2220 2560"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJGTkwU14Hzz8R3mMPHUuu7_8",
+        "name": "من الدعامية الى الدعامية",
+        "area": "الفحيحيل",
+        "reviews": 140,
+        "phone": "+965 2496 9696"
+      },
+      {
+        "pid": "ChIJy3MM98uazz8RBin0cgwKGaI",
+        "name": "من الدعامية الى الدعامية",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 774,
+        "phone": "24969696"
+      },
+      {
+        "pid": "ChIJS7UtLFT2zz8RTzgMnNn7N-M",
+        "name": "من الدعامية الي الدعامية",
+        "area": "الجهراء",
+        "reviews": 42,
+        "phone": "+965 2496 9696"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJ1ytEPcaazz8RUz9TqJ4YGJ8",
+        "name": "Mostafa Abul Hassan Tires",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 1531,
+        "phone": "60002755"
+      },
+      {
+        "pid": "ChIJVSCLX1IGzz8RlGtJprPAeuQ",
+        "name": "Mostafa Abul Hassan Tires",
+        "area": "الفحيحيل",
+        "reviews": 2021,
+        "phone": "+965 9409 7192"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJa6OlMdKhzz8RhQUbMnPC95w",
+        "name": "Workshop Car Repair EE",
+        "area": "غرب ابو فطيرة الحرفية",
+        "reviews": 0,
+        "phone": ""
+      },
+      {
+        "pid": "ChIJL7_kN3Gbzz8RFNaJiWL-c04",
+        "name": "Workshop Car Repair EE",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 0,
+        "phone": ""
+      }
+    ],
+    [
+      {
+        "pid": "ChIJTy0GoQ-dzz8RYWkCL_gZGI0",
+        "name": "ونش الكويت خدمة 24 ساعة",
+        "area": "حولي",
+        "reviews": 144,
+        "phone": "+965 9661 2929"
+      },
+      {
+        "pid": "ChIJxa9CmqOpzz8REH1m2YxfFIk",
+        "name": "ونش الكويت خدمة 24 ساعة",
+        "area": "جنوب الأحمدي",
+        "reviews": 0,
+        "phone": "+965 500 21626"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJ2WxUS5Sazz8RTHjRoWcuSE0",
+        "name": "مركز بهبهاني للإطارات",
+        "area": "مدينة الكويت",
+        "reviews": 129,
+        "phone": "9651847300"
+      },
+      {
+        "pid": "ChIJ9Rf0mZCazz8RhfV7Qz1-cH0",
+        "name": "مركز بهبهاني للإطارات",
+        "area": "الشويخ الصناعية",
+        "reviews": 108,
+        "phone": "9651847300"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJU0wp9yqPzz8REH1rlNB_0vU",
+        "name": "كراج انوار كاظمه",
+        "area": "الشويخ",
+        "reviews": 0,
+        "phone": "66188445"
+      },
+      {
+        "pid": "ChIJ6akVaEybzz8Ry419zRczgcQ",
+        "name": "كراج أنوار كاظمة",
+        "area": "الري",
+        "reviews": 3,
+        "phone": ""
+      }
+    ],
+    [
+      {
+        "pid": "ChIJ__9P7h6ezz8R9fyYojDSmqI",
+        "name": "Car Mechanic",
+        "area": "سلوى",
+        "reviews": 2,
+        "phone": ""
+      },
+      {
+        "pid": "ChIJR2rjAQCbzz8RJ8tjpepWn9Q",
+        "name": "Car mechanic 🏎️",
+        "area": "12219835خيطان",
+        "reviews": 0,
+        "phone": ""
+      }
+    ],
+    [
+      {
+        "pid": "ChIJCYVn1VMGzz8RO8Yv-QTWRVw",
+        "name": "يوريكا",
+        "area": "الفحيحيل",
+        "reviews": 2310,
+        "phone": "+965 2576 1100"
+      },
+      {
+        "pid": "ChIJDbjCyNKbzz8RnEVT_uQosOI",
+        "name": "يوريكا",
+        "area": "الفروانية",
+        "reviews": 3284,
+        "phone": "+965 2576 1100"
+      }
+    ],
+    [
+      {
+        "pid": "ChIJv8NEM8Gazz8RyxP0WDgFq4w",
+        "name": "Kuwait car",
+        "area": "مدينة الكويت",
+        "reviews": 16,
+        "phone": "+965 9776 7186"
+      },
+      {
+        "pid": "ChIJeTCDpzWRzz8Rqh7ZI5pCPo0",
+        "name": "Kuwait car",
+        "area": "العارضية الحرفية",
+        "reviews": 8,
+        "phone": "+965 411 08109"
+      }
+    ]
+  ],
+  "coordDups": [
+    {
+      "dist": 19,
+      "sim": 100,
+      "a": {
+        "pid": "ChIJm70Du8Oazz8RFdJJDLh5--U",
+        "name": "Cadillac Alghanim Service Center - Shuwaikh",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 200
+      },
+      "b": {
+        "pid": "ChIJ47nNbwCbzz8RlUGFYXgs8bI",
+        "name": "Cadillac",
+        "area": "الشويخ",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 4,
+      "sim": 80,
+      "a": {
+        "pid": "ChIJfUDII8uazz8RH5EfrPm6K4Y",
+        "name": "Ford Alghanim Service & Spare Parts",
+        "area": "الشويخ الصناعية",
+        "reviews": 405
+      },
+      "b": {
+        "pid": "ChIJU8eP-8qazz8RB0Zn86L5zOw",
+        "name": "Honda Alghanim - Shuwaikh Service Center, Bodyshop and Spare Parts Center",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 89
+      }
+    },
+    {
+      "dist": 24,
+      "sim": 80,
+      "a": {
+        "pid": "ChIJ--EHVACbzz8Rpzw2nMAqf9E",
+        "name": "كراج الكنج روبك اخصائي تكييف A/C",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 5
+      },
+      "b": {
+        "pid": "ChIJaW5nIdWbzz8RV5egZSz6Wj4",
+        "name": "كراج روبك اخصائي تكييف وكهرباء",
+        "area": "الشويخ الصناعية",
+        "reviews": 7
+      }
+    },
+    {
+      "dist": 28,
+      "sim": 80,
+      "a": {
+        "pid": "ChIJ21uq3Omazz8RRPpiEKFrW6s",
+        "name": "Prince Auto Spare Parts co. BR.Main - قطع نيسان",
+        "area": "الشويخ الصناعية",
+        "reviews": 68
+      },
+      "b": {
+        "pid": "ChIJx3fqxJWPzz8RzerEW4GOzA4",
+        "name": "Alfa Auto Parts Co- قطع نيسان",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 27
+      }
+    },
+    {
+      "dist": 15,
+      "sim": 75,
+      "a": {
+        "pid": "ChIJ9U3gCsuazz8RAsKyGnt0jSg",
+        "name": "Ford Spare Parts Center",
+        "area": "الشويخ",
+        "reviews": 2575
+      },
+      "b": {
+        "pid": "ChIJU8eP-8qazz8RB0Zn86L5zOw",
+        "name": "Honda Alghanim - Shuwaikh Service Center, Bodyshop and Spare Parts Center",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 89
+      }
+    },
+    {
+      "dist": 16,
+      "sim": 75,
+      "a": {
+        "pid": "ChIJ7-2DDybxzz8RyWUf_z36STk",
+        "name": "مركز صيانة كيا (الجهراء)",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 158
+      },
+      "b": {
+        "pid": "ChIJZ360GgDxzz8Rpnx9WbvFeB8",
+        "name": "مركز صيانة تويوتا الساير (فرع الجهراء الثاني)",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 48
+      }
+    },
+    {
+      "dist": 19,
+      "sim": 75,
+      "a": {
+        "pid": "ChIJ9U3gCsuazz8RAsKyGnt0jSg",
+        "name": "Ford Spare Parts Center",
+        "area": "الشويخ",
+        "reviews": 2575
+      },
+      "b": {
+        "pid": "ChIJfUDII8uazz8RH5EfrPm6K4Y",
+        "name": "Ford Alghanim Service & Spare Parts",
+        "area": "الشويخ الصناعية",
+        "reviews": 405
+      }
+    },
+    {
+      "dist": 21,
+      "sim": 75,
+      "a": {
+        "pid": "ChIJm70Du8Oazz8RFdJJDLh5--U",
+        "name": "Cadillac Alghanim Service Center - Shuwaikh",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 200
+      },
+      "b": {
+        "pid": "ChIJBxGqGQCbzz8R0Xa0-a-IbDo",
+        "name": "Cadillac Alghanim Shuwaikh Showroom",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 10
+      }
+    },
+    {
+      "dist": 25,
+      "sim": 75,
+      "a": {
+        "pid": "ChIJGVMUdPahzz8RRbNRASdcrTI",
+        "name": "كراج القرين الذهبي لتصليح السيارات",
+        "area": "غرب ابو فطيرة الحرفية",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJp-6BBwChzz8R3rH9F_4qXxc",
+        "name": "كراج هارفارد لتصليح السيارات",
+        "area": "Qurain",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 0,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJo3zhx2OPzz8RgIiPekP8C7k",
+        "name": "Obaids Auto Parts",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJQwXqagCPzz8RWoiYV49dkXc",
+        "name": "TURBO INTERNATIONAL Auto Spare Parts Co.",
+        "area": "المنطقة الحرة",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 0,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJo3zhx2OPzz8RgIiPekP8C7k",
+        "name": "Obaids Auto Parts",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJYxXiHwCPzz8R3NkZ2ffQiT0",
+        "name": "Imdaad auto parts",
+        "area": "المنطقة الحرة",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 0,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJQwXqagCPzz8RWoiYV49dkXc",
+        "name": "TURBO INTERNATIONAL Auto Spare Parts Co.",
+        "area": "المنطقة الحرة",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJYxXiHwCPzz8R3NkZ2ffQiT0",
+        "name": "Imdaad auto parts",
+        "area": "المنطقة الحرة",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 4,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJlwglydaYzz8RFY8NehLI2-E",
+        "name": "الفحص الفني مرور مبارك الكبير",
+        "area": "صبحان الصناعية",
+        "reviews": 156
+      },
+      "b": {
+        "pid": "ChIJ4dzfFwCZzz8ROmWZH-rteIs",
+        "name": "الفحص الفني صبحان",
+        "area": "صبحان الصناعية",
+        "reviews": 129
+      }
+    },
+    {
+      "dist": 6,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJG7njeaSazz8RQ7ZFQc0ab3A",
+        "name": "Soussa Auto Spare Parts Co. - Branch",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 25
+      },
+      "b": {
+        "pid": "ChIJGzvA0tebzz8RVeqFsLMtvak",
+        "name": "ALAMDAR AUTO AC PARTS CO",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 11,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJrSC0bgAHzz8RGNyJduKcHmM",
+        "name": "Al Mulla Motors Mitsubishi, Car Service Center",
+        "area": "شرق الأحمدي",
+        "reviews": 27
+      },
+      "b": {
+        "pid": "ChIJgYdjt6MHzz8RE8nQo5SAeLM",
+        "name": "Mitsubishi Al Mulla Service Center & Spare Parts Ahmadi Center - مركز خدمة ميتسوبيشي الملا وقطع الغيار في الاحمدي",
+        "area": "شرق الأحمدي",
+        "reviews": 538
+      }
+    },
+    {
+      "dist": 12,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJ4ZtDoAqbzz8RpUaEIIyWnKc",
+        "name": "الشمالي اخصائي تكييف",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 8
+      },
+      "b": {
+        "pid": "ChIJaW5nIdWbzz8RV5egZSz6Wj4",
+        "name": "كراج روبك اخصائي تكييف وكهرباء",
+        "area": "الشويخ الصناعية",
+        "reviews": 7
+      }
+    },
+    {
+      "dist": 17,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJz0_fP0wHzz8Rt9jLRQ2ZuaU",
+        "name": "Motorcraft Alghanim Fahaheel Parts Center 2",
+        "area": "الفحيحيل",
+        "reviews": 13
+      },
+      "b": {
+        "pid": "ChIJ-6XSyEcHzz8ROeBjcnC4oCQ",
+        "name": "Motorcraft Fahaheel Centre",
+        "area": "الفحيحيل",
+        "reviews": 29
+      }
+    },
+    {
+      "dist": 18,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJLRETnJSazz8RqmBFurYfptU",
+        "name": "BAIC Motor Showroom",
+        "area": "الشويخ",
+        "reviews": 45
+      },
+      "b": {
+        "pid": "ChIJBzwWuUqFzz8R4ii7L0kAPVg",
+        "name": "GAC Motor Showroom",
+        "area": "الشويخ الصناعية",
+        "reviews": 144
+      }
+    },
+    {
+      "dist": 21,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJ4ZtDoAqbzz8RpUaEIIyWnKc",
+        "name": "الشمالي اخصائي تكييف",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 8
+      },
+      "b": {
+        "pid": "ChIJi3oNPMKbzz8R6THHURXaNzk",
+        "name": "النجم الذهبي اخصائي تكييف وهيدروليك",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 13
+      }
+    },
+    {
+      "dist": 24,
+      "sim": 67,
+      "a": {
+        "pid": "ChIJ17-bGwCbzz8Rn9H6G6HMLCE",
+        "name": "ريد لاين لزينة السيارات",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 14
+      },
+      "b": {
+        "pid": "ChIJqdUA2E2bzz8R4H14zxXXPvA",
+        "name": "الاسطورة لزينة السيارات",
+        "area": "الشويخ",
+        "reviews": 25
+      }
+    },
+    {
+      "dist": 25,
+      "sim": 60,
+      "a": {
+        "pid": "ChIJu4PpQMGazz8Rupo2Aj_AVqM",
+        "name": "زهرة النسيم لأدوات زينة السيارات",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 225
+      },
+      "b": {
+        "pid": "ChIJe2GykO-bzz8RGXQpnZoXmO4",
+        "name": "نيو لوك كار لادوات زينة السيارات",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 9
+      }
+    },
+    {
+      "dist": 27,
+      "sim": 60,
+      "a": {
+        "pid": "ChIJtdINkBybzz8RfQjMP1vXH44",
+        "name": "Lexus Certified Used Cars Showroom - Shuwaikh",
+        "area": "الشويخ الصناعية",
+        "reviews": 3
+      },
+      "b": {
+        "pid": "ChIJOUn8PUuFzz8RklWVC4mhhr0",
+        "name": "Lexus New Vehicles Showroom - Shuwaikh",
+        "area": "الشويخ الصناعية",
+        "reviews": 1051
+      }
+    },
+    {
+      "dist": 0,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJb112QACPzz8RzpWlvQ7S9dM",
+        "name": "Bangla car polish and Painting",
+        "area": "الشويخ",
+        "reviews": 1
+      },
+      "b": {
+        "pid": "ChIJm_Bjp2mPzz8RF3DPQajcajQ",
+        "name": "GORILLA CAR CAR",
+        "area": "الشويخ",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 0,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJKQZhj9QHzz8RuhCP5ccg6Vc",
+        "name": "مسجلات زينة مفاتيح سيارات Car stero keys car accessories",
+        "area": "الفحيحيل",
+        "reviews": 5
+      },
+      "b": {
+        "pid": "ChIJ8cvRz5QHzz8REIASalY5f5Y",
+        "name": "Kuwait Alkhaleej Car Accessories",
+        "area": "الفحيحيل",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 1,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJCzXRN3aFzz8Rr6OY24HsSN8",
+        "name": "MP (Markaz Pakistan) - Automobile Upholstery",
+        "area": "شرق",
+        "reviews": 1
+      },
+      "b": {
+        "pid": "ChIJgwqzuAWFzz8Ry4dK8Ksiqq0",
+        "name": "Pakistan Centre for Upholstery/كشنات مركذ باكستان",
+        "area": "شرق",
+        "reviews": 19
+      }
+    },
+    {
+      "dist": 2,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJ4ZtDoAqbzz8RpUaEIIyWnKc",
+        "name": "الشمالي اخصائي تكييف",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 8
+      },
+      "b": {
+        "pid": "ChIJXbdP99ybzz8RqVaMCs8Blsw",
+        "name": "تكييف سيارات",
+        "area": "الشويخ الصناعية",
+        "reviews": 1
+      }
+    },
+    {
+      "dist": 2,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJzVQgWHyfzz8RSE1TezP5JZI",
+        "name": "فرع خدمة السيارات (كراج) - جمعيه سلوى التعاونية",
+        "area": "سلوى",
+        "reviews": 117
+      },
+      "b": {
+        "pid": "ChIJBcBsbPKfzz8RDU-5j_RKarY",
+        "name": "كهرباء وبنشر جمعية سلوى",
+        "area": "سلوى",
+        "reviews": 45
+      }
+    },
+    {
+      "dist": 3,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJafb-pAibzz8RGdmH2-5kDds",
+        "name": "بطاريات موتركرفت + تركيب سفايف",
+        "area": "الشويخ الصناعية",
+        "reviews": 44
+      },
+      "b": {
+        "pid": "ChIJk0hyzx-bzz8R6Qsr2ipf3-o",
+        "name": "تبديل سفايف",
+        "area": "الشويخ الصناعية",
+        "reviews": 2
+      }
+    },
+    {
+      "dist": 4,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJNcqhhz-Fzz8RqAdTXn_VIdY",
+        "name": "MHero showroom",
+        "area": "الشويخ",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJLRETnJSazz8RqmBFurYfptU",
+        "name": "BAIC Motor Showroom",
+        "area": "الشويخ",
+        "reviews": 45
+      }
+    },
+    {
+      "dist": 4,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJFU2jAg6bzz8RtEByfTPk5oQ",
+        "name": "كراج اوتو ترانس بيرفورمنس",
+        "area": "الري",
+        "reviews": 12
+      },
+      "b": {
+        "pid": "ChIJPfT4dzSbzz8RUTfTgrfb36s",
+        "name": "كراج نيو اوتو كير لتصليح السيارات",
+        "area": "الري",
+        "reviews": 22
+      }
+    },
+    {
+      "dist": 5,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJCXEFYgCbzz8RL1JaQM5tfck",
+        "name": "Royal Auto Mart Spare Parts",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 11
+      },
+      "b": {
+        "pid": "ChIJgeaQs2Cbzz8R6jnMvkGJrt0",
+        "name": "Al Mashaan Int'l Spare Parts",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 10
+      }
+    },
+    {
+      "dist": 5,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJgZUCLgD3zz8RELQBxA2LLus",
+        "name": "حداد الرباط",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJQTVRdgD3zz8R61nN_5x4D5k",
+        "name": "جراح الرباط",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 1
+      }
+    },
+    {
+      "dist": 6,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJZ5BOOsmbzz8RrTTcbg4RkvI",
+        "name": "شركة الأوائل الاوريبة تنجيد كشنات. shop",
+        "area": "الشويخ الصناعية",
+        "reviews": 27
+      },
+      "b": {
+        "pid": "ChIJCWsTotebzz8Re5JMWPVN_lY",
+        "name": "تلبيس كشنات",
+        "area": "الشويخ الصناعية",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 8,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJtaaVqs-azz8RCBUi0-9eXpU",
+        "name": "Honda Service",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 73
+      },
+      "b": {
+        "pid": "ChIJsbMXjAKbzz8RczAy4IK6ktM",
+        "name": "Honda Alghanim - Shuwaikh Showroom",
+        "area": "الشويخ الصناعية",
+        "reviews": 52
+      }
+    },
+    {
+      "dist": 8,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJEy_U9zybzz8RM9RWdzq6lkM",
+        "name": "كراج الديري",
+        "area": "الشويخ الصناعية",
+        "reviews": 3
+      },
+      "b": {
+        "pid": "ChIJYaKZYlObzz8RSbLOHQve37M",
+        "name": "كراج تاج الرحمةلتصليح السيارات (حدادةوصبغ) 66577968",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 17
+      }
+    },
+    {
+      "dist": 11,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJC1Lx1mmbzz8Rjp4w4WxUC0Y",
+        "name": "Motorcraft Alghanim",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 161
+      },
+      "b": {
+        "pid": "ChIJU8eP-8qazz8RB0Zn86L5zOw",
+        "name": "Honda Alghanim - Shuwaikh Service Center, Bodyshop and Spare Parts Center",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 89
+      }
+    },
+    {
+      "dist": 14,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJaW5nIdWbzz8RV5egZSz6Wj4",
+        "name": "كراج روبك اخصائي تكييف وكهرباء",
+        "area": "الشويخ الصناعية",
+        "reviews": 7
+      },
+      "b": {
+        "pid": "ChIJXbdP99ybzz8RqVaMCs8Blsw",
+        "name": "تكييف سيارات",
+        "area": "الشويخ الصناعية",
+        "reviews": 1
+      }
+    },
+    {
+      "dist": 14,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJ2eJV4XWZzz8RjtdaiQLjEaQ",
+        "name": "كراج حافظ",
+        "area": "جليب الشيوخ",
+        "reviews": 5
+      },
+      "b": {
+        "pid": "ChIJqeJvPgCZzz8RBLr0EKOiTy0",
+        "name": "كراج علي القرشي",
+        "area": "جليب الشيوخ",
+        "reviews": 2
+      }
+    },
+    {
+      "dist": 15,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJC1Lx1mmbzz8Rjp4w4WxUC0Y",
+        "name": "Motorcraft Alghanim",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 161
+      },
+      "b": {
+        "pid": "ChIJfUDII8uazz8RH5EfrPm6K4Y",
+        "name": "Ford Alghanim Service & Spare Parts",
+        "area": "الشويخ الصناعية",
+        "reviews": 405
+      }
+    },
+    {
+      "dist": 16,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJDYLx6uUHzz8RHRl6N5MxdKQ",
+        "name": "انوار المهلب ANWAAR AL MUHALLB CAR Accessories",
+        "area": "الفحيحيل",
+        "reviews": 47
+      },
+      "b": {
+        "pid": "ChIJ8cvRz5QHzz8REIASalY5f5Y",
+        "name": "Kuwait Alkhaleej Car Accessories",
+        "area": "الفحيحيل",
+        "reviews": 0
+      }
+    },
+    {
+      "dist": 18,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJM82JFbaazz8ROkYj4Ac8Kco",
+        "name": "كراج زنون اسبشل كراج شفط كراج صبغ وحدادة مركز ناصر Garage Zenon Special",
+        "area": "الشويخ الصناعية 1",
+        "reviews": 68
+      },
+      "b": {
+        "pid": "ChIJY2UwdF2bzz8RCa3-iwIDBHY",
+        "name": "كراج فايبر",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 16
+      }
+    },
+    {
+      "dist": 18,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJU7_E412bzz8RFUyGxBPlDm4",
+        "name": "كراج الحرير كهربائي ومكنيك",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJEy_U9zybzz8RM9RWdzq6lkM",
+        "name": "كراج الديري",
+        "area": "الشويخ الصناعية",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 18,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJSzK4OSahzz8R5759Sbat-YY",
+        "name": "Asian auto works (Indian garage)",
+        "area": "غرب ابو فطيرة الحرفية",
+        "reviews": 10
+      },
+      "b": {
+        "pid": "ChIJw_N3ULihzz8RJPiA0FGO5Ys",
+        "name": "Sas Bless Asian auto",
+        "area": "غرب ابو فطيرة الحرفية",
+        "reviews": 6
+      }
+    },
+    {
+      "dist": 18,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJHSoNBJGbzz8R0YVjfq29mYI",
+        "name": "FORTHING Showroom",
+        "area": "الشويخ الصناعية",
+        "reviews": 12
+      },
+      "b": {
+        "pid": "ChIJt0p1RgCFzz8R5LveQHRiygc",
+        "name": "Automak Showroom - معرض أوتوماك",
+        "area": "الشويخ الغزالي",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 21,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJNcqhhz-Fzz8RqAdTXn_VIdY",
+        "name": "MHero showroom",
+        "area": "الشويخ",
+        "reviews": 0
+      },
+      "b": {
+        "pid": "ChIJBzwWuUqFzz8R4ii7L0kAPVg",
+        "name": "GAC Motor Showroom",
+        "area": "الشويخ الصناعية",
+        "reviews": 144
+      }
+    },
+    {
+      "dist": 23,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJXbdP99ybzz8RqVaMCs8Blsw",
+        "name": "تكييف سيارات",
+        "area": "الشويخ الصناعية",
+        "reviews": 1
+      },
+      "b": {
+        "pid": "ChIJi3oNPMKbzz8R6THHURXaNzk",
+        "name": "النجم الذهبي اخصائي تكييف وهيدروليك",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 13
+      }
+    },
+    {
+      "dist": 24,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJX3c-_hCbzz8R31sqv65H0p4",
+        "name": "Osaka965 Garage",
+        "area": "الشويخ الصناعية",
+        "reviews": 27
+      },
+      "b": {
+        "pid": "ChIJrYxJHiibzz8RViUjR80VoIg",
+        "name": "Garage Draw My Ride",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 15
+      }
+    },
+    {
+      "dist": 24,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJhYLyKVf3zz8Re6jipKGn5Fs",
+        "name": "كراج ابوراشد لتصليح السيارات",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 7
+      },
+      "b": {
+        "pid": "ChIJEb1acmT3zz8R3lWYYP6FPNs",
+        "name": "كراج اوكيو",
+        "area": "الجهراء المنطقة الصناعية قطعه 1",
+        "reviews": 2
+      }
+    },
+    {
+      "dist": 28,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJEWxXdbebzz8RH5OgoDFcveg",
+        "name": "Volvo Cars Showroom and Service Center",
+        "area": "الشويخ الصناعية 3",
+        "reviews": 301
+      },
+      "b": {
+        "pid": "ChIJHSoNBJGbzz8R0YVjfq29mYI",
+        "name": "FORTHING Showroom",
+        "area": "الشويخ الصناعية",
+        "reviews": 12
+      }
+    },
+    {
+      "dist": 28,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJh9jn_1abzz8RoymazXx4Lrc",
+        "name": "TOTAL PITSTOP (Al Afrah Service Center)",
+        "area": "الري",
+        "reviews": 28
+      },
+      "b": {
+        "pid": "ChIJH3pI2Eebzz8Ryinl5t0kUWo",
+        "name": "Zayani Car Service Center",
+        "area": "الشويخ الصناعية 2",
+        "reviews": 20
+      }
+    },
+    {
+      "dist": 28,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJW_rZr0Wbzz8RShtf7YVc4Ew",
+        "name": "كراج اللوفر الالماني لتصليح السيارات",
+        "area": "الري",
+        "reviews": 59
+      },
+      "b": {
+        "pid": "ChIJlUiHi5Obzz8RTsRIf7MgZzI",
+        "name": "كراج الملكي",
+        "area": "الري",
+        "reviews": 3
+      }
+    },
+    {
+      "dist": 30,
+      "sim": 50,
+      "a": {
+        "pid": "ChIJzQDMttcHzz8R07HtmSxulbU",
+        "name": "كراج الخفران",
+        "area": "شرق الأحمدي",
+        "reviews": 7
+      },
+      "b": {
+        "pid": "ChIJ7S1adEsHzz8RH5JrB44p-Y8",
+        "name": "كراج البديع",
+        "area": "شرق الأحمدي",
+        "reviews": 0
+      }
+    }
+  ]
+}
