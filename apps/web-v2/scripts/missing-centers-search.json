@@ -1,0 +1,2843 @@
+[
+  {
+    "target": "Auto Lab (أوتو لاب)",
+    "candidates": [
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "AutoLab Quick Service By Jaidah, Landmark Branch",
+        "area": "Next To Landmark Mall، طريق الشمال، الدوحة، قطر",
+        "place_id": "ChIJwYe0lmXcRT4RU-_4EW2ISEs",
+        "rating": 4,
+        "reviews": 362,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 362 مراجعة"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "قطع غيار الميلم",
+        "area": "1 شارع 22، الشويخ الصناعية",
+        "place_id": "ChIJo33DWxybzz8RH7wfw8PhvM8",
+        "rating": 4.4,
+        "reviews": 197,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 197 مراجعة"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "AutoLab Quick Service By Jaidah, Al Khor",
+        "area": "Opposite Woqod Petrol Station، طـريق الخــور الســـاحلـي، الخور، قطر",
+        "place_id": "ChIJ93ZbicH5RT4R1DAJ5zJfcQg",
+        "rating": 4.1,
+        "reviews": 144,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 144 مراجعة"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Nano x pro لحماية السيارات",
+        "area": "1498 شارع حمد راشد العلبان، مدينة الكويت",
+        "place_id": "ChIJgdPdFgCbzz8ROMKXokOaC1c",
+        "rating": 4.5,
+        "reviews": 10,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 10 مراجعة"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Autotalab",
+        "area": "shop no:28, St 27 - complex 62, kuwait 70050",
+        "place_id": "ChIJ8zJsfASy_EgR3wlnffWtJIw",
+        "rating": 4.5,
+        "reviews": 8,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 8 مراجعة"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "AUTO1 Accessories, Parts, Tires & Batteries - أوتو 1 للإكسسوارات، قطع الغيار، الإطارات والبطاريات",
+        "area": "Canada Dry Street Near Khaldiya Bridge Head Office Branch Shuwaikh Industrial, الشويخ الصناعية 13043",
+        "place_id": "ChIJUQI2eVubzz8RKIGBV64ViUc",
+        "rating": 4.2,
+        "reviews": 1425,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "مجموعة الميلم – المكتب الرئيسي",
+        "area": "Street 21 Shuwaikh Canada Dry Street, 8WFR+RHF، شارع 21، الشويخ الصناعية",
+        "place_id": "ChIJR_maUb-azz8Rc6PYqI9WFPk",
+        "rating": 4.1,
+        "reviews": 942,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "الميلم لقطع الغيار السيارات",
+        "area": "طريق جاسم محمد الخرافي، الجهراء",
+        "place_id": "ChIJmZOT1Mf2zz8R3d1yjTHNTlc",
+        "rating": 4,
+        "reviews": 375,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Auto Mall",
+        "area": "شارع عبدالعزيز فهد المساعيد، الشويخ الصناعية",
+        "place_id": "ChIJm_9rJMaazz8RDK0yCnf_84E",
+        "rating": 4.3,
+        "reviews": 110,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "AlMailem Tires - Sharq",
+        "area": "Khalid Ibn Al Waleed St, مدينة الكويت",
+        "place_id": "ChIJt0oi_8-Fzz8RF8VMqSgTQas",
+        "rating": 4.4,
+        "reviews": 80,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Auto1 Tire & Services (07) أوتو1 مركز الغنام للاطارات والخدمات",
+        "area": "Abdul Aziz Fahad Al Musaed Street, Entrance to Street 21, Canada Dry St, Shuwaikh 13122",
+        "place_id": "ChIJl0pjY-Gbzz8RhaQWFgiDTOg",
+        "rating": 4.1,
+        "reviews": 47,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Turtle Lab",
+        "area": "Street 30، الشويخ الصناعية 13131",
+        "place_id": "ChIJn7aByZuazz8RfpQ_zPVkeXc",
+        "rating": 4.6,
+        "reviews": 43,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "الذكير أوتو KGM",
+        "area": "8W5R+CFW، شارع سعد جديع الشيتان",
+        "place_id": "ChIJc4HP7Imbzz8RCNKP-TudM-w",
+        "rating": 4.4,
+        "reviews": 27,
+        "types": [
+          "car_rental"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [car_rental,establishment,point_of_interest]"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Motolab Online car repair service and Garage",
+        "area": "8WHW+H7Q، الشويخ الصناعية",
+        "place_id": "ChIJo0QTGACbzz8RaX75jaDmoXQ",
+        "rating": 5,
+        "reviews": 5,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Garage»"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "مركز اوتو لاب",
+        "area": "FQ2V+4VG، البصرة، البصرة محافظة، العراق",
+        "place_id": "ChIJF5PzeACXxD8RIC6Mk8UXIaQ",
+        "rating": 5,
+        "reviews": 2,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "UV LAB",
+        "area": "8WHV+RXF، شارع عبدالعزيز فهد المساعيد، الشويخ الصناعية",
+        "place_id": "ChIJ5a0vHPCbzz8RlybmcngFmNQ",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=0 < 5"
+      },
+      {
+        "target": "Auto Lab (أوتو لاب)",
+        "name": "Power Lab",
+        "area": "1383 شارع 28",
+        "place_id": "ChIJ7VElGgCbzz8ReOrllZQJEK4",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=0 < 5"
+      }
+    ]
+  },
+  {
+    "target": "Speedex (سبيدكس)",
+    "candidates": [
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "Speedex Auto Workshop L.L.C",
+        "area": "مصفح - مصفح 38 - أبو ظبي - الإمارات العربية المتحدة",
+        "place_id": "ChIJ13loMZVBXj4RbH25dWG9z9Q",
+        "rating": 4.6,
+        "reviews": 61,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 61 مراجعة"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "speed tech performance parts",
+        "area": "shop 6&16، street 4، الشويخ الصناعية 85601",
+        "place_id": "ChIJ09f2lfybzz8RX-OVb72h0Bs",
+        "rating": 4.6,
+        "reviews": 9,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 9 مراجعة"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "اسبيديكس",
+        "area": "127 شارع الشيخ زايد - القوز الثالثة - القوز - دبي - الإمارات العربية المتحدة",
+        "place_id": "ChIJb1Xeg45pXz4RZimdoYxZI44",
+        "rating": 4.2,
+        "reviews": 692,
+        "types": [
+          "hardware_store",
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,hardware_store,home_goods_store,point_of_interest]"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "Speedex Technical Co.",
+        "area": "Shop No. 10, Khalifa Jasim Street, Shuwaikh",
+        "place_id": "ChIJ3XcyytyPzz8RN8GlC_ski3I",
+        "rating": 5,
+        "reviews": 12,
+        "types": [
+          "hardware_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,hardware_store,point_of_interest,store]"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "Speedex car",
+        "area": "shuwaikh, 8WGW+CRG، الشويخ الصناعية 99087",
+        "place_id": "ChIJNXI9ngSbzz8RnrosjhlK4k0",
+        "rating": 4,
+        "reviews": 4,
+        "types": [
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=4 < 5"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "SpeedEx worldwide express",
+        "area": "10. Block 1. Beside Lulu Hyper Fresh Market. Kuwait Tel: 24314506 Mobile : 97947886, 1st Floor, Office No, Al Soor Complex, Kuwait city",
+        "place_id": "ChIJIbb4FQCZzz8RIh2Bpi--IXU",
+        "rating": 1,
+        "reviews": 1,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Express»"
+      },
+      {
+        "target": "Speedex (سبيدكس)",
+        "name": "Speed Star Fasteners (Speedex) - Hardware Tools and Fasteners Shop",
+        "area": "Street 344 Ahmadi، الأحمدي 60000",
+        "place_id": "ChIJvexX9qcHzz8RO7piVv3R5Tc",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "hardware_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,hardware_store,point_of_interest,store]"
+      }
+    ]
+  },
+  {
+    "target": "Midas",
+    "candidates": [
+      {
+        "target": "Midas",
+        "name": "عادل الغانم لسيارات - سيارات ام جي",
+        "area": "شارع 13، الشويخ الصناعية 00000",
+        "place_id": "ChIJa_xJts-azz8RU5Bw-crsIh4",
+        "rating": 4,
+        "reviews": 518,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 518 مراجعة"
+      },
+      {
+        "target": "Midas",
+        "name": "مرسيدس الملا - معرض الري",
+        "area": "Fourth Ring Road - Plot 1317 Al Rai Industrial Area, 13002",
+        "place_id": "ChIJ7SuJymubzz8RFqvT9fhKdhk",
+        "rating": 4,
+        "reviews": 127,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 127 مراجعة"
+      },
+      {
+        "target": "Midas",
+        "name": "مرسيدس الملا - السيارات المستعملة - الري",
+        "area": "Al Rai Industrial Area 29 St Safat، 13002",
+        "place_id": "ChIJUSuQtdibzz8RhkyazCrO78A",
+        "rating": 4.5,
+        "reviews": 67,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 67 مراجعة"
+      },
+      {
+        "target": "Midas",
+        "name": "Public Auto Parts Co.",
+        "area": "Street 15, 85855",
+        "place_id": "ChIJBV2g3ImZzz8RpoiCCcaiUCI",
+        "rating": 4.4,
+        "reviews": 55,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 55 مراجعة"
+      },
+      {
+        "target": "Midas",
+        "name": "MG Quick Service - Daiya",
+        "area": "Rashed Ahmed Al Roumi Street",
+        "place_id": "ChIJi0lcn8udzz8RIyU0YT2yahQ",
+        "rating": 4.4,
+        "reviews": 17,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 17 مراجعة"
+      },
+      {
+        "target": "Midas",
+        "name": "الشركة الأهلية لقطع غيار السيارات",
+        "area": "8WGV+W4P، الشويخ الصناعية",
+        "place_id": "ChIJY2gflseazz8RwF_TuAwIb88",
+        "rating": 4.2,
+        "reviews": 3041,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "فورد الغانم (قطع)",
+        "area": "55 Airport Rd, مدينة الكويت 13003",
+        "place_id": "ChIJ9U3gCsuazz8RAsKyGnt0jSg",
+        "rating": 4.1,
+        "reviews": 2575,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "Carbox Kuwait - (Batariyat)",
+        "area": "building no 64 shop no 28، street 25، الشويخ الصناعية 42488",
+        "place_id": "ChIJg7wKzceazz8RLGOfIcI3-00",
+        "rating": 4.5,
+        "reviews": 1330,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "المُلا وبهبهاني للسيارات",
+        "area": "Plot 1845, fourth ring road, Al Rai, Kuwait, Al Rai",
+        "place_id": "ChIJnwj4xZiazz8RPJlVSnPBgXU",
+        "rating": 3.8,
+        "reviews": 1024,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "شركة فؤاد الغانم واولاده للسيارات",
+        "area": "Shuwaikh Industrial Area Street Nr 11 Block Nr 11 Building Nr 56A, مدينة الكويت",
+        "place_id": "ChIJn468q7Oazz8RYnXk8Aq06Uo",
+        "rating": 4,
+        "reviews": 612,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "مرسيدس الملا - خدمة الشويخ",
+        "area": "Plot No. 112 Street 9، الشويخ الصناعية",
+        "place_id": "ChIJa-kzGLWbzz8Rs4FMRmWgdTs",
+        "rating": 4.2,
+        "reviews": 612,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «الشويخ»"
+      },
+      {
+        "target": "Midas",
+        "name": "ميداس - الري",
+        "area": "Opp. Avenues Mall, 1857 شارع مطلق عباس مناور، 09366",
+        "place_id": "ChIJdXpBaIWazz8RLi-pRkDbtEY",
+        "rating": 4,
+        "reviews": 514,
+        "types": [
+          "furniture_store",
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "شركه الفانوس لزينة السيارات",
+        "area": "Street 19, الشويخ الصناعية",
+        "place_id": "ChIJQ6XGBMeazz8Rm_vA0flo5iE",
+        "rating": 3.9,
+        "reviews": 426,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "Midas office furniture",
+        "area": "الأثاث المكتبي, مجمع الساير، الضجيج 81005",
+        "place_id": "ChIJ5-1fceaZzz8RNAQecgXJ5c0",
+        "rating": 4,
+        "reviews": 309,
+        "types": [
+          "furniture_store",
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,furniture_store,home_goods_store,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "مجموعة الملا",
+        "area": "Free Trade Zone المنطقة التجارية الحرة Kuwait City، المنطقة الحرة 13002",
+        "place_id": "ChIJlxO-iyaPzz8RGwvcYAq_efU",
+        "rating": 4.2,
+        "reviews": 189,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "شركة الخالد للسيارات",
+        "area": "shuwaikh industrial AreaBlock 1 Street 20 Building No. 95 SHOP. No 6, الشويخ الصناعية،, الشويخ الصناعية",
+        "place_id": "ChIJ54u1q8ebzz8RFF-FDFb1mQY",
+        "rating": 3.5,
+        "reviews": 160,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "Motorgy-The smarter way to buy & sell cars in Kuwait",
+        "area": "Tijaria Commercial Tower, مدينة الكويت",
+        "place_id": "ChIJwWQTQf-bzz8R4mQrvZfe0Dk",
+        "rating": 4.3,
+        "reviews": 149,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "MG Kuwait - Main Service Center",
+        "area": "Al rai, Block 4, St. 1",
+        "place_id": "ChIJF4zDSJ2bzz8RZ8DyKHwjXdw",
+        "rating": 3.3,
+        "reviews": 135,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "شركة الملا وبهبهاني للسيارات المعتمده",
+        "area": "8W5J+G89, المنقف",
+        "place_id": "ChIJB1xebJqazz8RexnSwXyZJys",
+        "rating": 3.9,
+        "reviews": 101,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "Midas Auto Services Centre Limited",
+        "area": "Repen Complex, Mombasa Road, كينيا",
+        "place_id": "ChIJKSDQAvXDOxgRmRcQOlt0hV0",
+        "rating": 4.7,
+        "reviews": 45,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "ميداس للأدوات الصحية - Midas Sanitary Wares",
+        "area": "7 شارع تونس، حولي",
+        "place_id": "ChIJMUlod72czz8RTSguCyCfU2s",
+        "rating": 3.7,
+        "reviews": 35,
+        "types": [
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,home_goods_store,point_of_interest,store]"
+      },
+      {
+        "target": "Midas",
+        "name": "MG Service Center Shuwaikh Kuwait",
+        "area": "8 Street Shuwaikh Industrial 13008, Shuwaikh",
+        "place_id": "ChIJ0Vm73wObzz8Rkq3831tCdMg",
+        "rating": 3.6,
+        "reviews": 29,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "حماية وتظليل حراري للسيارات - شركة الماسة",
+        "area": "13، 47041",
+        "place_id": "ChIJ5Xm3xw2hzz8R-o3wizW1Tkg",
+        "rating": 4.1,
+        "reviews": 29,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "سوسه لقطع غيار السيارات",
+        "area": "شارع 26، الشويخ الصناعية 13126",
+        "place_id": "ChIJKTxtjsGazz8ReNCJUWTuZeM",
+        "rating": 4.3,
+        "reviews": 23,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "Midas Headoffice",
+        "area": "السالمية",
+        "place_id": "ChIJsXv4Sy92zz8R8JEvw8p_8cw",
+        "rating": 3.8,
+        "reviews": 16,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "MG New Service Center - Shuwaikh",
+        "area": "Shuwaikh st 22, الشويخ الصناعية 70050",
+        "place_id": "ChIJN1QmLgCbzz8RLrmcTKXvlxc",
+        "rating": 4.1,
+        "reviews": 16,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Shuwaik»"
+      },
+      {
+        "target": "Midas",
+        "name": "MG Service Center Riggae Kuwait",
+        "area": "طريق الدائري الرابع",
+        "place_id": "ChIJO2cinIGbzz8RWv0UjpcwapQ",
+        "rating": 3.1,
+        "reviews": 9,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Kuwait»"
+      },
+      {
+        "target": "Midas",
+        "name": "كراج بنميرا لاصلاح و تجديد معاونات هيدروليك سيارات",
+        "area": "25 شويخ الصناعية، الشويخ الصناعية 00965",
+        "place_id": "ChIJe0YHjdebzz8RPp3xcMExPeM",
+        "rating": 4.2,
+        "reviews": 6,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Midas",
+        "name": "Midas Auto Services Centre Limited",
+        "area": "Repen Complex, Nairobi, كينيا",
+        "place_id": "ChIJA5GjcqYNLxgR-MOm_L_77Ow",
+        "rating": 5,
+        "reviews": 1,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Midas",
+        "name": "مركز ماكس مايد لقطع غيار السيارات",
+        "area": "8W9H+87J، الشويخ الصناعية",
+        "place_id": "ChIJc-qCi6Oazz8RWLw4-MPP9sM",
+        "rating": 2,
+        "reviews": 1,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=1 < 5"
+      }
+    ]
+  },
+  {
+    "target": "النفيسي",
+    "candidates": [
+      {
+        "target": "النفيسي",
+        "name": "نيسان البابطين - الري",
+        "area": "طريق الدائري الرابع الري،، Kuwait",
+        "place_id": "ChIJpUddeZeazz8ROLopBC5acAg",
+        "rating": 4.2,
+        "reviews": 1101,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 1101 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "علي الغانم وأولاده للسيارات - جيلي",
+        "area": "Block 3, Street 29 Intersection of 4th Ring Road, & طريق الغزالي، 13076",
+        "place_id": "ChIJawyGPTmbzz8RuBfWgXAYe2s",
+        "rating": 4.1,
+        "reviews": 384,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 384 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "معرض انفينيتي البابطين",
+        "area": "Al Rai, Block 3, Car Dealer Rd، Kuwait 13008",
+        "place_id": "ChIJVQT5IpSazz8RumjqfRNVfi4",
+        "rating": 4.3,
+        "reviews": 284,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 284 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Al-Zayani Automotive",
+        "area": "Street 29, مدينة الكويت",
+        "place_id": "ChIJG1JRYpSazz8Ror5TcJlfD4g",
+        "rating": 4.3,
+        "reviews": 247,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "finance",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 247 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "المطوع و القاضي MUTAWAALKAZI",
+        "area": "طريق الدائري الرابع، 13007",
+        "place_id": "ChIJbxVmZpSazz8RmnNX_dSJFBE",
+        "rating": 3.9,
+        "reviews": 218,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 218 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "كار ماكس لسيارات الملا المستعملة",
+        "area": "8W5M+QH3، الشويخ الصناعية",
+        "place_id": "ChIJdy2nfqKazz8RI-Q8jW5U1yU",
+        "rating": 3.7,
+        "reviews": 184,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 184 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "معرض سيارات مصطفى كرم Mustafa Karam & Sonsco",
+        "area": "kuwait، طريق الدائري الرابع، مدينة الكويت",
+        "place_id": "ChIJWxrAZeyazz8R8IS6fGaYBNs",
+        "rating": 4,
+        "reviews": 152,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 152 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "معرض سيارات جاكوار - الزياني",
+        "area": "Al-Rai, 4th Ring Road, Fourth Ring Rd, 13001",
+        "place_id": "ChIJwV7U05Wazz8R17c34MUNDM8",
+        "rating": 4.2,
+        "reviews": 133,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 133 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "مركزخدمة بورشه هريتيج - Porsche Heritage Service Centre",
+        "area": "Bldg. 108، D Shuwaikh، Street 8، Shuwaikh Industrial Area 70031",
+        "place_id": "ChIJsa41v8mazz8R2lemDAZYjwY",
+        "rating": 4.4,
+        "reviews": 130,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 130 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "شركة سوبر سيرفس للفحص الفني للسيارات Super Service Car Inspection Co.",
+        "area": "شارع حمد راشد العلبان، الري 13061",
+        "place_id": "ChIJE4YhWrabzz8RkkeHDQoZJJc",
+        "rating": 3.8,
+        "reviews": 94,
+        "types": [
+          "car_repair",
+          "insurance_agency",
+          "police"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 94 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "معرض سيارات مازاراتي - الزياني",
+        "area": "Safat, Al-Zayani Trading Co, Al Ghanim, Shuwaikh Fourth Ring Rd, 13001",
+        "place_id": "ChIJcdT6ytbkzz8RNSYiUGAt37g",
+        "rating": 4,
+        "reviews": 81,
+        "types": [
+          "car_dealer",
+          "insurance_agency",
+          "local_government_office",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 81 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Amg Kits",
+        "area": "8WCV+9C8، الشويخ الصناعية",
+        "place_id": "ChIJP5rX3TGbzz8RTB7Bntr8Yd0",
+        "rating": 4,
+        "reviews": 21,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 21 مراجعة"
+      },
+      {
+        "target": "النفيسي",
+        "name": "فورد الغانم (قطع)",
+        "area": "55 Airport Rd, مدينة الكويت 13003",
+        "place_id": "ChIJ9U3gCsuazz8RAsKyGnt0jSg",
+        "rating": 4.1,
+        "reviews": 2575,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "الخدمة السريعة ميتسوبيشي الملا للسيارات",
+        "area": "Street #9, Plot/Bldg, 1823 Car Dealer Rd, 13028",
+        "place_id": "ChIJwZ6HUJiazz8RT48m_zxRNXw",
+        "rating": 4.2,
+        "reviews": 1126,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "المُلا وبهبهاني للسيارات",
+        "area": "Plot 1845, fourth ring road, Al Rai, Kuwait, Al Rai",
+        "place_id": "ChIJnwj4xZiazz8RPJlVSnPBgXU",
+        "rating": 3.8,
+        "reviews": 1024,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "من الدعامية الى الدعامية",
+        "area": "Street 12, الشويخ الصناعية",
+        "place_id": "ChIJy3MM98uazz8RBin0cgwKGaI",
+        "rating": 4.2,
+        "reviews": 774,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "معرض هيونداي",
+        "area": "80 Al- Jahra Road, Shuwaikh 25908",
+        "place_id": "ChIJc6sqZjWFzz8RmrneNYB62vg",
+        "rating": 4.2,
+        "reviews": 694,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Infiniti Quick Service - Al Babtain",
+        "area": "Hamad Rashed Al Alban St, Block 3، Al Rai 13008",
+        "place_id": "ChIJTVH-do6azz8RA1Ddnvrntlk",
+        "rating": 4.2,
+        "reviews": 476,
+        "types": [
+          "car_dealer",
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "شارع الزينه صحه- الشويخ الصناعية",
+        "area": "8WGV+GHH، شارع 19، الشويخ الصناعية",
+        "place_id": "ChIJl1gGsYebzz8Rcvrn4D0SdLk",
+        "rating": 4.1,
+        "reviews": 219,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "شركة الخالد للسيارات",
+        "area": "shuwaikh industrial AreaBlock 1 Street 20 Building No. 95 SHOP. No 6, الشويخ الصناعية،, الشويخ الصناعية",
+        "place_id": "ChIJ54u1q8ebzz8RFF-FDFb1mQY",
+        "rating": 3.5,
+        "reviews": 160,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "مرسيدس الملا - معرض الري",
+        "area": "Fourth Ring Road - Plot 1317 Al Rai Industrial Area, 13002",
+        "place_id": "ChIJ7SuJymubzz8RFqvT9fhKdhk",
+        "rating": 4,
+        "reviews": 127,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "شركة الملا وبهبهاني للسيارات المعتمده",
+        "area": "8W5J+G89, المنقف",
+        "place_id": "ChIJB1xebJqazz8RexnSwXyZJys",
+        "rating": 3.9,
+        "reviews": 101,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Ali Alghanim & Sons Automotive Main Service Center | مركز الخدمة الرئيسي علي",
+        "area": "55 Airport Rd, الشويخ الصناعية 72460",
+        "place_id": "ChIJG-vHTVWazz8R_sNmWmh8ZoA",
+        "rating": 4.3,
+        "reviews": 99,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "برج الجوهرة",
+        "area": "46 شارع الشهداء، مدينة الكويت",
+        "place_id": "ChIJ9550LJaEzz8R2cWmc3QEG6o",
+        "rating": 3.9,
+        "reviews": 33,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Al Nafisi Tower - By Alnafisi Group",
+        "area": "شارع عبدالله المبارك، مدينة الكويت",
+        "place_id": "ChIJD7v1FeqEzz8RZCw8MVWKJWc",
+        "rating": 4.3,
+        "reviews": 32,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "بيستون الخالد أوتو الكويت",
+        "area": "Shuwaikh Industrial, Street 21, Bestune, الشويخ الصناعية 42488",
+        "place_id": "ChIJxwSjHTabzz8RPeDdxYHXiOM",
+        "rating": 3.9,
+        "reviews": 27,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "كراج سفاري محمد الرفاعي",
+        "area": "شارع 19، الشويخ الصناعية",
+        "place_id": "ChIJuUxxAfebzz8REIKJNjdV2QQ",
+        "rating": 4.2,
+        "reviews": 23,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "برج النفيسي",
+        "area": "9XCG+JRV، مدينة الكويت",
+        "place_id": "ChIJNSYjF-qEzz8RYPZ7Yu3N41o",
+        "rating": 5,
+        "reviews": 22,
+        "types": [
+          "bank",
+          "finance"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [bank,establishment,finance,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Nafees نفيس",
+        "area": "مجمع بهبهاني، شارع جابر المبارك، مدينة الكويت",
+        "place_id": "ChIJ7zkhEbGFzz8R3XPnQwjsq20",
+        "rating": 4.1,
+        "reviews": 18,
+        "types": [
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,home_goods_store,point_of_interest,store]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "نايس كار لزينة السيارة وقطع الغيار",
+        "area": "8WGV+FHV، الشويخ الصناعية",
+        "place_id": "ChIJ0c5SAM2bzz8RfjChN_kQktw",
+        "rating": 4.3,
+        "reviews": 14,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Dana Building",
+        "area": "9XMQ+6M7، شارع جابر المبارك، مدينة الكويت",
+        "place_id": "ChIJ45vRT5CEzz8RlxayMURPUVs",
+        "rating": 3.9,
+        "reviews": 9,
+        "types": [
+          "real_estate_agency"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest,real_estate_agency]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Mega Service Center (Suzuki Kuwait Body Workshop)",
+        "area": "قسيمة ٦٠، الأحمدي،، الأحمدي،، Ahmadi, الأحمدي",
+        "place_id": "ChIJP6wT1F4Hzz8RX4W8kYmhVcg",
+        "rating": 4.3,
+        "reviews": 7,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Al Nafisi Group - Head Office",
+        "area": "Salhiya Mall, مدينة الكويت",
+        "place_id": "ChIJMSf4ViOFzz8RpUc8QCRYM1s",
+        "rating": 4.6,
+        "reviews": 5,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "تبديل زيت وفلتر ( احسن هندي )",
+        "area": "34FF+63H بجانب مركز سلطان محل الدبوس",
+        "place_id": "ChIJcwq8u9MHzz8RJCEsVVx8PVw",
+        "rating": 5,
+        "reviews": 4,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Al Watiyah Tower - By Alnafisi Group",
+        "area": "شارع أبو بكر، مدينة الكويت",
+        "place_id": "ChIJjb73DBWFzz8RQD4u3q0kI3w",
+        "rating": 5,
+        "reviews": 3,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "Fahad Al-Nafisi & Sons Group",
+        "area": "8WX6+FGR، المنطقة الحرة",
+        "place_id": "ChIJhzuObZKPzz8RbJcCQB68TAI",
+        "rating": 1,
+        "reviews": 2,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "النفيسي",
+        "name": "شركة النفيس للتكييف",
+        "area": "9XGG+8XR، مدينة الكويت",
+        "place_id": "ChIJheqj_7yFzz8Re_iMGRN2DIE",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=0 < 5"
+      }
+    ]
+  },
+  {
+    "target": "العيسى",
+    "candidates": [
+      {
+        "target": "العيسى",
+        "name": "العيسائي للسيارات والصيانة",
+        "area": "مخطط الراجحي، تبوك 47711، السعودية",
+        "place_id": "ChIJs-X8qsGtqRURh_kKKY4wowA",
+        "rating": 3.8,
+        "reviews": 593,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 593 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "ALEISSA AUTOS كراج العيسى",
+        "area": "De Steenberg 18, 7678 CN Geesteren, هولندا",
+        "place_id": "ChIJ5WPHNv2TxkcRKb0BXfkUo9Q",
+        "rating": 4.7,
+        "reviews": 467,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 467 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة العيسى العالمية للسيارات ايسوزو",
+        "area": "الروضة، جدة 23432، السعودية",
+        "place_id": "ChIJjSwrnuHRwxURj5xea6eyl6c",
+        "rating": 3.9,
+        "reviews": 266,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 266 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركه العيسى العالمية للسيارات ايسوزو",
+        "area": "JGIB9033، 9033 المعلم الشيخ حسين عجاج، 4252،، حي صناعي،، جدة 23796،، السعودية",
+        "place_id": "ChIJd0JelGp1wRURLYTguKimme0",
+        "rating": 3.1,
+        "reviews": 164,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 164 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "مجموعة الساير",
+        "area": "Kuwait Free Trade Zone , Shuwaikh Port, Safat 13005",
+        "place_id": "ChIJyWDmbI2Pzz8ROinOnc9rRKE",
+        "rating": 4.3,
+        "reviews": 137,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 137 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "معرض صالح الحارثي للسيارات ايسوزو ميتسوبيشي",
+        "area": "C7G3+VJR، الجوهرة، جدة 22417، السعودية",
+        "place_id": "ChIJBWCToaDLwxUReYRggvVdDAQ",
+        "rating": 4.7,
+        "reviews": 50,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 50 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "Masila Cars",
+        "area": "الشويخ الصناعية",
+        "place_id": "ChIJSWyVkr6azz8R9745tGMFCpI",
+        "rating": 3.1,
+        "reviews": 44,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 44 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "كراج عيسى الكندري",
+        "area": "شويخ الصناعية 1،، الشويخ الصناعية",
+        "place_id": "ChIJZ9N2je2bzz8RATepyTyL00s",
+        "rating": 4.3,
+        "reviews": 15,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 15 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "شونيز انترناشيونال",
+        "area": "29.373122866162298, 47.993507721543075 sharq, مدينة الكويت",
+        "place_id": "ChIJpy1zYqaEzz8R-zFVflmnBlw",
+        "rating": 4.5,
+        "reviews": 15,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 15 مراجعة"
+      },
+      {
+        "target": "العيسى",
+        "name": "تويوتا الساير",
+        "area": "طريق الدائري الرابع، مدينة الكويت 50000",
+        "place_id": "ChIJX4NTzZmazz8RSHdOHr7_9NU",
+        "rating": 4.1,
+        "reviews": 1725,
+        "types": [
+          "car_dealer",
+          "insurance_agency",
+          "local_government_office",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "العيسى",
+        "name": "العيسى ميد معرض الرعاية الصحية",
+        "area": "79 Street Dajeej area, Block 1, Building 44 Sultan Ben Essa, Son's Complex, الضجيج 85000",
+        "place_id": "ChIJY7VHIRGZzz8R1S4X0nc0ZnA",
+        "rating": 5,
+        "reviews": 518,
+        "types": [
+          "health",
+          "hospital",
+          "shoe_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,health,hospital,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "صالة عيسى اليوسفي",
+        "area": "800017 شارع عبدالرحمن يوسف الرومي، مدينة الكويت",
+        "place_id": "ChIJlaKHeZ-Ezz8RiRen1ZqzfuQ",
+        "rating": 4,
+        "reviews": 410,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "مسجد عيسى العثمان",
+        "area": "مسجد العثمان، مدينة الكويت",
+        "place_id": "ChIJ_6jkedCazz8RTwxmx-hIQr4",
+        "rating": 4.7,
+        "reviews": 250,
+        "types": [
+          "mosque",
+          "place_of_worship"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,mosque,place_of_worship,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة الخالد للسيارات",
+        "area": "shuwaikh industrial AreaBlock 1 Street 20 Building No. 95 SHOP. No 6, الشويخ الصناعية،, الشويخ الصناعية",
+        "place_id": "ChIJ54u1q8ebzz8RFF-FDFb1mQY",
+        "rating": 3.5,
+        "reviews": 160,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "العيسى",
+        "name": "الساير لتأجير السيارات",
+        "area": "7WRF+3MM، العارضية",
+        "place_id": "ChIJt1U7HX-azz8R72yTcLRIs14",
+        "rating": 4.2,
+        "reviews": 138,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "مجموعة شركات العيسى",
+        "area": "Shuwaikh Port, Shuwaikh",
+        "place_id": "ChIJ6062Cpaazz8RbaotV57LPtY",
+        "rating": 4,
+        "reviews": 118,
+        "types": [
+          "general_contractor"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,general_contractor,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "الساير - السيارات المستعملة - الشويخ",
+        "area": "8WPM+2R6، الشويخ الصناعية",
+        "place_id": "ChIJH9gCpQObzz8R1JTUpHs4MAc",
+        "rating": 4.4,
+        "reviews": 117,
+        "types": [
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «الشويخ»"
+      },
+      {
+        "target": "العيسى",
+        "name": "Rekab Rent A Car - Airport Branch Terminal 1",
+        "area": "Gazali Expressway Kuwait International Airport, Terminal 1, Arrivals Hall",
+        "place_id": "ChIJVZG5XnqZzz8RkkGqg88GtL8",
+        "rating": 4.5,
+        "reviews": 53,
+        "types": [
+          "car_rental"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [car_rental,establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "ورشة تصليح هيتاشي - شركة العيسى",
+        "area": "شارع 75، الشويخ الصناعية",
+        "place_id": "ChIJHyE437Gazz8R2fDJLfKIhKM",
+        "rating": 3.6,
+        "reviews": 44,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "مسجد محمود عيسى محمد العصفور",
+        "area": "مسجد محمد عيسى العصفور، 2 شارع 2، كويت",
+        "place_id": "ChIJpwzM00Oezz8RXMfW2nyIsFM",
+        "rating": 5,
+        "reviews": 26,
+        "types": [
+          "mosque",
+          "place_of_worship"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,mosque,place_of_worship,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "SOUEAST Kuwait Showroom",
+        "area": "Al Rai, 4th Ring Road, Car Dealer Road Street 9, Safat 13002, Shuwaikh 70030",
+        "place_id": "ChIJq0qwHKqbzz8RW5AQbFrxlvM",
+        "rating": 4.3,
+        "reviews": 16,
+        "types": [
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Kuwait»"
+      },
+      {
+        "target": "العيسى",
+        "name": "معرض هيتاشي - العيسى",
+        "area": "Block 213, شارع ابن خلدون، حولي",
+        "place_id": "ChIJ2-CWGXCdzz8RScDxPaMieSc",
+        "rating": 3.4,
+        "reviews": 15,
+        "types": [
+          "electronics_store",
+          "home_goods_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [electronics_store,establishment,home_goods_store,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "Sircar Auctionمزاد سيركار",
+        "area": "7WW5+F2X، العارضية",
+        "place_id": "ChIJPZbu2BqRzz8RN4BMJpJTw0w",
+        "rating": 4,
+        "reviews": 14,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "العيسى",
+        "name": "AVIS Kuwait",
+        "area": "شارع فهد السالم، مدينة الكويت",
+        "place_id": "ChIJdYuPwWKFzz8RiudIzMWwu9s",
+        "rating": 2.8,
+        "reviews": 11,
+        "types": [
+          "car_rental"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Kuwait»"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة العيسى للتكييف والتبريد ( معرض قطع غيار )",
+        "area": "3 طريق الدائري الرابع، الشويخ الصناعية",
+        "place_id": "ChIJm3fJ3tSbzz8RN5z9niSkhSM",
+        "rating": 3.7,
+        "reviews": 10,
+        "types": [
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest,store]"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة مجموعة المسيله للتأجير ونقل البضائع",
+        "area": "Shuwaikh Industrial Area، الشويخ الصناعية",
+        "place_id": "ChIJX2-fjb6azz8RFSizViFRsq8",
+        "rating": 4,
+        "reviews": 9,
+        "types": [
+          "finance"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,finance,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة مجموعة عبداللطيف العيسى القابضة",
+        "area": "طريق صلاح الدين الأيوبي،, الضباط،, الرياض 11564، السعودية",
+        "place_id": "ChIJb5HLpLDlLj4R1wZTwkGZ8l4",
+        "rating": 4,
+        "reviews": 7,
+        "types": [
+          "finance"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,finance,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "Altali Car",
+        "area": "29.295155, 47.915493, العارضية",
+        "place_id": "ChIJlb7qVv2Rzz8RqoCyOcI6u4k",
+        "rating": 4,
+        "reviews": 4,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=4 < 5"
+      },
+      {
+        "target": "العيسى",
+        "name": "شركة المسيلة للسيارات - Masila Cars Company",
+        "area": "7WV7+G6M، العارضية",
+        "place_id": "ChIJCVbzGH-Rzz8RV0WtczaRZIE",
+        "rating": 3,
+        "reviews": 4,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "وكالة سيارات زوتيZOTYE",
+        "area": "مركز صن سيتي، شارع 8، الشويخ الصناعية",
+        "place_id": "ChIJnQsqFKGbzz8R4daM2a5QYXA",
+        "rating": 5,
+        "reviews": 2,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "KAIYI KWT",
+        "area": "13, الشويخ الصناعية",
+        "place_id": "ChIJH_5toC-bzz8RGEASxjelKko",
+        "rating": 4,
+        "reviews": 2,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=2 < 5"
+      },
+      {
+        "target": "العيسى",
+        "name": "سعيد و عيسى الكهربائي",
+        "area": "8W8H+WR6، الشويخ الصناعية",
+        "place_id": "ChIJMQs3CgCbzz8Rfqw2G5-Ydls",
+        "rating": 5,
+        "reviews": 2,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=2 < 5"
+      },
+      {
+        "target": "العيسى",
+        "name": "Al Essa Ready Mix",
+        "area": "8W8P+4XW، شارع 31، الشويخ الصناعية",
+        "place_id": "ChIJAaCPzpWazz8Rx6GabqqVdeQ",
+        "rating": 1,
+        "reviews": 1,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "العيسى",
+        "name": "Alruwais Cars الرويس للسيارات",
+        "area": "Khalid Ibn Al Waleed St, مدينة الكويت",
+        "place_id": "ChIJsWdpDwCFzz8RsR_LYFtVFwU",
+        "rating": 5,
+        "reviews": 1,
+        "types": [
+          "car_dealer",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=1 < 5"
+      }
+    ]
+  },
+  {
+    "target": "Trust (الثقة)",
+    "candidates": [
+      {
+        "target": "Trust (الثقة)",
+        "name": "محطة الفلاح لغسيل السيارات",
+        "area": "شارع مبارك الكبير، مدينة الكويت",
+        "place_id": "ChIJdQiyMquEzz8RsrwyuSJ7Aig",
+        "rating": 4.2,
+        "reviews": 1160,
+        "types": [
+          "car_repair",
+          "car_wash",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 1160 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "الثقه لكهرباء وزينه السيارات عمان",
+        "area": "ش. الشهيد، عمّان، الأردن",
+        "place_id": "ChIJi6TFoW1gGxURNb6F8LwZIYE",
+        "rating": 3.7,
+        "reviews": 437,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 437 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "ثقة لخدمات السيارات",
+        "area": "7HP8JQPV+RR، الرحيف، طويق، الرياض 12252، السعودية",
+        "place_id": "ChIJlfw1rRMHLz4RDXPfkWYAhtI",
+        "rating": 3.7,
+        "reviews": 196,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 196 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "ثقة لصيانة السيارات",
+        "area": "XW7J+42، قسم أول 6 أكتوبر، محافظة الجيزة 3232004، مصر",
+        "place_id": "ChIJ39VHlcxXWBQRR81h4FRGMaw",
+        "rating": 4.5,
+        "reviews": 54,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 54 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "Creative car care",
+        "area": "1357 شارع 28",
+        "place_id": "ChIJddsqQdCbzz8RSQUJtf_gqN4",
+        "rating": 4.2,
+        "reviews": 9,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 9 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "perfect car care بيرفكت كار كير",
+        "area": "شارع 28",
+        "place_id": "ChIJDfio70ubzz8Rr3dIC8nKdVA",
+        "rating": 4.5,
+        "reviews": 8,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 8 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "My Sayartee",
+        "area": "Shuwaikh Ind. Area 2, Building 40D Kuwait City، الشويخ الصناعية 70051",
+        "place_id": "ChIJUZ9Ah9Wbzz8RjtTKiwUTUS0",
+        "rating": 4.3,
+        "reviews": 8,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 8 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "ترست اكسبرس",
+        "area": "7XF6+Q68، شارع 114، الفروانية",
+        "place_id": "ChIJ__MCMM-bzz8RGF-srBoSlqU",
+        "rating": 5,
+        "reviews": 5,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 5 مراجعة"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "جلف اكسبريس للإطارات",
+        "area": "شارع عبدالعزيز فهد المساعيد، الشويخ الصناعية 70050",
+        "place_id": "ChIJTROCYpObzz8Rjri6CMR4IVM",
+        "rating": 4.9,
+        "reviews": 2754,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "Thabt ثابت فرع أسواق القرين",
+        "area": "Bulding 6, Store 5, Street 10, Aswaq 47041",
+        "place_id": "ChIJXbiSJ1ihzz8R_RXSUTBbPf4",
+        "rating": 5,
+        "reviews": 515,
+        "types": [
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "NO2 GARAGE",
+        "area": "Shuwaikh Industrial area 3، Building 20، Street 53، مدينة الكويت 25406",
+        "place_id": "ChIJD1HyC7Wbzz8Rk64cRLM0d0g",
+        "rating": 4.9,
+        "reviews": 473,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "الملحم لخدمة السيارات",
+        "area": "202 شارع 20، مدينة الكويت",
+        "place_id": "ChIJR_pjk5Gazz8RE0qngs1Vwe8",
+        "rating": 4.6,
+        "reviews": 410,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "مركز مشرف لخدمة وصيانة السيارات",
+        "area": "73GC+V4W، طريق 59",
+        "place_id": "ChIJ4S-tCTKezz8RxqnDleK-zJg",
+        "rating": 4.2,
+        "reviews": 253,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "محطة غسيل السيارات المنصورية - مافرا",
+        "area": "شارع القاهرة، 35503",
+        "place_id": "ChIJ5dE8hsibzz8RKNFaU2Ll3vE",
+        "rating": 4,
+        "reviews": 249,
+        "types": [
+          "car_repair",
+          "car_wash",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «مافرا»"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "fk auto parts - قطع غيار السيارات",
+        "area": "8WGR+PQC, Abdul Aziz Fahad Almusaed St, مركز وارة، Opp. Mcdonalds and, Canada Dry Street, الشويخ الصناعية",
+        "place_id": "ChIJUXp4DgCbzz8RtbtldDh5JPI",
+        "rating": 4.7,
+        "reviews": 227,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «FK Auto Parts - قطع غيار السيارات»"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "AlRabiah Transmission services center",
+        "area": "21 الشويخ الصناعية, الشويخ الصناعية 42204",
+        "place_id": "ChIJ7eSAVseazz8RcX6VGU3KOkc",
+        "rating": 4.1,
+        "reviews": 197,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "الرمال الذهبية للفحص الفني للسيارات - الفرع الرئيسي",
+        "area": "مقابل مسجد العثمان، شارع 22",
+        "place_id": "ChIJzyEA-_Wbzz8RyUtNbAvvNcs",
+        "rating": 3.8,
+        "reviews": 136,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "كراج متنقل | شركة دينمو كار لصيانة و تبديل تواير السيارات",
+        "area": "26th Floor, برج باناسونيك، 16 شارع فهد السالم، مدينة الكويت 13151",
+        "place_id": "ChIJGyYwapCFzz8RYm-VJ-zEo-s",
+        "rating": 4.8,
+        "reviews": 124,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "شركه قريه الزيوت العالميه لقطع غيار السيارات وتوابعها",
+        "area": "8W8J+7MC، شارع 52، الشويخ الصناعية",
+        "place_id": "ChIJz5m6rNKbzz8RLH8C6FBF2zk",
+        "rating": 4.3,
+        "reviews": 118,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "Auto Tech co. . شركة اوتو تيك",
+        "area": "109 شارع 9، الشويخ الصناعية",
+        "place_id": "ChIJEw1u0u6bzz8RV6oS2FfmMEg",
+        "rating": 4.8,
+        "reviews": 103,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "Al dabbous auto service",
+        "area": "8WCV+9JG، الشويخ الصناعية",
+        "place_id": "ChIJ01072lWbzz8RrkOAWnNJPmo",
+        "rating": 4.3,
+        "reviews": 93,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "مافرا",
+        "area": "الشويخ الصناعية",
+        "place_id": "ChIJMfp298iazz8RatTKarzo6wA",
+        "rating": 4,
+        "reviews": 88,
+        "types": [
+          "car_repair",
+          "car_wash",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "HIQ Car Service Center",
+        "area": "الشويخ الصناعية",
+        "place_id": "ChIJ42Q3fbyazz8RY9CEEaptOx8",
+        "rating": 4.6,
+        "reviews": 65,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "A Plus Car Care",
+        "area": "شارع 8، 70071",
+        "place_id": "ChIJ-dlIXambzz8RkOUdzBffVyE",
+        "rating": 4.8,
+        "reviews": 53,
+        "types": [
+          "car_repair",
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "3eauto garage - automotive services center | كراج ثري اي اوتو لتصليح السيارات",
+        "area": "block 1 street 6 Building 1711 Al",
+        "place_id": "ChIJr-EA7j6bzz8R69S_363d6zg",
+        "rating": 4,
+        "reviews": 52,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "انوار المهلب ANWAAR AL MUHALLB CAR Accessories",
+        "area": "شارع 1",
+        "place_id": "ChIJDYLx6uUHzz8RHRl6N5MxdKQ",
+        "rating": 4.8,
+        "reviews": 47,
+        "types": [
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "future car care",
+        "area": "شارع حمد راشد العلبان",
+        "place_id": "ChIJ1dQ1FpGazz8RKJXHVwzuFe4",
+        "rating": 4.4,
+        "reviews": 44,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "توب كار حماية السيارات بالكويت Top Car protection",
+        "area": "شارع حمد راشد العلبان، الشويخ",
+        "place_id": "ChIJ9RqogICbzz8RbdQo5P-Mxjs",
+        "rating": 4.4,
+        "reviews": 39,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "كهرباء وبنشر متنقل",
+        "area": "Kuwait Cancer Control Center kuwait، حولي 13027",
+        "place_id": "ChIJ61MrLfadzz8RDHZnDzIzNlI",
+        "rating": 4,
+        "reviews": 39,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "غسيل سيارات متنقل",
+        "area": "Tunis St، حولي 30000",
+        "place_id": "ChIJM0vdLV-dzz8RFe3nzL0eNGY",
+        "rating": 4,
+        "reviews": 21,
+        "types": [
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «غسيل سيارات»"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "كراج الخضري 🇰🇼💙",
+        "area": "8WCX+354، الشويخ الصناعية",
+        "place_id": "ChIJYXXpKQCbzz8RSRR0WlyM_UA",
+        "rating": 5,
+        "reviews": 18,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "كراج برق الكويت لتصليح السيارات",
+        "area": "Building 110, street 51, الشويخ الصناعية 91200",
+        "place_id": "ChIJB_CTdQCbzz8RjNXkJsvAN60",
+        "rating": 4.9,
+        "reviews": 16,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "Trust VS Auto Garage",
+        "area": "1691-1719 شارع 6",
+        "place_id": "ChIJwWNdBqqbzz8R8EhRFiQ7CC0",
+        "rating": 4.8,
+        "reviews": 5,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Garage»"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "خدمة فاليه باركن",
+        "area": "شارع الخنساء، السالمية 12028",
+        "place_id": "ChIJ12aqe7J3zz8RtlZ-55MF2Rc",
+        "rating": 5,
+        "reviews": 5,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "SAIF PROTECTIONS s KUWAIT",
+        "area": "Mutlaq Abbas Munawir Street 8W4P+92 Shuwaikh Industrial, Kuwait city",
+        "place_id": "ChIJacnGhvmbzz8RQLcRzhm21CU",
+        "rating": 5,
+        "reviews": 5,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Trust (الثقة)",
+        "name": "مركز الثقه لتلميع السيارات",
+        "area": "Street 7",
+        "place_id": "ChIJZ4f7QX2bzz8RFTAA3rnx5qU",
+        "rating": 3.3,
+        "reviews": 3,
+        "types": [
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=3 < 5"
+      }
+    ]
+  },
+  {
+    "target": "Magic",
+    "candidates": [
+      {
+        "target": "Magic",
+        "name": "Maruti Suzuki Service (Magic Auto)",
+        "area": "A92/93, Mayapuri Industrial Area Phase II, Mayapuri, New Delhi, Delhi, 110064، الهند",
+        "place_id": "ChIJRR20IU8DDTkRI7YUfqrY2ts",
+        "rating": 4,
+        "reviews": 1805,
+        "types": [
+          "car_repair",
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 1805 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "Magic Auto Service",
+        "area": "رقم 6، قسم ثان 6 أكتوبر، محافظة الجيزة 3222605، مصر",
+        "place_id": "ChIJhWkveoJVWBQRjQNgV8NTX6U",
+        "rating": 4.5,
+        "reviews": 164,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 164 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "Magic Auto Service",
+        "area": "Beverly Hills Gate 8, The Walk Mall، ثاني الشيخ زايد، محافظة الجيزة 12588، مصر",
+        "place_id": "ChIJR2IPQkNXWBQR6P7MREMntkg",
+        "rating": 4.5,
+        "reviews": 33,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 33 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "Magic Touch Car Maintenance اللمسةالسحرية للصيانةالسيارات",
+        "area": "Building:484 Street:340 Zone:55, البناية: 484 الشارع: 340 المنطقة:, 55 طريق سلوى، الدوحة، قطر",
+        "place_id": "ChIJAXFaGcHRRT4R12nNqGiEDSI",
+        "rating": 4.7,
+        "reviews": 28,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 28 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "Magic Motors",
+        "area": "شارع 22، الشويخ الصناعية",
+        "place_id": "ChIJ_Zofoiybzz8RRGuv80ONIeI",
+        "rating": 4.7,
+        "reviews": 15,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 15 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "المطرقة السحرية",
+        "area": "الشويخ الصناعية",
+        "place_id": "ChIJ52tsVwCbzz8R3YkfsraJYh8",
+        "rating": 5,
+        "reviews": 6,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 6 مراجعة"
+      },
+      {
+        "target": "Magic",
+        "name": "كويت ماجيك مول",
+        "area": "شارع سالم صباح السالم الصباح، Kuwait",
+        "place_id": "ChIJ2Xmqm-8Izz8R8FFt6xK8Dho",
+        "rating": 4.2,
+        "reviews": 4220,
+        "types": [
+          "clothing_store",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [clothing_store,establishment,point_of_interest,store]"
+      },
+      {
+        "target": "Magic",
+        "name": "ماجيك بلانيت",
+        "area": "Al Farwaniya The Avenues Mall Level، 1، الأفنيوز، Kuwait",
+        "place_id": "ChIJjaeAwouazz8RUCRm5fd0WhY",
+        "rating": 4.1,
+        "reviews": 560,
+        "types": [
+          "amusement_park"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [amusement_park,establishment,point_of_interest]"
+      },
+      {
+        "target": "Magic",
+        "name": "Kuwait Magic Mall",
+        "area": "الكويت‎",
+        "place_id": "ChIJTZDbdAAJzz8RotmEcA1Jceo",
+        "rating": 4.4,
+        "reviews": 216,
+        "types": [
+          "shopping_mall"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «Kuwait»"
+      },
+      {
+        "target": "Magic",
+        "name": "MG Kuwait - Main Service Center",
+        "area": "Al rai, Block 4, St. 1",
+        "place_id": "ChIJF4zDSJ2bzz8RZ8DyKHwjXdw",
+        "rating": 3.3,
+        "reviews": 135,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Magic",
+        "name": "MG Service Center Shuwaikh Kuwait",
+        "area": "8 Street Shuwaikh Industrial 13008, Shuwaikh",
+        "place_id": "ChIJ0Vm73wObzz8Rkq3831tCdMg",
+        "rating": 3.6,
+        "reviews": 29,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Magic",
+        "name": "Kuwait Auto Service",
+        "area": "Shuwaikh 21 St, مدينة الكويت 70652",
+        "place_id": "ChIJp6_fdH6Fzz8Rqxfdz2y0Zok",
+        "rating": 5,
+        "reviews": 2,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Magic",
+        "name": "عبدالعزيز ناصر",
+        "area": "كويت ماجيك، شارع سالم صباح السالم الصباح",
+        "place_id": "ChIJo2jlXwAJzz8RQ58_SqpdftE",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=0 < 5"
+      },
+      {
+        "target": "Magic",
+        "name": "ماجيك ووش",
+        "area": "10، 53005",
+        "place_id": "ChIJ-QwOpoihzz8RZRKFUKDgldk",
+        "rating": null,
+        "reviews": 0,
+        "types": [
+          "car_wash"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=0 < 5"
+      }
+    ]
+  },
+  {
+    "target": "Auto One (الكيان الحقيقي)",
+    "candidates": [
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 Parts and Accessories Jahra",
+        "area": "5th Road Near Jahra Industrial Fire Station، الجهراء 13043",
+        "place_id": "ChIJMUVDhk_3zz8RCurRG8pIv4Y",
+        "rating": 3.8,
+        "reviews": 20,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 20 مراجعة"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Auto1 store alrai",
+        "area": "51 شارع 43",
+        "place_id": "ChIJ10nQYFqbzz8R0oV3wnUDMq8",
+        "rating": 4.7,
+        "reviews": 19,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 19 مراجعة"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 Parts and Accessories Al-Rai",
+        "area": "23 Street Opposite Al Essa Service Center Al Rai Block 3، 13043",
+        "place_id": "ChIJsxwjiUqbzz8RyU-QgjTOUxo",
+        "rating": 3.8,
+        "reviews": 12,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 12 مراجعة"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Auto1 Tire & Services (B02 - NEXEN) أوتو1 مركز الغنام للاطارات",
+        "area": "Canada Dry St, الشويخ الصناعية 13043",
+        "place_id": "ChIJxWt8VQCbzz8RzhwM7oPgvu4",
+        "rating": 3.8,
+        "reviews": 9,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 9 مراجعة"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 KOREAN&BODYPARTS",
+        "area": "8WCV+Q22، الشويخ الصناعية",
+        "place_id": "ChIJyWYRGwCbzz8ROLVLUU2X48c",
+        "rating": 4.2,
+        "reviews": 6,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "ADD",
+        "reason": "auto + operational + 6 مراجعة"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 Accessories, Parts, Tires & Batteries - أوتو 1 للإكسسوارات، قطع الغيار، الإطارات والبطاريات",
+        "area": "Canada Dry Street Near Khaldiya Bridge Head Office Branch Shuwaikh Industrial, الشويخ الصناعية 13043",
+        "place_id": "ChIJUQI2eVubzz8RKIGBV64ViUc",
+        "rating": 4.2,
+        "reviews": 1425,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Auto1 Tire & Services (B10) أوتو1 مركز الغنام للاطارات والخدمات",
+        "area": "Canada Dry St, الشويخ الصناعية 13043",
+        "place_id": "ChIJieRrMxCbzz8Ri36eG0vmvJI",
+        "rating": 4.9,
+        "reviews": 257,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 fahaheel",
+        "area": "Dabbous Street. Fahaheel Industrial Area Near Al Daman Inspection Center Fahaheel Block 3، 13043",
+        "place_id": "ChIJSwkWyiUHzz8R65navMZgP6c",
+        "rating": 4,
+        "reviews": 115,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Al dabbous auto service",
+        "area": "8WCV+9JG، الشويخ الصناعية",
+        "place_id": "ChIJ01072lWbzz8RrkOAWnNJPmo",
+        "rating": 4.3,
+        "reviews": 93,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 Parts & Accessories Shuwaikh 03",
+        "area": "53 Street, Block B Near Al Homaizi Factory Store, الشويخ الصناعية",
+        "place_id": "ChIJf4VMyqOazz8RS-k2mNRePdk",
+        "rating": 4.1,
+        "reviews": 80,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Auto1 Tire & Services (07) أوتو1 مركز الغنام للاطارات والخدمات",
+        "area": "Abdul Aziz Fahad Al Musaed Street, Entrance to Street 21, Canada Dry St, Shuwaikh 13122",
+        "place_id": "ChIJl0pjY-Gbzz8RhaQWFgiDTOg",
+        "rating": 4.1,
+        "reviews": 47,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "أوتو 1",
+        "area": "Near Nissan Service Center, Street 19, الشويخ الصناعية 13043",
+        "place_id": "ChIJyWNgbJmbzz8RqgN1TzgYIUc",
+        "rating": 3.5,
+        "reviews": 26,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تطابق اسم مع موجود: «AUTO1 Accessories, Parts, Tires & Batteries - أوتو 1 للإكسسوارات، قطع الغيار، الإطارات والبطاريات»"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "اي ون لتلميع ووقاية السيارات",
+        "area": "8W5P+W4، الشويخ الصناعية 92400",
+        "place_id": "ChIJYXkweCKbzz8RQG_0H4SwcBU",
+        "rating": 4.4,
+        "reviews": 23,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "كراج وشركة بيزول و اوتو ون فرع الجهراء",
+        "area": "الجهراء المنطقة الصناعية قطعه 1،، الجهراء،، الجهراء",
+        "place_id": "ChIJoxhFD2b3zz8R1WVBqtXeu8o",
+        "rating": 3.1,
+        "reviews": 20,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "AUTO1 Parts and Accessories Sharq",
+        "area": "Soor Street, Sharq Industrial Area Near Kuwait Computer Services Murqab Block 3، مدينة الكويت 13043",
+        "place_id": "ChIJPcr6Iy6Fzz8RA6zvB34HdAw",
+        "rating": 4.2,
+        "reviews": 15,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "One Stop Auto Services",
+        "area": "33w شارع 24، الشويخ الصناعية",
+        "place_id": "ChIJi0v6gsibzz8Rpnm1Cy9Pnzo",
+        "rating": 4.3,
+        "reviews": 12,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "Auto1 Tire & Services (B12) أوتو1 مركز الغنام للاطارات والخدمات",
+        "area": "Near Toyota Service Center, شارع 400، الأحمدي 13043",
+        "place_id": "ChIJU-W54_0Hzz8RV7NJc-QrftU",
+        "rating": 4.4,
+        "reviews": 11,
+        "types": [
+          "car_repair",
+          "store"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "موجود بالفعل (place_id)"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "شركة ون كار لتأجير السيارات | One 1 Car Rental",
+        "area": "شارع محمد نزال المعصب، العارضية 92400",
+        "place_id": "ChIJYS1CI8yRzz8RqD9PYs0UIbA",
+        "rating": 4,
+        "reviews": 8,
+        "types": [
+          "car_rental"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [car_rental,establishment,point_of_interest]"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "KAPICO Group HQ",
+        "area": "Abdul Aziz Fahad Al Musaed Street Canada Dry Street, الشويخ الصناعية",
+        "place_id": "ChIJS9a_3c-azz8R20dR7j3vKR0",
+        "rating": 4.6,
+        "reviews": 8,
+        "types": [],
+        "business_status": "OPERATIONAL",
+        "verdict": "SKIP",
+        "reason": "تصنيف غير سيارات: [establishment,point_of_interest]"
+      },
+      {
+        "target": "Auto One (الكيان الحقيقي)",
+        "name": "One Stop Auto Shop",
+        "area": "8WGR+PQC، شارع عبدالعزيز فهد المساعيد، الشويخ الصناعية",
+        "place_id": "ChIJmyPxe5Obzz8R1EaDIiYUQ6I",
+        "rating": 3.7,
+        "reviews": 3,
+        "types": [
+          "car_repair"
+        ],
+        "business_status": "OPERATIONAL",
+        "verdict": "VERIFY",
+        "reason": "reviews=3 < 5"
+      }
+    ]
+  }
+]

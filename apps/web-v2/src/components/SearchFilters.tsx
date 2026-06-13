@@ -10,6 +10,7 @@ const SERVICE_MODES = [
 ];
 
 const SORT_OPTIONS = [
+  { value: "relevance", label: "الأنسب" },
   { value: "top-rated", label: "الأعلى تقييماً" },
   { value: "most-reviews", label: "الأكثر مراجعات" },
   { value: "az", label: "أبجدي (أ-ي)" },
@@ -39,7 +40,7 @@ export function SearchFilters({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nbhdDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const sortValue = searchParams.get("sort") ?? "top-rated";
+  const sortValue = searchParams.get("sort") ?? "relevance";
 
   // Build a new URL with one param changed (empty value removes it), reset paging.
   const updateParam = useCallback(
@@ -169,7 +170,7 @@ export function SearchFilters({
         <select
           value={sortValue}
           onChange={(e) =>
-            updateParam("sort", e.target.value === "top-rated" ? "" : e.target.value)
+            updateParam("sort", e.target.value === "relevance" ? "" : e.target.value)
           }
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
