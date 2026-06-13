@@ -11,6 +11,10 @@ const NAV = [
   { href: "#footer", label: "تواصل" },
 ];
 
+// Auth (دخول/تسجيل) is deferred (Checkpoint 5). Button kept in code but hidden
+// from the UI — flip to true and wire the real link when accounts ship.
+const SHOW_AUTH = false;
+
 export function Header() {
   const [open, setOpen] = useState(false);
 
@@ -42,16 +46,18 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Login button (RTL end = left) — disabled until Checkpoint 5 */}
+        {/* Login button (RTL end = left) — hidden until auth ships (SHOW_AUTH) */}
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            disabled
-            title="قريباً"
-            className="hidden cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60 md:block"
-          >
-            دخول / تسجيل
-          </button>
+          {SHOW_AUTH && (
+            <button
+              type="button"
+              disabled
+              title="قريباً"
+              className="hidden cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60 md:block"
+            >
+              دخول / تسجيل
+            </button>
+          )}
 
           {/* Mobile hamburger */}
           <button
@@ -92,13 +98,15 @@ export function Header() {
               {n.label}
             </Link>
           ))}
-          <button
-            type="button"
-            disabled
-            className="mt-1 cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60"
-          >
-            دخول / تسجيل
-          </button>
+          {SHOW_AUTH && (
+            <button
+              type="button"
+              disabled
+              className="mt-1 cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60"
+            >
+              دخول / تسجيل
+            </button>
+          )}
         </nav>
       )}
     </header>
