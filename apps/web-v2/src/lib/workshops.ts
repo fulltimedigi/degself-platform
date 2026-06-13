@@ -1,5 +1,6 @@
 import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
+import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
 import type { Workshop } from "@/lib/types";
 
 export interface SearchParams {
@@ -56,8 +57,23 @@ export async function searchWorkshops(
     .eq("out_of_scope", false);
 
   if (query) {
-    const tokens = normalizeArabic(query).split(" ").filter(Boolean);
-    for (const t of tokens) q = q.ilike("search_text", `%${t}%`);
+    const raw = normalizeArabic(query).split(" ").filter(Boolean);
+    // drop generic action/filler words so the meaningful noun carries the query;
+    // fall back to the raw tokens if filtering would empty it.
+    const meaningful = raw.filter((t) => !SEARCH_STOPWORDS.has(t));
+    const tokens = meaningful.length ? meaningful : raw;
+    for (const t of tokens) {
+      // OR-expand each token with its synonyms (script/dialect/spelling variants),
+      // then AND the groups together. Each variant is re-normalized to match the
+      // normalized search_text column.
+      const variants = expandToken(t).map((v) => normalizeArabic(v)).filter(Boolean);
+      const uniq = [...new Set(variants)];
+      if (uniq.length === 1) {
+        q = q.ilike("search_text", `%${uniq[0]}%`);
+      } else {
+        q = q.or(uniq.map((v) => `search_text.ilike.%${v}%`).join(","));
+      }
+    }
   }
   if (area) q = q.eq("area", area);
   if (neighborhood) q = q.eq("neighborhood", neighborhood);
