@@ -11,7 +11,7 @@ export interface SearchParams {
   entity_type?: string;
   service_mode?: string;
   min_rating?: number;
-  sort?: string; // "top-rated" (default) | "most-reviews" | "az"
+  sort?: string; // "relevance" (default) | "top-rated" | "most-reviews" | "az"
   limit?: number;
   offset?: number;
 }
@@ -24,7 +24,9 @@ export interface SearchResult {
 /**
  * Filtered, paginated search. Free-text `query` is normalized (Arabic-aware)
  * and matched token-by-token via ILIKE on the trigram-indexed search_text.
- * Sort: google_rating DESC, then google_reviews_count DESC.
+ * Default sort: rank_score DESC (relevance — Bayesian rating + review-volume +
+ * dealer boost; see migration 004) so trusted established centers surface above
+ * thin 5.0-with-3-reviews shops. Other sorts: top-rated | most-reviews | az.
  */
 export async function searchWorkshops(
   params: SearchParams = {}
@@ -70,9 +72,14 @@ export async function searchWorkshops(
     q = q.order("google_reviews_count", { ascending: false, nullsFirst: false });
   } else if (sort === "az") {
     q = q.order("name", { ascending: true });
-  } else {
+  } else if (sort === "top-rated") {
     q = q
       .order("google_rating", { ascending: false, nullsFirst: false })
+      .order("google_reviews_count", { ascending: false, nullsFirst: false });
+  } else {
+    // default: relevance — Bayesian rating + review volume + dealer boost
+    q = q
+      .order("rank_score", { ascending: false, nullsFirst: false })
       .order("google_reviews_count", { ascending: false, nullsFirst: false });
   }
 
@@ -95,7 +102,7 @@ export async function getWorkshop(placeId: string): Promise<Workshop | null> {
   return (data as Workshop | null) ?? null;
 }
 
-/** Top-rated live workshops for the homepage. */
+/** Most relevant (trusted + established) live workshops for the homepage. */
 export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
   const supabase = supabasePublic;
   const { data, error } = await supabase
@@ -106,7 +113,7 @@ export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
     .eq("is_automotive", true)
     .eq("out_of_scope", false)
     .not("google_rating", "is", null)
-    .order("google_rating", { ascending: false, nullsFirst: false })
+    .order("rank_score", { ascending: false, nullsFirst: false })
     .order("google_reviews_count", { ascending: false, nullsFirst: false })
     .limit(limit);
   if (error) throw new Error(`getFeaturedWorkshops failed: ${error.message}`);
