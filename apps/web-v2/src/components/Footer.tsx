@@ -12,7 +12,7 @@ export function Footer() {
           <Image src="/brand/logo-icon.svg" alt="دق سلف" width={40} height={40} unoptimized />
           <p className="text-sm font-bold">دق سلف</p>
           <p className="text-sm text-muted-foreground">
-            لا تحاتي، بنصلحها — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.
+            لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.
           </p>
         </div>
 
@@ -39,13 +39,25 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">تابعنا على وسائل التواصل</p>
           <div className="flex gap-3">
             {/* X */}
-            <a href="#" aria-label="X" className="text-muted-foreground hover:text-primary">
+            <a
+              href="https://x.com/degself"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X (تويتر)"
+              className="text-muted-foreground hover:text-primary"
+            >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.656l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
             </a>
             {/* Instagram */}
-            <a href="#" aria-label="Instagram" className="text-muted-foreground hover:text-primary">
+            <a
+              href="https://www.instagram.com/degselfkw"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="text-muted-foreground hover:text-primary"
+            >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="2" y="2" width="20" height="20" rx="5" />
                 <circle cx="12" cy="12" r="4" />

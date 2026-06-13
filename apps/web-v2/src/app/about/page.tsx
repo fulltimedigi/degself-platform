@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export const metadata = {
   title: "عن دق سلف | دليل كراجات وخدمات السيارات في الكويت",
-  description: "دق سلف — لا تحاتي، بنصلحها. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+  description: "دق سلف — لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto w-full max-w-2xl px-6 py-12">
       <h1 className="text-3xl font-extrabold">عن دق سلف</h1>
-      <p className="mt-2 text-xl font-bold text-primary">لا تحاتي، بنصلحها</p>
+      <p className="mt-2 text-xl font-bold text-primary">لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب</p>
 
       <div className="mt-6 flex flex-col gap-4 leading-relaxed text-muted-foreground">
         <p>

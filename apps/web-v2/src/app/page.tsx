@@ -14,7 +14,9 @@ export default async function Home() {
     <>
       {/* Hero (unchanged) */}
       <section className="flex flex-col items-center gap-6 px-6 py-16 text-center">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">لا تحاتي، بنصلحها</h1>
+        <h1 className="text-3xl font-extrabold sm:text-4xl">
+          لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب
+        </h1>
         <p className="text-muted-foreground">
           دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت
         </p>
