@@ -36,7 +36,7 @@ export default async function Home() {
         </form>
       </section>
 
-      {/* مترجم الكراج — قسم بارز فوق */}
+      {/* اكتشف العطل — قسم بارز فوق */}
       <section className="px-6 pb-4">
         <GarageTranslator />
       </section>

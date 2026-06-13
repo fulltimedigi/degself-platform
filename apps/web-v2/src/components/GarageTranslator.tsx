@@ -6,7 +6,7 @@ import { track } from "@vercel/analytics";
 import { StarRating } from "@/components/StarRating";
 import { MAX_INPUT_CHARS, type TranslateResponse } from "@/lib/garageTranslator";
 
-const PLACEHOLDER = "اكتب مشكلة سيارتك… مثلاً: الثلاجة ما تبرّد بالنهار";
+const PLACEHOLDER = "اكتب مشكلة سيارتك… مثلاً: المكيف ما يبرّد بالنهار";
 
 export function GarageTranslator() {
   const [input, setInput] = useState("");
@@ -64,9 +64,9 @@ export function GarageTranslator() {
   return (
     <section className="mx-auto w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
       <div className="flex flex-col gap-2 text-center">
-        <h2 className="text-2xl font-extrabold">مترجم الكراج</h2>
+        <h2 className="text-2xl font-extrabold">اكتشف العطل</h2>
         <p className="text-sm text-muted-foreground">
-          اكتب مشكلة سيارتك بكلامك العادي، ونوريك أشهر الأسباب المحتملة وأنسب كراج لها.
+          اشرح المشكلة في سيارتك بكلامك العادي، ونبيّن لك أشهر الأسباب المحتملة وأنسب كراج لها.
         </p>
       </div>
 
@@ -88,7 +88,7 @@ export function GarageTranslator() {
             disabled={loading || !input.trim()}
             className="rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
           >
-            {loading ? "جارٍ الترجمة…" : "ترجم"}
+            {loading ? "جارٍ الكشف…" : "اكتشف العطل"}
           </button>
         </div>
       </form>
