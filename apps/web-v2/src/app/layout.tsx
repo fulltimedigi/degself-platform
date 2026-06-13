@@ -1,9 +1,10 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -32,6 +33,23 @@ export const metadata: Metadata = {
     description: "ابحث عن كراج أو خدمة سيارات في الكويت. لا تحاتي، بنصلحها.",
     images: ["/brand/logo-arabic.png"],
   },
+  applicationName: "دق سلف",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "دق سلف",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-icon-180.png", sizes: "180x180", type: "image/png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({
@@ -44,6 +62,7 @@ export default function RootLayout({
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
