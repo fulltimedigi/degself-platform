@@ -77,7 +77,7 @@ function Header() {
 function Footer() {
   return (
     <footer className="border-t border-border bg-card/40">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-2 md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-3 md:px-6">
         <div className="space-y-3">
           <LogoEn className="h-8" />
           <p className="text-sm font-bold text-primary">{TAGLINE}</p>
@@ -87,7 +87,33 @@ function Footer() {
           </p>
         </div>
 
-        <div className="md:text-end">
+        <div>
+          <h4 className="mb-3 text-sm font-bold">تابعنا على</h4>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li>
+              <a
+                href="https://x.com/degself"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                إكس (تويتر)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/degselfkw"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                إنستغرام
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="md:text-left">
           <h4 className="mb-3 text-sm font-bold">روابط سريعة</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {NAV.map((n) => (
