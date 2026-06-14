@@ -1,18 +1,21 @@
 import type { MetadataRoute } from "next";
 import { getAllPlaceIdsWithLastmod } from "@/lib/workshops";
 import { getLandingCombos, getLandingLastmod, comboKey } from "@/lib/landing";
+import { getMakeCounts } from "@/lib/makes";
 import { articleSlugs } from "@/app/blog/_articles";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 const KARAJ = encodeURIComponent("كراج");
+const MARKA = encodeURIComponent("ماركة");
 
 export const revalidate = 86400; // rebuild sitemap daily
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [workshops, combos, landingLastmod] = await Promise.all([
+  const [workshops, combos, landingLastmod, makes] = await Promise.all([
     getAllPlaceIdsWithLastmod(),
     getLandingCombos(),
     getLandingLastmod(),
+    getMakeCounts(),
   ]);
 
   const now = new Date();
@@ -59,6 +62,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Car-make pages (browse by brand) + their index.
+  const makePages: MetadataRoute.Sitemap = [
+    { url: `${SITE}/${MARKA}`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    ...makes.map((m) => ({
+      url: `${SITE}/${MARKA}/${encodeURIComponent(m.slug)}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+  ];
+
   // SEO landing pages (specialty × area) — per-combo MAX(updated_at).
   const landingPages: MetadataRoute.Sitemap = combos.map((c) => ({
     url: `${SITE}/${KARAJ}/${encodeURIComponent(c.specialty)}/${encodeURIComponent(c.area)}`,
@@ -69,6 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...makePages,
     ...specialtyPages,
     ...blogPages,
     ...landingPages,

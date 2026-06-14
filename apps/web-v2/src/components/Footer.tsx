@@ -25,6 +25,9 @@ export function Footer() {
           <Link href="/search" className="text-sm text-muted-foreground hover:text-primary">
             البحث
           </Link>
+          <Link href="/ماركة" className="text-sm text-muted-foreground hover:text-primary">
+            تصفّح حسب الماركة
+          </Link>
           <Link href="/emergency" className="text-sm text-muted-foreground hover:text-primary">
             سطحة وكراج متنقل
           </Link>
