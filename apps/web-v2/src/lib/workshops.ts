@@ -12,15 +12,36 @@ export interface SearchParams {
   entity_type?: string;
   service_mode?: string;
   min_rating?: number;
-  sort?: string; // "relevance" (default) | "top-rated" | "most-reviews" | "az"
+  sort?: string; // "relevance" (default) | "top-rated" | "most-reviews" | "az" | "distance"
+  lat?: number; // user location (for sort=distance)
+  lng?: number;
   limit?: number;
   offset?: number;
 }
 
+export type WorkshopWithDistance = Workshop & { distance_km?: number | null };
+
 export interface SearchResult {
-  workshops: Workshop[];
+  workshops: WorkshopWithDistance[];
   total: number;
 }
+
+// Great-circle distance in meters between two lat/lng points.
+function haversineMeters(aLat: number, aLng: number, bLat: number, bLng: number): number {
+  const R = 6371000;
+  const toR = (d: number) => (d * Math.PI) / 180;
+  const dLat = toR(bLat - aLat);
+  const dLng = toR(bLng - aLng);
+  const x =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toR(aLat)) * Math.cos(toR(bLat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+
+// "Near me" fetches at most this many most-relevant matches, then sorts them by
+// distance in JS (Supabase can't ORDER BY distance without PostGIS). Real filtered
+// searches are well under this; an unfiltered browse takes the top-N relevant.
+const DISTANCE_CANDIDATE_CAP = 500;
 
 /**
  * Filtered, paginated search. Free-text `query` is normalized (Arabic-aware)
@@ -42,6 +63,8 @@ export async function searchWorkshops(
     service_mode,
     min_rating,
     sort,
+    lat,
+    lng,
     limit = 24,
     offset = 0,
   } = params;
@@ -82,6 +105,28 @@ export async function searchWorkshops(
   if (entity_type) q = q.eq("entity_type", entity_type);
   if (service_mode) q = q.eq("service_mode", service_mode);
   if (min_rating) q = q.gte("google_rating", min_rating);
+
+  // "near me" — sort the (bounded) match set by distance to the user in JS.
+  if (sort === "distance" && Number.isFinite(lat) && Number.isFinite(lng)) {
+    const { data, error } = await q
+      .order("rank_score", { ascending: false, nullsFirst: false })
+      .range(0, DISTANCE_CANDIDATE_CAP - 1);
+    if (error) throw new Error(`searchWorkshops(distance) failed: ${error.message}`);
+    const ranked = ((data ?? []) as Workshop[])
+      .map((w) => ({
+        w,
+        d:
+          w.lat != null && w.lng != null
+            ? haversineMeters(lat as number, lng as number, w.lat, w.lng)
+            : Number.POSITIVE_INFINITY,
+      }))
+      .sort((a, b) => a.d - b.d);
+    const page = ranked.slice(offset, offset + limit).map(({ w, d }) => ({
+      ...w,
+      distance_km: Number.isFinite(d) ? Math.round(d / 100) / 10 : null,
+    }));
+    return { workshops: page, total: ranked.length };
+  }
 
   // sort
   if (sort === "most-reviews") {

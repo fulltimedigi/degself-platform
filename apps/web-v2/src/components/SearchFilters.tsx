@@ -37,10 +37,52 @@ export function SearchFilters({
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [nbhd, setNbhd] = useState(searchParams.get("neighborhood") ?? "");
   const [rating, setRating] = useState(Number(searchParams.get("min_rating") ?? 0));
+  const [locating, setLocating] = useState(false);
+  const [geoErr, setGeoErr] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nbhdDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sortValue = searchParams.get("sort") ?? "relevance";
+  const nearActive = sortValue === "distance";
+
+  // "near me": ask the browser for the user's location, then sort by distance.
+  function nearMe() {
+    if (!("geolocation" in navigator)) {
+      setGeoErr("المتصفح لا يدعم تحديد الموقع");
+      return;
+    }
+    setLocating(true);
+    setGeoErr("");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("sort", "distance");
+        params.set("lat", pos.coords.latitude.toFixed(5));
+        params.set("lng", pos.coords.longitude.toFixed(5));
+        params.delete("page");
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      },
+      () => {
+        setLocating(false);
+        setGeoErr("تعذّر تحديد موقعك — فعّل إذن الموقع وحاول مرة أخرى");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }
+
+  // Changing sort away from "distance" drops the stored location too.
+  function onSortChange(value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (!value || value === "relevance") params.delete("sort");
+    else params.set("sort", value);
+    if (value !== "distance") {
+      params.delete("lat");
+      params.delete("lng");
+    }
+    params.delete("page");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }
 
   // Build a new URL with one param changed (empty value removes it), reset paging.
   const updateParam = useCallback(
@@ -86,7 +128,8 @@ export function SearchFilters({
     !!searchParams.get("governorate") ||
     !!searchParams.get("service_mode") ||
     !!searchParams.get("min_rating") ||
-    !!searchParams.get("sort");
+    !!searchParams.get("sort") ||
+    !!searchParams.get("lat");
 
   function clearAll() {
     setQuery("");
@@ -169,18 +212,34 @@ export function SearchFilters({
         {/* sort */}
         <select
           value={sortValue}
-          onChange={(e) =>
-            updateParam("sort", e.target.value === "relevance" ? "" : e.target.value)
-          }
+          onChange={(e) => onSortChange(e.target.value)}
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
+          {nearActive && <option value="distance">الأقرب لك</option>}
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
+
+        {/* near me */}
+        <button
+          type="button"
+          onClick={nearMe}
+          disabled={locating}
+          className={
+            "rounded-xl border px-3 py-2 text-sm font-semibold transition disabled:opacity-60 " +
+            (nearActive
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border text-foreground hover:bg-muted")
+          }
+        >
+          📍 {locating ? "جارٍ تحديد موقعك…" : nearActive ? "الأقرب لك" : "الأقرب لي"}
+        </button>
       </div>
+
+      {geoErr && <p className="text-sm text-red-500">{geoErr}</p>}
 
       {/* min-rating slider */}
       <div className="flex items-center gap-3">

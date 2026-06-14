@@ -65,6 +65,8 @@ export default async function SearchPage({
         specialty: sp.specialty,
         service_mode: sp.service_mode,
         sort: sp.sort,
+        lat: sp.lat ? Number(sp.lat) : undefined,
+        lng: sp.lng ? Number(sp.lng) : undefined,
         min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
         limit: PAGE_SIZE,
         offset,
@@ -86,6 +88,8 @@ export default async function SearchPage({
     if (sp.specialty) params.set("specialty", sp.specialty);
     if (sp.service_mode) params.set("service_mode", sp.service_mode);
     if (sp.sort) params.set("sort", sp.sort);
+    if (sp.lat) params.set("lat", sp.lat);
+    if (sp.lng) params.set("lng", sp.lng);
     if (sp.min_rating) params.set("min_rating", sp.min_rating);
     if (p > 1) params.set("page", String(p));
     const qs = params.toString();
@@ -112,7 +116,7 @@ export default async function SearchPage({
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {workshops.map((w) => (
-              <WorkshopCard key={w.place_id} workshop={w} />
+              <WorkshopCard key={w.place_id} workshop={w} distanceKm={w.distance_km} />
             ))}
           </div>
         )}

@@ -6,7 +6,13 @@ import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { truncate } from "@/lib/utils";
 import type { Workshop } from "@/lib/types";
 
-export function WorkshopCard({ workshop }: { workshop: Workshop }) {
+export function WorkshopCard({
+  workshop,
+  distanceKm,
+}: {
+  workshop: Workshop;
+  distanceKm?: number | null;
+}) {
   const {
     place_id,
     name,
@@ -48,6 +54,11 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
           {google_rating != null && <StarRating rating={google_rating} />}
           {volume && <span className="text-muted-foreground">{volume}</span>}
           <OpenNowBadge openingHours={opening_hours} />
+          {distanceKm != null && (
+            <span className="rounded-md bg-primary/10 px-2 py-0.5 font-semibold text-primary">
+              📍 {distanceKm} كم
+            </span>
+          )}
         </div>
       </div>
     </Link>
