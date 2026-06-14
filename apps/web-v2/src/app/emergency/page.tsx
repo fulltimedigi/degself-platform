@@ -6,8 +6,26 @@ import { WorkshopCard } from "@/components/WorkshopCard";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "طوارئ — سطحة وكراج متنقل | دق سلف",
-  description: "سيارتك عطلانة؟ لاقِ سطحة أو كراج متنقل ييجي عندك في الكويت.",
+  title: "سطحة وكراج متنقل في الكويت | خدمة طوارئ السيارات | دق سلف",
+  description:
+    "تحتاج سطحة أو كراج متنقل الآن؟ دليل خدمات الطوارئ المتنقلة لسيارتك في جميع محافظات الكويت.",
+  alternates: { canonical: "https://degself.com/emergency" },
+  openGraph: {
+    title: "سطحة وكراج متنقل في الكويت | خدمة طوارئ السيارات | دق سلف",
+    description:
+      "تحتاج سطحة أو كراج متنقل الآن؟ دليل خدمات الطوارئ المتنقلة لسيارتك في جميع محافظات الكويت.",
+    url: "https://degself.com/emergency",
+    type: "website",
+    locale: "ar_KW",
+    siteName: "دق سلف",
+    images: ["/og-image.jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "سطحة وكراج متنقل في الكويت | خدمة طوارئ السيارات | دق سلف",
+    description: "دليل خدمات الطوارئ المتنقلة لسيارتك في جميع محافظات الكويت.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 const TYPES = [
