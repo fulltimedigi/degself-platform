@@ -131,7 +131,7 @@ export default async function ArticlePage({
         <div>
           <p className="font-bold">محتاج كراج موثوق في الكويت؟</p>
           <p className="text-sm text-muted-foreground">
-            ابحث بالتخصص والمنطقة في أكثر من 1,750 كراج موثّق — مجاناً.
+            ابحث بالتخصص والمنطقة في 1,753 كراج موثّق — مجاناً.
           </p>
         </div>
         <Link
