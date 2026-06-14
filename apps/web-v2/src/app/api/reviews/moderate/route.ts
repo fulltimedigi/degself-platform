@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -108,8 +109,17 @@ export async function PATCH(req: NextRequest) {
       ? { status: "approved", approved_at: new Date().toISOString() }
       : { status: "rejected", approved_at: null };
 
-  const { error } = await supabaseAdmin.from("reviews").update(patch).eq("id", id);
+  const { data: updated, error } = await supabaseAdmin
+    .from("reviews")
+    .update(patch)
+    .eq("id", id)
+    .select("place_id")
+    .single();
   if (error) return NextResponse.json({ error: "تعذّر تحديث التقييم." }, { status: 500 });
+
+  // bust the workshop page's ISR cache so the approved/removed review shows
+  // immediately instead of waiting up to an hour for revalidation.
+  if (updated?.place_id) revalidatePath(`/workshop/${updated.place_id}`);
 
   return NextResponse.json({ ok: true });
 }
