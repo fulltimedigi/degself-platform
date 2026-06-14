@@ -28,6 +28,9 @@ export function Footer() {
           <Link href="/ماركة" className="text-sm text-muted-foreground hover:text-primary">
             تصفّح حسب الماركة
           </Link>
+          <Link href="/saved" className="text-sm text-muted-foreground hover:text-primary">
+            المحفوظة
+          </Link>
           <Link href="/emergency" className="text-sm text-muted-foreground hover:text-primary">
             سطحة وكراج متنقل
           </Link>

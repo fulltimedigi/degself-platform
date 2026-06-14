@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Heart } from "lucide-react";
 
 const NAV = [
   { href: "/", label: "الرئيسية" },
@@ -50,6 +51,15 @@ export function Header() {
 
         {/* Login button (RTL end = left) — hidden until auth ships (SHOW_AUTH) */}
         <div className="flex items-center gap-2">
+          <Link
+            href="/saved"
+            aria-label="الكراجات المحفوظة"
+            title="المحفوظة"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground/80 transition hover:bg-muted hover:text-primary"
+          >
+            <Heart size={20} aria-hidden />
+          </Link>
+
           {SHOW_AUTH && (
             <button
               type="button"

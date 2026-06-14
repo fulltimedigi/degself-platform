@@ -13,6 +13,7 @@ import { CallButton } from "@/components/CallButton";
 
 const SITE = "https://degself.com";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { SaveButton } from "@/components/SaveButton";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
 
@@ -107,6 +108,10 @@ export default async function WorkshopPage({
           </span>
         )}
         <OpenNowBadge openingHours={w.opening_hours} />
+      </div>
+
+      <div className="mt-4">
+        <SaveButton placeId={w.place_id} variant="inline" />
       </div>
 
       {/* Details */}
