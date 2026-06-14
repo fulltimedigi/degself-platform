@@ -6,12 +6,12 @@ export const revalidate = 3600; // ISR: refresh map points hourly
 export const metadata = {
   title: "خريطة كراجات الكويت | دق سلف",
   description:
-    "تصفّح خريطة تفاعلية تضم 1,753 كراج سيارات في كل محافظات الكويت. اعثر على الأقرب إليك جغرافياً.",
+    "تصفّح خريطة تفاعلية تضم 1,757 كراج سيارات في كل محافظات الكويت. اعثر على الأقرب إليك جغرافياً.",
   alternates: { canonical: "https://degself.com/map" },
   openGraph: {
     title: "خريطة كراجات الكويت | دق سلف",
     description:
-      "خريطة تفاعلية تضم 1,753 كراج سيارات في كل محافظات الكويت. اعثر على الأقرب إليك.",
+      "خريطة تفاعلية تضم 1,757 كراج سيارات في كل محافظات الكويت. اعثر على الأقرب إليك.",
     url: "https://degself.com/map",
     type: "website",
     locale: "ar_KW",
@@ -21,7 +21,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "خريطة كراجات الكويت | دق سلف",
-    description: "خريطة تفاعلية تضم 1,753 كراج سيارات في كل محافظات الكويت.",
+    description: "خريطة تفاعلية تضم 1,757 كراج سيارات في كل محافظات الكويت.",
     images: ["/og-image.jpg"],
   },
 };

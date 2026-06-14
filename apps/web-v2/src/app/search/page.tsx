@@ -14,12 +14,12 @@ export const dynamic = "force-dynamic"; // results depend on the query — never
 export const metadata = {
   title: "البحث عن كراج في الكويت | دق سلف",
   description:
-    "ابحث في 1,753 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
+    "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
   alternates: { canonical: "https://degself.com/search" },
   openGraph: {
     title: "البحث عن كراج في الكويت | دق سلف",
     description:
-      "ابحث في 1,753 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
+      "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
     url: "https://degself.com/search",
     type: "website",
     locale: "ar_KW",
@@ -29,7 +29,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "البحث عن كراج في الكويت | دق سلف",
-    description: "ابحث في 1,753 كراج موثّق بالكويت.",
+    description: "ابحث في 1,757 كراج موثّق بالكويت.",
     images: ["/og-image.jpg"],
   },
 };

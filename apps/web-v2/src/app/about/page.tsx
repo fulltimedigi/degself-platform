@@ -18,7 +18,7 @@ const SITE = "https://degself.com";
 export const metadata: Metadata = {
   title: "عن دق سلف — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت",
   description:
-    "أول دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات، دون ترتيب مدفوع. تعرّف على فريقنا ومنهجيتنا في تنقية بيانات 1,753 كراجاً.",
+    "أول دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات، دون ترتيب مدفوع. تعرّف على فريقنا ومنهجيتنا في تنقية بيانات 1,757 كراجاً.",
   keywords: [
     "عن دق سلف",
     "دليل كراجات الكويت",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 const STATS = [
-  { value: "1,753", label: "كراج نشط موثّق" },
+  { value: "1,757", label: "كراج نشط موثّق" },
   { value: "6", label: "محافظات (كل الكويت)" },
   { value: "+1,760", label: "أحياء محدَّدة بدقة" },
   { value: "+10", label: "تخصصات للكراجات" },
@@ -245,9 +245,9 @@ export default function AboutPage() {
             ))}
           </div>
           <p className="leading-loose text-foreground/85">
-            في النهاية، لدينا{" "}
-            <strong className="text-foreground">1,753 كراج موثّق</strong> من أصل 1,798
-            جمعناها في البداية.
+            بدأنا بجمع 1,798 كراجاً، ثم نقّينا القوائم وأضفنا كراجات مكتشفة
+            وموثّقة، لنصل اليوم إلى{" "}
+            <strong className="text-foreground">1,757 كراجاً موثّقاً نشطاً</strong>.
           </p>
         </Section>
 
