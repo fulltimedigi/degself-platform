@@ -4,6 +4,11 @@
 -- approved reviews; all writes go through our server (service role), never the
 -- browser directly.
 
+-- NOTE: replaces the original auth-based reviews table (schema.sql §5, which
+-- required a registered user_id). That table is empty and unused — the chosen
+-- model is anonymous + manual moderation. Safe to drop and recreate.
+drop table if exists public.reviews cascade;
+
 create table if not exists public.reviews (
   id          uuid primary key default gen_random_uuid(),
   place_id    text not null,

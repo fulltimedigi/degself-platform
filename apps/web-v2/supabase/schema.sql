@@ -132,76 +132,30 @@ create policy "only admins can modify workshops"
 -- =========================================================
 -- 5. reviews (Phase 2 — schema ready, UI later)
 -- =========================================================
+-- Anonymous + manually-moderated reviews (canonical def in migration 005_reviews.sql).
+-- Replaced the original auth-based design (which required a registered user_id);
+-- the chosen model needs no login — submissions are 'pending' until approved, and
+-- aggregate rating is computed in-app (no trigger needed).
 create table public.reviews (
-  id uuid primary key default uuid_generate_v4(),
-  workshop_id text not null references public.workshops(place_id) on delete cascade,
-  user_id uuid not null references public.profiles(id) on delete cascade,
-
-  rating int not null check (rating between 1 and 5),
-  quality_rating int check (quality_rating between 1 and 5),
-  price_rating int check (price_rating between 1 and 5),
-  speed_rating int check (speed_rating between 1 and 5),
-
-  body text not null check (char_length(body) >= 30),
-  photos text[] default '{}',
-
-  helpful_count int default 0,
-  owner_response text,
-  owner_response_at timestamptz,
-
-  status text not null default 'visible',       -- visible / hidden / pending_review
-  moderation_flags jsonb default '{}'::jsonb,
-  hashed_ip text,
-
-  created_at timestamptz default now(),
-  updated_at timestamptz default now(),
-
-  unique (workshop_id, user_id)                 -- one review per user per workshop
+  id          uuid primary key default gen_random_uuid(),
+  place_id    text not null,
+  rating      smallint not null check (rating between 1 and 5),
+  author_name text check (author_name is null or char_length(author_name) <= 60),
+  body        text not null check (char_length(btrim(body)) between 3 and 1000),
+  status      text not null default 'pending' check (status in ('pending','approved','rejected')),
+  created_at  timestamptz not null default now(),
+  approved_at timestamptz
 );
 
-create index reviews_workshop_idx on public.reviews(workshop_id);
-create index reviews_user_idx on public.reviews(user_id);
-create index reviews_created_idx on public.reviews(created_at desc);
-
--- Keep workshops aggregate ratings in sync
-create or replace function public.update_workshop_rating()
-returns trigger as $$
-begin
-  update public.workshops
-  set internal_rating_avg = (
-    select avg(rating)::numeric(3,2)
-    from public.reviews
-    where workshop_id = coalesce(new.workshop_id, old.workshop_id)
-      and status = 'visible'
-  ),
-  internal_reviews_count = (
-    select count(*)
-    from public.reviews
-    where workshop_id = coalesce(new.workshop_id, old.workshop_id)
-      and status = 'visible'
-  )
-  where place_id = coalesce(new.workshop_id, old.workshop_id);
-  return new;
-end;
-$$ language plpgsql;
-
-create trigger reviews_aggregate_trigger
-  after insert or update or delete on public.reviews
-  for each row execute function public.update_workshop_rating();
+create index reviews_place_approved_idx on public.reviews (place_id) where status = 'approved';
+create index reviews_status_created_idx on public.reviews (status, created_at desc);
 
 alter table public.reviews enable row level security;
 
-create policy "visible reviews readable by everyone"
-  on public.reviews for select using (status = 'visible');
-
-create policy "users can insert own review"
-  on public.reviews for insert with check (auth.uid() = user_id);
-
-create policy "users can update own review"
-  on public.reviews for update using (auth.uid() = user_id);
-
-create policy "users can delete own review"
-  on public.reviews for delete using (auth.uid() = user_id);
+-- Public (anon) reads ONLY approved reviews; writes go through the server (service role).
+create policy "reviews_read_approved"
+  on public.reviews for select to anon, authenticated
+  using (status = 'approved');
 
 -- =========================================================
 -- 6. community_mentions (Phase 3 — FB groups, aggregate only)
