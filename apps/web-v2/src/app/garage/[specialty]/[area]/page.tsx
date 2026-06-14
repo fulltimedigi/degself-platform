@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLandingCombos, getLandingWorkshops } from "@/lib/landing";
 import { WorkshopCard } from "@/components/WorkshopCard";
+import { JsonLd } from "@/components/JsonLd";
+
+const SITE = "https://degself.com";
 
 export const revalidate = 86400; // daily
 export const dynamicParams = false; // only pre-generated (≥3) combos exist — no thin pages
@@ -46,8 +49,45 @@ export default async function LandingPage({
     .filter((c) => c.specialty === specialty && c.area !== area)
     .map((c) => c.area);
 
+  // Public Arabic URL for this page (matches the /كراج rewrite).
+  const pageUrl = `${SITE}/كراج/${specialty}/${area}`;
+
+  const collectionLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `كراجات ${res.label} في ${area}`,
+    description: `دليل كراجات ${res.label} في ${area} بالكويت — العناوين، الهواتف، المواعيد.`,
+    url: pageUrl,
+    inLanguage: "ar",
+    isPartOf: { "@id": `${SITE}/#website` },
+  };
+
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: res.workshops.slice(0, 10).map((w, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${SITE}/workshop/${w.place_id}`,
+      name: w.name,
+    })),
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
+      { "@type": "ListItem", position: 2, name: `كراجات ${res.label}`, item: `${SITE}/كراج/${specialty}` },
+      { "@type": "ListItem", position: 3, name: area, item: pageUrl },
+    ],
+  };
+
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-8">
+      <JsonLd data={collectionLd} />
+      <JsonLd data={itemListLd} />
+      <JsonLd data={breadcrumbLd} />
       <h1 className="text-2xl font-extrabold">
         كراجات {res.label} في {area}
       </h1>
