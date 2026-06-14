@@ -1,6 +1,7 @@
 import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
+import { isOpenNow } from "@/lib/hours";
 import type { Workshop } from "@/lib/types";
 
 export interface SearchParams {
@@ -15,6 +16,7 @@ export interface SearchParams {
   sort?: string; // "relevance" (default) | "top-rated" | "most-reviews" | "az" | "distance"
   lat?: number; // user location (for sort=distance)
   lng?: number;
+  open_now?: boolean; // keep only places open right now (Kuwait time)
   limit?: number;
   offset?: number;
 }
@@ -38,10 +40,10 @@ function haversineMeters(aLat: number, aLng: number, bLat: number, bLng: number)
   return 2 * R * Math.asin(Math.sqrt(x));
 }
 
-// "Near me" fetches at most this many most-relevant matches, then sorts them by
-// distance in JS (Supabase can't ORDER BY distance without PostGIS). Real filtered
-// searches are well under this; an unfiltered browse takes the top-N relevant.
-const DISTANCE_CANDIDATE_CAP = 500;
+// The JS pipeline (open-now / distance) fetches at most this many most-relevant
+// matches, then filters/sorts in JS. Real filtered searches are well under this;
+// an unfiltered browse takes the top-N relevant.
+const JS_CANDIDATE_CAP = 500;
 
 /**
  * Filtered, paginated search. Free-text `query` is normalized (Arabic-aware)
@@ -65,6 +67,7 @@ export async function searchWorkshops(
     sort,
     lat,
     lng,
+    open_now,
     limit = 24,
     offset = 0,
   } = params;
@@ -106,26 +109,38 @@ export async function searchWorkshops(
   if (service_mode) q = q.eq("service_mode", service_mode);
   if (min_rating) q = q.gte("google_rating", min_rating);
 
-  // "near me" — sort the (bounded) match set by distance to the user in JS.
-  if (sort === "distance" && Number.isFinite(lat) && Number.isFinite(lng)) {
+  // JS pipeline — needed for "open now" (free-text hours, can't filter in SQL) and
+  // "near me" (Supabase can't ORDER BY distance without PostGIS). They compose:
+  // nearest OPEN garage. Fetch a bounded, relevance-ordered candidate set first.
+  const wantDistance = sort === "distance" && Number.isFinite(lat) && Number.isFinite(lng);
+  if (wantDistance || open_now) {
     const { data, error } = await q
       .order("rank_score", { ascending: false, nullsFirst: false })
-      .range(0, DISTANCE_CANDIDATE_CAP - 1);
-    if (error) throw new Error(`searchWorkshops(distance) failed: ${error.message}`);
-    const ranked = ((data ?? []) as Workshop[])
-      .map((w) => ({
-        w,
-        d:
-          w.lat != null && w.lng != null
-            ? haversineMeters(lat as number, lng as number, w.lat, w.lng)
-            : Number.POSITIVE_INFINITY,
-      }))
-      .sort((a, b) => a.d - b.d);
-    const page = ranked.slice(offset, offset + limit).map(({ w, d }) => ({
-      ...w,
-      distance_km: Number.isFinite(d) ? Math.round(d / 100) / 10 : null,
-    }));
-    return { workshops: page, total: ranked.length };
+      .range(0, JS_CANDIDATE_CAP - 1);
+    if (error) throw new Error(`searchWorkshops(pipeline) failed: ${error.message}`);
+    let rows = (data ?? []) as Workshop[];
+    if (open_now) rows = rows.filter((w) => isOpenNow(w.opening_hours));
+
+    let ordered: WorkshopWithDistance[];
+    if (wantDistance) {
+      ordered = rows
+        .map((w) => ({
+          w,
+          d:
+            w.lat != null && w.lng != null
+              ? haversineMeters(lat as number, lng as number, w.lat, w.lng)
+              : Number.POSITIVE_INFINITY,
+        }))
+        .sort((a, b) => a.d - b.d)
+        .map(({ w, d }) => ({
+          ...w,
+          distance_km: Number.isFinite(d) ? Math.round(d / 100) / 10 : null,
+        }));
+    } else {
+      ordered = rows; // already relevance-ordered by rank_score
+    }
+    const page = ordered.slice(offset, offset + limit);
+    return { workshops: page, total: ordered.length };
   }
 
   // sort

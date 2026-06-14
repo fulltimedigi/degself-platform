@@ -44,6 +44,7 @@ export function SearchFilters({
 
   const sortValue = searchParams.get("sort") ?? "relevance";
   const nearActive = sortValue === "distance";
+  const openNowActive = searchParams.get("open_now") === "1";
 
   // "near me": ask the browser for the user's location, then sort by distance.
   function nearMe() {
@@ -129,7 +130,8 @@ export function SearchFilters({
     !!searchParams.get("service_mode") ||
     !!searchParams.get("min_rating") ||
     !!searchParams.get("sort") ||
-    !!searchParams.get("lat");
+    !!searchParams.get("lat") ||
+    !!searchParams.get("open_now");
 
   function clearAll() {
     setQuery("");
@@ -264,6 +266,20 @@ export function SearchFilters({
 
       {/* service mode buttons */}
       <div className="flex flex-wrap gap-2">
+        {/* open now */}
+        <button
+          type="button"
+          onClick={() => updateParam("open_now", openNowActive ? "" : "1")}
+          className={
+            "rounded-xl border px-4 py-2 text-sm font-semibold transition " +
+            (openNowActive
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border text-foreground hover:bg-muted")
+          }
+        >
+          🟢 مفتوح الآن
+        </button>
+
         {SERVICE_MODES.map((m) => {
           const on = activeMode === m.value;
           return (

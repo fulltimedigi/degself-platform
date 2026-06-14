@@ -67,6 +67,7 @@ export default async function SearchPage({
         sort: sp.sort,
         lat: sp.lat ? Number(sp.lat) : undefined,
         lng: sp.lng ? Number(sp.lng) : undefined,
+        open_now: sp.open_now === "1",
         min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
         limit: PAGE_SIZE,
         offset,
@@ -90,6 +91,7 @@ export default async function SearchPage({
     if (sp.sort) params.set("sort", sp.sort);
     if (sp.lat) params.set("lat", sp.lat);
     if (sp.lng) params.set("lng", sp.lng);
+    if (sp.open_now) params.set("open_now", sp.open_now);
     if (sp.min_rating) params.set("min_rating", sp.min_rating);
     if (p > 1) params.set("page", String(p));
     const qs = params.toString();
