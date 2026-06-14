@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,6 +46,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "اختر تقييماً من 1 إلى 5 نجوم." }, { status: 400 });
   if (body.length < 3 || body.length > 1000)
     return NextResponse.json({ error: "اكتب مراجعة بين 3 و1000 حرف." }, { status: 400 });
+
+  let supabaseAdmin;
+  try {
+    supabaseAdmin = getSupabaseAdmin();
+  } catch {
+    return NextResponse.json({ error: "خدمة التقييمات غير مهيّأة حالياً." }, { status: 503 });
+  }
 
   // the workshop must exist (place_id is case-sensitive)
   const { data: w } = await supabaseAdmin
