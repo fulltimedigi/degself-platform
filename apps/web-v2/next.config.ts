@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
       // Public Arabic URL → internal ASCII route (Turbopack doesn't register
       // non-ASCII route folders, so the folder is /garage but the URL stays /كراج).
       { source: `/${KARAJ}/:specialty/:area`, destination: "/garage/:specialty/:area" },
+      // Specialty index (one level): /كراج/ميكانيكا → /garage/ميكانيكا
+      { source: `/${KARAJ}/:specialty`, destination: "/garage/:specialty" },
     ];
   },
 };
