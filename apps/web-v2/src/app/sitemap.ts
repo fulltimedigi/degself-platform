@@ -13,10 +13,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${SITE}/`, changeFrequency: "weekly", priority: 1 },
-    { url: `${SITE}/search`, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${SITE}/map`, changeFrequency: "weekly", priority: 0.6 },
-    { url: `${SITE}/emergency`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE}/search`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE}/map`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE}/emergency`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
@@ -31,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const workshopPages: MetadataRoute.Sitemap = ids.map((id) => ({
     url: `${SITE}/workshop/${id}`, // place_id verbatim — case-sensitive
+    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.6,
   }));
@@ -38,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // SEO landing pages (specialty × area) — Arabic segments percent-encoded for <loc>
   const landingPages: MetadataRoute.Sitemap = combos.map((c) => ({
     url: `${SITE}/${encodeURIComponent("كراج")}/${encodeURIComponent(c.specialty)}/${encodeURIComponent(c.area)}`,
+    lastModified: now,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
