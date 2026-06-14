@@ -4,6 +4,18 @@ export function truncate(s: string, max: number): string {
   return s.length > max ? s.slice(0, max).trim() + "…" : s;
 }
 
+const AR_MONTHS = [
+  "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+  "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر",
+];
+
+/** Format an ISO date (YYYY-MM-DD) as Arabic "13 يونيو 2026". */
+export function formatArabicDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map((n) => parseInt(n, 10));
+  if (!y || !m || !d) return iso;
+  return `${d} ${AR_MONTHS[m - 1]} ${y}`;
+}
+
 /**
  * wa.me digits for a Kuwaiti MOBILE number only (965 + [5/6/9] + 7 digits).
  * Returns null for landlines/hotlines (e.g. 1822500) so we don't show a

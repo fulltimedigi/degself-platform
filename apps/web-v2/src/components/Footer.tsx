@@ -28,6 +28,12 @@ export function Footer() {
           <Link href="/emergency" className="text-sm text-muted-foreground hover:text-primary">
             سطحة وكراج متنقل
           </Link>
+          <Link href="/blog" className="text-sm text-muted-foreground hover:text-primary">
+            المدونة
+          </Link>
+          <Link href="/faq" className="text-sm text-muted-foreground hover:text-primary">
+            الأسئلة الشائعة
+          </Link>
           <Link href="/about" className="text-sm text-muted-foreground hover:text-primary">
             عن دق سلف
           </Link>
