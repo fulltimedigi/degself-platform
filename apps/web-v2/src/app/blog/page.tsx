@@ -25,13 +25,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/brand/logo-arabic.png"],
+    images: ["/og-image.jpg"],
   },
   twitter: {
     card: "summary_large_image",
     title: "المدونة | دق سلف",
     description: "نصائح ودلائل عملية عن صيانة السيارات في الكويت.",
-    images: ["/brand/logo-arabic.png"],
+    images: ["/og-image.jpg"],
   },
 };
 

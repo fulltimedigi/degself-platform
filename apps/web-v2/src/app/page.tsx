@@ -8,15 +8,17 @@ import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
 
 const SITE = "https://degself.com";
-// Shared OG/social image — same brand asset used by /about, /faq, /blog.
-const OG_IMAGE = `${SITE}/brand/logo-arabic.png`;
+// Social share card (brand-colored, 1200×630).
+const OG_IMAGE = `${SITE}/og-image.jpg`;
+// Brand logo (used for the Organization schema logo, not the social card).
+const LOGO = `${SITE}/brand/logo-arabic.png`;
 
 export const revalidate = 3600; // ISR: rebuild at most once per hour
 
 export const metadata: Metadata = {
   title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
   description:
-    "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.",
+    "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
   alternates: { canonical: SITE },
   openGraph: {
     type: "website",
@@ -25,12 +27,13 @@ export const metadata: Metadata = {
     siteName: "دق سلف",
     title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.",
+      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
     images: [
       {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
+        type: "image/jpeg",
         alt: "دق سلف — دليل كراجات الكويت",
       },
     ],
@@ -39,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن كراج أو خدمة سيارات في الكويت. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.",
+      "ابحث عن كراج أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
     images: [OG_IMAGE],
   },
 };
@@ -54,9 +57,9 @@ export default async function Home() {
     name: "دق سلف",
     alternateName: "Deg Self",
     url: SITE,
-    logo: OG_IMAGE,
+    logo: LOGO,
     description:
-      "أول دليل ذكي لكراجات الكويت — مجاناً، بدون إعلانات، بدون ترتيب مدفوع.",
+      "أول دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات، دون ترتيب مدفوع.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "KW",
@@ -93,7 +96,7 @@ export default async function Home() {
       {/* Hero (unchanged) */}
       <section className="flex flex-col items-center gap-6 px-6 py-16 text-center">
         <h1 className="text-3xl font-extrabold sm:text-4xl">
-          لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب
+          اكتشف عطل سيارتك الآن واختر الكراج المناسب
         </h1>
         <p className="text-muted-foreground">
           دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت

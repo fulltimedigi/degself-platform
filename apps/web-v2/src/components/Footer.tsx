@@ -12,7 +12,7 @@ export function Footer() {
           <Image src="/brand/logo-icon.svg" alt="دق سلف" width={40} height={40} unoptimized />
           <p className="text-sm font-bold">دق سلف</p>
           <p className="text-sm text-muted-foreground">
-            لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.
+            اكتشف عطل سيارتك الآن واختر الكراج المناسب — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.
           </p>
         </div>
 

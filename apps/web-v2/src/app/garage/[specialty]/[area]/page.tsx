@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!res) return { title: "غير موجود — دق سلف" };
   return {
     title: `كراجات ${res.label} في ${area} | دق سلف`,
-    description: `دليل كراجات ${res.label} في ${area} بالكويت — العناوين، الهواتف، المواعيد. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.`,
+    description: `دليل كراجات ${res.label} في ${area} بالكويت — العناوين، الهواتف، المواعيد. اكتشف عطل سيارتك الآن واختر الكراج المناسب.`,
     alternates: { canonical: `/كراج/${specialty}/${area}` },
   };
 }
@@ -53,7 +53,7 @@ export default async function LandingPage({
       </h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         دليلك لأفضل كراجات ومراكز {res.label} في منطقة {area} بالكويت — لاقِ العنوان
-        والهاتف والمواعيد بسهولة. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.
+        والهاتف والمواعيد بسهولة. اكتشف عطل سيارتك الآن واختر الكراج المناسب.
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

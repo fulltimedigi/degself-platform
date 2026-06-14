@@ -36,13 +36,13 @@ export async function generateMetadata({
       siteName: "دق سلف",
       publishedTime: article.datePublished,
       modifiedTime: article.dateModified,
-      images: ["/brand/logo-arabic.png"],
+      images: ["/og-image.jpg"],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.description,
-      images: ["/brand/logo-arabic.png"],
+      images: ["/og-image.jpg"],
     },
   };
 }
@@ -68,7 +68,7 @@ export default async function ArticlePage({
     dateModified: article.dateModified,
     articleSection: article.category,
     inLanguage: "ar",
-    image: `${SITE}/brand/logo-arabic.png`,
+    image: `${SITE}/og-image.jpg`,
     author: { "@type": "Organization", name: "دق سلف", url: SITE },
     publisher: {
       "@type": "Organization",
@@ -129,7 +129,7 @@ export default async function ArticlePage({
       {/* CTA */}
       <div className="mt-12 flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-bold">محتاج كراج موثوق في الكويت؟</p>
+          <p className="font-bold">هل تبحث عن كراج موثوق في الكويت؟</p>
           <p className="text-sm text-muted-foreground">
             ابحث بالتخصص والمنطقة في 1,753 كراج موثّق — مجاناً.
           </p>

@@ -24,14 +24,22 @@ export const metadata: Metadata = {
     siteName: "دق سلف",
     title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.",
-    images: ["/brand/logo-arabic.png"],
+      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+    images: [
+      {
+        url: "https://degself.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "دق سلف — دليل كراجات الكويت",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "دق سلف — دليلك لكراجات وخدمات السيارات في الكويت",
-    description: "ابحث عن كراج أو خدمة سيارات في الكويت. لا تحاتي واكتشف عطل سيارتك الآن وحدد الكراج المناسب.",
-    images: ["/brand/logo-arabic.png"],
+    description: "ابحث عن كراج أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+    images: ["https://degself.com/og-image.jpg"],
   },
   applicationName: "دق سلف",
   appleWebApp: {
