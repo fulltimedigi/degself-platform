@@ -92,6 +92,59 @@ export const getLandingCombos = unstable_cache(computeLandingCombos, ["landing-c
   revalidate: 86400,
 });
 
+export function comboKey(specialtySlug: string, area: string): string {
+  return `${specialtySlug}__${area}`;
+}
+
+// fetch (search_text, updated_at) for every live workshop, paginated
+async function fetchSearchTextLastmod(): Promise<
+  { search_text: string; updated_at: string }[]
+> {
+  const PAGE = 1000;
+  const out: { search_text: string; updated_at: string }[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("search_text, updated_at")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`fetchSearchTextLastmod failed: ${error.message}`);
+    const batch = (data ?? []) as { search_text: string | null; updated_at: string | null }[];
+    for (const r of batch) out.push({ search_text: r.search_text ?? "", updated_at: r.updated_at ?? "" });
+    if (batch.length < PAGE) break;
+  }
+  return out;
+}
+
+/**
+ * MAX(updated_at) per specialty×area combo — for accurate sitemap <lastmod> on
+ * the landing pages. Keyed by comboKey(specialty, area).
+ */
+async function computeLandingLastmod(): Promise<Record<string, string>> {
+  const rows = await fetchSearchTextLastmod();
+  const map: Record<string, string> = {};
+  for (const sp of LANDING_SPECIALTIES) {
+    const sq = normalizeArabic(sp.q);
+    const matchSpec = rows.filter((r) => r.search_text.includes(sq));
+    for (const area of LANDING_AREAS) {
+      const aq = normalizeArabic(area);
+      let max = "";
+      for (const r of matchSpec) {
+        if (r.search_text.includes(aq) && r.updated_at > max) max = r.updated_at;
+      }
+      if (max) map[comboKey(sp.slug, area)] = max;
+    }
+  }
+  return map;
+}
+
+export const getLandingLastmod = unstable_cache(computeLandingLastmod, ["landing-lastmod"], {
+  revalidate: 86400,
+});
+
 /** Workshops for one landing page: search_text must contain BOTH terms. */
 export async function getLandingWorkshops(
   specialtySlug: string,

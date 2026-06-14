@@ -176,6 +176,29 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
   return all;
 }
 
+/** Every active place_id with its updated_at — for accurate sitemap <lastmod>. */
+export async function getAllPlaceIdsWithLastmod(): Promise<
+  { place_id: string; updated_at: string | null }[]
+> {
+  const PAGE = 1000;
+  const all: { place_id: string; updated_at: string | null }[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabasePublic
+      .from("workshops")
+      .select("place_id, updated_at")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(`getAllPlaceIdsWithLastmod failed: ${error.message}`);
+    const batch = (data ?? []) as { place_id: string; updated_at: string | null }[];
+    all.push(...batch);
+    if (batch.length < PAGE) break;
+  }
+  return all;
+}
+
 export interface MapPoint {
   place_id: string;
   name: string;

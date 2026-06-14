@@ -1,16 +1,22 @@
 import type { MetadataRoute } from "next";
-import { getAllPlaceIds } from "@/lib/workshops";
-import { getLandingCombos } from "@/lib/landing";
+import { getAllPlaceIdsWithLastmod } from "@/lib/workshops";
+import { getLandingCombos, getLandingLastmod, comboKey } from "@/lib/landing";
 import { articleSlugs } from "@/app/blog/_articles";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
+const KARAJ = encodeURIComponent("كراج");
 
 export const revalidate = 86400; // rebuild sitemap daily
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [ids, combos] = await Promise.all([getAllPlaceIds(), getLandingCombos()]);
+  const [workshops, combos, landingLastmod] = await Promise.all([
+    getAllPlaceIdsWithLastmod(),
+    getLandingCombos(),
+    getLandingLastmod(),
+  ]);
 
   const now = new Date();
+  const toDate = (s?: string | null) => (s ? new Date(s) : now);
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${SITE}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
@@ -29,20 +35,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const workshopPages: MetadataRoute.Sitemap = ids.map((id) => ({
-    url: `${SITE}/workshop/${id}`, // place_id verbatim — case-sensitive
-    lastModified: now,
+  // Workshop pages — real per-row updated_at (case-sensitive place_id verbatim).
+  const workshopPages: MetadataRoute.Sitemap = workshops.map((w) => ({
+    url: `${SITE}/workshop/${w.place_id}`,
+    lastModified: toDate(w.updated_at),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
-  // SEO landing pages (specialty × area) — Arabic segments percent-encoded for <loc>
+  // Specialty index pages — lastmod = newest among that specialty's areas.
+  const specialties = [...new Set(combos.map((c) => c.specialty))];
+  const specialtyPages: MetadataRoute.Sitemap = specialties.map((slug) => {
+    const dates = combos
+      .filter((c) => c.specialty === slug)
+      .map((c) => landingLastmod[comboKey(slug, c.area)])
+      .filter(Boolean);
+    const max = dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : undefined;
+    return {
+      url: `${SITE}/${KARAJ}/${encodeURIComponent(slug)}`,
+      lastModified: toDate(max),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    };
+  });
+
+  // SEO landing pages (specialty × area) — per-combo MAX(updated_at).
   const landingPages: MetadataRoute.Sitemap = combos.map((c) => ({
-    url: `${SITE}/${encodeURIComponent("كراج")}/${encodeURIComponent(c.specialty)}/${encodeURIComponent(c.area)}`,
-    lastModified: now,
+    url: `${SITE}/${KARAJ}/${encodeURIComponent(c.specialty)}/${encodeURIComponent(c.area)}`,
+    lastModified: toDate(landingLastmod[comboKey(c.specialty, c.area)]),
     changeFrequency: "weekly",
     priority: 0.8,
   }));
 
-  return [...staticPages, ...blogPages, ...landingPages, ...workshopPages];
+  return [
+    ...staticPages,
+    ...specialtyPages,
+    ...blogPages,
+    ...landingPages,
+    ...workshopPages,
+  ];
 }
