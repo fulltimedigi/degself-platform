@@ -8,7 +8,10 @@ import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
 import { HoursTable } from "@/components/HoursTable";
 import { WorkshopJsonLd } from "@/components/WorkshopJsonLd";
+import { JsonLd } from "@/components/JsonLd";
 import { CallButton } from "@/components/CallButton";
+
+const SITE = "https://degself.com";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
@@ -34,6 +37,8 @@ export async function generateMetadata({
   return {
     title: `${w.name} — degself`,
     description: `${w.specialty}${loc} — على دق سلف`,
+    // place_id is case-sensitive — emit it verbatim, never lowercased.
+    alternates: { canonical: `${SITE}/workshop/${place_id}` },
   };
 }
 
@@ -52,9 +57,25 @@ export default async function WorkshopPage({
   const waDigits = kuwaitWhatsAppDigits(w.phone_intl || w.phone); // mobile-only
   const services = [...new Set([w.specialty, ...(w.specialty_hints ?? [])])].filter(Boolean);
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
+      { "@type": "ListItem", position: 2, name: "الكراجات", item: `${SITE}/search` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: w.name,
+        item: `${SITE}/workshop/${place_id}`,
+      },
+    ],
+  };
+
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-8">
       <WorkshopJsonLd workshop={w} />
+      <JsonLd data={breadcrumbLd} />
 
       <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground">
         ← رجوع للبحث
