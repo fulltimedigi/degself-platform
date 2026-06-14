@@ -14,8 +14,10 @@ import { CallButton } from "@/components/CallButton";
 const SITE = "https://degself.com";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SaveButton } from "@/components/SaveButton";
+import { ReviewForm } from "@/components/ReviewForm";
+import { getApprovedReviews } from "@/lib/reviews";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
-import { kuwaitWhatsAppDigits } from "@/lib/utils";
+import { kuwaitWhatsAppDigits, formatArabicDate } from "@/lib/utils";
 
 export const revalidate = 3600; // ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
@@ -52,6 +54,8 @@ export default async function WorkshopPage({
   const w = await getWorkshop(place_id);
   if (!w) notFound();
 
+  const reviewSummary = await getApprovedReviews(place_id);
+
   const volume = reviewVolumeLabel(w.google_reviews_count);
   const location = [w.area, w.governorate].filter(Boolean).join(" · ");
   const telHref = (w.phone_intl || w.phone || "").replace(/[^\d+]/g, "");
@@ -75,7 +79,7 @@ export default async function WorkshopPage({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-8">
-      <WorkshopJsonLd workshop={w} />
+      <WorkshopJsonLd workshop={w} reviews={reviewSummary} />
       <JsonLd data={breadcrumbLd} />
 
       <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground">
@@ -202,10 +206,42 @@ export default async function WorkshopPage({
         </section>
       )}
 
-      {/* Reviews — Phase 2 placeholder */}
-      <section className="mt-4 rounded-xl border border-dashed border-border p-6 text-center">
-        <h2 className="font-bold">التقييمات</h2>
-        <p className="mt-1 text-sm text-muted-foreground">قريباً — تقييمات المستخدمين</p>
+      {/* Reviews — visitor reviews (manually moderated) */}
+      <section className="mt-4 rounded-xl border border-border bg-card p-4">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="font-bold">التقييمات</h2>
+          {reviewSummary.count > 0 && reviewSummary.avg != null && (
+            <span className="flex items-center gap-2 text-sm">
+              <StarRating rating={reviewSummary.avg} />
+              <span className="text-muted-foreground">({reviewSummary.count})</span>
+            </span>
+          )}
+        </div>
+
+        {reviewSummary.count > 0 ? (
+          <ul className="flex flex-col gap-3">
+            {reviewSummary.reviews.map((r) => (
+              <li key={r.id} className="border-b border-border pb-3 last:border-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <StarRating rating={r.rating} />
+                  <span className="text-sm font-semibold">{r.author_name || "زائر"}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatArabicDate(r.created_at.slice(0, 10))}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm leading-relaxed text-foreground/85">{r.body}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            لا توجد تقييمات بعد — كن أول من يقيّم هذا الكراج.
+          </p>
+        )}
+
+        <div className="mt-5 border-t border-border pt-4">
+          <ReviewForm placeId={w.place_id} />
+        </div>
       </section>
     </div>
   );

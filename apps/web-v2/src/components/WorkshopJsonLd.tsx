@@ -1,4 +1,5 @@
 import type { Workshop } from "@/lib/types";
+import type { ReviewSummary } from "@/lib/reviews";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 
@@ -11,7 +12,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
  * which does NOT map to schema.org's "Mo-Su 08:00-20:00" format. Emitting it raw
  * would be invalid markup, so it is intentionally omitted until a parser is added.
  */
-export function WorkshopJsonLd({ workshop }: { workshop: Workshop }) {
+export function WorkshopJsonLd({
+  workshop,
+  reviews,
+}: {
+  workshop: Workshop;
+  reviews?: ReviewSummary;
+}) {
   const {
     place_id,
     name,
@@ -46,6 +53,29 @@ export function WorkshopJsonLd({ workshop }: { workshop: Workshop }) {
   const tel = phone_intl || phone;
   if (tel) data.telephone = tel;
   if (website) data.sameAs = website;
+
+  // Genuine, on-page visitor reviews → aggregateRating + a few Review items.
+  if (reviews && reviews.count > 0 && reviews.avg != null) {
+    data.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: reviews.avg,
+      reviewCount: reviews.count,
+      bestRating: 5,
+      worstRating: 1,
+    };
+    data.review = reviews.reviews.slice(0, 5).map((r) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: r.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      author: { "@type": "Person", name: r.author_name || "زائر" },
+      reviewBody: r.body,
+      datePublished: r.created_at.slice(0, 10),
+    }));
+  }
 
   // Escape "<" so the JSON can't break out of the <script> element.
   const json = JSON.stringify(data).replace(/</g, "\\u003c");
