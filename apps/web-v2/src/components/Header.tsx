@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart } from "lucide-react";
+import { InstallApp } from "@/components/InstallApp";
 
 const NAV = [
   { href: "/", label: "الرئيسية" },
@@ -110,6 +111,14 @@ export function Header() {
               {n.label}
             </Link>
           ))}
+
+          {/* Always-available install option (the native prompt isn't shown to
+              everyone — iOS never, Android only sometimes) */}
+          <InstallApp
+            onDone={() => setOpen(false)}
+            className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+          />
+
           {SHOW_AUTH && (
             <button
               type="button"
