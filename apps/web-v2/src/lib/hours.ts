@@ -66,20 +66,28 @@ function parseHours(hours: string): Array<[number, number]> | "24" | "closed" {
   if (!hours) return "closed";
   const h = hours.trim().toLowerCase();
   if (h === "closed" || h === "مغلق") return "closed";
-  if (h.includes("24")) return "24";
+  if (h.includes("24") || h.includes("٢٤") || h.includes("طوال اليوم")) return "24";
 
   const ranges: Array<[number, number]> = [];
   for (const part of hours.split(",")) {
+    // meridiem may be English (AM/PM) or Arabic (ص = AM, م = PM), and the digits
+    // may have no space before it ("8ص to 9:30م").
     const m = part.match(
-      /(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*(?:to|–|-|—)\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i
+      /(\d{1,2})(?::(\d{2}))?\s*(AM|PM|ص|م)?\s*(?:to|–|-|—)\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM|ص|م)?/i
     );
     if (!m) continue;
+    const toMer = (x: string): "AM" | "PM" | "" =>
+      x === "ص" ? "AM" : x === "م" ? "PM" : (x.toUpperCase() as "AM" | "PM" | "");
     let sh = parseInt(m[1], 10);
     const sm = m[2] ? parseInt(m[2], 10) : 0;
-    const sap = (m[3] || "").toUpperCase();
     let eh = parseInt(m[4], 10);
     const em = m[5] ? parseInt(m[5], 10) : 0;
-    const eap = (m[6] || "").toUpperCase();
+    // Google often drops the meridiem on one side ("2 to 8م", "3:00–8:30 م") —
+    // inherit it from the other side so PM ranges aren't misread as AM.
+    let sap = toMer(m[3] || "");
+    let eap = toMer(m[6] || "");
+    if (!sap && eap) sap = eap;
+    if (!eap && sap) eap = sap;
     if (sap === "PM" && sh < 12) sh += 12;
     if (sap === "AM" && sh === 12) sh = 0;
     if (eap === "PM" && eh < 12) eh += 12;
