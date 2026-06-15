@@ -1,0 +1,18 @@
+[
+  {
+    "id": "example-image",
+    "status": "draft",
+    "publish_at": "2026-06-20T18:00:00Z",
+    "type": "image",
+    "media_url": "https://degself.com/og-image.jpg",
+    "caption": "مثال بوست صورة — غيّر status لـ \"scheduled\" عشان يتنشر في وقته."
+  },
+  {
+    "id": "example-reel",
+    "status": "draft",
+    "publish_at": "2026-06-21T18:00:00Z",
+    "type": "reel",
+    "media_url": "https://degself.com/path/to/reel.mp4",
+    "caption": "مثال ريل — media_url لازم يكون رابط فيديو عام (.mp4)."
+  }
+]
