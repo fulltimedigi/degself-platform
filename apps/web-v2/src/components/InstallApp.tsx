@@ -10,6 +10,14 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+// The event is captured app-wide (layout inline script) into window.__bipEvent,
+// because it can fire before this component — which lives in the menu — mounts.
+declare global {
+  interface Window {
+    __bipEvent: BeforeInstallPromptEvent | null;
+  }
+}
+
 export function InstallApp({
   className,
   onDone,
@@ -35,18 +43,19 @@ export function InstallApp({
     const ua = window.navigator.userAgent;
     setIsIOS(/iphone|ipad|ipod/i.test(ua));
 
-    const onPrompt = (e: Event) => {
-      e.preventDefault(); // stop the mini-infobar; we trigger it ourselves
-      setDeferred(e as BeforeInstallPromptEvent);
-    };
+    // pick up an event that may have already fired before we mounted
+    setDeferred(window.__bipEvent ?? null);
+
+    // the global capture re-broadcasts via 'bipchange' whenever it changes
+    const onChange = () => setDeferred(window.__bipEvent ?? null);
     const onInstalled = () => {
       setInstalled(true);
       setDeferred(null);
     };
-    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("bipchange", onChange);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("bipchange", onChange);
       window.removeEventListener("appinstalled", onInstalled);
     };
   }, []);
@@ -55,9 +64,10 @@ export function InstallApp({
 
   async function handleClick() {
     if (deferred) {
-      // Android / Chrome: native install dialog
+      // Android / Chrome: native install dialog — no instructions needed
       await deferred.prompt();
       await deferred.userChoice.catch(() => {});
+      window.__bipEvent = null; // a prompt can only be used once
       setDeferred(null);
       onDone?.();
       return;

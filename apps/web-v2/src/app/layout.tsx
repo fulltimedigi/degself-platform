@@ -70,6 +70,24 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${cairo.variable} antialiased`}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
+        {/* Capture the install prompt as early as possible — it can fire before
+            React hydrates, and the menu (where the button lives) mounts late.
+            Stash it globally so the button can replay it on demand. */}
+        <Script id="pwa-install-capture" strategy="beforeInteractive">
+          {`(function(){
+  window.__bipEvent = null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    window.__bipEvent = e;
+    window.dispatchEvent(new Event('bipchange'));
+  });
+  window.addEventListener('appinstalled', function(){
+    window.__bipEvent = null;
+    window.dispatchEvent(new Event('bipchange'));
+  });
+})();`}
+        </Script>
+
         <Header />
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
