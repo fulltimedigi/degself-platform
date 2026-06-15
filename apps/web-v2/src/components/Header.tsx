@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart } from "lucide-react";
@@ -21,9 +21,31 @@ const SHOW_AUTH = false;
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Auto-close the mobile menu when the user scrolls away from it or taps
+  // outside it — so they don't have to hit the ✕ manually.
+  useEffect(() => {
+    if (!open) return;
+    const close = () => setOpen(false);
+    const onPointer = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("scroll", close, { passive: true });
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      window.removeEventListener("scroll", close);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur"
+    >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
         {/* Logo (RTL start = right) */}
         <Link href="/" className="flex items-center" aria-label="دق سلف — الرئيسية">
