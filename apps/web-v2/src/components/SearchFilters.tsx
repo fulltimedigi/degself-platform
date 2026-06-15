@@ -140,17 +140,32 @@ export function SearchFilters({
     router.push(pathname, { scroll: false });
   }
 
+  // Explicit search (button click or Enter) — flush the debounce and apply now.
+  function onSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (query.trim() !== (searchParams.get("q") ?? "")) updateParam("q", query.trim());
+  }
+
   return (
     <div className="flex flex-col gap-3" dir="rtl">
-      {/* text search */}
-      <input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="ابحث عن كراج، منطقة، أو خدمة..."
-        autoComplete="off"
-        className="w-full rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-      />
+      {/* text search — live as you type, plus an explicit button for clarity */}
+      <form onSubmit={onSearchSubmit} className="flex gap-2">
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="ابحث عن كراج، منطقة، أو خدمة..."
+          autoComplete="off"
+          className="min-w-0 flex-1 rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+        />
+        <button
+          type="submit"
+          className="shrink-0 rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground transition hover:opacity-90"
+        >
+          ابحث
+        </button>
+      </form>
 
       <div className="flex flex-wrap gap-3">
         {/* governorate */}
