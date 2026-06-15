@@ -196,7 +196,7 @@ export default async function WorkshopPage({
             title="موقع المنشأة على الخريطة"
           />
           <a
-            href={`https://www.google.com/maps/place/?q=place_id:${w.place_id}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${w.lat},${w.lng}&query_place_id=${encodeURIComponent(w.place_id)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-block rounded-xl border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
