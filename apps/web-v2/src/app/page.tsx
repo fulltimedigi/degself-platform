@@ -55,7 +55,7 @@ export default async function Home() {
     "@type": "Organization",
     "@id": `${SITE}/#organization`,
     name: "دق سلف",
-    alternateName: "Deg Self",
+    alternateName: ["Deg Self", "Degself", "دقسلف"],
     url: SITE,
     logo: LOGO,
     description:
@@ -65,8 +65,54 @@ export default async function Home() {
       addressCountry: "KW",
       addressRegion: "الكويت",
     },
+    areaServed: {
+      "@type": "Country",
+      name: "Kuwait",
+      alternateName: "الكويت",
+    },
     sameAs: ["https://x.com/degself", "https://www.instagram.com/degselfkw"],
     founder: { "@type": "Person", name: "أحمد عبدالحليم" },
+    knowsAbout: [
+      "صيانة السيارات",
+      "كراجات الكويت",
+      "ميكانيكي السيارات",
+      "تصليح السيارات",
+      "قطع غيار السيارات",
+    ],
+  };
+
+  const webAppLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${SITE}/#webapp`,
+    name: "دق سلف",
+    url: SITE,
+    description:
+      "دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت. ابحث في 1,640+ كراج موثق في 10 محافظات.",
+    applicationCategory: "AutomotiveApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Requires JavaScript. Requires HTML5.",
+    inLanguage: "ar",
+    isAccessibleForFree: true,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "KWD",
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Kuwait",
+    },
+    audience: {
+      "@type": "Audience",
+      geographicArea: {
+        "@type": "Country",
+        name: "Kuwait",
+      },
+      audienceType: "أصحاب السيارات في الكويت",
+    },
+    creator: { "@id": `${SITE}/#organization` },
+    publisher: { "@id": `${SITE}/#organization` },
   };
 
   const websiteLd = {
@@ -92,6 +138,7 @@ export default async function Home() {
     <>
       <JsonLd data={organizationLd} />
       <JsonLd data={websiteLd} />
+      <JsonLd data={webAppLd} />
 
       {/* Hero (unchanged) */}
       <section className="flex flex-col items-center gap-6 px-6 py-16 text-center">
