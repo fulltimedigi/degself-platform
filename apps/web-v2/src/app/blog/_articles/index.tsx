@@ -24,6 +24,12 @@ import Article22, { meta as Article22Meta } from "./muqaranat-asaar-karajat-kuwa
 import Article23, { meta as Article23Meta } from "./afdal-karaj-toyota-kuwait-2026";
 import Article24, { meta as Article24Meta } from "./afdal-karaj-nissan-kuwait-2026";
 import Article25, { meta as Article25Meta } from "./karaj-farwaniya-khaitan-dalil";
+import Article26, { meta as Article26Meta } from "./afdal-karaj-lexus-kuwait-2026";
+import Article27, { meta as Article27Meta } from "./afdal-karaj-gmc-kuwait-2026";
+import Article28, { meta as Article28Meta } from "./afdal-karaj-mercedes-kuwait-2026";
+import Article29, { meta as Article29Meta } from "./karaj-amghara-dalil";
+import Article30, { meta as Article30Meta } from "./tazleel-sayara-kuwait-2026";
+import Article31, { meta as Article31Meta } from "./mizan-tarsees-sayara-kuwait";
 import Choose, { meta as chooseMeta } from "./kayf-takhtar-karaj-mawthoq";
 import Tires, { meta as tiresMeta } from "./asaar-altawayer-alkuwait-2026";
 import Lights, { meta as lightsMeta } from "./lumbat-tahdheer-altabloon";
@@ -44,6 +50,11 @@ export type Article = ArticleMeta & { content: ReactNode };
 
 // Ordered newest-first for the blog index.
 export const articles: Article[] = [
+  { ...Article27Meta, content: <Article27 /> },
+  { ...Article28Meta, content: <Article28 /> },
+  { ...Article29Meta, content: <Article29 /> },
+  { ...Article30Meta, content: <Article30 /> },
+  { ...Article31Meta, content: <Article31 /> },
   { ...Article1Meta, content: <Article1 /> },
   { ...Article2Meta, content: <Article2 /> },
   { ...Article3Meta, content: <Article3 /> },
@@ -69,6 +80,7 @@ export const articles: Article[] = [
   { ...Article23Meta, content: <Article23 /> },
   { ...Article24Meta, content: <Article24 /> },
   { ...Article25Meta, content: <Article25 /> },
+  { ...Article26Meta, content: <Article26 /> },
   { ...chooseMeta, content: <Choose /> },
   { ...tiresMeta, content: <Tires /> },
   { ...lightsMeta, content: <Lights /> },
