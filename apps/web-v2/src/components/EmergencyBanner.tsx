@@ -24,7 +24,7 @@ export function EmergencyBanner() {
             سطحة
           </Link>
           <Link
-            href="/emergency?type=mobile"
+            href="/karaj-mutanaqil"
             className="flex items-center gap-2 rounded-xl border border-red-500/40 px-5 py-2.5 font-bold text-foreground transition hover:bg-red-950/50"
           >
             <Wrench size={18} aria-hidden />
