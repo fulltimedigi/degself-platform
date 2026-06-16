@@ -58,6 +58,13 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/icons/apple-icon-180.png", sizes: "180x180", type: "image/png" }],
   },
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "دق سلف - المدونة" },
+      ],
+    },
+  },
 };
 
 export const viewport: Viewport = {

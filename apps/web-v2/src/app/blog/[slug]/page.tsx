@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Clock, Calendar, Search } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
-import { getArticle, articleSlugs } from "../_articles";
+import { getArticle, articleSlugs, articles } from "../_articles";
 import { formatArabicDate } from "@/lib/utils";
 
 const SITE = "https://degself.com";
@@ -125,6 +125,48 @@ export default async function ArticlePage({
       </header>
 
       <div className="mt-8">{article.content}</div>
+
+      {/* Related Articles - Internal Linking for SEO */}
+      {(() => {
+        const related = articles
+          .filter((a) => a.slug !== article.slug && a.category === article.category)
+          .slice(0, 3);
+        if (related.length === 0) {
+          // Fallback: show 3 most recent other articles
+          const fallback = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
+          return (
+            <section className="mt-12 border-t border-border pt-8">
+              <h2 className="mb-4 text-xl font-extrabold">مقالات ذات صلة</h2>
+              <ul className="flex flex-col gap-3">
+                {fallback.map((a) => (
+                  <li key={a.slug}>
+                    <Link href={`/blog/${a.slug}`} className="group flex flex-col gap-1 rounded-xl border border-border bg-card p-4 hover:border-primary">
+                      <span className="text-xs font-semibold text-primary">{a.category}</span>
+                      <span className="font-bold group-hover:text-primary">{a.title}</span>
+                      <span className="text-sm text-muted-foreground line-clamp-2">{a.description}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        }
+        return (
+          <section className="mt-12 border-t border-border pt-8">
+            <h2 className="mb-4 text-xl font-extrabold">مقالات في نفس القسم: {article.category}</h2>
+            <ul className="flex flex-col gap-3">
+              {related.map((a) => (
+                <li key={a.slug}>
+                  <Link href={`/blog/${a.slug}`} className="group flex flex-col gap-1 rounded-xl border border-border bg-card p-4 hover:border-primary">
+                    <span className="font-bold group-hover:text-primary">{a.title}</span>
+                    <span className="text-sm text-muted-foreground line-clamp-2">{a.description}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })()}
 
       {/* CTA */}
       <div className="mt-12 flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between">

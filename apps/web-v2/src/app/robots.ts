@@ -17,7 +17,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://degself.com/sitemap.xml",
+    sitemap: [
+      "https://degself.com/sitemap.xml",
+    ],
     host: "https://degself.com",
   };
 }
