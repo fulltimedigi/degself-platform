@@ -1,18 +1,52 @@
 [
   {
-    "id": "example-image",
-    "status": "draft",
-    "publish_at": "2026-06-20T18:00:00Z",
+    "id": "01-hero",
+    "status": "posted",
+    "publish_at": "2026-06-01T00:00:00.000Z",
     "type": "image",
-    "media_url": "https://degself.com/og-image.jpg",
-    "caption": "مثال بوست صورة — غيّر status لـ \"scheduled\" عشان يتنشر في وقته."
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/01-hero.jpg",
+    "caption": "كراجات الكويت كلها في مكان واحد 🔧\n\nدق سلف = أكبر دليل كراجات في الكويت. ابحث بالتخصص والمنطقة، شوف التقييمات، واتصل أو ابعت واتساب بضغطة — مجانًا وبدون تسجيل.\n\nابدأ من اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #ميكانيكي_الكويت #صيانة_سيارات #q8 #kuwait #دق_سلف",
+    "media_id": "17914817733203785",
+    "posted_at": "2026-06-16T22:32:17.357Z"
   },
   {
-    "id": "example-reel",
+    "id": "02-translator",
     "status": "draft",
-    "publish_at": "2026-06-21T18:00:00Z",
-    "type": "reel",
-    "media_url": "https://degself.com/path/to/reel.mp4",
-    "caption": "مثال ريل — media_url لازم يكون رابط فيديو عام (.mp4)."
+    "publish_at": "2026-06-18T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/02-translator.jpg",
+    "caption": "مش عارف تشرح العطل للكراج؟ خليه يشرح نفسه 👇\n\nاكتب مشكلة عربيتك بكلامك العادي، ودق سلف يحوّلها رسالة واتساب جاهزة تبعتها للكراج على طول — من غير لف ودوران.\n\nجرّبه مجانًا — اللينك في البايو 👆\n\n#الكويت #سيارات #كراج #ميكانيكي_الكويت #كهرباء_سيارات #q8 #kuwaitcars #دق_سلف"
+  },
+  {
+    "id": "03-sounds",
+    "status": "draft",
+    "publish_at": "2026-06-19T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/03-sounds.jpg",
+    "caption": "أصوات السيارة اللي لازم تاخدها بجدية 🔧🚨\n\nاحفظ البوست عشان تفتكرها وقت الحاجة. وأول ما تسمع أي صوت منهم، لاقي أقرب كراج متخصص على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #صيانة_سيارات #ميكانيكي_الكويت #فرامل #كراجات_الكويت #q8 #دق_سلف"
+  },
+  {
+    "id": "04-summer",
+    "status": "draft",
+    "publish_at": "2026-06-20T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/04-summer.jpg",
+    "caption": "نصايح صيانة عربيتك في حر الكويت 🌡️🔥\n\nقبل ما الحر يوقفك، جهّز عربيتك. لاقي كراج تكييف أو بطاريات قريب منك على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #صيف_الكويت #تكييف_سيارات #بطاريات #صيانة_سيارات #q8 #كراجات_الكويت #دق_سلف"
+  },
+  {
+    "id": "05-trust",
+    "status": "draft",
+    "publish_at": "2026-06-21T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/05-trust.jpg",
+    "caption": "ليه تضيّع وقتك تدوّر؟ 🕒\n\n+١٦٠٠ كراج موثّق في الكويت، مرتّبين بالتخصص والمنطقة. ابحث، قارن، واتصل بضغطة — مجانًا.\n\nابدأ من اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #ميكانيكي_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "06-howto",
+    "status": "draft",
+    "publish_at": "2026-06-22T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/06-howto.jpg",
+    "caption": "تلاقي كراج كويس في ٣ خطوات 👇\n\n① اختر التخصص والمنطقة\n② قارن التقييمات والمسافة\n③ اتصل أو ابعت واتساب بضغطة\n\nكله مجانًا — اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات #ميكانيكي_الكويت #q8 #kuwaitcars #دق_سلف"
   }
 ]

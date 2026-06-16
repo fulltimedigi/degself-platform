@@ -45,8 +45,25 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function publishImage(media_url: string, caption: string) {
   const c = await post(`${UID}/media`, { image_url: media_url, caption });
-  const out = await post(`${UID}/media_publish`, { creation_id: c.id });
-  return out.id;
+  // wait for the container to finish processing, then publish (with retry on 9007)
+  for (let i = 0; i < 12; i++) {
+    const s = await get(`${c.id}?fields=status_code`);
+    if (s.status_code === "FINISHED") break;
+    if (s.status_code === "ERROR") throw new Error("فشل معالجة الصورة");
+    await sleep(2000);
+  }
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const out = await post(`${UID}/media_publish`, { creation_id: c.id });
+      return out.id;
+    } catch (e: any) {
+      if (attempt < 4 && /9007|not available/i.test(e.message)) {
+        await sleep(3000);
+        continue;
+      }
+      throw e;
+    }
+  }
 }
 
 async function publishReel(media_url: string, caption: string) {
