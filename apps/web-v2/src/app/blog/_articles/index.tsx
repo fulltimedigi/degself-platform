@@ -17,6 +17,9 @@ import Article15, { meta as Article15Meta } from "./dalil-taameen-sayara-kuwait-
 import Article16, { meta as Article16Meta } from "./karaj-mutanaqil-kuwait-24-saa";
 import Article17, { meta as Article17Meta } from "./bansher-mutanaqil-kuwait-dalil";
 import Article18, { meta as Article18Meta } from "./karaj-shuwaikh-sinaiya-shamil";
+import Article19, { meta as Article19Meta } from "./karaj-jahra-dalil-shamil";
+import Article20, { meta as Article20Meta } from "./karaj-fahaheel-dalil";
+import Article21, { meta as Article21Meta } from "./karaj-salmiya-hawalli-dalil";
 import Choose, { meta as chooseMeta } from "./kayf-takhtar-karaj-mawthoq";
 import Tires, { meta as tiresMeta } from "./asaar-altawayer-alkuwait-2026";
 import Lights, { meta as lightsMeta } from "./lumbat-tahdheer-altabloon";
@@ -55,6 +58,9 @@ export const articles: Article[] = [
   { ...Article16Meta, content: <Article16 /> },
   { ...Article17Meta, content: <Article17 /> },
   { ...Article18Meta, content: <Article18 /> },
+  { ...Article19Meta, content: <Article19 /> },
+  { ...Article20Meta, content: <Article20 /> },
+  { ...Article21Meta, content: <Article21 /> },
   { ...chooseMeta, content: <Choose /> },
   { ...tiresMeta, content: <Tires /> },
   { ...lightsMeta, content: <Lights /> },
