@@ -59,11 +59,26 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-icon-180.png", sizes: "180x180", type: "image/png" }],
   },
   alternates: {
+    canonical: "https://degself.com",
+    languages: {
+      "ar-KW": "https://degself.com",
+      "x-default": "https://degself.com",
+    },
     types: {
       "application/rss+xml": [
         { url: "/feed.xml", title: "دق سلف - المدونة" },
       ],
     },
+  },
+  other: {
+    // Geo-targeting: limit indexing relevance to Kuwait
+    "geo.region": "KW",
+    "geo.country": "KW",
+    "geo.placename": "Kuwait",
+    "geo.position": "29.3759;47.9774",
+    "ICBM": "29.3759, 47.9774",
+    "distribution": "local",
+    "target-country": "KW",
   },
 };
 
@@ -75,7 +90,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable} antialiased`}>
+    <html lang="ar-KW" dir="rtl" className={`${cairo.variable} antialiased`}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         {/* Capture the install prompt as early as possible — it can fire before
             React hydrates, and the menu (where the button lives) mounts late.

@@ -92,8 +92,12 @@ export default async function Home() {
     applicationCategory: "AutomotiveApplication",
     operatingSystem: "Web",
     browserRequirements: "Requires JavaScript. Requires HTML5.",
-    inLanguage: "ar",
+    inLanguage: "ar-KW",
     isAccessibleForFree: true,
+    countryOfOrigin: {
+      "@type": "Country",
+      name: "Kuwait",
+    },
     offers: {
       "@type": "Offer",
       price: "0",
@@ -122,7 +126,7 @@ export default async function Home() {
     name: "دق سلف",
     alternateName: "Deg Self",
     url: SITE,
-    inLanguage: "ar",
+    inLanguage: "ar-KW",
     publisher: { "@id": `${SITE}/#organization` },
     potentialAction: {
       "@type": "SearchAction",
