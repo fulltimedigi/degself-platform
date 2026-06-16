@@ -148,10 +148,10 @@ export default async function KarajMutanaqilPage() {
                 ابحث عن كراج متنقل قريب
               </Link>
               <Link
-                href="/emergency"
+                href="/bansher-mutanaqil"
                 className="rounded-xl border border-border bg-card px-6 py-3 font-bold text-foreground hover:bg-muted"
               >
-                خدمات الطوارئ
+                بنشر متنقل
               </Link>
             </div>
           </div>

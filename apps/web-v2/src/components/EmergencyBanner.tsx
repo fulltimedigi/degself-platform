@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Truck, Wrench } from "lucide-react";
+import { Truck, Wrench, Disc3 } from "lucide-react";
 
 export function EmergencyBanner() {
   return (
@@ -29,6 +29,13 @@ export function EmergencyBanner() {
           >
             <Wrench size={18} aria-hidden />
             كراج متنقل
+          </Link>
+          <Link
+            href="/bansher-mutanaqil"
+            className="flex items-center gap-2 rounded-xl border border-red-500/40 px-5 py-2.5 font-bold text-foreground transition hover:bg-red-950/50"
+          >
+            <Disc3 size={18} aria-hidden />
+            بنشر متنقل
           </Link>
         </div>
       </div>
