@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "asaar-taghyeer-faramil-kuwait",
   title: "أسعار تغيير الفرامل في الكويت 2026 - دليل شامل",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "11 دقيقة",
   category: "أسعار وتكاليف",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "هل أغيّر فحمات أمامية وخلفية معاً؟", acceptedAnswer: { "@type": "Answer", text: "لا، يمكن تغييرهما بشكل منفصل. عادةً الأمامية تنتهي قبل الخلفية بسبب الضغط الأعلى." } },
+    { "@type": "Question", name: "هل تغيير القرص ضروري عند تغيير الفحمات؟", acceptedAnswer: { "@type": "Answer", text: "ليس دائماً. القرص يُغيّر فقط إذا: - تآكل أقل من السُمك الأدنى - معوج (يسبب اهتزاز) - متشقق" } },
+    { "@type": "Question", name: "كم يستغرق تغيير الفرامل؟", acceptedAnswer: { "@type": "Answer", text: "فحمات فقط: 30-60 دقيقة - فحمات + أقراص: 1-2 ساعة - مع تغيير زيت الفرامل: 2-3 ساعات" } },
+    { "@type": "Question", name: "هل يمكنني القيادة بفرامل ضعيفة؟", acceptedAnswer: { "@type": "Answer", text: "خطر جداً. مسافة الفرملة تزيد بـ 30-50% مما قد يؤدي لحادث." } },
+    { "@type": "Question", name: "ما الفرق بين الفحمات الأصلية والتجارية؟", acceptedAnswer: { "@type": "Answer", text: "الأصلية: من مصنع السيارة، ضمان أطول التجارية: من شركات أخرى (Brembo, Bosch)، جودة قريبة، سعر أقل" } }
+  ],
 };
 
 const SOURCE = `
@@ -277,5 +291,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-asaar-taghyeer-faramil-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

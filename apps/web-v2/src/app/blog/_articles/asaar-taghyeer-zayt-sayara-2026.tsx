@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "asaar-taghyeer-zayt-sayara-2026",
   title: "أسعار تغيير زيت السيارة في الكويت 2026 - دليل شامل",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "9 دقائق",
   category: "أسعار وتكاليف",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "كم سعر تغيير زيت تويوتا كورولا في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "بين 8-15 د.ك للزيت المعدني، و 15-25 د.ك للتخليقي الكامل، شاملاً الفلتر." } },
+    { "@type": "Question", name: "هل يمكن تغيير الزيت في المنزل؟", acceptedAnswer: { "@type": "Answer", text: "نعم، كثير من كراجات الكويت يقدمون خدمة متنقلة بسعر إضافي 3-7 د.ك. ابحث في دق سلف عن كراجات الخدمة المتنقلة." } },
+    { "@type": "Question", name: "ما الفرق بين الزيت التخليقي والمعدني؟", acceptedAnswer: { "@type": "Answer", text: "التخليقي: أعلى أداء، أطول عمر، أغلى سعراً - المعدني: تكلفة أقل، تغيير أكثر، مناسب للسيارات القديمة" } },
+    { "@type": "Question", name: "كم مرة يجب تغيير الزيت في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "بسبب الحرارة الشديدة في الصيف، نوصي بتغيير الزيت كل 5,000-8,000 كم بدلاً من 10,000 كم المعتادة في المناخات المعتدلة." } },
+    { "@type": "Question", name: "هل سعر الفلتر يدخل في سعر تغيير الزيت؟", acceptedAnswer: { "@type": "Answer", text: "في معظم الكراجات نعم، لكن تأكد دائماً قبل البدء. بعض الكراجات تحسب الفلتر منفصلاً." } }
+  ],
 };
 
 const SOURCE = `
@@ -188,5 +202,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-asaar-taghyeer-zayt-sayara-2026"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

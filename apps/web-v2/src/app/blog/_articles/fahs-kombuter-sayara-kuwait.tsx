@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "fahs-kombuter-sayara-kuwait",
   title: "فحص كمبيوتر السيارة - متى ولماذا - دليل شامل 2026",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "10 دقائق",
   category: "فحص وتشخيص",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "هل يمكنني فحص سيارتي بنفسي؟", acceptedAnswer: { "@type": "Answer", text: "نعم، يمكنك شراء جهاز OBD-II رخيص (5-30 د.ك) من معارض قطع الغيار، لكنه محدود ولا يعطي تشخيص دقيق للأنظمة المتقدمة." } },
+    { "@type": "Question", name: "هل لمبة Check Engine خطيرة؟", acceptedAnswer: { "@type": "Answer", text: "مضيئة باستمرار: غير عاجل، اذهب للفحص خلال أسبوع - متقطعة (ترمش): خطر، اذهب للكراج فوراً" } },
+    { "@type": "Question", name: "هل يمكن قيادة السيارة مع وجود كود؟", acceptedAnswer: { "@type": "Answer", text: "يعتمد على الكود: - 🟢 أكواد بسيطة: نعم - 🟡 أكواد متوسطة: لمسافات قصيرة - 🔴 أكواد خطرة: لا" } },
+    { "@type": "Question", name: "كم يستغرق فحص الكمبيوتر؟", acceptedAnswer: { "@type": "Answer", text: "بسيط: 10-15 دقيقة - شامل: 30-60 دقيقة - متخصص: 1-2 ساعة" } },
+    { "@type": "Question", name: "هل يجب فحص السيارة قبل الشراء؟", acceptedAnswer: { "@type": "Answer", text: "نعم، ضروري. حتى لو السيارة تبدو سليمة، الكمبيوتر يكشف أعطال خفية." } }
+  ],
 };
 
 const SOURCE = `
@@ -255,5 +269,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-fahs-kombuter-sayara-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

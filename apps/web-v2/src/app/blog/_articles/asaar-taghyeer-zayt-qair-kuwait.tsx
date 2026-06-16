@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "asaar-taghyeer-zayt-qair-kuwait",
   title: "أسعار تغيير زيت القير في الكويت 2026",
@@ -8,6 +9,20 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "10 دقائق",
   category: "أسعار وتكاليف",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "كم سعر تغيير زيت قير تويوتا كامري؟", acceptedAnswer: { "@type": "Answer", text: "بين 25-45 د.ك للتغيير العادي، و 50-80 د.ك للـ Flush الكامل." } },
+    { "@type": "Question", name: "هل أحتاج لتغيير فلتر القير مع كل تغيير زيت؟", acceptedAnswer: { "@type": "Answer", text: "نعم، يفضل ذلك. كثير من الكراجات تنسى أو تتجاهل هذا. تأكد من ذكره مسبقاً." } },
+    { "@type": "Question", name: "كم يكلف تجفيت القير في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "بين 80-250 د.ك حسب موديل السيارة ودرجة التسرب." } },
+    { "@type": "Question", name: "هل القير CVT أغلى في الصيانة؟", acceptedAnswer: { "@type": "Answer", text: "نعم، 15-25% أغلى من القير التقليدي، لكنه أكثر كفاءة في استهلاك الوقود." } },
+    { "@type": "Question", name: "متى يجب أن أبدأ بالقلق على قير سيارتي؟", acceptedAnswer: { "@type": "Answer", text: "بعد 100,000 كم: راقب باستمرار - بعد 150,000 كم: فحص شامل سنوياً - بعد 200,000 كم: قد يحتاج صيانة كبيرة" } },
+    { "@type": "Question", name: "هل يمكن تغيير زيت القير في المنزل؟", acceptedAnswer: { "@type": "Answer", text: "نظرياً نعم، لكن لا ننصح لأن: - يحتاج رفع السيارة بأمان - يحتاج جهاز فحص لمستوى الزيت الصحيح - التخلص من الزيت القديم - خطر تعبئة كمية خاطئة" } }
+  ],
 };
 
 const SOURCE = `
@@ -315,5 +330,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-asaar-taghyeer-zayt-qair-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

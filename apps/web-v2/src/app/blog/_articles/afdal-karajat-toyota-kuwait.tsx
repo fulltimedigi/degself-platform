@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "afdal-karajat-toyota-kuwait",
   title: "أفضل كراجات تويوتا في الكويت - دليل 2026",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "10 دقائق",
   category: "كراجات حسب الماركة",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "كم تكلفة الصيانة السنوية لتويوتا كورولا في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "بين 80-150 د.ك سنوياً للصيانة الدورية، شاملاً تغيير الزيت 3 مرات وفحص شامل واحد." } },
+    { "@type": "Question", name: "هل أفضل الذهاب للوكالة أم لكراج خاص؟", acceptedAnswer: { "@type": "Answer", text: "للسيارات الجديدة تحت الضمان: الوكالة (ضرورية) - للسيارات بعد الضمان: كراج خاص جيد (توفير 50-70%) - للأعطال الإلكترونية المعقدة: الوكالة أو كراج متخصص جداً" } },
+    { "@type": "Question", name: "كم يكلف تغيير زيت لاند كروزر في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "بين 20-40 د.ك للزيت المعدني، و 30-55 د.ك للتخليقي الكامل." } },
+    { "@type": "Question", name: "أين أجد قطع غيار تويوتا الأصلية في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "الوكالة الرسمية (الشويخ): الأصلي مع ضمان - قطع OEM: محلات الشويخ الصناعية - عبر الإنترنت: من البحرين والإمارات (وقت أطول)" } },
+    { "@type": "Question", name: "كيف أعرف إذا كان الكراج صادقاً معي؟", acceptedAnswer: { "@type": "Answer", text: "يعرض السعر قبل البدء بالعمل - يريك القطعة المعطلة - لا يضغط عليك لاستبدال قطع غير ضرورية - يقدم ضمان مكتوب على الأعمال" } }
+  ],
 };
 
 const SOURCE = `
@@ -243,5 +257,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-afdal-karajat-toyota-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

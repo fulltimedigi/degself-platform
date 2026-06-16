@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "taslih-mukayyif-sayara-kuwait",
   title: "تصليح مكيف السيارة في الكويت - دليل شامل 2026",
@@ -8,6 +9,20 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "11 دقيقة",
   category: "صيانة وإصلاح",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "كم مرة يجب تعبئة الفريون؟", acceptedAnswer: { "@type": "Answer", text: "في الحالة الطبيعية، مرة كل 2-3 سنوات. لو تحتاج لتعبئة أكثر، عندك تسريب." } },
+    { "@type": "Question", name: "هل تعبئة الفريون تكفي لإصلاح المكيف؟", acceptedAnswer: { "@type": "Answer", text: "لا. لو فيه تسريب، الفريون الجديد سيخرج خلال أسابيع. يجب إصلاح التسريب أولاً." } },
+    { "@type": "Question", name: "كم سعر تعبئة فريون في الكويت؟", acceptedAnswer: { "@type": "Answer", text: "R-134a (للسيارات القديمة): 15-25 د.ك - R-1234yf (للسيارات الحديثة): 25-50 د.ك" } },
+    { "@type": "Question", name: "هل يمكن أن أقوم بتعبئة الفريون بنفسي؟", acceptedAnswer: { "@type": "Answer", text: "ممكن نظرياً (شراء عدة من المحلات)، لكن لا ننصح بذلك لأن: - خطر على الجلد والعين - يحتاج جهاز ضغط احترافي - قد تضع كمية خاطئة" } },
+    { "@type": "Question", name: "متى يحتاج الكومبروسر للتغيير؟", acceptedAnswer: { "@type": "Answer", text: "العمر الافتراضي 5-10 سنوات في الكويت. علامات الحاجة للتغيير: - صوت طقطقة عالٍ - المكيف لا يبرد حتى مع الفريون الجديد - ضوء فحص المحرك يضيء" } },
+    { "@type": "Question", name: "هل المكيف يستهلك بنزين كثير؟", acceptedAnswer: { "@type": "Answer", text: "نعم، يزيد استهلاك البنزين بـ 10-20%. لكن في حر الكويت، لا خيار آخر." } }
+  ],
 };
 
 const SOURCE = `
@@ -288,5 +303,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-taslih-mukayyif-sayara-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

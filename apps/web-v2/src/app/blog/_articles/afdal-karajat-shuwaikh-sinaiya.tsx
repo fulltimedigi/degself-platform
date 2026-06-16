@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "afdal-karajat-shuwaikh-sinaiya",
   title: "أفضل كراجات في الشويخ الصناعية - دليل شامل 2026",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "9 دقائق",
   category: "كراجات حسب المنطقة",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "هل أحتاج لموعد مسبق؟", acceptedAnswer: { "@type": "Answer", text: "معظم كراجات الشويخ تقبل بدون موعد، لكن للسيارات الفاخرة يُفضل الحجز." } },
+    { "@type": "Question", name: "ما أفضل وقت لزيارة الشويخ؟", acceptedAnswer: { "@type": "Answer", text: "الصباح الباكر (8-10 ص) أو بعد العصر (4-6 م) لتجنب الزحام." } },
+    { "@type": "Question", name: "هل توجد كراجات نسائية؟", acceptedAnswer: { "@type": "Answer", text: "نعم، توجد بعض الكراجات التي تخدم النساء بشكل خاص. ابحث عبر دق سلف باستخدام فلتر \"كراجات نسائية\"." } },
+    { "@type": "Question", name: "كم متوسط وقت الانتظار؟", acceptedAnswer: { "@type": "Answer", text: "صيانة بسيطة: 30-60 دقيقة - إصلاح متوسط: 2-4 ساعات - إصلاحات كبيرة: 1-3 أيام" } },
+    { "@type": "Question", name: "هل أسعار الشويخ أرخص من المناطق الأخرى؟", acceptedAnswer: { "@type": "Answer", text: "نعم، في المتوسط 15-25% أرخص من كراجات الوكالات، وأرخص قليلاً من كراجات الجهراء الصناعية للعلامات الفاخرة." } }
+  ],
 };
 
 const SOURCE = `
@@ -209,5 +223,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-afdal-karajat-shuwaikh-sinaiya"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "dalil-siyana-dawriya-sayara",
   title: "دليل الصيانة الدورية للسيارة - كل ما تحتاج معرفته 2026",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "12 دقيقة",
   category: "صيانة ودلائل",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "هل يجب الالتزام بصيانة الوكالة؟", acceptedAnswer: { "@type": "Answer", text: "خلال الضمان: نعم، حفاظاً على الضمان بعد الضمان: لا، الكراجات الخاصة الجيدة تقدم نفس الجودة بسعر أقل" } },
+    { "@type": "Question", name: "كم تكلفة الصيانة السنوية للسيارة؟", acceptedAnswer: { "@type": "Answer", text: "سيارة اقتصادية: 150-300 د.ك سنوياً - سيارة متوسطة: 250-500 د.ك سنوياً - سيارة فاخرة: 500-1,500+ د.ك سنوياً" } },
+    { "@type": "Question", name: "هل الصيانة الذاتية موفرة؟", acceptedAnswer: { "@type": "Answer", text: "نعم، إذا كنت تجيدها، لكن تذكر: - تكلفة الأدوات - المخاطر إذا لم تكن خبيراً - صعوبة بعض الأعمال" } },
+    { "@type": "Question", name: "متى أبيع سيارتي؟", acceptedAnswer: { "@type": "Answer", text: "عندما تبدأ تكاليف الصيانة في تجاوز 30% من قيمة السيارة سنوياً." } },
+    { "@type": "Question", name: "هل صيانة السيارات الكهربائية أرخص؟", acceptedAnswer: { "@type": "Answer", text: "نعم، 40-50% أرخص بسبب عدد القطع الأقل، لكن البطارية مكلفة عند الحاجة." } }
+  ],
 };
 
 const SOURCE = `
@@ -304,5 +318,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-dalil-siyana-dawriya-sayara"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }

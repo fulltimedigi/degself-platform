@@ -1,5 +1,6 @@
 import { Markdown } from "@/components/Markdown";
 
+import Script from "next/script";
 export const meta = {
   slug: "siyanat-sayara-sayf-kuwait",
   title: "صيانة سيارتك في صيف الكويت - دليل شامل للنجاة من الحرارة",
@@ -8,6 +9,19 @@ export const meta = {
   dateModified: "2026-06-16",
   readingTime: "11 دقيقة",
   category: "صيانة موسمية",
+};
+
+
+const FAQ_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "متى يجب تحضير السيارة للصيف؟", acceptedAnswer: { "@type": "Answer", text: "فبراير - مارس هو الوقت المثالي قبل بداية الحرارة الشديدة." } },
+    { "@type": "Question", name: "كم تكلفة الصيانة الصيفية الكاملة؟", acceptedAnswer: { "@type": "Answer", text: "80-200 د.ك للصيانة الشاملة شاملة المكيف وتغيير الزيت والفلاتر." } },
+    { "@type": "Question", name: "هل المكيف يستهلك بنزين؟", acceptedAnswer: { "@type": "Answer", text: "نعم، حوالي 10-15% زيادة في استهلاك الوقود." } },
+    { "@type": "Question", name: "ما هي درجة الحرارة الطبيعية للمحرك؟", acceptedAnswer: { "@type": "Answer", text: "بين 90-105 درجة مئوية في المؤشر العادي." } },
+    { "@type": "Question", name: "هل تظليل الزجاج يساعد؟", acceptedAnswer: { "@type": "Answer", text: "نعم، يقلل حرارة الكابينة 15-20 درجة." } }
+  ],
 };
 
 const SOURCE = `
@@ -258,5 +272,14 @@ const SOURCE = `
 `;
 
 export default function Article() {
-  return <Markdown source={SOURCE} />;
+  return (
+    <>
+      <Script
+        id="faq-ld-siyanat-sayara-sayf-kuwait"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }}
+      />
+      <Markdown source={SOURCE} />
+    </>
+  );
 }
