@@ -9,6 +9,11 @@ import Article7, { meta as Article7Meta } from "./siyanat-sayara-sayf-kuwait";
 import Article8, { meta as Article8Meta } from "./fahs-kombuter-sayara-kuwait";
 import Article9, { meta as Article9Meta } from "./asaar-taghyeer-faramil-kuwait";
 import Article10, { meta as Article10Meta } from "./dalil-siyana-dawriya-sayara";
+import Article11, { meta as Article11Meta } from "./asaar-tasleeh-qair-kuwait-2026";
+import Article12, { meta as Article12Meta } from "./siyanat-mukayyif-sayara-shamil";
+import Article13, { meta as Article13Meta } from "./asaar-batariyat-sayara-kuwait";
+import Article14, { meta as Article14Meta } from "./dalil-shiraa-sayara-mustamal-kuwait";
+import Article15, { meta as Article15Meta } from "./dalil-taameen-sayara-kuwait-2026";
 import Choose, { meta as chooseMeta } from "./kayf-takhtar-karaj-mawthoq";
 import Tires, { meta as tiresMeta } from "./asaar-altawayer-alkuwait-2026";
 import Lights, { meta as lightsMeta } from "./lumbat-tahdheer-altabloon";
@@ -39,6 +44,11 @@ export const articles: Article[] = [
   { ...Article8Meta, content: <Article8 /> },
   { ...Article9Meta, content: <Article9 /> },
   { ...Article10Meta, content: <Article10 /> },
+  { ...Article11Meta, content: <Article11 /> },
+  { ...Article12Meta, content: <Article12 /> },
+  { ...Article13Meta, content: <Article13 /> },
+  { ...Article14Meta, content: <Article14 /> },
+  { ...Article15Meta, content: <Article15 /> },
   { ...chooseMeta, content: <Choose /> },
   { ...tiresMeta, content: <Tires /> },
   { ...lightsMeta, content: <Lights /> },
