@@ -180,18 +180,34 @@ export async function getWorkshop(placeId: string): Promise<Workshop | null> {
 
 /**
  * Extract a stable "chain key" from a workshop name so that branches of the
- * same business (e.g. "AlBabtain Auto, Al Faiha", "AlBabtain Auto - Jahra")
- * collapse to a single bucket. Used to diversify the homepage carousel.
+ * same business (e.g. "AlBabtain Auto, Al Faiha", "Al Babtain Auto - Jahra",
+ * "AlBabtain Auto Ahmadi") collapse to a single bucket. Used to diversify the
+ * homepage carousel.
+ *
+ * Strategy:
+ *  1. Lowercase + strip Arabic diacritics + keep only latin/arabic letters.
+ *  2. Drop common prefixes that are essentially noise for chain detection
+ *     ("al", "el", "the") and the generic suffix "auto".
+ *  3. Take the first remaining meaningful token — that's the brand stem.
+ *     e.g. "al babtain auto al faiha" → ["babtain", "faiha"] → "babtain".
  */
+const CHAIN_NOISE = new Set(["al", "el", "the", "auto", "اوتو", "ال"]);
 function chainKey(name: string): string {
-  const cleaned = (name || "")
+  const tokens = (name || "")
     .toLowerCase()
     .replace(/[\u0610-\u061a\u064b-\u065f\u0670]/g, "") // Arabic diacritics
-    .replace(/[^a-z\u0600-\u06ff\s]/g, " ") // keep latin + arabic letters
-    .split(/[\-–—,،|()\s]+/)
+    .replace(/[^a-z\u0600-\u06ff\s]/g, " ") // keep letters only
+    .split(/\s+/)
     .filter(Boolean);
-  // first 2 tokens are usually the brand (e.g. "albabtain auto")
-  return cleaned.slice(0, 2).join(" ").trim() || (name || "").trim().toLowerCase();
+  // collapse glued "al"-prefixed words: "albabtain" → "babtain"
+  const expanded = tokens.flatMap((t) => {
+    if (/^al[a-z]{3,}$/.test(t)) return [t.slice(2)];
+    return [t];
+  });
+  const meaningful = expanded.filter((t) => !CHAIN_NOISE.has(t));
+  if (meaningful.length === 0) return (name || "").trim().toLowerCase();
+  // first meaningful token is the brand stem
+  return meaningful[0];
 }
 
 /**
