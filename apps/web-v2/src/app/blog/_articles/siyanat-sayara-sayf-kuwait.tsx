@@ -67,7 +67,7 @@ const SOURCE = `
 - صوت غير طبيعي
 - الهواء ساخن أحياناً
 
-📖 [اقرأ دليلنا الشامل لتصليح المكيف](https://degself.com/blog/taslih-mukayyif-sayara)
+📖 [اقرأ دليلنا الشامل لتصليح المكيف](https://degself.com/blog/taslih-mukayyif-sayara-kuwait)
 
 ---
 
@@ -143,7 +143,7 @@ const SOURCE = `
 - **سيارات حديثة**: 5W-30 أو حسب توصية الشركة
 - **التغيير**: كل 5,000 كم في الصيف بدلاً من 7,500
 
-📖 [اقرأ دليل أسعار الزيت في الكويت](https://degself.com/blog/asaar-taghyeer-zayt-sayara)
+📖 [اقرأ دليل أسعار الزيت في الكويت](https://degself.com/blog/asaar-taghyeer-zayt-sayara-2026)
 
 #### السوائل الأخرى
 | السائل | الفحص |

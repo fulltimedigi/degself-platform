@@ -33,6 +33,7 @@ import Article31, { meta as Article31Meta } from "./mizan-tarsees-sayara-kuwait"
 import Article32, { meta as Article32Meta } from "./asaar-zayt-mahrek-kuwait-castrol-mobil";
 import Article33, { meta as Article33Meta } from "./karaj-jabriya-surra-dalil";
 import Article34, { meta as Article34Meta } from "./asaar-taameen-sayara-kuwait-muqarana";
+import Article35, { meta as Article35Meta } from "./sat-ha-sayara-kuwait-asaar";
 import Choose, { meta as chooseMeta } from "./kayf-takhtar-karaj-mawthoq";
 import Tires, { meta as tiresMeta } from "./asaar-altawayer-alkuwait-2026";
 import Lights, { meta as lightsMeta } from "./lumbat-tahdheer-altabloon";
@@ -53,6 +54,7 @@ export type Article = ArticleMeta & { content: ReactNode };
 
 // Ordered newest-first for the blog index.
 export const articles: Article[] = [
+  { ...Article35Meta, content: <Article35 /> },
   { ...Article32Meta, content: <Article32 /> },
   { ...Article33Meta, content: <Article33 /> },
   { ...Article34Meta, content: <Article34 /> },

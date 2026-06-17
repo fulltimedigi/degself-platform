@@ -138,7 +138,7 @@ const SOURCE = `
 - **السبب**: الزيت يتأكسد ويفقد خصائصه
 - **العلامات**: لون الزيت أسود داكن، استهلاك زائد للوقود
 
-📖 [أسعار الزيت في الكويت](https://degself.com/blog/asaar-taghyeer-zayt-sayara)
+📖 [أسعار الزيت في الكويت](https://degself.com/blog/asaar-taghyeer-zayt-sayara-2026)
 
 ### 2. الفلاتر 🌬️
 
@@ -181,11 +181,11 @@ const SOURCE = `
 
 ### 5. الفرامل 🛑
 
-📖 [دليل أسعار الفرامل الشامل](https://degself.com/blog/asaar-taghyeer-faramil)
+📖 [دليل أسعار الفرامل الشامل](https://degself.com/blog/asaar-taghyeer-faramil-kuwait)
 
 ### 6. زيت القير ⚙️
 
-📖 [أسعار تغيير زيت القير](https://degself.com/blog/asaar-taghyeer-zayt-qair)
+📖 [أسعار تغيير زيت القير](https://degself.com/blog/asaar-taghyeer-zayt-qair-kuwait)
 
 ### 7. نظام التبريد 🌡️
 - **ماء الرديتر**: كل 40,000 كم أو سنتين
