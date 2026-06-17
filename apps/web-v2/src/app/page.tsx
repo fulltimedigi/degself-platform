@@ -3,6 +3,7 @@ import { getFeaturedWorkshops } from "@/lib/workshops";
 import { GarageTranslator } from "@/components/GarageTranslator";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
+import { PriceCalculatorBanner } from "@/components/PriceCalculatorBanner";
 import { GovernorateGrid } from "@/components/GovernorateGrid";
 import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
@@ -181,6 +182,9 @@ export default async function Home() {
 
         {/* Emergency CTA */}
         <EmergencyBanner />
+
+        {/* Price Calculator CTA */}
+        <PriceCalculatorBanner />
 
         {/* Browse by governorate */}
         <section className="flex flex-col gap-4">
