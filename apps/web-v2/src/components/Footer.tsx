@@ -88,8 +88,8 @@ export function Footer() {
           </p>
           <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4 sm:gap-6">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-lg font-extrabold text-primary">+1,640</span>
-              <span className="text-[10px] text-muted-foreground">كراج موثّق</span>
+              <span className="text-base font-extrabold text-primary">دليل شامل</span>
+              <span className="text-[10px] text-muted-foreground">لكراجات الكويت</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <span className="flex items-center gap-1 text-base font-extrabold text-primary">

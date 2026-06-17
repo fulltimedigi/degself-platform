@@ -89,7 +89,7 @@ export default async function Home() {
     name: "دق سلف",
     url: SITE,
     description:
-      "دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت. ابحث في 1,640+ كراج موثق في 10 محافظات.",
+      "دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت. ابحث في دليل شامل للكراجات الموثقة في جميع مناطق الكويت.",
     applicationCategory: "AutomotiveApplication",
     operatingSystem: "Web",
     browserRequirements: "Requires JavaScript. Requires HTML5.",
@@ -200,19 +200,28 @@ export default async function Home() {
             </button>
           </form>
 
-          {/* Stats Bar — أرقام موثوقية */}
+          {/* ميزات موثوقية بدون أرقام متضاربة */}
           <div className="mt-4 grid w-full max-w-2xl grid-cols-3 gap-3 sm:gap-6">
-            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <span className="text-xl font-extrabold text-primary sm:text-2xl">+1,640</span>
-              <span className="text-[11px] text-muted-foreground sm:text-xs">كراج ومورد خدمة</span>
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span className="text-xs font-bold sm:text-sm">جميع مناطق الكويت</span>
             </div>
-            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <span className="text-base font-extrabold text-primary sm:text-lg">جميع مناطق</span>
-              <span className="text-[11px] text-muted-foreground sm:text-xs">الكويت</span>
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+              </svg>
+              <span className="text-xs font-bold sm:text-sm">بيانات موثّقة</span>
             </div>
-            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <span className="text-xl font-extrabold text-primary sm:text-2xl">مجانًا</span>
-              <span className="text-[11px] text-muted-foreground sm:text-xs">بدون إعلانات</span>
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+              </svg>
+              <span className="text-xs font-bold sm:text-sm">مجانًا بدون إعلانات</span>
             </div>
           </div>
         </div>
