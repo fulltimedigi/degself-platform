@@ -33,7 +33,7 @@ export function FloatingWhatsApp() {
             <ul className="flex flex-col">
               <li>
                 <Link
-                  href="/satha"
+                  href="/emergency?type=tow"
                   onClick={() => {
                     track("floating_widget", { action: "satha" });
                     setOpen(false);
