@@ -4,7 +4,7 @@ import Script from "next/script";
 export const meta = {
   slug: "dalil-shiraa-sayara-mustamal-kuwait",
   title: "دليل شراء سيارة مستعملة في الكويت - 30 نقطة فحص",
-  description: "خطة فحص كاملة من 30 نقطة قبل شراء سيارة مستعملة في الكويت. تجنب الحوادث المخفية ووفّر آلاف الدنانير.",
+  description: "خطة فحص كاملة من 30 نقطة قبل شراء سيارة مستعملة في الكويت 2026: تجنّب الحوادث المخفية والعدّاد الممسوح ووفّر آلاف الدنانير قبل أن تدفع.",
   datePublished: "2026-06-16",
   dateModified: "2026-06-16",
   readingTime: "12 دقيقة",

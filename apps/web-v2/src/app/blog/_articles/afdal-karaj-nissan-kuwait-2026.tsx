@@ -4,7 +4,7 @@ import Script from "next/script";
 export const meta = {
   slug: "afdal-karaj-nissan-kuwait-2026",
   title: "أفضل كراج نيسان في الكويت 2026 — Patrol وSunny وX-Trail",
-  description: "دليل أفضل كراجات نيسان في الكويت 2026: وكالة المُلّا، كراجات Patrol، خدمة Sunny. أسعار، مواقع، وتقييمات.",
+  description: "دليل أفضل كراجات نيسان في الكويت 2026: الوكالة الرسمية والكراجات التخصصية لسيارات Patrol وSunny وX-Trail. أسعار ومواقع وتقييمات حقيقية.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",
   readingTime: "10 دقائق",

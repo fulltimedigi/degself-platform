@@ -300,6 +300,12 @@ const SOURCE = `
 **آخر تحديث**: 16 يونيو 2026
 **الكاتب**: فريق دق سلف
 **تم التحقق من**: 150+ كراج تكييف في الكويت
+
+## روابط ذات صلة
+- [كراجات تكييف في الكويت](https://degself.com/كراج/تكييف)
+- [صيانة مكيف السيارة الشاملة](https://degself.com/blog/siyanat-mukayyif-sayara-shamil)
+- [نصائح صيانة السيارة في الصيف](https://degself.com/blog/siyanat-sayara-sayf-kuwait)
+- [ابحث عن كراج](https://degself.com/search)
 `;
 
 export default function Article() {

@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export const meta = {
   slug: "asaar-zayt-mahrek-kuwait-castrol-mobil",
-  title: "أسعار زيوت السيارات في الكويت 2026 — Castrol, Mobil, Shell, Total",
+  title: "أسعار زيوت المحرك في الكويت 2026: كاسترول وموبيل وشِل",
   description: "دليل شامل لأسعار زيوت المحرّك في الكويت 2026: Castrol, Mobil 1, Shell, Total, Liqui Moly. مقارنة 4 لتر، نصف صناعي، صناعي بالكامل. مع أفضل الكراجات للتركيب.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",

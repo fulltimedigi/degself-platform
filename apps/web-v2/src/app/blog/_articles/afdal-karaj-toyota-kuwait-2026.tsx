@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export const meta = {
   slug: "afdal-karaj-toyota-kuwait-2026",
-  title: "أفضل كراج تويوتا في الكويت 2026 — وكالة السيّر والكراجات التخصصية",
+  title: "كراج تويوتا في الكويت: الوكالة مقابل الكراج التخصصي 2026",
   description: "دليل أفضل كراجات تويوتا في الكويت 2026: وكالة السيّر، كراجات Land Cruiser وPrado، خدمة Lexus. أسعار، مواقع، وتقييمات.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",

@@ -3,7 +3,7 @@ import { Markdown } from "@/components/Markdown";
 import Script from "next/script";
 export const meta = {
   slug: "afdal-karajat-shuwaikh-sinaiya",
-  title: "أفضل كراجات في الشويخ الصناعية - دليل شامل 2026",
+  title: "أفضل كراجات الشويخ حسب التخصص: ميكانيكا وبودي وكهرباء",
   description: "دليلك الكامل لأفضل كراجات الشويخ الصناعية في الكويت. تخصصات، أسعار، وعناوين دقيقة لجميع الكراجات. مدعوم من دق سلف.",
   datePublished: "2026-06-16",
   dateModified: "2026-06-16",

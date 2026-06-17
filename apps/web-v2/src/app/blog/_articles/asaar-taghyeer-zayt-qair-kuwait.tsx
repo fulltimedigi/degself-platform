@@ -327,6 +327,12 @@ const SOURCE = `
 **آخر تحديث**: 16 يونيو 2026
 **الكاتب**: فريق دق سلف
 **تم التحقق من**: 100+ كراج متخصص في القير في الكويت
+
+## روابط ذات صلة
+- [متخصصو القير في الكويت](https://degself.com/كراج/قير)
+- [أسعار تصليح القير](https://degself.com/blog/asaar-tasleeh-qair-kuwait-2026)
+- [أسعار تغيير زيت السيارة](https://degself.com/blog/asaar-taghyeer-zayt-sayara-2026)
+- [ابحث عن كراج](https://degself.com/search)
 `;
 
 export default function Article() {

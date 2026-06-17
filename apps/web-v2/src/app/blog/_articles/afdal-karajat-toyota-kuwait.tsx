@@ -3,7 +3,7 @@ import { Markdown } from "@/components/Markdown";
 import Script from "next/script";
 export const meta = {
   slug: "afdal-karajat-toyota-kuwait",
-  title: "أفضل كراجات تويوتا في الكويت - دليل 2026",
+  title: "أفضل كراجات تويوتا في الكويت 2026: دليل لكل المناطق",
   description: "دليل كامل لأفضل كراجات تويوتا في الكويت لكل المناطق. أسعار، تخصصات، وضمانات. اعثر على كراج تويوتا الموثوق عبر دق سلف.",
   datePublished: "2026-06-16",
   dateModified: "2026-06-16",
@@ -254,6 +254,12 @@ const SOURCE = `
 **آخر تحديث**: 16 يونيو 2026
 **الكاتب**: فريق دق سلف
 **عدد الكراجات المرجعية**: 200+ كراج تويوتا في الكويت
+
+## روابط ذات صلة
+- [كراج تويوتا: الوكالة مقابل الكراج التخصصي](https://degself.com/blog/afdal-karaj-toyota-kuwait-2026)
+- [تصفّح كراجات تويوتا](https://degself.com/ماركة/تويوتا)
+- [ميكانيكا في الكويت](https://degself.com/كراج/ميكانيكا)
+- [كيف تختار كراجاً موثوقاً](https://degself.com/blog/kayf-takhtar-karaj-mawthoq)
 `;
 
 export default function Article() {
