@@ -23,20 +23,32 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
-  // Auto-close the mobile menu when the user scrolls away from it or taps
-  // outside it — so they don't have to hit the ✕ manually.
+  // Auto-close the mobile menu when the user scrolls a meaningful amount
+  // away from it or taps outside it. We intentionally:
+  //   - capture the scroll position at the moment the menu opened, then only
+  //     close after the user has moved > 40px (avoids the iOS/Android quirk
+  //     where opening a sticky-positioned menu emits a tiny scroll event that
+  //     would instantly close it again).
+  //   - delay attaching the pointerdown listener by one frame so the click
+  //     that opened the menu isn't treated as an "outside" click.
   useEffect(() => {
     if (!open) return;
-    const close = () => setOpen(false);
+    const startY = window.scrollY;
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - startY) > 40) setOpen(false);
+    };
     const onPointer = (e: PointerEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
-    window.addEventListener("scroll", close, { passive: true });
-    document.addEventListener("pointerdown", onPointer);
+    const raf = requestAnimationFrame(() => {
+      document.addEventListener("pointerdown", onPointer);
+    });
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", close);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("pointerdown", onPointer);
     };
   }, [open]);
