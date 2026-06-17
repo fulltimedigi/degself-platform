@@ -165,7 +165,7 @@ export default async function Home() {
           aria-hidden
         />
 
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 py-16 text-center sm:py-20">
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-5 px-6 py-12 text-center sm:py-16">
           {/* Trust badge */}
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary">
             <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-hidden />
@@ -177,59 +177,40 @@ export default async function Home() {
             <br className="hidden sm:block" />
             واختر الكراج المناسب
           </h1>
-          <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
-            دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت
+          <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
+            اكتب مشكلة سيارتك بلغتك — نترجمها إلى تخصص فني وندلّك على أفضل الكراجات الموثّقة في الكويت.
           </p>
 
-          <form
-            action="/search"
-            className="mt-2 flex w-full max-w-xl flex-col gap-2 rounded-2xl border border-border bg-card/80 p-2 shadow-lg backdrop-blur sm:flex-row"
-          >
-            <input
-              type="search"
-              name="q"
-              placeholder="ابحث عن كراج، منطقة، أو خدمة..."
-              autoComplete="off"
-              className="flex-1 rounded-xl bg-transparent px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="rounded-xl bg-primary px-8 py-3 font-bold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30"
-            >
-              ابحث الآن
-            </button>
-          </form>
-
-          {/* ميزات موثوقية بدون أرقام متضاربة */}
-          <div className="mt-4 grid w-full max-w-2xl grid-cols-3 gap-3 sm:gap-6">
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span className="text-xs font-bold sm:text-sm">جميع مناطق الكويت</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
-                <path d="M9 11l3 3L22 4" />
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-              </svg>
-              <span className="text-xs font-bold sm:text-sm">بيانات موثّقة</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden>
-                <circle cx="12" cy="12" r="10" />
-                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-              </svg>
-              <span className="text-xs font-bold sm:text-sm">مجانًا بدون إعلانات</span>
-            </div>
+          {/* مترجم العطل — الـprimary input للموقع */}
+          <div className="w-full max-w-2xl">
+            <GarageTranslator />
           </div>
-        </div>
-      </section>
 
-      {/* اكتشف العطل — قسم بارز فوق */}
-      <section className="px-6 pb-4">
-        <GarageTranslator />
+          {/* بديل خفيف: بحث نصي مباشر */}
+          <details className="w-full max-w-xl">
+            <summary className="cursor-pointer select-none text-xs text-muted-foreground transition hover:text-primary">
+              أو ابحث مباشرة باسم كراج أو منطقة ↓
+            </summary>
+            <form
+              action="/search"
+              className="mt-3 flex flex-col gap-2 rounded-2xl border border-border bg-card/80 p-2 shadow-lg backdrop-blur sm:flex-row"
+            >
+              <input
+                type="search"
+                name="q"
+                placeholder="مثال: بنشر الجهرا، أو تويوتا السالمية..."
+                autoComplete="off"
+                className="flex-1 rounded-xl bg-transparent px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-md transition hover:opacity-90"
+              >
+                ابحث
+              </button>
+            </form>
+          </details>
+        </div>
       </section>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pb-16">

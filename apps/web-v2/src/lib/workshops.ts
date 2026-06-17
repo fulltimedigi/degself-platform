@@ -178,9 +178,33 @@ export async function getWorkshop(placeId: string): Promise<Workshop | null> {
   return (data as Workshop | null) ?? null;
 }
 
-/** Most relevant (trusted + established) live workshops for the homepage. */
+/**
+ * Extract a stable "chain key" from a workshop name so that branches of the
+ * same business (e.g. "AlBabtain Auto, Al Faiha", "AlBabtain Auto - Jahra")
+ * collapse to a single bucket. Used to diversify the homepage carousel.
+ */
+function chainKey(name: string): string {
+  const cleaned = (name || "")
+    .toLowerCase()
+    .replace(/[\u0610-\u061a\u064b-\u065f\u0670]/g, "") // Arabic diacritics
+    .replace(/[^a-z\u0600-\u06ff\s]/g, " ") // keep latin + arabic letters
+    .split(/[\-–—,،|()\s]+/)
+    .filter(Boolean);
+  // first 2 tokens are usually the brand (e.g. "albabtain auto")
+  return cleaned.slice(0, 2).join(" ").trim() || (name || "").trim().toLowerCase();
+}
+
+/**
+ * Most relevant (trusted + established) live workshops for the homepage.
+ *
+ * Diversification: we over-fetch then keep at most MAX_PER_CHAIN entries per
+ * brand/chain so the carousel doesn't get monopolised by a single business
+ * (e.g. AlBabtain Auto branches).
+ */
 export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
   const supabase = supabasePublic;
+  const MAX_PER_CHAIN = 2;
+  const OVERFETCH = Math.max(limit * 8, 80);
   const { data, error } = await supabase
     .from("workshops")
     .select("*")
@@ -191,9 +215,31 @@ export async function getFeaturedWorkshops(limit = 12): Promise<Workshop[]> {
     .not("google_rating", "is", null)
     .order("rank_score", { ascending: false, nullsFirst: false })
     .order("google_reviews_count", { ascending: false, nullsFirst: false })
-    .limit(limit);
+    .limit(OVERFETCH);
   if (error) throw new Error(`getFeaturedWorkshops failed: ${error.message}`);
-  return (data ?? []) as Workshop[];
+
+  const rows = (data ?? []) as Workshop[];
+  const seen = new Map<string, number>();
+  const picked: Workshop[] = [];
+  for (const w of rows) {
+    if (picked.length >= limit) break;
+    const key = chainKey(w.name);
+    const count = seen.get(key) ?? 0;
+    if (count >= MAX_PER_CHAIN) continue;
+    seen.set(key, count + 1);
+    picked.push(w);
+  }
+  // Fallback: if dedup left us short (very small dataset), top up from the
+  // original list preserving order, ignoring the dedup cap.
+  if (picked.length < limit) {
+    const taken = new Set(picked.map((w) => w.place_id));
+    for (const w of rows) {
+      if (picked.length >= limit) break;
+      if (taken.has(w.place_id)) continue;
+      picked.push(w);
+    }
+  }
+  return picked;
 }
 
 /**
