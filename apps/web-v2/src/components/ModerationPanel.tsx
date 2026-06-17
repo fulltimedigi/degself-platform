@@ -128,9 +128,17 @@ export function ModerationPanel() {
     { key: "rejected", label: "مرفوضة" },
   ];
 
+  function logout() {
+    sessionStorage.removeItem(PW_KEY);
+    setPw(null);
+    setReviews([]);
+    setError("");
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex gap-2">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -144,6 +152,13 @@ export function ModerationPanel() {
             {t.label}
           </button>
         ))}
+        </div>
+        <button
+          onClick={logout}
+          className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition hover:bg-muted"
+        >
+          تغيير كلمة السر
+        </button>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
