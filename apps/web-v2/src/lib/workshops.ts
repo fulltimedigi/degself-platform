@@ -191,7 +191,11 @@ export async function getWorkshop(placeId: string): Promise<Workshop | null> {
  *  3. Take the first remaining meaningful token — that's the brand stem.
  *     e.g. "al babtain auto al faiha" → ["babtain", "faiha"] → "babtain".
  */
-const CHAIN_NOISE = new Set(["al", "el", "the", "auto", "اوتو", "ال"]);
+const CHAIN_NOISE = new Set([
+  "al", "el", "the", "auto", "اوتو", "ال",
+  "service", "center", "co", "company", "and", "for",
+  "لصيانة", "للسيارات", "تجارة", "شركة",
+]);
 function chainKey(name: string): string {
   const tokens = (name || "")
     .toLowerCase()
@@ -199,15 +203,23 @@ function chainKey(name: string): string {
     .replace(/[^a-z\u0600-\u06ff\s]/g, " ") // keep letters only
     .split(/\s+/)
     .filter(Boolean);
-  // collapse glued "al"-prefixed words: "albabtain" → "babtain"
-  const expanded = tokens.flatMap((t) => {
-    if (/^al[a-z]{3,}$/.test(t)) return [t.slice(2)];
-    return [t];
+
+  //  Normalize each token:
+  //  • latin: drop glued "al" prefix ("albabtain" → "babtain")
+  //  • arabic: drop leading "ال" article ("البابطين" → "بابطين")
+  const normalized = tokens.map((t) => {
+    if (/^al[a-z]{3,}$/.test(t)) return t.slice(2);
+    if (/^ال[\u0600-\u06ff]{2,}$/.test(t)) return t.slice(2);
+    return t;
   });
-  const meaningful = expanded.filter((t) => !CHAIN_NOISE.has(t));
+  const meaningful = normalized.filter((t) => !CHAIN_NOISE.has(t));
   if (meaningful.length === 0) return (name || "").trim().toLowerCase();
-  // first meaningful token is the brand stem
-  return meaningful[0];
+
+  // Prefer the first LATIN meaningful token when both scripts are present —
+  // latin spellings are more consistent across Google Places entries
+  // (e.g. "babtain" stable; arabic root may vary "بابطين" vs "البابطين").
+  const latin = meaningful.find((t) => /^[a-z]/.test(t));
+  return latin ?? meaningful[0];
 }
 
 /**
