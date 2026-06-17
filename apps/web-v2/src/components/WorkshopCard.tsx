@@ -91,8 +91,8 @@ export function WorkshopCard({
         </div>
       </Link>
 
-      {/* save heart — top corner, outside the link */}
-      <div className="absolute left-2 top-2">
+      {/* save heart — sits over the specialty cover (logical-start), outside the link */}
+      <div className="absolute right-2 top-2">
         <SaveButton placeId={place_id} />
       </div>
 
