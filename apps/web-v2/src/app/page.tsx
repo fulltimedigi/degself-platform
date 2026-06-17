@@ -207,8 +207,8 @@ export default async function Home() {
               <span className="text-[11px] text-muted-foreground sm:text-xs">كراج ومورد خدمة</span>
             </div>
             <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
-              <span className="text-xl font-extrabold text-primary sm:text-2xl">6</span>
-              <span className="text-[11px] text-muted-foreground sm:text-xs">محافظات الكويت</span>
+              <span className="text-base font-extrabold text-primary sm:text-lg">جميع مناطق</span>
+              <span className="text-[11px] text-muted-foreground sm:text-xs">الكويت</span>
             </div>
             <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
               <span className="text-xl font-extrabold text-primary sm:text-2xl">مجانًا</span>
