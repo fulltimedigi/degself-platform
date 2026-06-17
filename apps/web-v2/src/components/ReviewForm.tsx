@@ -112,7 +112,7 @@ export function ReviewForm({ placeId }: { placeId: string }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="w-fit rounded-xl bg-primary px-6 py-2.5 font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
+        className="w-fit rounded-xl bg-primary px-6 py-2.5 font-bold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground/70 disabled:shadow-none"
       >
         {status === "sending" ? "جارٍ الإرسال…" : "إرسال التقييم"}
       </button>

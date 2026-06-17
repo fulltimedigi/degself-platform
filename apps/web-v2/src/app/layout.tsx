@@ -6,6 +6,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { PWAInstallBanner } from "@/components/PWAInstallBanner";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
 // Google Analytics 4 — public Measurement ID.
 const GA_ID = "G-806P73YN0Z";
@@ -115,6 +117,8 @@ export default function RootLayout({
         <Footer />
         <Analytics />
         <ServiceWorkerRegister />
+        <PWAInstallBanner />
+        <FloatingWhatsApp />
 
         {/* Google Analytics 4 */}
         <Script

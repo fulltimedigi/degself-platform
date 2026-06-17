@@ -134,7 +134,7 @@ export function PriceCalculator() {
           type="button"
           onClick={handleCalculate}
           disabled={!serviceId || !carCategory}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-bold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-extrabold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground/70 disabled:shadow-none"
         >
           <Calculator size={18} aria-hidden />
           احسب السعر
