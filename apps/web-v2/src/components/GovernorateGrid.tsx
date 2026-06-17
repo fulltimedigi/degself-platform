@@ -9,9 +9,9 @@ export function GovernorateGrid() {
         <Link
           key={g.name}
           href={`/search?governorate=${encodeURIComponent(g.name)}`}
-          className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 transition hover:border-primary/50"
+          className="group flex flex-col gap-1.5 rounded-xl border border-border bg-card p-4 transition duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/10"
         >
-          <span className="flex items-center gap-1.5 font-bold">
+          <span className="flex items-center gap-1.5 font-bold transition group-hover:text-primary">
             <MapPin size={15} className="text-primary" aria-hidden />
             {g.name}
           </span>

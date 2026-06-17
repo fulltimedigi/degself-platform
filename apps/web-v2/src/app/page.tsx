@@ -145,30 +145,77 @@ export default async function Home() {
       <JsonLd data={websiteLd} />
       <JsonLd data={webAppLd} />
 
-      {/* Hero (unchanged) */}
-      <section className="flex flex-col items-center gap-6 px-6 py-16 text-center">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">
-          اكتشف عطل سيارتك الآن واختر الكراج المناسب
-        </h1>
-        <p className="text-muted-foreground">
-          دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت
-        </p>
+      {/* Hero — محسّن بخلفية تدرج وإضاءات + أرقام موثوقية */}
+      <section className="relative overflow-hidden">
+        {/* تدرج خلفي خفيف + وهج أصفر */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,214,10,0.10), transparent 70%)",
+          }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              "linear-gradient(to right, transparent, rgba(255,214,10,0.4), transparent)",
+          }}
+          aria-hidden
+        />
 
-        <form action="/search" className="flex w-full max-w-md gap-2">
-          <input
-            type="search"
-            name="q"
-            placeholder="ابحث عن كراج، منطقة، أو خدمة..."
-            autoComplete="off"
-            className="flex-1 rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground hover:opacity-90"
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 py-16 text-center sm:py-20">
+          {/* Trust badge */}
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-hidden />
+            أول دليل ذكي لكراجات الكويت
+          </span>
+
+          <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
+            اكتشف <span className="text-primary">عطل سيارتك</span> الآن
+            <br className="hidden sm:block" />
+            واختر الكراج المناسب
+          </h1>
+          <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
+            دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت
+          </p>
+
+          <form
+            action="/search"
+            className="mt-2 flex w-full max-w-xl flex-col gap-2 rounded-2xl border border-border bg-card/80 p-2 shadow-lg backdrop-blur sm:flex-row"
           >
-            ابحث
-          </button>
-        </form>
+            <input
+              type="search"
+              name="q"
+              placeholder="ابحث عن كراج، منطقة، أو خدمة..."
+              autoComplete="off"
+              className="flex-1 rounded-xl bg-transparent px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="rounded-xl bg-primary px-8 py-3 font-bold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30"
+            >
+              ابحث الآن
+            </button>
+          </form>
+
+          {/* Stats Bar — أرقام موثوقية */}
+          <div className="mt-4 grid w-full max-w-2xl grid-cols-3 gap-3 sm:gap-6">
+            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <span className="text-xl font-extrabold text-primary sm:text-2xl">+1,640</span>
+              <span className="text-[11px] text-muted-foreground sm:text-xs">كراج ومورد خدمة</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <span className="text-xl font-extrabold text-primary sm:text-2xl">6</span>
+              <span className="text-[11px] text-muted-foreground sm:text-xs">محافظات الكويت</span>
+            </div>
+            <div className="flex flex-col items-center gap-0.5 rounded-xl border border-border/50 bg-card/50 px-2 py-3 backdrop-blur">
+              <span className="text-xl font-extrabold text-primary sm:text-2xl">مجانًا</span>
+              <span className="text-[11px] text-muted-foreground sm:text-xs">بدون إعلانات</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* اكتشف العطل — قسم بارز فوق */}
@@ -187,8 +234,14 @@ export default async function Home() {
         <PriceCalculatorBanner />
 
         {/* Browse by governorate */}
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold">تصفّح حسب المحافظة</h2>
+        <section className="flex flex-col gap-5">
+          <div className="flex items-center gap-3">
+            <span className="h-7 w-1 rounded-full bg-primary" aria-hidden />
+            <div className="flex flex-col">
+              <h2 className="text-xl font-extrabold sm:text-2xl">تصفّح حسب المحافظة</h2>
+              <p className="text-xs text-muted-foreground">اختر محافظتك لعرض أقرب الكراجات</p>
+            </div>
+          </div>
           <GovernorateGrid />
         </section>
 

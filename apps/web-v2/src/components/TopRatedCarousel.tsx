@@ -6,14 +6,20 @@ export function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
   if (workshops.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">الأعلى تقييماً</h2>
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="h-7 w-1 rounded-full bg-primary" aria-hidden />
+          <div className="flex flex-col">
+            <h2 className="text-xl font-extrabold sm:text-2xl">الأعلى تقييماً</h2>
+            <p className="text-xs text-muted-foreground">أفضل الكراجات بناءً على تقييمات Google</p>
+          </div>
+        </div>
         <Link
           href="/search?sort=top-rated"
-          className="text-sm font-semibold text-primary hover:underline"
+          className="shrink-0 rounded-lg border border-primary/30 px-3 py-1.5 text-sm font-semibold text-primary transition hover:bg-primary/10"
         >
-          عرض الكل
+          عرض الكل ←
         </Link>
       </div>
 

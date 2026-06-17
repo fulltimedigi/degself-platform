@@ -79,7 +79,12 @@ export function GarageTranslator() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+    <section className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-8">
+      {/* وهج أصفر خفيف في الخلفية */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"
+      />
       <div className="flex flex-col gap-2 text-center">
         <h2 className="text-2xl font-extrabold">اكتشف العطل</h2>
         <p className="text-sm text-muted-foreground">
@@ -103,7 +108,7 @@ export function GarageTranslator() {
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
+            className="rounded-xl bg-primary px-6 py-3 font-extrabold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground/70 disabled:shadow-none"
           >
             {loading ? "جارٍ الكشف…" : "اكتشف العطل"}
           </button>
