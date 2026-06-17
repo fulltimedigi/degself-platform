@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export const meta = {
   slug: "karaj-jabriya-surra-dalil",
-  title: "كراج الجابرية والسرة — دليل أفضل كراجات المنطقة 2026 | دق سلف",
+  title: "كراج الجابرية والسرة — دليل أفضل كراجات المنطقة 2026",
   description: "دليل كراجات الجابرية والسرة في الكويت 2026. ميكانيكا، كهرباء، تكييف، بنشر. مواقع وأسعار وتقييمات. كراج متنقل 24 ساعة.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",

@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export const meta = {
   slug: "muqaranat-asaar-karajat-kuwait-2026",
-  title: "مقارنة أسعار الكراجات في الكويت 2026 — جدول شامل | دق سلف",
+  title: "مقارنة أسعار الكراجات في الكويت 2026 — جدول شامل",
   description: "مقارنة شاملة لأسعار الكراجات في الكويت 2026: ميكانيكا، بودي، كهرباء، تكييف، بنشر. أسعار وكالات، كراجات تخصصية، وميكانيكي متنقل.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",

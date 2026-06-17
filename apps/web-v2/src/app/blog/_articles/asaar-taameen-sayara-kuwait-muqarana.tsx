@@ -3,7 +3,7 @@ import Script from "next/script";
 
 export const meta = {
   slug: "asaar-taameen-sayara-kuwait-muqarana",
-  title: "مقارنة أسعار تأمين السيارات في الكويت 2026 — أفضل 8 شركات | دق سلف",
+  title: "مقارنة أسعار تأمين السيارات في الكويت 2026 — أفضل 8 شركات",
   description: "مقارنة شاملة لأسعار تأمين السيارات في الكويت 2026: شامل وضد الغير. أبرز الشركات، تكاليف، وأفضل العروض. دليل اختيار الشركة الأنسب.",
   datePublished: "2026-06-17",
   dateModified: "2026-06-17",
