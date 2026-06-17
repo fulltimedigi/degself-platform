@@ -4,9 +4,26 @@ import { useState } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { StarRating } from "@/components/StarRating";
-import { MAX_INPUT_CHARS, type TranslateResponse } from "@/lib/garageTranslator";
+import { MAX_INPUT_CHARS, categoryToSpecialty, type TranslateResponse } from "@/lib/garageTranslator";
 
 const PLACEHOLDER = "اكتب مشكلة سيارتك… مثلاً: المكيف ما يبرّد بالنهار";
+
+// نطاق التكلفة التقريبي بالدينار الكويتي لكل تصنيف.
+// مرجعي فقط — التفصيل في /asaar.
+const CATEGORY_PRICE_RANGE: Record<string, { low: number; high: number; note?: string }> = {
+  "ميكانيكا": { low: 15, high: 300, note: "تشخيص + إصلاح بسيط إلى متوسط" },
+  "كهرباء سيارات": { low: 15, high: 120 },
+  "قير وفتيس": { low: 30, high: 900, note: "تجفيت/زيت قير حتى تبديل" },
+  "تكييف": { low: 8, high: 350, note: "شحن فريون حتى تبديل كباس" },
+  "تواير وبنشر": { low: 5, high: 380 },
+  "فرامل": { low: 20, high: 180 },
+  "بودي وصبغ": { low: 15, high: 550, note: "قطعة واحدة حتى صبغ كامل" },
+  "كمبيوتر وتشخيص": { low: 5, high: 50 },
+  "بطاريات": { low: 18, high: 65 },
+  "زيوت وصيانة": { low: 8, high: 50 },
+  "ونش وسحب": { low: 10, high: 50 },
+  "صيانة عامة": { low: 10, high: 200 },
+};
 
 export function GarageTranslator() {
   const [input, setInput] = useState("");
@@ -115,6 +132,47 @@ export function GarageTranslator() {
                 {result.category}
               </span>
             </div>
+          )}
+
+          {/* نطاق التكلفة المتوقع */}
+          {result.category && CATEGORY_PRICE_RANGE[result.category] && (
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs text-muted-foreground">نطاق التكلفة المتوقع</span>
+                  <span className="text-lg font-extrabold text-primary">
+                    {CATEGORY_PRICE_RANGE[result.category].low} – {CATEGORY_PRICE_RANGE[result.category].high} د.ك
+                  </span>
+                  {CATEGORY_PRICE_RANGE[result.category].note && (
+                    <span className="text-xs text-muted-foreground">
+                      {CATEGORY_PRICE_RANGE[result.category].note}
+                    </span>
+                  )}
+                </div>
+                <Link
+                  href="/asaar"
+                  onClick={() => track("translator_to_asaar", { category: result.category ?? "none" })}
+                  className="shrink-0 rounded-lg border border-primary/40 px-3 py-2 text-xs font-bold text-primary transition hover:bg-primary/10"
+                >
+                  احسب بالتفصيل
+                </Link>
+              </div>
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                أسعار تقديرية في السوق الكويتي — تختلف حسب السيارة وحجم العطل.
+              </p>
+            </div>
+          )}
+
+          {/* CTA رئيسي: ابحث عن كراج */}
+          {result.category && (
+            <Link
+              href={`/search?specialty=${encodeURIComponent(categoryToSpecialty(result.category))}`}
+              onClick={() => track("translator_to_search", { category: result.category ?? "none" })}
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-extrabold text-primary-foreground transition hover:opacity-90"
+            >
+              ابحث عن كراج لـ {result.category}
+              <span aria-hidden>←</span>
+            </Link>
           )}
 
           {/* الأسباب المحتملة */}
