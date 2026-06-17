@@ -13,7 +13,13 @@ export function getFavorites(): string[] {
 }
 
 function persist(ids: string[]) {
-  localStorage.setItem(KEY, JSON.stringify(ids));
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(ids));
+  } catch {
+    // Safari private mode / quota exceeded — keep the UI responsive and still
+    // notify listeners; the favorite just won't survive a reload.
+  }
   window.dispatchEvent(new CustomEvent(FAVORITES_EVENT));
 }
 

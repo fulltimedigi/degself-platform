@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { createHash, timingSafeEqual } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -13,11 +14,11 @@ function authorized(req: NextRequest): boolean {
   if (!expected) return false;
   const header = req.headers.get("authorization") ?? "";
   const got = header.startsWith("Bearer ") ? header.slice(7) : "";
-  if (got.length !== expected.length) return false;
-  // constant-time-ish compare
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) diff |= got.charCodeAt(i) ^ expected.charCodeAt(i);
-  return diff === 0;
+  // Hash both sides to fixed-length buffers so the compare is constant-time and
+  // never branches on (or leaks) the password length.
+  const a = createHash("sha256").update(got).digest();
+  const b = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(a, b);
 }
 
 const STATUSES = ["pending", "approved", "rejected"] as const;
@@ -114,8 +115,9 @@ export async function PATCH(req: NextRequest) {
     .update(patch)
     .eq("id", id)
     .select("place_id")
-    .single();
+    .maybeSingle();
   if (error) return NextResponse.json({ error: "تعذّر تحديث التقييم." }, { status: 500 });
+  if (!updated) return NextResponse.json({ error: "التقييم غير موجود." }, { status: 404 });
 
   // bust the workshop page's ISR cache so the approved/removed review shows
   // immediately instead of waiting up to an hour for revalidation.

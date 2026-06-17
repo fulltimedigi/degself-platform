@@ -55,11 +55,12 @@ export async function POST(req: NextRequest) {
   }
 
   // the workshop must exist (place_id is case-sensitive)
-  const { data: w } = await supabaseAdmin
+  const { data: w, error: wErr } = await supabaseAdmin
     .from("workshops")
     .select("place_id")
     .eq("place_id", place_id)
     .maybeSingle();
+  if (wErr) return NextResponse.json({ error: "تعذّر التحقق من الكراج حالياً." }, { status: 503 });
   if (!w) return NextResponse.json({ error: "الكراج غير موجود." }, { status: 404 });
 
   const { error } = await supabaseAdmin
