@@ -173,7 +173,7 @@ export default async function Home() {
           </span>
 
           <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
-            اكتشف <span className="text-primary">عطل سيارتك</span> الآن
+            اكتشف <span className="text-primary">عطل سيارتك</span> الآن{" "}
             <br className="hidden sm:block" />
             واختر الكراج المناسب
           </h1>
