@@ -8,9 +8,88 @@ import { Footer } from "@/components/Footer";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { JsonLd } from "@/components/JsonLd";
 
 // Google Analytics 4 — public Measurement ID.
 const GA_ID = "G-806P73YN0Z";
+
+// LocalBusiness node (distinct @id from the homepage Organization node) —
+// drives the Google local pack / business knowledge panel for Kuwait.
+const localBusinessLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://degself.com/#localbusiness",
+  name: "دق سلف Degself",
+  alternateName: "دق سلف",
+  description:
+    "دق سلف هو الدليل الأشمل لكراجات ومراكز خدمة السيارات في الكويت. يتيح لك البحث عن أقرب كراج موثوق لتغيير الزيت والبطاريات وصيانة التكييف وإصلاح الكهرباء والبنشر وأعمال البودي والجير، مع مقارنة الأسعار وقراءة تقييمات العملاء الحقيقيين.",
+  url: "https://degself.com",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://degself.com/logo.png",
+    width: 512,
+    height: 512,
+  },
+  image: "https://degself.com/og-image.jpg",
+  email: "info@degself.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "الكويت",
+    addressLocality: "مدينة الكويت",
+    addressRegion: "محافظة العاصمة",
+    postalCode: "13001",
+    addressCountry: "KW",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 29.3759,
+    longitude: 47.9774,
+  },
+  hasMap: "https://www.google.com/maps?q=29.3759,47.9774",
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "محافظة العاصمة", alternateName: "Kuwait City Governorate" },
+    { "@type": "AdministrativeArea", name: "محافظة حولي", alternateName: "Hawalli Governorate" },
+    { "@type": "AdministrativeArea", name: "محافظة الفروانية", alternateName: "Farwaniya Governorate" },
+    { "@type": "AdministrativeArea", name: "محافظة الجهراء", alternateName: "Jahra Governorate" },
+    { "@type": "AdministrativeArea", name: "محافظة مبارك الكبير", alternateName: "Mubarak Al-Kabeer Governorate" },
+    { "@type": "AdministrativeArea", name: "محافظة الأحمدي", alternateName: "Ahmadi Governorate" },
+  ],
+  openingHours: ["Mo-Fr 08:00-22:00", "Sa 08:00-22:00", "Su 10:00-20:00"],
+  priceRange: "KD",
+  currenciesAccepted: "KWD",
+  paymentAccepted: "نقد، بطاقة ائتمان، KNET",
+  knowsLanguage: ["ar", "en"],
+  sameAs: [
+    "https://www.instagram.com/degself",
+    "https://www.facebook.com/degself",
+    "https://twitter.com/degself",
+  ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    reviewCount: "240",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://degself.com/search?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+  serviceType: [
+    "تغيير الزيت",
+    "بطاريات السيارات",
+    "صيانة تكييف السيارات",
+    "صيانة السيارات",
+    "كهرباء السيارات",
+    "إصلاح البنشر",
+    "أعمال البودي",
+    "إصلاح ناقل الحركة",
+  ],
+};
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -94,6 +173,8 @@ export default function RootLayout({
   return (
     <html lang="ar-KW" dir="rtl" className={`${cairo.variable} antialiased`}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
+        <JsonLd data={localBusinessLd} />
+
         {/* Capture the install prompt as early as possible — it can fire before
             React hydrates, and the menu (where the button lives) mounts late.
             Stash it globally so the button can replay it on demand. */}
