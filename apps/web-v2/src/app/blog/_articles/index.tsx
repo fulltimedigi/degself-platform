@@ -45,6 +45,16 @@ import Tires, { meta as tiresMeta } from "./asaar-altawayer-alkuwait-2026";
 import Lights, { meta as lightsMeta } from "./lumbat-tahdheer-altabloon";
 import Oil, { meta as oilMeta } from "./mata-taghyer-zayt-alsayyara";
 import Body, { meta as bodyMeta } from "./alfarq-bayn-alsabgh-walhaya";
+import ArticleNew1, { meta as ArticleNew1Meta } from "./limaza-sayarati-tukhrij-dukhan";
+import ArticleNew2, { meta as ArticleNew2Meta } from "./lumbat-loohat-alqiyadat-dalil-kamil";
+import ArticleNew3, { meta as ArticleNew3Meta } from "./taklifat-islah-mukayyif-sayara-kuwait-2026";
+import ArticleNew4, { meta as ArticleNew4Meta } from "./alamat-tilf-batariyat-sayara";
+import ArticleNew5, { meta as ArticleNew5Meta } from "./aswat-sayara-ghariba";
+import ArticleNew6, { meta as ArticleNew6Meta } from "./mata-taghyeer-zayt-naqil-haraka";
+import ArticleNew7, { meta as ArticleNew7Meta } from "./farq-bayn-sabgh-walitlmee";
+import ArticleNew8, { meta as ArticleNew8Meta } from "./kayf-takhtar-afdal-karaj";
+import ArticleNew9, { meta as ArticleNew9Meta } from "./alamat-tilf-fahmat-faramil";
+import ArticleNew10, { meta as ArticleNew10Meta } from "./afdal-waqt-taghyeer-itarat-kuwait";
 
 export type ArticleMeta = {
   slug: string;
@@ -60,6 +70,16 @@ export type Article = ArticleMeta & { content: ReactNode };
 
 // Ordered newest-first for the blog index.
 export const articles: Article[] = [
+  { ...ArticleNew1Meta, content: <ArticleNew1 /> },
+  { ...ArticleNew2Meta, content: <ArticleNew2 /> },
+  { ...ArticleNew3Meta, content: <ArticleNew3 /> },
+  { ...ArticleNew4Meta, content: <ArticleNew4 /> },
+  { ...ArticleNew5Meta, content: <ArticleNew5 /> },
+  { ...ArticleNew6Meta, content: <ArticleNew6 /> },
+  { ...ArticleNew7Meta, content: <ArticleNew7 /> },
+  { ...ArticleNew8Meta, content: <ArticleNew8 /> },
+  { ...ArticleNew9Meta, content: <ArticleNew9 /> },
+  { ...ArticleNew10Meta, content: <ArticleNew10 /> },
   { ...Article32Meta, content: <Article32 /> },
   { ...Article33Meta, content: <Article33 /> },
   { ...Article34Meta, content: <Article34 /> },
