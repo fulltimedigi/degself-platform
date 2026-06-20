@@ -15248,62 +15248,6 @@
   },
   {
     "source": "v3+v4",
-    "name": "ملابس ومشدات مقابل كراج عادل الغانم للسيارات",
-    "category_raw": "",
-    "specialty": "صيانة عامة",
-    "area": "الشويخ",
-    "address": "الشويخ, Kuwait",
-    "street": "",
-    "phone": "",
-    "phone_intl": "",
-    "website": "",
-    "rating": null,
-    "reviews_count": 0,
-    "latitude": 29.354444,
-    "longitude": 47.909722,
-    "google_url": "https://www.google.com/maps/place/?q=place_id:ChIJwwX7FgCPzz8RVaUXU_gBOJc",
-    "place_id": "ChIJwwX7FgCPzz8RVaUXU_gBOJc",
-    "permanently_closed": false,
-    "opening_hours": "الإثنين: 9 AM to 6 PM | الثلاثاء: 9 AM to 6 PM | الأربعاء: 9 AM to 6 PM | الخميس: 9 AM to 6 PM | الجمعة: Closed | السبت: 9 AM to 6 PM | الأحد: 9 AM to 6 PM",
-    "opening_hours_raw": [
-      {
-        "day": "Monday",
-        "hours": "9 AM to 6 PM"
-      },
-      {
-        "day": "Tuesday",
-        "hours": "9 AM to 6 PM"
-      },
-      {
-        "day": "Wednesday",
-        "hours": "9 AM to 6 PM"
-      },
-      {
-        "day": "Thursday",
-        "hours": "9 AM to 6 PM"
-      },
-      {
-        "day": "Friday",
-        "hours": "Closed"
-      },
-      {
-        "day": "Saturday",
-        "hours": "9 AM to 6 PM"
-      },
-      {
-        "day": "Sunday",
-        "hours": "9 AM to 6 PM"
-      }
-    ],
-    "amenities": "ميكانيكي",
-    "governorate": "العاصمة",
-    "category_raw_v2": "ورشة إصلاح سيارات",
-    "images_count": 0,
-    "active": true,
-    "entity_type": "كراج"
-  },
-  {
-    "source": "v3+v4",
     "name": "Obaids Auto Parts",
     "category_raw": "",
     "specialty": "قطع غيار",
@@ -57577,36 +57521,6 @@
     "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFJZqNMJi0Cx7YE0y-G0Aa2IGpWQ-YPQtxqS4zL90AVWY_wPw9BkatlV8zWPzOu65zp-mhwvebu4d-p60kPOu_vCzU3vphCf4ntRCrwk071aJ9vpN-SGo4GnWoB-lAjGpdc1hxDttcKCXxf=w426-h240-k-no",
     "payments": "",
     "active": true,
-    "entity_type": "خدمة"
-  },
-  {
-    "source": "apify_2026_06_round2_specialty",
-    "name": "الكويت",
-    "category_raw": "خدمة وسائل النقل",
-    "specialty": "ونش وسحب",
-    "specialty_hints": [
-      "ونش وسحب"
-    ],
-    "area": "الكويت",
-    "governorate": "الجهراء",
-    "address": "ونش، الكويت",
-    "street": "",
-    "phone": "",
-    "phone_intl": "",
-    "website": "",
-    "rating": 5,
-    "reviews_count": 3,
-    "latitude": 29.31166,
-    "longitude": 47.481766,
-    "google_url": "https://www.google.com/maps/place/?q=place_id:ChIJcUwfw3ZVxT8RquyGHPQMiZQ",
-    "place_id": "ChIJcUwfw3ZVxT8RquyGHPQMiZQ",
-    "permanently_closed": true,
-    "opening_hours": "",
-    "opening_hours_raw": "",
-    "images_count": 0,
-    "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGHFRMFixMMKKw1mSV_v7aN5AVMXlbs9murWihpMHIaLaY_OpZB_Ed9q2zc9EcQoqg9uYxSB_y3hrFmTqF_QWywFEFYzSqZu7v27wpTwxedkNtNvc2_yXfvb6A_rMQ7u6dlT3n5Kw=w408-h725-k-no",
-    "payments": "",
-    "active": false,
     "entity_type": "خدمة"
   },
   {
