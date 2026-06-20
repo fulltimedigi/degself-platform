@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { MapPin, Phone, Search } from "lucide-react";
+import { SiWhatsapp } from "react-icons/si";
 import { Layout } from "@/components/Layout";
-import { LogoEn, LogoAr, LogoHero, TAGLINE, SUBTITLE_AR } from "@/components/Brand";
+import { LogoEn, LogoAr, LogoHero, TAGLINE, SUBTITLE_AR, BUSINESS_PHONE, BUSINESS_PHONE_TEL, BUSINESS_WA_URL } from "@/components/Brand";
 
 export default function About() {
   return (
@@ -33,7 +34,7 @@ export default function About() {
             مع المواقع والأرقام وساعات العمل والتقييمات.
           </p>
           <p>
-            هدفنا بسيط: أن تجد المكان المناسب لسيارتك في ثوانٍ — <span className="font-bold text-primary">لا تحاتي، بنصلحها</span>.
+            هدفنا بسيط: أن تجد المكان المناسب لسيارتك في ثوانٍ — <span className="font-bold text-primary">نحن ندلّك على أفضل الخيارات</span>.
           </p>
         </div>
       </section>
@@ -67,6 +68,36 @@ export default function About() {
             <span className="font-bold text-primary">ملاحظة:</span> المنصة في مرحلة التطوير والتحديث المستمر.
             البيانات قابلة للتعديل والإضافة. إذا لاحظت معلومة تحتاج تحديث، تواصل معنا.
           </p>
+        </div>
+      </section>
+
+      {/* Contact us */}
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-3xl px-4 py-14 md:px-6">
+          <h2 className="mb-6 text-xl font-extrabold md:text-2xl">تواصل معنا</h2>
+          <p className="mb-6 text-base leading-relaxed text-muted-foreground">
+            إذا كنت صاحب كراج وترغب في إضافة منشأتك إلى الدليل، أو لديك أي استفسار أو ملاحظة على بيانات كراج موجود، تواصل معنا عبر:
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <a
+              href={BUSINESS_WA_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-4 text-base font-extrabold text-primary-foreground hover-elevate active-elevate-2"
+              data-testid="link-about-whatsapp"
+            >
+              <SiWhatsapp size={20} />
+              واتساب <span className="font-en" dir="ltr">{BUSINESS_PHONE}</span>
+            </a>
+            <a
+              href={`tel:${BUSINESS_PHONE_TEL}`}
+              className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-4 text-base font-bold hover-elevate active-elevate-2"
+              data-testid="link-about-call"
+            >
+              <Phone size={20} className="text-primary" />
+              اتصل بنا <span className="font-en" dir="ltr">{BUSINESS_PHONE}</span>
+            </a>
+          </div>
         </div>
       </section>
 

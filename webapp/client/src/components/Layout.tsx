@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Search, Map, Info, Home, Menu, X, Siren } from "lucide-react";
-import { LogoEn, TAGLINE } from "./Brand";
+import { SiWhatsapp } from "react-icons/si";
+import { LogoEn, TAGLINE, BUSINESS_WA_URL, BUSINESS_PHONE } from "./Brand";
 
 const NAV = [
   { href: "/", label: "الرئيسية", icon: Home },
@@ -38,6 +39,17 @@ function Header() {
               {item.label}
             </Link>
           ))}
+          <a
+            href={BUSINESS_WA_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="mr-1 flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-sm font-bold text-primary-foreground hover-elevate active-elevate-2"
+            data-testid="link-nav-whatsapp"
+            aria-label="تواصل عبر واتساب"
+          >
+            <SiWhatsapp size={16} />
+            واتساب
+          </a>
         </nav>
 
         <button
@@ -67,6 +79,17 @@ function Header() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={BUSINESS_WA_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setOpen(false)}
+              className="mt-1 flex items-center gap-3 rounded-lg bg-primary px-3 py-3 text-base font-bold text-primary-foreground"
+              data-testid="link-mobnav-whatsapp"
+            >
+              <SiWhatsapp size={18} />
+              تواصل عبر واتساب
+            </a>
           </div>
         </nav>
       )}
@@ -88,8 +111,20 @@ function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-bold">تابعنا على</h4>
+          <h4 className="mb-3 text-sm font-bold">تواصل معنا</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
+            <li>
+              <a
+                href={BUSINESS_WA_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-primary transition-colors"
+                data-testid="link-footer-whatsapp"
+              >
+                <SiWhatsapp size={14} className="text-green-400" />
+                واتساب <span className="font-en" dir="ltr">{BUSINESS_PHONE}</span>
+              </a>
+            </li>
             <li>
               <a
                 href="https://x.com/degself"

@@ -8,6 +8,7 @@ import {
   ChevronRight,
   CheckCircle2,
   CreditCard,
+  AlertCircle,
 } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { Layout } from "@/components/Layout";
@@ -18,6 +19,7 @@ import { ErrorState } from "@/components/States";
 import { fetchWorkshop } from "@/lib/api";
 import type { WorkshopDetail as TDetail } from "@/lib/types";
 import { DAY_AR, DAY_ORDER, todayName, formatHours } from "@/lib/brand";
+import { BUSINESS_WA } from "@/components/Brand";
 
 export default function WorkshopDetail() {
   const [, params] = useRoute("/workshop/:place_id");
@@ -201,6 +203,31 @@ export default function WorkshopDetail() {
                 />
               </section>
             </div>
+
+            {/* Report data issue */}
+            <section className="rounded-xl border border-border bg-card/40 p-5">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3">
+                  <AlertCircle size={20} className="mt-0.5 shrink-0 text-primary" />
+                  <div>
+                    <h3 className="text-sm font-bold">لاحظت معلومة غير صحيحة؟</h3>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      ساعدنا في تحديث بيانات هذا الكراج — تواصل مع فريق دق سلف عبر واتساب.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={`https://wa.me/${BUSINESS_WA}?text=${encodeURIComponent(`السلام عليكم، أرغب في الإبلاغ عن معلومة تحتاج تحديث في صفحة الكراج:\n\n${data.name}\nhttps://degself.com/workshop/${placeId}\n\nالمعلومة:`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover-elevate active-elevate-2"
+                  data-testid="button-report-issue"
+                >
+                  <SiWhatsapp size={16} />
+                  بلّغنا
+                </a>
+              </div>
+            </section>
           </div>
         )}
       </div>

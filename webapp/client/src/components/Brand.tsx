@@ -95,5 +95,12 @@ export function LogoKey({ className = "h-9" }: { className?: string }) {
   );
 }
 
-export const TAGLINE = "لا تحاتي، بنصلحها";
+export const TAGLINE = "دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت";
 export const SUBTITLE_AR = "دق سلف";
+
+// Official Degself business WhatsApp line (Ooredoo postpaid eSIM)
+export const BUSINESS_PHONE = "+965 6579 9195";
+export const BUSINESS_PHONE_TEL = "+96565799195";
+export const BUSINESS_WA = "96565799195";
+export const BUSINESS_WA_URL = `https://wa.me/${BUSINESS_WA}?text=${encodeURIComponent("السلام عليكم، تواصلت معكم من موقع degself")}`;
+export const BUSINESS_EMAIL = "hello@degself.com";

@@ -274,8 +274,20 @@ const orgJsonLd = {
   alternateName: "degself",
   url: SITE,
   logo: `${SITE}/icons/icon-512.png`,
-  description: "منصة كويتية تجمع كراجات ومراكز صيانة السيارات",
+  description: "دليل كويتي لكراجات وميكانيكي وخدمات السيارات في الكويت",
   areaServed: { "@type": "Country", name: "Kuwait" },
+  contactPoint: [{
+    "@type": "ContactPoint",
+    telephone: "+96565799195",
+    contactType: "customer support",
+    areaServed: "KW",
+    availableLanguage: ["Arabic", "English"],
+    contactOption: ["WhatsApp", "VoiceCall"],
+  }],
+  sameAs: [
+    "https://x.com/degself",
+    "https://www.instagram.com/degselfkw",
+  ],
 };
 const siteJsonLd = {
   "@context": "https://schema.org",
@@ -293,12 +305,12 @@ const siteJsonLd = {
 const hubPages = [
   {
     pathName: "/",
-    title: "degself — دق سلف | منصة كراجات ومراكز صيانة السيارات في الكويت",
+    title: "degself — دق سلف | دليل كراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن أفضل كراجات وورش صيانة السيارات في الكويت — جميع المحافظات، تخصصات متعددة، أرقام تواصل مباشرة، وخدمة سطحة وكراج متنقل للطوارئ. لا تحاتي، بنصلحها.",
-    h1: "degself دق سلف — منصة كراجات الكويت",
+      "دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت — أكثر من 1800 كراج في جميع المحافظات. ندلّك على أفضل الخيارات حسب الماركة والتخصص والمنطقة، بالإضافة إلى خدمات الطوارئ (سطحة وكراج متنقل).",
+    h1: "degself دق سلف — دليل كراجات الكويت",
     intro:
-      "دليل شامل لأكثر من 1800 كراج ومركز صيانة سيارات في جميع محافظات الكويت. ابحث، اتصل، احجز.",
+      "دليل شامل لأكثر من 1800 كراج وميكانيكي سيارات في جميع محافظات الكويت. نحن ندلّك على المكان المناسب — ابحث، قارن، تواصل.",
     jsonLd: [orgJsonLd, siteJsonLd],
   },
   {
