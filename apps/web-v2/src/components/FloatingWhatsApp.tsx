@@ -26,9 +26,22 @@ export function FloatingWhatsApp() {
       {open && (
         <div className="absolute bottom-16 right-0 w-64 origin-bottom-right">
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
-            <div className="border-b border-border bg-primary/10 px-4 py-3">
-              <p className="text-sm font-extrabold">سيارتك عطلانة؟</p>
-              <p className="text-xs text-muted-foreground">اختر الخدمة المناسبة</p>
+            <div className="border-b border-border bg-red-500/10 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/20 text-red-500">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M12 2v2" />
+                    <path d="M5.6 4.6l1.4 1.4" />
+                    <path d="M18.4 4.6L17 6" />
+                    <path d="M7 11a5 5 0 0 1 10 0" />
+                    <rect x="4" y="16" width="16" height="3" rx="1" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-red-500">خدمات الطوارئ</p>
+                  <p className="text-[11px] text-muted-foreground">سيارتك عطلانة؟ اختر الخدمة</p>
+                </div>
+              </div>
             </div>
             <ul className="flex flex-col">
               <li>
@@ -108,23 +121,30 @@ export function FloatingWhatsApp() {
         </div>
       )}
 
-      {/* الزرار العائم */}
+      {/* الزرار العائم - سارينة طوارئ */}
       <button
         type="button"
         onClick={() => {
           setOpen((v) => !v);
           if (!open) track("floating_widget", { action: "open" });
         }}
-        aria-label={open ? "إغلاق قائمة المساعدة السريعة" : "قائمة المساعدة السريعة"}
+        aria-label={open ? "إغلاق قائمة الطوارئ" : "خدمات الطوارئ السريعة"}
         aria-expanded={open}
-        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/30 transition hover:scale-105 hover:shadow-primary/50"
+        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-2xl shadow-red-600/40 transition hover:scale-105 hover:bg-red-500 hover:shadow-red-500/60"
       >
-        {/* وهج نابض */}
+        {/* وهج نابض أحمر للطوارئ */}
         {!open && (
-          <span
-            aria-hidden
-            className="absolute inset-0 animate-ping rounded-full bg-primary/40"
-          />
+          <>
+            <span
+              aria-hidden
+              className="absolute inset-0 animate-ping rounded-full bg-red-500/50"
+            />
+            <span
+              aria-hidden
+              className="absolute inset-0 rounded-full bg-red-500/0 animate-pulse"
+              style={{ boxShadow: "0 0 0 4px rgba(239, 68, 68, 0.3)" }}
+            />
+          </>
         )}
         {open ? (
           <svg
@@ -142,15 +162,31 @@ export function FloatingWhatsApp() {
             <line x1="18" y1="6" x2="6" y2="18" />
           </svg>
         ) : (
+          // أيقونة سارينة الطوارئ (Emergency Siren / Beacon Light)
           <svg
-            width="26"
-            height="26"
+            width="28"
+            height="28"
             viewBox="0 0 24 24"
-            fill="currentColor"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             aria-hidden
             className="relative"
           >
-            <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
+            {/* خطوط الإشعاع العلوية */}
+            <path d="M12 2v2" />
+            <path d="M5.6 4.6l1.4 1.4" />
+            <path d="M18.4 4.6L17 6" />
+            {/* القبة العلوية للسارينة */}
+            <path d="M7 11a5 5 0 0 1 10 0" fill="currentColor" fillOpacity="0.3" />
+            {/* جسم السارينة المستطيل */}
+            <rect x="5" y="11" width="14" height="5" rx="1" fill="currentColor" fillOpacity="0.2" />
+            {/* قاعدة السارينة */}
+            <rect x="4" y="16" width="16" height="3" rx="1" />
+            {/* نقطة الضوء في المنتصف */}
+            <circle cx="12" cy="13.5" r="1" fill="currentColor" />
           </svg>
         )}
       </button>
