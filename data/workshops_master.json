@@ -26024,7 +26024,9 @@
     "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGDoAWvceBnaGHh_zMDD38PTug1ptUCtvKCBCNFWsX_hiDyKkDOpFXPW4UEdtNwqrnmHBoms3sADoKMTHuPqCia4cMlU18v8eNQV-QjjfyRWmwikH1q2NISy3HXw4Z6HA8QFs6j=w426-h240-k-no",
     "payments": "",
     "active": true,
-    "entity_type": "مركز"
+    "entity_type": "مركز",
+    "phone_2": "+96565998777",
+    "phone_2_intl": "+96565998777"
   },
   {
     "source": "apify_2026_06_kuwait_v9",
@@ -26079,62 +26081,6 @@
     "payments": "",
     "active": true,
     "entity_type": "كراج"
-  },
-  {
-    "source": "apify_2026_06_kuwait_v9",
-    "name": "شركة جولدن صن للفحص الفنى للسيارات",
-    "category_raw": "محطة فحص سيارات",
-    "specialty": "فحص فني",
-    "area": "الري",
-    "governorate": "العاصمة",
-    "address": "Parallel to Ghazali St، Street 29، Al-Farwaniya 32080، الكويت",
-    "street": "",
-    "phone": "+965 6599 8777",
-    "phone_intl": "+96565998777",
-    "website": "",
-    "rating": 4.5,
-    "reviews_count": 16,
-    "latitude": 29.3094631,
-    "longitude": 47.9427555,
-    "google_url": "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%88%D9%84%D8%AF%D9%86%20%D8%B5%D9%86%20%D9%84%D9%84%D9%81%D8%AD%D8%B5%20%D8%A7%D9%84%D9%81%D9%86%D9%89%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA&query_place_id=ChIJHWK9wbibzz8R0GA7cg-LYmE",
-    "place_id": "ChIJHWK9wbibzz8R0GA7cg-LYmE",
-    "permanently_closed": false,
-    "opening_hours": "الثلاثاء: 8ص to 1م, 4 to 8م | الأربعاء: 8ص to 1م, 4 to 8م | الخميس: 8ص to 1م, 4 to 8م | الجمعة: مغلق | السبت: مغلق | الأحد: 8ص to 1م, 4 to 8م | الاثنين: 8ص to 1م, 4 to 8م",
-    "opening_hours_raw": [
-      {
-        "day": "الثلاثاء",
-        "hours": "8ص to 1م, 4 to 8م"
-      },
-      {
-        "day": "الأربعاء",
-        "hours": "8ص to 1م, 4 to 8م"
-      },
-      {
-        "day": "الخميس",
-        "hours": "8ص to 1م, 4 to 8م"
-      },
-      {
-        "day": "الجمعة",
-        "hours": "مغلق"
-      },
-      {
-        "day": "السبت",
-        "hours": "مغلق"
-      },
-      {
-        "day": "الأحد",
-        "hours": "8ص to 1م, 4 to 8م"
-      },
-      {
-        "day": "الاثنين",
-        "hours": "8ص to 1م, 4 to 8م"
-      }
-    ],
-    "images_count": 0,
-    "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGBD5XlXOZCu6bLMCgLRtfmY760WP4Yk7PQGWXH8ULZQJxGhZJ_lMR2GxSBcWKIFRTVmYgyuIHXxT7WsZzYNPU09Zaxc3SHthP9yA1XD4E5IX_dTAU8CqiCu8n3FnVQEgYTCcaK=w408-h287-k-no",
-    "payments": "",
-    "active": true,
-    "entity_type": "مركز"
   },
   {
     "source": "apify_2026_06_kuwait_v9",
@@ -39311,62 +39257,6 @@
   },
   {
     "source": "apify_2026_06_kuwait_v9",
-    "name": "كراج القرين الذهبي لتصليح السيارات",
-    "category_raw": "تصليح سيارات",
-    "specialty": "صيانة عامة",
-    "area": "غرب ابو فطيرة الحرفية",
-    "governorate": "مبارك الكبير",
-    "address": "شارع 13، 12345، الكويت",
-    "street": "",
-    "phone": "+965 566 67878",
-    "phone_intl": "+96556667878",
-    "website": "",
-    "rating": 0,
-    "reviews_count": 0,
-    "latitude": 29.1997902,
-    "longitude": 48.0476943,
-    "google_url": "https://www.google.com/maps/search/?api=1&query=%D9%83%D8%B1%D8%A7%D8%AC%20%D8%A7%D9%84%D9%82%D8%B1%D9%8A%D9%86%20%D8%A7%D9%84%D8%B0%D9%87%D8%A8%D9%8A%20%D9%84%D8%AA%D8%B5%D9%84%D9%8A%D8%AD%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA&query_place_id=ChIJGVMUdPahzz8RRbNRASdcrTI",
-    "place_id": "ChIJGVMUdPahzz8RRbNRASdcrTI",
-    "permanently_closed": false,
-    "opening_hours": "الثلاثاء: نعمل على مدار 24 ساعة | الأربعاء: نعمل على مدار 24 ساعة | الخميس: نعمل على مدار 24 ساعة | الجمعة: نعمل على مدار 24 ساعة | السبت: نعمل على مدار 24 ساعة | الأحد: نعمل على مدار 24 ساعة | الاثنين: نعمل على مدار 24 ساعة",
-    "opening_hours_raw": [
-      {
-        "day": "الثلاثاء",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "الأربعاء",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "الخميس",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "الجمعة",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "السبت",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "الأحد",
-        "hours": "نعمل على مدار 24 ساعة"
-      },
-      {
-        "day": "الاثنين",
-        "hours": "نعمل على مدار 24 ساعة"
-      }
-    ],
-    "images_count": 0,
-    "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFNG7ssUuUeFzYt2Z3XqM7qVom9voEGjzWf51bRgkbGmxdC1vppKin23HYn1L_OHD-czrLuBcAcjsW_7MAsE6FXssoCrrilElXV8_GBDep3OQqcgD1Jy11EGIfu9ZA3xb5VYIE=w408-h306-k-no",
-    "payments": "",
-    "active": true,
-    "entity_type": "كراج"
-  },
-  {
-    "source": "apify_2026_06_kuwait_v9",
     "name": "شركة الضمان للفحص الفنى اسواق القرين",
     "category_raw": "محطة فحص سيارات",
     "specialty": "فحص فني",
@@ -41297,7 +41187,9 @@
     "main_image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH5tlwROi-AgeLEOcv7fWc2JLv2Sy3f6YK3lH07O2AsavYgNUiQwmRZdnZQvRuGkn31zgCew2zlGmY19KI4vkqFI8Q0TCHA3McQyl9aP2gBolRlXUTxGuUJUVpdAVaCJm7fU2JwzqHsmGVR=w408-h544-k-no",
     "payments": "",
     "active": true,
-    "entity_type": "كراج"
+    "entity_type": "كراج",
+    "phone_2": "+96556667878",
+    "phone_2_intl": "+96556667878"
   },
   {
     "source": "apify_2026_06_kuwait_v9",
@@ -42238,8 +42130,8 @@
     "governorate": "الأحمدي",
     "address": "شارع 1،،، الكويت",
     "street": "",
-    "phone": "",
-    "phone_intl": "",
+    "phone": "99466361",
+    "phone_intl": "+965 9946 6361",
     "website": "",
     "rating": 5,
     "reviews_count": 1,
@@ -52875,8 +52767,8 @@
     "governorate": "الأحمدي",
     "address": "شارع 1، 63000، الكويت",
     "street": "",
-    "phone": "",
-    "phone_intl": "",
+    "phone": "97370766",
+    "phone_intl": "+965 9737 0766",
     "website": "",
     "rating": 5,
     "reviews_count": 6,
@@ -58137,8 +58029,8 @@
     "governorate": "الأحمدي",
     "address": "445F+7W5، المنقف، الكويت",
     "street": "",
-    "phone": "",
-    "phone_intl": "",
+    "phone": "56558821",
+    "phone_intl": "+965 565 58821",
     "website": "",
     "rating": 4.3,
     "reviews_count": 6,
