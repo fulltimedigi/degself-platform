@@ -32,6 +32,17 @@ const localBusinessLd = {
   },
   image: "https://degself.com/og-image.jpg",
   email: "info@degself.com",
+  telephone: "+96565799195",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+96565799195",
+      contactType: "customer support",
+      areaServed: "KW",
+      availableLanguage: ["Arabic", "English"],
+      contactOption: "TollFree",
+    },
+  ],
   address: {
     "@type": "PostalAddress",
     streetAddress: "الكويت",

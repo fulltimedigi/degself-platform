@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { BUSINESS_PHONE_DISPLAY, BUSINESS_WA_URL, BUSINESS_PHONE_TEL } from "@/lib/constants";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -47,8 +48,34 @@ export function Footer() {
 
         {/* تواصل */}
         <div className="flex flex-col gap-3">
-          <h3 className="font-bold">تواصل</h3>
-          <p className="text-sm text-muted-foreground">تابعنا على وسائل التواصل</p>
+          <h3 className="font-bold">تواصل معنا</h3>
+
+          {/* Official WhatsApp business line */}
+          <a
+            href={BUSINESS_WA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-fit items-center gap-2 rounded-lg bg-primary/15 px-3 py-2 text-sm font-bold text-primary transition hover:bg-primary/25"
+            aria-label="تواصل عبر واتساب"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
+            </svg>
+            <span dir="ltr" className="font-en">{BUSINESS_PHONE_DISPLAY}</span>
+          </a>
+
+          <a
+            href={`tel:${BUSINESS_PHONE_TEL}`}
+            className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground transition hover:text-primary"
+            aria-label="اتصل بنا"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            اتصل بنا: <span dir="ltr" className="font-en">{BUSINESS_PHONE_DISPLAY}</span>
+          </a>
+
+          <p className="mt-2 text-sm text-muted-foreground">تابعنا على وسائل التواصل</p>
           <div className="flex gap-3">
             {/* X */}
             <a

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { InstallApp } from "@/components/InstallApp";
+import { BUSINESS_WA_URL } from "@/lib/constants";
 
 const NAV = [
   { href: "/", label: "الرئيسية" },
@@ -12,7 +13,6 @@ const NAV = [
   { href: "/map", label: "الخريطة" },
   { href: "/blog", label: "المدونة" },
   { href: "/faq", label: "الأسئلة الشائعة" },
-  { href: "#footer", label: "تواصل" },
 ];
 
 // Auth (دخول/تسجيل) is deferred (Checkpoint 5). Button kept in code but hidden
@@ -86,6 +86,21 @@ export function Header() {
 
         {/* Login button (RTL end = left) — hidden until auth ships (SHOW_AUTH) */}
         <div className="flex items-center gap-2">
+          {/* WhatsApp business CTA — desktop only, mobile shows in hamburger */}
+          <a
+            href={BUSINESS_WA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="تواصل عبر واتساب"
+            title="تواصل عبر واتساب"
+            className="hidden items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90 md:inline-flex"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
+            </svg>
+            واتساب
+          </a>
+
           <Link
             href="/saved"
             aria-label="الكراجات المحفوظة"
@@ -146,11 +161,25 @@ export function Header() {
             </Link>
           ))}
 
+          {/* WhatsApp business CTA (mobile menu) */}
+          <a
+            href={BUSINESS_WA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
+            </svg>
+            تواصل عبر واتساب
+          </a>
+
           {/* Always-available install option (the native prompt isn't shown to
               everyone — iOS never, Android only sometimes) */}
           <InstallApp
             onDone={() => setOpen(false)}
-            className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+            className="mt-1 flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/20"
           />
 
           {SHOW_AUTH && (

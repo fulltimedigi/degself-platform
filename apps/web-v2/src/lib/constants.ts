@@ -1,5 +1,13 @@
 // Shared static data for Home enrichment (Phase 5.1).
 
+// Official Degself business WhatsApp line (Ooredoo postpaid eSIM, activated 2026-06-20).
+export const BUSINESS_PHONE_DISPLAY = "+965 6579 9195";
+export const BUSINESS_PHONE_TEL = "+96565799195";
+export const BUSINESS_WA = "96565799195";
+export const BUSINESS_WA_TEXT = "السلام عليكم، تواصلت معكم من موقع degself";
+export const BUSINESS_WA_URL = `https://wa.me/${BUSINESS_WA}?text=${encodeURIComponent(BUSINESS_WA_TEXT)}`;
+
+
 // 6 quick-filter specialties. Pills use FREE-TEXT search (q=) — not specialty= —
 // so they catch matches across name + specialty + specialty_hints. This is
 // data-driven: the DB has no "ميكانيكا"/"كهرباء"/"الهيئة" specialty category, but

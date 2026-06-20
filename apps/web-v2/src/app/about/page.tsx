@@ -10,8 +10,15 @@ import {
   CheckCircle2,
   MapPin,
   Wrench,
+  Phone,
+  MessageCircle,
 } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
+import {
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_TEL,
+  BUSINESS_WA_URL,
+} from "@/lib/constants";
 
 const SITE = "https://degself.com";
 
@@ -352,6 +359,24 @@ export default function AboutPage() {
 
         {/* Contact */}
         <Section title="تواصل معنا">
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={BUSINESS_WA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground hover:opacity-90"
+            >
+              <MessageCircle size={18} aria-hidden />
+              واتساب — {BUSINESS_PHONE_DISPLAY}
+            </a>
+            <a
+              href={`tel:${BUSINESS_PHONE_TEL}`}
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 font-bold text-foreground hover:bg-muted"
+            >
+              <Phone size={18} className="text-primary" aria-hidden />
+              اتصال — {BUSINESS_PHONE_DISPLAY}
+            </a>
+          </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { label: "للمستخدمين", email: "hello@degself.com" },

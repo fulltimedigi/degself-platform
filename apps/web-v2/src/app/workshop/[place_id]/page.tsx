@@ -18,6 +18,7 @@ import { ReviewForm } from "@/components/ReviewForm";
 import { getApprovedReviews } from "@/lib/reviews";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { kuwaitWhatsAppDigits, formatArabicDate } from "@/lib/utils";
+import { BUSINESS_WA } from "@/lib/constants";
 
 export const revalidate = 3600; // ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
@@ -242,6 +243,24 @@ export default async function WorkshopPage({
         <div className="mt-5 border-t border-border pt-4">
           <ReviewForm placeId={w.place_id} />
         </div>
+      </section>
+
+      {/* Report this listing to Degself team via business WhatsApp */}
+      <section className="mt-4 rounded-xl border border-border bg-card p-4">
+        <h2 className="mb-2 font-bold">بلّغنا</h2>
+        <p className="mb-3 text-sm text-muted-foreground">
+          إذا لاحظت أي خطأ في بيانات هذا الكراج (رقم، عنوان، ساعات عمل، أو خدمات)، أبلغنا عبر واتساب لنصحّحه خلال ساعات.
+        </p>
+        <a
+          href={`https://wa.me/${BUSINESS_WA}?text=${encodeURIComponent(
+            `السلام عليكم، أرغب بالتبليغ عن خطأ في بيانات كراج:\n${w.name}\nhttps://degself.com/workshop/${w.place_id}\n\nالخطأ: `
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground hover:opacity-90"
+        >
+          بلّغنا عبر واتساب
+        </a>
       </section>
     </div>
   );
