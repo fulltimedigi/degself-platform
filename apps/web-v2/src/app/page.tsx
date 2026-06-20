@@ -274,22 +274,32 @@ export default async function Home() {
             <GarageTranslator />
           </div>
 
-          {/* بديل خفيف: بحث نصي مباشر */}
-          <details className="w-full max-w-xl">
-            <summary className="cursor-pointer select-none text-xs text-muted-foreground transition hover:text-primary">
-              أو ابحث مباشرة باسم كراج أو منطقة ↓
-            </summary>
+          {/* بحث نصي مباشر — ظاهر دايماً */}
+          <div className="flex w-full max-w-2xl flex-col gap-2">
+            <div className="flex items-center justify-center gap-2">
+              <span className="h-px flex-1 bg-border" aria-hidden />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">أو</span>
+              <span className="h-px flex-1 bg-border" aria-hidden />
+            </div>
             <form
               action="/search"
-              className="mt-3 flex flex-col gap-2 rounded-2xl border border-border bg-card/80 p-2 shadow-lg backdrop-blur sm:flex-row"
+              className="flex flex-col gap-2 rounded-2xl border border-border bg-card/80 p-2 shadow-lg backdrop-blur sm:flex-row"
+              role="search"
             >
-              <input
-                type="search"
-                name="q"
-                placeholder="مثال: بنشر الجهرا، أو تويوتا السالمية..."
-                autoComplete="off"
-                className="flex-1 rounded-xl bg-transparent px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none"
-              />
+              <div className="flex flex-1 items-center gap-2 px-3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground" aria-hidden>
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.3-4.3" />
+                </svg>
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="ابحث باسم الكراج أو المنطقة (مثال: بنشر الجهراء)"
+                  autoComplete="off"
+                  aria-label="ابحث عن كراج أو منطقة"
+                  className="flex-1 rounded-xl bg-transparent py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none"
+                />
+              </div>
               <button
                 type="submit"
                 className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-md transition hover:opacity-90"
@@ -297,7 +307,7 @@ export default async function Home() {
                 ابحث
               </button>
             </form>
-          </details>
+          </div>
         </div>
       </section>
 
