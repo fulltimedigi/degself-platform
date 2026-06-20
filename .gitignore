@@ -34,3 +34,4 @@ yarn-debug.log*
 .cache/
 webapp/qa/
 .vercel
+data/workshops_master.json.bak_*
