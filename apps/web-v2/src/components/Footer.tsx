@@ -44,6 +44,12 @@ export function Footer() {
           <Link href="/about" className="text-sm text-muted-foreground hover:text-primary">
             عن دق سلف
           </Link>
+          <Link
+            href="/report-workshop"
+            className="text-sm font-bold text-primary hover:underline"
+          >
+            بلّغنا عن كراج ناقص
+          </Link>
         </div>
 
         {/* تواصل */}

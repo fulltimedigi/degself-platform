@@ -133,6 +133,12 @@ export default async function SearchPage({
             <Link href="/search" className="text-sm font-semibold text-primary hover:underline">
               إعادة تعيين الفلاتر وعرض الكل ←
             </Link>
+            <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-5 text-center">
+              <p className="mb-2 text-sm font-bold">تعرف على كراج غير موجود عندنا؟</p>
+              <Link href="/report-workshop" className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90">
+                بلّغنا عنه — وسنضيفه مجاناً
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -142,6 +148,19 @@ export default async function SearchPage({
           </div>
         )}
       </div>
+
+      {/* Report missing workshop banner */}
+      {workshops.length > 0 && (
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-5 text-center sm:flex-row sm:justify-between sm:text-right">
+          <div>
+            <p className="text-sm font-bold">تعرف على كراج مفقود من الدليل؟</p>
+            <p className="text-xs text-muted-foreground">ساعدنا نكمل دليل كراجات الكويت — إضافة مجانية.</p>
+          </div>
+          <Link href="/report-workshop" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90">
+            بلّغنا عن كراج ناقص
+          </Link>
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
