@@ -3,6 +3,7 @@ import { getAllPlaceIdsWithLastmod } from "@/lib/workshops";
 import { getLandingCombos, getLandingLastmod, comboKey } from "@/lib/landing";
 import { getMakeCounts } from "@/lib/makes";
 import { articleSlugs } from "@/app/blog/_articles";
+import { getEnrichedWorkshops, bestCategories } from "@/lib/best";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 const KARAJ = encodeURIComponent("كراج");
@@ -11,11 +12,12 @@ const MARKA = encodeURIComponent("ماركة");
 export const revalidate = 86400; // rebuild sitemap daily
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [workshops, combos, landingLastmod, makes] = await Promise.all([
+  const [workshops, combos, landingLastmod, makes, enriched] = await Promise.all([
     getAllPlaceIdsWithLastmod(),
     getLandingCombos(),
     getLandingLastmod(),
     getMakeCounts(),
+    getEnrichedWorkshops(),
   ]);
 
   const now = new Date();
@@ -34,7 +36,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE}/karaj-mutanaqil`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/bansher-mutanaqil`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/asaar`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE}/best`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
   ];
+
+  // "Best garages" per-specialty pages — one per populated specialty.
+  const bestCategoryPages: MetadataRoute.Sitemap = bestCategories(enriched).map((c) => ({
+    url: `${SITE}/best/${encodeURIComponent(c.specialty)}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
 
   const blogPages: MetadataRoute.Sitemap = articleSlugs.map((slug) => ({
     url: `${SITE}/blog/${slug}`,
@@ -88,6 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...bestCategoryPages,
     ...makePages,
     ...specialtyPages,
     ...blogPages,

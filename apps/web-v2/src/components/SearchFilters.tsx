@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import filterOptions from "@/data/filter_options.json";
 
 const SERVICE_MODES = [
   { value: "fixed", label: "كراج" },
@@ -14,6 +15,18 @@ const SORT_OPTIONS = [
   { value: "top-rated", label: "الأعلى تقييماً" },
   { value: "most-reviews", label: "الأكثر مراجعات" },
   { value: "az", label: "أبجدي (أ-ي)" },
+];
+
+// Review-analysis facets (degself enrichment). Counts come straight from the
+// generated filter_options.json so the UI stays in sync with the data.
+const TRUST_OPTS = filterOptions.trust_signals; // {value,label,count,icon}
+const POSITIVE_OPTS = filterOptions.positive_filters.slice(0, 8); // top 8 — keep UI light
+const NEGATIVE_OPTS = filterOptions.negative_filters.slice(0, 6); // {tag,count}
+const SCORE_OPTS = [
+  { value: "", label: "الكل" },
+  { value: "85", label: "ممتاز (85+)" },
+  { value: "70", label: "جيد جداً (70+)" },
+  { value: "55", label: "مقبول (55+)" },
 ];
 
 interface SearchFiltersProps {
@@ -36,7 +49,6 @@ export function SearchFilters({
   // local state for the debounced text inputs
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [nbhd, setNbhd] = useState(searchParams.get("neighborhood") ?? "");
-  const [rating, setRating] = useState(Number(searchParams.get("min_rating") ?? 0));
   const [locating, setLocating] = useState(false);
   const [geoErr, setGeoErr] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -97,6 +109,39 @@ export function SearchFilters({
     [router, pathname, searchParams]
   );
 
+  // Comma-separated multi-select facets (trust / positive / negative).
+  const csv = (key: string) =>
+    (searchParams.get(key) ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const isOn = (key: string, value: string) => csv(key).includes(value);
+  const toggleMulti = useCallback(
+    (key: string, value: string) => {
+      const cur = (searchParams.get(key) ?? "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const next = cur.includes(value)
+        ? cur.filter((v) => v !== value)
+        : [...cur, value];
+      const params = new URLSearchParams(searchParams.toString());
+      if (next.length) params.set(key, next.join(","));
+      else params.delete(key);
+      params.delete("page");
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [router, pathname, searchParams]
+  );
+
+  // Advanced (review-analysis) facets — collapsed by default so results stay
+  // visible; opens as an inline accordion on desktop and a bottom drawer on
+  // mobile. Sticky-open on load when any of its filters is already active.
+  const scoreValue = searchParams.get("score") ?? "";
+  const insightsCount =
+    csv("trust").length +
+    csv("pos").length +
+    csv("neg").length +
+    (scoreValue ? 1 : 0);
+  const [advancedOpen, setAdvancedOpen] = useState(insightsCount > 0);
+
   // debounce the text query (300ms)
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -131,12 +176,15 @@ export function SearchFilters({
     !!searchParams.get("min_rating") ||
     !!searchParams.get("sort") ||
     !!searchParams.get("lat") ||
-    !!searchParams.get("open_now");
+    !!searchParams.get("open_now") ||
+    !!searchParams.get("trust") ||
+    !!searchParams.get("pos") ||
+    !!searchParams.get("neg") ||
+    !!searchParams.get("score");
 
   function clearAll() {
     setQuery("");
     setNbhd("");
-    setRating(0);
     router.push(pathname, { scroll: false });
   }
 
@@ -146,6 +194,122 @@ export function SearchFilters({
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (query.trim() !== (searchParams.get("q") ?? "")) updateParam("q", query.trim());
   }
+
+  // The four review-analysis groups — rendered inside both the desktop accordion
+  // and the mobile drawer, so they live in one place.
+  const advancedGroups = (
+    <div className="flex flex-col gap-4">
+      {/* trust level */}
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">مستوى الثقة</legend>
+        <div className="flex flex-wrap gap-2">
+          {TRUST_OPTS.map((t) => {
+            const on = isOn("trust", t.value);
+            return (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => toggleMulti("trust", t.value)}
+                className={
+                  "rounded-full border px-3 py-1.5 text-sm font-semibold transition " +
+                  (on
+                    ? "border-primary bg-primary/15 text-primary"
+                    : "border-border text-foreground hover:bg-muted")
+                }
+              >
+                <span aria-hidden>{t.icon}</span> {t.label}{" "}
+                <span className="text-muted-foreground">({t.count})</span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {/* what sets a garage apart */}
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">ما يميّز الكراج</legend>
+        <div className="flex flex-wrap gap-2">
+          {POSITIVE_OPTS.map((p) => {
+            const on = isOn("pos", p.tag);
+            return (
+              <button
+                key={p.tag}
+                type="button"
+                onClick={() => toggleMulti("pos", p.tag)}
+                className={
+                  "rounded-full border px-3 py-1.5 text-sm transition " +
+                  (on
+                    ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-200"
+                    : "border-border text-foreground hover:bg-muted")
+                }
+              >
+                {p.tag} <span className="text-muted-foreground">({p.count})</span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {/* things to avoid */}
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">
+          تجنّب الكراجات التي فيها…
+        </legend>
+        <div className="flex flex-wrap gap-2">
+          {NEGATIVE_OPTS.map((n) => {
+            const on = isOn("neg", n.tag);
+            return (
+              <button
+                key={n.tag}
+                type="button"
+                onClick={() => toggleMulti("neg", n.tag)}
+                className={
+                  "rounded-full border px-3 py-1.5 text-sm transition " +
+                  (on
+                    ? "border-orange-500/50 bg-orange-500/15 text-orange-200"
+                    : "border-border text-foreground hover:bg-muted")
+                }
+              >
+                {n.tag} <span className="text-muted-foreground">({n.count})</span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {/* score range — single select */}
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">نطاق التقييم</legend>
+        <div className="flex flex-wrap gap-2">
+          {SCORE_OPTS.map((s) => {
+            const on = scoreValue === s.value;
+            return (
+              <button
+                key={s.value || "all"}
+                type="button"
+                onClick={() => updateParam("score", s.value)}
+                className={
+                  "rounded-full border px-3 py-1.5 text-sm font-semibold transition " +
+                  (on
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border text-foreground hover:bg-muted")
+                }
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+    </div>
+  );
+
+  const countBadge =
+    insightsCount > 0 ? (
+      <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
+        {insightsCount}
+      </span>
+    ) : null;
 
   return (
     <div className="flex flex-col gap-3" dir="rtl">
@@ -258,27 +422,6 @@ export function SearchFilters({
 
       {geoErr && <p className="text-sm text-red-500">{geoErr}</p>}
 
-      {/* min-rating slider */}
-      <div className="flex items-center gap-3">
-        <label className="whitespace-nowrap text-sm text-muted-foreground">
-          التقييم الأدنى: {rating > 0 ? `${rating}+ ★` : "الكل"}
-        </label>
-        <input
-          type="range"
-          min={0}
-          max={5}
-          step={1}
-          value={rating}
-          onChange={(e) => {
-            const v = Number(e.target.value);
-            setRating(v);
-            updateParam("min_rating", v ? String(v) : "");
-          }}
-          className="flex-1 accent-primary"
-          aria-label="التقييم الأدنى"
-        />
-      </div>
-
       {/* service mode buttons */}
       <div className="flex flex-wrap gap-2">
         {/* open now */}
@@ -324,6 +467,64 @@ export function SearchFilters({
           </button>
         )}
       </div>
+
+      {/* ── Advanced filters — collapsed by default; results stay in view ── */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setAdvancedOpen((o) => !o)}
+          aria-expanded={advancedOpen}
+          className="flex items-center gap-2 self-start rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold transition hover:border-primary/60"
+        >
+          <span aria-hidden>⚙</span>
+          <span>فلاتر متقدمة</span>
+          {countBadge}
+          <span aria-hidden className="text-muted-foreground">
+            {advancedOpen ? "▲" : "▼"}
+          </span>
+        </button>
+
+        {/* Desktop: inline accordion (mobile uses the drawer below) */}
+        <div className={advancedOpen ? "mt-3 hidden rounded-2xl border border-border bg-card/40 p-4 sm:block" : "hidden"}>
+          {advancedGroups}
+        </div>
+      </div>
+
+      {/* Mobile: bottom drawer */}
+      {advancedOpen && (
+        <div className="fixed inset-0 z-50 sm:hidden" role="dialog" aria-modal="true">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setAdvancedOpen(false)}
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[82vh] flex-col rounded-t-2xl border-t border-border bg-background">
+            <div className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-muted" aria-hidden />
+            <div className="flex items-center justify-between px-4 py-3">
+              <h3 className="flex items-center gap-2 font-bold">
+                فلاتر متقدمة {countBadge}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setAdvancedOpen(false)}
+                className="text-sm font-semibold text-muted-foreground hover:text-foreground"
+              >
+                إغلاق ✕
+              </button>
+            </div>
+            <div className="overflow-y-auto px-4 pb-2">{advancedGroups}</div>
+            <div className="border-t border-border p-4">
+              <button
+                type="button"
+                onClick={() => setAdvancedOpen(false)}
+                className="w-full rounded-xl bg-primary py-3 font-bold text-primary-foreground transition hover:opacity-90"
+              >
+                عرض النتائج
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

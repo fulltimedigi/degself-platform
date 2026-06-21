@@ -10,6 +10,7 @@ import { BUSINESS_WA_URL } from "@/lib/constants";
 const NAV = [
   { href: "/", label: "الرئيسية" },
   { href: "/search", label: "البحث" },
+  { href: "/best", label: "الأفضل" },
   { href: "/map", label: "الخريطة" },
   { href: "/blog", label: "المدونة" },
   { href: "/faq", label: "الأسئلة الشائعة" },

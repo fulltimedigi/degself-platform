@@ -19,6 +19,13 @@ import { getApprovedReviews } from "@/lib/reviews";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { kuwaitWhatsAppDigits, formatArabicDate } from "@/lib/utils";
 import { BUSINESS_WA } from "@/lib/constants";
+import { getEnrichment } from "@/lib/enrichment";
+import {
+  TrustBanner,
+  SmartScore,
+  EnrichmentSummary,
+  EnrichmentTags,
+} from "@/components/ReviewInsights";
 
 export const revalidate = 3600; // ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
@@ -56,6 +63,7 @@ export default async function WorkshopPage({
   if (!w) notFound();
 
   const reviewSummary = await getApprovedReviews(place_id);
+  const enrichment = getEnrichment(place_id);
 
   const volume = reviewVolumeLabel(w.google_reviews_count);
   const location = [w.area, w.governorate].filter(Boolean).join(" · ");
@@ -104,7 +112,16 @@ export default async function WorkshopPage({
         </span>
       </div>
 
-      {/* Rating + live open-now */}
+      {/* Trust signal — degself review analysis, directly after the title */}
+      {enrichment && <TrustBanner signal={enrichment.trust_signal} />}
+
+      {/* degself summary (rewritten analysis, never a verbatim Google review) */}
+      {enrichment && <EnrichmentSummary summary={enrichment.summary_ar} />}
+
+      {/* Smart score (0–100) */}
+      {enrichment && <SmartScore enrichment={enrichment} />}
+
+      {/* Google rating + live open-now */}
       <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
         {w.google_rating != null && (
           <span className="flex items-center gap-2">
@@ -118,6 +135,9 @@ export default async function WorkshopPage({
       <div className="mt-4">
         <SaveButton placeId={w.place_id} variant="inline" />
       </div>
+
+      {/* What sets this garage apart + customer notes (degself tag analysis) */}
+      {enrichment && <EnrichmentTags enrichment={enrichment} />}
 
       {/* Details */}
       <section className="mt-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-4">

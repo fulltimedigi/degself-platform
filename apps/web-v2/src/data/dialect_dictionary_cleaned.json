@@ -1,0 +1,466 @@
+{
+  "dialect_dictionary": [
+    {
+      "phrase": "تواير",
+      "normalized_form": "إطارات",
+      "category": "قطع غيار",
+      "issue_type": "vocabulary",
+      "frequency": 44,
+      "context_examples": [
+        "مركز الدالي للاطارات"
+      ]
+    },
+    {
+      "phrase": "سفايف",
+      "normalized_form": "فحمات الفرامل",
+      "category": "ميكانيكا",
+      "issue_type": "سفايف",
+      "frequency": 43
+    },
+    {
+      "phrase": "سيرفس",
+      "normalized_form": "صيانة دورية",
+      "category": "صيانة عامة",
+      "issue_type": "سيرفس",
+      "frequency": 43
+    },
+    {
+      "phrase": "قير",
+      "normalized_form": "ناقل الحركة",
+      "category": "قير وفتيس",
+      "issue_type": "قير",
+      "frequency": 34
+    },
+    {
+      "phrase": "بنشر",
+      "normalized_form": "ثقب إطار",
+      "category": "صيانة عامة",
+      "issue_type": "vocabulary",
+      "frequency": 25,
+      "context_examples": [
+        "تواير وبنشر",
+        "كهرباء وبنشر"
+      ]
+    },
+    {
+      "phrase": "سكراب",
+      "normalized_form": "قطع غيار مستعملة",
+      "category": "قطع غيار",
+      "issue_type": "سكراب",
+      "frequency": 22
+    },
+    {
+      "phrase": "كراج",
+      "normalized_form": "ورشة تصليح",
+      "category": "صيانة عامة",
+      "issue_type": "مصطلح دارج",
+      "frequency": 21,
+      "context_examples": [
+        "شالنجر لتصليح السيارات"
+      ]
+    },
+    {
+      "phrase": "معاونات",
+      "normalized_form": "مساعدات هيدروليكية",
+      "category": "ميكانيكا",
+      "issue_type": "معاونات",
+      "frequency": 21
+    },
+    {
+      "phrase": "صبغ",
+      "normalized_form": "طلاء السيارات",
+      "category": "بودي وصبغ",
+      "issue_type": "صبغ",
+      "frequency": 19
+    },
+    {
+      "phrase": "تبديل سفايف",
+      "normalized_form": "فحمات الفرامل",
+      "category": "ميكانيكا",
+      "issue_type": "سفايف",
+      "frequency": 11
+    },
+    {
+      "phrase": "تبديل تواير",
+      "normalized_form": "إطارات",
+      "category": "تواير وبنشر",
+      "issue_type": "تواير",
+      "frequency": 10
+    },
+    {
+      "phrase": "سلف",
+      "normalized_form": "بادئ الحركة",
+      "category": "كهرباء",
+      "issue_type": "سلف",
+      "frequency": 10
+    },
+    {
+      "phrase": "ونش",
+      "normalized_form": "رافعة",
+      "category": "صيانة عامة",
+      "issue_type": "ونش",
+      "frequency": 10
+    },
+    {
+      "phrase": "كويتي",
+      "normalized_form": "فحص حاسوب السيارة",
+      "category": "كمبيوتر وتشخيص",
+      "issue_type": "فحص كمبيوتر",
+      "frequency": 10
+    },
+    {
+      "phrase": "دعامية",
+      "normalized_form": "مصد السيارة",
+      "category": "بودي وصبغ",
+      "issue_type": "دعامية",
+      "frequency": 9
+    },
+    {
+      "phrase": "فحص كمبيوتر",
+      "normalized_form": "فحص بالكمبيوتر",
+      "category": "كمبيوتر وتشخيص",
+      "issue_type": "فحص كمبيوتر",
+      "frequency": 9
+    },
+    {
+      "phrase": "بلكات",
+      "normalized_form": "شمعات الاحتراق",
+      "category": "قطع غيار",
+      "issue_type": "بلكات",
+      "frequency": 8
+    },
+    {
+      "phrase": "تجفيت",
+      "normalized_form": "تجديد شامل",
+      "category": "بودي وصبغ",
+      "issue_type": "تجفيت",
+      "frequency": 8
+    },
+    {
+      "phrase": "زينة",
+      "normalized_form": "كماليات",
+      "category": "إكسسوارات",
+      "issue_type": "زينة",
+      "frequency": 8
+    },
+    {
+      "phrase": "تبديل دهن",
+      "normalized_form": "تغيير الزيت",
+      "category": "زيوت وصيانة",
+      "issue_type": "تبديل دهن",
+      "frequency": 8
+    },
+    {
+      "phrase": "تنجيد",
+      "normalized_form": "تغطية مقاعد السيارة",
+      "category": "تنجيد وفرش",
+      "issue_type": "تنجيد",
+      "frequency": 8
+    },
+    {
+      "phrase": "تصليح",
+      "normalized_form": "إصلاح",
+      "category": "صيانة عامة",
+      "issue_type": "مصطلح دارج",
+      "frequency": 7,
+      "context_examples": [
+        "لتصليح السيارات"
+      ]
+    },
+    {
+      "phrase": "service",
+      "normalized_form": "صيانة دورية",
+      "category": "صيانة عامة",
+      "issue_type": "سيرفس",
+      "frequency": 7
+    },
+    {
+      "phrase": "كفالة",
+      "normalized_form": "ضمان المصنع أو الورشة",
+      "category": "صيانة عامة",
+      "issue_type": "كفالة",
+      "frequency": 7
+    },
+    {
+      "phrase": "فرش",
+      "normalized_form": "تغطية الأرضيات",
+      "category": "تنجيد وفرش",
+      "issue_type": "فرش",
+      "frequency": 7
+    },
+    {
+      "phrase": "بطارية",
+      "normalized_form": "بطارية",
+      "category": "بطاريات",
+      "issue_type": "بطارية",
+      "frequency": 6
+    },
+    {
+      "phrase": "مكينة",
+      "normalized_form": "محرك السيارة",
+      "category": "ميكانيكا",
+      "issue_type": "مكينة",
+      "frequency": 6
+    },
+    {
+      "phrase": "جام",
+      "normalized_form": "زجاج السيارة",
+      "category": "بودي وصبغ",
+      "issue_type": "جام",
+      "frequency": 6
+    },
+    {
+      "phrase": "قطع سكراب",
+      "normalized_form": "قطع غيار مستعملة",
+      "category": "قطع غيار",
+      "issue_type": "سكراب",
+      "frequency": 6
+    },
+    {
+      "phrase": "Banshar",
+      "normalized_form": "ثقب الإطار",
+      "category": "تواير وبنشر",
+      "issue_type": "بنشر",
+      "frequency": 5
+    },
+    {
+      "phrase": "Service",
+      "normalized_form": "صيانة دورية",
+      "category": "صيانة عامة",
+      "issue_type": "سيرفس",
+      "frequency": 5
+    },
+    {
+      "phrase": "تجيك",
+      "normalized_form": "فحص وصيانة",
+      "category": "صيانة عامة",
+      "issue_type": "تجيك",
+      "frequency": 5
+    },
+    {
+      "phrase": "كمبريسر",
+      "normalized_form": "ضاغط المكيف",
+      "category": "تكييف",
+      "issue_type": "كمبريسر",
+      "frequency": 5
+    },
+    {
+      "phrase": "ChIJV99DXJabzz8ROSWAkD3spRk",
+      "normalized_form": "أسلاك الكهرباء",
+      "category": "كهرباء",
+      "issue_type": "ضفيرة",
+      "frequency": 5
+    },
+    {
+      "phrase": "ليتات",
+      "normalized_form": "مصابيح السيارات",
+      "category": "إكسسوارات",
+      "issue_type": "إنارة",
+      "frequency": 5
+    },
+    {
+      "phrase": "سيرفس سيارة",
+      "normalized_form": "صيانة دورية",
+      "category": "صيانة عامة",
+      "issue_type": "سيرفس",
+      "frequency": 5
+    },
+    {
+      "phrase": "تبديل",
+      "normalized_form": "تغيير",
+      "category": "زيوت وصيانة",
+      "issue_type": "تبديل",
+      "frequency": 5
+    },
+    {
+      "phrase": "سطحة",
+      "normalized_form": "ناقلة سيارات",
+      "category": "صيانة عامة",
+      "issue_type": "سطحة",
+      "frequency": 5
+    },
+    {
+      "phrase": "دواسر",
+      "normalized_form": "عتبات جانبية",
+      "category": "إكسسوارات",
+      "issue_type": "دواسر",
+      "frequency": 5
+    },
+    {
+      "phrase": "صناعية",
+      "normalized_form": "منطقة الورش الصناعية",
+      "category": "صيانة عامة",
+      "issue_type": "صناعية",
+      "frequency": 4
+    },
+    {
+      "phrase": "تصليح بنشر",
+      "normalized_form": "ثقب الإطار",
+      "category": "تواير وبنشر",
+      "issue_type": "بنشر",
+      "frequency": 4
+    },
+    {
+      "phrase": "Scrap",
+      "normalized_form": "قطع غيار مستعملة",
+      "category": "قطع غيار",
+      "issue_type": "سكراب",
+      "frequency": 4
+    },
+    {
+      "phrase": "dialect",
+      "normalized_form": "محطات الغسيل",
+      "category": "صيانة عامة",
+      "issue_type": "المغاسل",
+      "frequency": 4
+    },
+    {
+      "phrase": "تجاري",
+      "normalized_form": "قطع غيار غير أصلية",
+      "category": "قطع غيار",
+      "issue_type": "تجاري",
+      "frequency": 4
+    },
+    {
+      "phrase": "دينمو",
+      "normalized_form": "مولد الكهرباء",
+      "category": "كهرباء",
+      "issue_type": "دينمو",
+      "frequency": 4
+    },
+    {
+      "phrase": "تجفيت مكينة",
+      "normalized_form": "توضيب المحرك",
+      "category": "ميكانيكا",
+      "issue_type": "تجفيت",
+      "frequency": 3
+    },
+    {
+      "phrase": "ميزان",
+      "normalized_form": "موازنة الإطارات",
+      "category": "تواير وبنشر",
+      "issue_type": "ميزان",
+      "frequency": 3
+    },
+    {
+      "phrase": "Tawayir",
+      "normalized_form": "إطارات",
+      "category": "تواير وبنشر",
+      "issue_type": "تواير",
+      "frequency": 3
+    },
+    {
+      "phrase": "مدقر",
+      "normalized_form": "رفرف السيارة",
+      "category": "بودي وصبغ",
+      "issue_type": "مدقر",
+      "frequency": 3
+    },
+    {
+      "phrase": "تظليل",
+      "normalized_form": "تظليل",
+      "category": "إكسسوارات",
+      "issue_type": "تظليل",
+      "frequency": 3
+    },
+    {
+      "phrase": "نظام التعليق",
+      "normalized_form": "Suspension system",
+      "category": "ميكانيكا",
+      "issue_type": "هيئة",
+      "frequency": 3
+    },
+    {
+      "phrase": "scrap",
+      "normalized_form": "قطع غيار مستعملة",
+      "category": "قطع غيار",
+      "issue_type": "سكراب",
+      "frequency": 3
+    },
+    {
+      "phrase": "جيك",
+      "normalized_form": "فحص المركبة",
+      "category": "فحص فني",
+      "issue_type": "جيك على السيارة",
+      "frequency": 3
+    },
+    {
+      "phrase": "تضليل",
+      "normalized_form": "تظليل الزجاج",
+      "category": "إكسسوارات",
+      "issue_type": "تظليل",
+      "frequency": 3
+    },
+    {
+      "phrase": "ميكانيك",
+      "normalized_form": "ميكانيكا",
+      "category": "ميكانيكا",
+      "issue_type": "ميكانيك",
+      "frequency": 3
+    },
+    {
+      "phrase": "حدادة",
+      "normalized_form": "حدادة",
+      "category": "بودي وصبغ",
+      "issue_type": "حدادة",
+      "frequency": 3
+    },
+    {
+      "phrase": "كهرباء وبنشر",
+      "normalized_form": "فني كهرباء وإطارات",
+      "category": "كهرباء",
+      "issue_type": "كهرباء وبنشر",
+      "frequency": 3
+    },
+    {
+      "phrase": "ban-shar",
+      "normalized_form": "ثقب الإطارات",
+      "category": "تواير وبنشر",
+      "issue_type": "بنشر",
+      "frequency": 3
+    },
+    {
+      "phrase": "بيمة",
+      "normalized_form": "تأمين المركبة",
+      "category": "فحص فني",
+      "issue_type": "بيمة",
+      "frequency": 3
+    },
+    {
+      "phrase": "باتري",
+      "normalized_form": "بطارية",
+      "category": "بطاريات",
+      "issue_type": "باتري",
+      "frequency": 3
+    },
+    {
+      "phrase": "kuwaiti",
+      "normalized_form": "سيارات الدفع الرباعي",
+      "category": "صيانة عامة",
+      "issue_type": "أوفرود",
+      "frequency": 3
+    },
+    {
+      "phrase": "اشتراك",
+      "normalized_form": "توصيل بطارية",
+      "category": "بطاريات",
+      "issue_type": "اشتراك",
+      "frequency": 3
+    },
+    {
+      "phrase": "معجون",
+      "normalized_form": "مادة تسوية الهيكل",
+      "category": "بودي وصبغ",
+      "issue_type": "معجون",
+      "frequency": 2
+    },
+    {
+      "phrase": "زينة سيارات",
+      "normalized_form": "إكسسوارات",
+      "category": "إكسسوارات",
+      "issue_type": "زينة",
+      "frequency": 2
+    }
+  ],
+  "total": 64
+}
