@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 import { StarRating } from "@/components/StarRating";
 import { MAX_INPUT_CHARS, categoryToSpecialty, type TranslateResponse } from "@/lib/garageTranslator";
 

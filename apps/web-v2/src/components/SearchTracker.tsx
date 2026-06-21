@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 
 /** Logs a "search" event (with the query) once per distinct query view. */
 export function SearchTracker({ query }: { query: string }) {

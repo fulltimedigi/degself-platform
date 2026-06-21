@@ -1,6 +1,6 @@
 "use client";
 
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 
 const WA_TEXT = "السلام عليكم، لقيتكم على دق سلف وحاب أستفسر عن الخدمة";
 
