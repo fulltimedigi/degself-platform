@@ -7,6 +7,7 @@ import { PriceCalculatorBanner } from "@/components/PriceCalculatorBanner";
 import { GovernorateGrid } from "@/components/GovernorateGrid";
 import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
+import { SOCIAL_SAME_AS } from "@/lib/brand";
 
 const SITE = "https://degself.com";
 // Social share card (brand-colored, 1200×630).
@@ -71,7 +72,7 @@ export default async function Home() {
       name: "Kuwait",
       alternateName: "الكويت",
     },
-    sameAs: ["https://x.com/degself", "https://www.instagram.com/degselfkw"],
+    sameAs: [...SOCIAL_SAME_AS],
     founder: { "@type": "Person", name: "أحمد عبدالحليم" },
     knowsAbout: [
       "صيانة السيارات",

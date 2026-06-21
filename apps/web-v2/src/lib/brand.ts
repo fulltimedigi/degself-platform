@@ -110,3 +110,11 @@ export function formatHours(h: string): string {
 }
 
 export const KUWAIT_CENTER: [number, number] = [29.3759, 47.9774];
+
+// Verified, owned social profiles — single source of truth for schema `sameAs`.
+// Only list real, live profiles: a `sameAs` to a dead/wrong URL weakens Google's
+// entity resolution. These mirror the links shown in the footer.
+export const SOCIAL_SAME_AS = [
+  "https://www.instagram.com/degselfkw",
+  "https://x.com/degself",
+] as const;
