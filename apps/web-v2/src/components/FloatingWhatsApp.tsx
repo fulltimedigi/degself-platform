@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 import { BUSINESS_WA } from "@/lib/constants";
 
 const WA_MESSAGE = encodeURIComponent(

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 
 export function ReviewForm({ placeId }: { placeId: string }) {
   const [rating, setRating] = useState(0);

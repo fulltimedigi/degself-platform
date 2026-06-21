@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 import { isFavorite, toggleFavorite, FAVORITES_EVENT } from "@/lib/favorites";
 
 /** Heart toggle that saves a workshop to localStorage favorites (no auth). */

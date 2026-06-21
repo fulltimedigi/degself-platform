@@ -26,6 +26,7 @@ import {
   EnrichmentSummary,
   EnrichmentTags,
 } from "@/components/ReviewInsights";
+import { WorkshopViewTracker } from "@/components/WorkshopViewTracker";
 
 export const revalidate = 3600; // ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
@@ -90,6 +91,7 @@ export default async function WorkshopPage({
     <div className="mx-auto w-full max-w-3xl px-6 py-8">
       <WorkshopJsonLd workshop={w} reviews={reviewSummary} />
       <JsonLd data={breadcrumbLd} />
+      <WorkshopViewTracker placeId={w.place_id} />
 
       <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground">
         ← رجوع للبحث

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Calculator, Search, AlertCircle } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 
 // Service categories with price ranges in KWD for Kuwait market (2026 data).
 // Multipliers applied based on car category.

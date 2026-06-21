@@ -1,6 +1,6 @@
 "use client";
 
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/track";
 
 /** tel: link that logs a "call" event (which workshop was called). */
 export function CallButton({
