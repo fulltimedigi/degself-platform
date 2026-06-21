@@ -9,6 +9,7 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { JsonLd } from "@/components/JsonLd";
+import { SOCIAL_SAME_AS } from "@/lib/brand";
 
 // Google Analytics 4 — public Measurement ID.
 const GA_ID = "G-806P73YN0Z";
@@ -73,11 +74,7 @@ const localBusinessLd = {
   currenciesAccepted: "KWD",
   paymentAccepted: "نقد، بطاقة ائتمان، KNET",
   knowsLanguage: ["ar", "en"],
-  sameAs: [
-    "https://www.instagram.com/degself",
-    "https://www.facebook.com/degself",
-    "https://twitter.com/degself",
-  ],
+  sameAs: [...SOCIAL_SAME_AS],
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "4.8",
