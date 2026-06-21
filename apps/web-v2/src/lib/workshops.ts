@@ -3,6 +3,10 @@ import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
 import { isOpenNow } from "@/lib/hours";
 import type { Workshop } from "@/lib/types";
+import { getEnrichment, allEnrichments, type Enrichment } from "@/lib/enrichment";
+
+// place_ids that carry review-analysis enrichment (smart_score, tags, …).
+const ENRICHED_IDS = Object.keys(allEnrichments());
 
 export interface SearchParams {
   query?: string;
@@ -17,15 +21,73 @@ export interface SearchParams {
   lat?: number; // user location (for sort=distance)
   lng?: number;
   open_now?: boolean; // keep only places open right now (Kuwait time)
+  // review-analysis facets (degself enrichment overlay; apply to enriched only)
+  trust?: string[]; // trust_signal ∈ selected
+  positive?: string[]; // must have ALL selected positive tag labels
+  negative?: string[]; // exclude if it has ANY selected negative tag label
+  score_min?: number; // smart_score >= score_min
   limit?: number;
   offset?: number;
 }
 
-export type WorkshopWithDistance = Workshop & { distance_km?: number | null };
+// Returned rows carry the enrichment overlay (and distance when sorted by it).
+export type WorkshopWithEnrichment = Workshop & {
+  distance_km?: number | null;
+  enrichment?: Enrichment | null;
+};
+// Back-compat alias for existing callers.
+export type WorkshopWithDistance = WorkshopWithEnrichment;
 
 export interface SearchResult {
-  workshops: WorkshopWithDistance[];
+  workshops: WorkshopWithEnrichment[];
   total: number;
+}
+
+/** Attach the review-analysis overlay to a workshop row. */
+function attach(w: Workshop): WorkshopWithEnrichment {
+  return { ...w, enrichment: getEnrichment(w.place_id) };
+}
+
+/** Does an enriched row pass the active review-analysis facets? Non-enriched
+ *  rows (enrichment === null) never pass once any such facet is selected. */
+function passesEnrichment(
+  e: Enrichment | null | undefined,
+  f: Pick<SearchParams, "trust" | "positive" | "negative" | "score_min">
+): boolean {
+  if (!e) return false;
+  if (f.trust?.length && !f.trust.includes(e.trust_signal)) return false;
+  if (f.score_min != null && e.smart_score < f.score_min) return false;
+  if (f.positive?.length) {
+    const have = new Set(e.positive_tags.map((t) => t.label));
+    if (!f.positive.every((p) => have.has(p))) return false;
+  }
+  if (f.negative?.length) {
+    const have = new Set(e.negative_tags.map((t) => t.label));
+    if (f.negative.some((n) => have.has(n))) return false;
+  }
+  return true;
+}
+
+/** Order a JS-side list. Default (relevance/smart) → smart_score desc. */
+function sortList(
+  list: WorkshopWithEnrichment[],
+  sort?: string
+): WorkshopWithEnrichment[] {
+  if (sort === "top-rated")
+    return list.sort(
+      (a, b) =>
+        (b.google_rating ?? 0) - (a.google_rating ?? 0) ||
+        (b.google_reviews_count ?? 0) - (a.google_reviews_count ?? 0)
+    );
+  if (sort === "most-reviews")
+    return list.sort(
+      (a, b) => (b.google_reviews_count ?? 0) - (a.google_reviews_count ?? 0)
+    );
+  if (sort === "az") return list.sort((a, b) => a.name.localeCompare(b.name, "ar"));
+  // smart_score desc
+  return list.sort(
+    (a, b) => (b.enrichment?.smart_score ?? -1) - (a.enrichment?.smart_score ?? -1)
+  );
 }
 
 // Great-circle distance in meters between two lat/lng points.
@@ -44,6 +106,10 @@ function haversineMeters(aLat: number, aLng: number, bLat: number, bLng: number)
 // matches, then filters/sorts in JS. Real filtered searches are well under this;
 // an unfiltered browse takes the top-N relevant.
 const JS_CANDIDATE_CAP = 500;
+
+// Default smart-ordered browse pages the whole filtered catalog into JS to put
+// enriched (scored) workshops first. Bounded so catalog growth can't run away.
+const FULL_CATALOG_CAP = 3000;
 
 /**
  * Filtered, paginated search. Free-text `query` is normalized (Arabic-aware)
@@ -68,60 +134,91 @@ export async function searchWorkshops(
     lat,
     lng,
     open_now,
+    trust,
+    positive,
+    negative,
+    score_min,
     limit = 24,
     offset = 0,
   } = params;
 
-  const supabase = supabasePublic;
+  // Fresh, fully-filtered base query (no order/range) — rebuildable so the
+  // JS-side paths can fetch in pages. Supabase builders aren't reusable post-await.
+  const buildBase = (withCount: boolean) => {
+    let q = supabasePublic
+      .from("workshops")
+      .select("*", withCount ? { count: "exact" } : undefined)
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .eq("is_automotive", true) // audit: hide non-automotive places
+      .eq("out_of_scope", false);
 
-  let q = supabase
-    .from("workshops")
-    .select("*", { count: "exact" })
-    .eq("active", true)
-    .eq("permanently_closed", false)
-    .eq("is_automotive", true) // audit: hide non-automotive places
-    .eq("out_of_scope", false);
-
-  if (query) {
-    const raw = normalizeArabic(query).split(" ").filter(Boolean);
-    // drop generic action/filler words so the meaningful noun carries the query;
-    // fall back to the raw tokens if filtering would empty it.
-    const meaningful = raw.filter((t) => !SEARCH_STOPWORDS.has(t));
-    const tokens = meaningful.length ? meaningful : raw;
-    for (const t of tokens) {
-      // OR-expand each token with its synonyms (script/dialect/spelling variants),
-      // then AND the groups together. Each variant is re-normalized to match the
-      // normalized search_text column.
-      const variants = expandToken(t).map((v) => normalizeArabic(v)).filter(Boolean);
-      const uniq = [...new Set(variants)];
-      if (uniq.length === 1) {
-        q = q.ilike("search_text", `%${uniq[0]}%`);
-      } else {
-        q = q.or(uniq.map((v) => `search_text.ilike.%${v}%`).join(","));
+    if (query) {
+      const raw = normalizeArabic(query).split(" ").filter(Boolean);
+      // drop generic action/filler words so the meaningful noun carries the query;
+      // fall back to the raw tokens if filtering would empty it.
+      const meaningful = raw.filter((t) => !SEARCH_STOPWORDS.has(t));
+      const tokens = meaningful.length ? meaningful : raw;
+      for (const t of tokens) {
+        // OR-expand each token with its synonyms (script/dialect/spelling variants),
+        // then AND the groups together. Each variant is re-normalized to match the
+        // normalized search_text column.
+        const variants = expandToken(t).map((v) => normalizeArabic(v)).filter(Boolean);
+        const uniq = [...new Set(variants)];
+        if (uniq.length === 1) q = q.ilike("search_text", `%${uniq[0]}%`);
+        else q = q.or(uniq.map((v) => `search_text.ilike.%${v}%`).join(","));
       }
     }
-  }
-  if (area) q = q.eq("area", area);
-  if (neighborhood) q = q.eq("neighborhood", neighborhood);
-  if (governorate) q = q.eq("governorate", governorate);
-  if (specialty) q = q.eq("reviewed_specialty", specialty); // audited specialty
-  if (entity_type) q = q.eq("entity_type", entity_type);
-  if (service_mode) q = q.eq("service_mode", service_mode);
-  if (min_rating) q = q.gte("google_rating", min_rating);
+    if (area) q = q.eq("area", area);
+    if (neighborhood) q = q.eq("neighborhood", neighborhood);
+    if (governorate) q = q.eq("governorate", governorate);
+    if (specialty) q = q.eq("reviewed_specialty", specialty); // audited specialty
+    if (entity_type) q = q.eq("entity_type", entity_type);
+    if (service_mode) q = q.eq("service_mode", service_mode);
+    if (min_rating) q = q.gte("google_rating", min_rating);
+    return q;
+  };
 
-  // JS pipeline — needed for "open now" (free-text hours, can't filter in SQL) and
-  // "near me" (Supabase can't ORDER BY distance without PostGIS). They compose:
-  // nearest OPEN garage. Fetch a bounded, relevance-ordered candidate set first.
-  const wantDistance = sort === "distance" && Number.isFinite(lat) && Number.isFinite(lng);
+  const enrichmentActive = !!(
+    trust?.length ||
+    positive?.length ||
+    negative?.length ||
+    score_min != null
+  );
+  const wantDistance =
+    sort === "distance" && Number.isFinite(lat) && Number.isFinite(lng);
+  const explicitSort =
+    sort === "top-rated" || sort === "most-reviews" || sort === "az";
+
+  // ── Path A: review-analysis facets active → enriched-only, ranked by smart_score.
+  // Non-enriched rows can never satisfy these facets, so restrict to ENRICHED_IDS.
+  if (enrichmentActive) {
+    const { data, error } = await buildBase(false)
+      .in("place_id", ENRICHED_IDS)
+      .order("rank_score", { ascending: false, nullsFirst: false })
+      .range(0, JS_CANDIDATE_CAP - 1);
+    if (error) throw new Error(`searchWorkshops(enriched) failed: ${error.message}`);
+    let rows = (data ?? []) as Workshop[];
+    if (open_now) rows = rows.filter((w) => isOpenNow(w.opening_hours));
+    const list = sortList(
+      rows.map(attach).filter((w) =>
+        passesEnrichment(w.enrichment, { trust, positive, negative, score_min })
+      ),
+      sort
+    );
+    return { workshops: list.slice(offset, offset + limit), total: list.length };
+  }
+
+  // ── Path B: "open now" / "near me" JS pipeline (free-text hours / no PostGIS).
   if (wantDistance || open_now) {
-    const { data, error } = await q
+    const { data, error } = await buildBase(false)
       .order("rank_score", { ascending: false, nullsFirst: false })
       .range(0, JS_CANDIDATE_CAP - 1);
     if (error) throw new Error(`searchWorkshops(pipeline) failed: ${error.message}`);
     let rows = (data ?? []) as Workshop[];
     if (open_now) rows = rows.filter((w) => isOpenNow(w.opening_hours));
 
-    let ordered: WorkshopWithDistance[];
+    let ordered: WorkshopWithEnrichment[];
     if (wantDistance) {
       ordered = rows
         .map((w) => ({
@@ -133,37 +230,56 @@ export async function searchWorkshops(
         }))
         .sort((a, b) => a.d - b.d)
         .map(({ w, d }) => ({
-          ...w,
+          ...attach(w),
           distance_km: Number.isFinite(d) ? Math.round(d / 100) / 10 : null,
         }));
     } else {
-      ordered = rows; // already relevance-ordered by rank_score
+      ordered = rows.map(attach); // already relevance-ordered by rank_score
     }
-    const page = ordered.slice(offset, offset + limit);
-    return { workshops: page, total: ordered.length };
+    return { workshops: ordered.slice(offset, offset + limit), total: ordered.length };
   }
 
-  // sort
-  if (sort === "most-reviews") {
-    q = q.order("google_reviews_count", { ascending: false, nullsFirst: false });
-  } else if (sort === "az") {
-    q = q.order("name", { ascending: true });
-  } else if (sort === "top-rated") {
-    q = q
-      .order("google_rating", { ascending: false, nullsFirst: false })
-      .order("google_reviews_count", { ascending: false, nullsFirst: false });
-  } else {
-    // default: relevance — Bayesian rating + review volume + dealer boost
-    q = q
+  // ── Path C: explicit non-smart sort → SQL paginates; overlay attached per page.
+  if (explicitSort) {
+    let q = buildBase(true);
+    if (sort === "most-reviews")
+      q = q.order("google_reviews_count", { ascending: false, nullsFirst: false });
+    else if (sort === "az") q = q.order("name", { ascending: true });
+    else
+      q = q
+        .order("google_rating", { ascending: false, nullsFirst: false })
+        .order("google_reviews_count", { ascending: false, nullsFirst: false });
+    q = q.range(offset, offset + limit - 1);
+    const { data, count, error } = await q;
+    if (error) throw new Error(`searchWorkshops failed: ${error.message}`);
+    return { workshops: (data ?? []).map((w) => attach(w as Workshop)), total: count ?? 0 };
+  }
+
+  // ── Path D (default): smart ordering across the whole filtered set — enriched
+  // first by smart_score desc, then the rest in relevance (rank_score) order.
+  // Loading the matched set is cheap for faceted queries; the unfiltered browse
+  // pages the full catalog (bounded by FULL_CATALOG_CAP).
+  const PAGE = 1000;
+  const all: Workshop[] = [];
+  for (let from = 0; from < FULL_CATALOG_CAP; from += PAGE) {
+    const to = Math.min(from + PAGE, FULL_CATALOG_CAP) - 1;
+    const { data, error } = await buildBase(false)
       .order("rank_score", { ascending: false, nullsFirst: false })
-      .order("google_reviews_count", { ascending: false, nullsFirst: false });
+      .range(from, to);
+    if (error) throw new Error(`searchWorkshops(default) failed: ${error.message}`);
+    const batch = (data ?? []) as Workshop[];
+    all.push(...batch);
+    if (batch.length < PAGE) break;
   }
-
-  q = q.range(offset, offset + limit - 1);
-
-  const { data, count, error } = await q;
-  if (error) throw new Error(`searchWorkshops failed: ${error.message}`);
-  return { workshops: (data ?? []) as Workshop[], total: count ?? 0 };
+  const rows = all.map(attach);
+  const enriched = rows
+    .filter((w) => w.enrichment)
+    .sort(
+      (a, b) => (b.enrichment?.smart_score ?? 0) - (a.enrichment?.smart_score ?? 0)
+    );
+  const rest = rows.filter((w) => !w.enrichment); // keep rank_score order
+  const ordered = [...enriched, ...rest];
+  return { workshops: ordered.slice(offset, offset + limit), total: ordered.length };
 }
 
 /** Single workshop by place_id. ⚠️ place_id is case-sensitive — never transform it. */

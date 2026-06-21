@@ -8,6 +8,7 @@ import {
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { SearchTracker } from "@/components/SearchTracker";
+import { inferSpecialtyFromQuery } from "@/lib/dialect";
 
 export const dynamic = "force-dynamic"; // results depend on the query — never cached
 
@@ -55,20 +56,37 @@ export default async function SearchPage({
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
   const offset = (page - 1) * PAGE_SIZE;
 
+  // comma-separated multi-select facets → arrays
+  const csv = (v?: string) =>
+    (v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+
+  // Dialect intent: when the colloquial query maps to a specialty, search by that
+  // specialty (intent) rather than literal keywords — unless the user opted out
+  // (?exact=1) or already picked an explicit specialty.
+  const optedOut = sp.exact === "1";
+  const dialect =
+    !optedOut && !sp.specialty ? inferSpecialtyFromQuery(sp.q) : null;
+  const effectiveSpecialty = sp.specialty ?? dialect?.specialty;
+  const effectiveQuery = dialect ? undefined : sp.q;
+
   const [{ workshops, total }, areas, neighborhoods, specialties] =
     await Promise.all([
       searchWorkshops({
-        query: sp.q,
+        query: effectiveQuery,
         area: sp.area,
         neighborhood: sp.neighborhood,
         governorate: sp.governorate,
-        specialty: sp.specialty,
+        specialty: effectiveSpecialty,
         service_mode: sp.service_mode,
         sort: sp.sort,
         lat: sp.lat ? Number(sp.lat) : undefined,
         lng: sp.lng ? Number(sp.lng) : undefined,
         open_now: sp.open_now === "1",
         min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
+        trust: csv(sp.trust),
+        positive: csv(sp.pos),
+        negative: csv(sp.neg),
+        score_min: sp.score ? Number(sp.score) : undefined,
         limit: PAGE_SIZE,
         offset,
       }),
@@ -93,9 +111,33 @@ export default async function SearchPage({
     if (sp.lng) params.set("lng", sp.lng);
     if (sp.open_now) params.set("open_now", sp.open_now);
     if (sp.min_rating) params.set("min_rating", sp.min_rating);
+    if (sp.trust) params.set("trust", sp.trust);
+    if (sp.pos) params.set("pos", sp.pos);
+    if (sp.neg) params.set("neg", sp.neg);
+    if (sp.score) params.set("score", sp.score);
+    if (sp.exact) params.set("exact", sp.exact);
     if (p > 1) params.set("page", String(p));
     const qs = params.toString();
     return qs ? `/search?${qs}` : "/search";
+  }
+
+  // "search literally" link — same query, dialect understanding disabled.
+  function exactHref() {
+    const params = new URLSearchParams();
+    if (sp.q) params.set("q", sp.q);
+    if (sp.area) params.set("area", sp.area);
+    if (sp.neighborhood) params.set("neighborhood", sp.neighborhood);
+    if (sp.governorate) params.set("governorate", sp.governorate);
+    if (sp.service_mode) params.set("service_mode", sp.service_mode);
+    if (sp.sort) params.set("sort", sp.sort);
+    if (sp.open_now) params.set("open_now", sp.open_now);
+    if (sp.min_rating) params.set("min_rating", sp.min_rating);
+    if (sp.trust) params.set("trust", sp.trust);
+    if (sp.pos) params.set("pos", sp.pos);
+    if (sp.neg) params.set("neg", sp.neg);
+    if (sp.score) params.set("score", sp.score);
+    params.set("exact", "1");
+    return `/search?${params.toString()}`;
   }
 
   return (
@@ -109,6 +151,21 @@ export default async function SearchPage({
         specialties={specialties}
         neighborhoods={neighborhoods}
       />
+
+      {/* Dialect intent banner — shown when a colloquial query was understood */}
+      {dialect && (
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm">
+          <span>
+            فهمنا قصدك: <span className="font-bold text-primary">{dialect.specialty}</span>
+          </span>
+          <Link
+            href={exactHref()}
+            className="font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+          >
+            البحث الكلي بدون فهم اللهجة
+          </Link>
+        </div>
+      )}
 
       <div className="mt-8">
         {workshops.length === 0 ? (
@@ -143,7 +200,12 @@ export default async function SearchPage({
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {workshops.map((w) => (
-              <WorkshopCard key={w.place_id} workshop={w} distanceKm={w.distance_km} />
+              <WorkshopCard
+                key={w.place_id}
+                workshop={w}
+                distanceKm={w.distance_km}
+                enrichment={w.enrichment}
+              />
             ))}
           </div>
         )}

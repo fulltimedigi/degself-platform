@@ -7,13 +7,16 @@ import { CardActions } from "@/components/CardActions";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
 import { truncate, kuwaitWhatsAppDigits } from "@/lib/utils";
 import type { Workshop } from "@/lib/types";
+import type { Enrichment } from "@/lib/enrichment";
 
 export function WorkshopCard({
   workshop,
   distanceKm,
+  enrichment,
 }: {
   workshop: Workshop;
   distanceKm?: number | null;
+  enrichment?: Enrichment | null;
 }) {
   const {
     place_id,
@@ -78,6 +81,16 @@ export function WorkshopCard({
             )}
 
             <div className="flex flex-wrap items-center gap-2 text-xs">
+              {/* degself smart score — glows; or a neutral "registered" badge when unscored */}
+              {enrichment ? (
+                <span className="inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/15 px-2 py-0.5 font-bold text-primary shadow-[0_0_10px_rgba(255,214,10,0.35)]">
+                  ⭐ {Math.round(enrichment.smart_score)}
+                </span>
+              ) : (
+                <span className="rounded-md border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                  كراج مُسجَّل
+                </span>
+              )}
               {google_rating != null && <StarRating rating={google_rating} />}
               {volume && <span className="text-muted-foreground">{volume}</span>}
               <OpenNowBadge openingHours={opening_hours} />

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import filterOptions from "@/data/filter_options.json";
 
 const SERVICE_MODES = [
   { value: "fixed", label: "كراج" },
@@ -14,6 +15,18 @@ const SORT_OPTIONS = [
   { value: "top-rated", label: "الأعلى تقييماً" },
   { value: "most-reviews", label: "الأكثر مراجعات" },
   { value: "az", label: "أبجدي (أ-ي)" },
+];
+
+// Review-analysis facets (degself enrichment). Counts come straight from the
+// generated filter_options.json so the UI stays in sync with the data.
+const TRUST_OPTS = filterOptions.trust_signals; // {value,label,count,icon}
+const POSITIVE_OPTS = filterOptions.positive_filters.slice(0, 8); // top 8 — keep UI light
+const NEGATIVE_OPTS = filterOptions.negative_filters.slice(0, 6); // {tag,count}
+const SCORE_OPTS = [
+  { value: "", label: "الكل" },
+  { value: "85", label: "ممتاز (85+)" },
+  { value: "70", label: "جيد جداً (70+)" },
+  { value: "55", label: "مقبول (55+)" },
 ];
 
 interface SearchFiltersProps {
@@ -97,6 +110,37 @@ export function SearchFilters({
     [router, pathname, searchParams]
   );
 
+  // Comma-separated multi-select facets (trust / positive / negative).
+  const csv = (key: string) =>
+    (searchParams.get(key) ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const isOn = (key: string, value: string) => csv(key).includes(value);
+  const toggleMulti = useCallback(
+    (key: string, value: string) => {
+      const cur = (searchParams.get(key) ?? "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const next = cur.includes(value)
+        ? cur.filter((v) => v !== value)
+        : [...cur, value];
+      const params = new URLSearchParams(searchParams.toString());
+      if (next.length) params.set(key, next.join(","));
+      else params.delete(key);
+      params.delete("page");
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [router, pathname, searchParams]
+  );
+
+  // review-analysis filter panel — collapsed on mobile, always open on desktop
+  const [insightsOpen, setInsightsOpen] = useState(false);
+  const scoreValue = searchParams.get("score") ?? "";
+  const insightsCount =
+    csv("trust").length +
+    csv("pos").length +
+    csv("neg").length +
+    (scoreValue ? 1 : 0);
+
   // debounce the text query (300ms)
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -131,7 +175,11 @@ export function SearchFilters({
     !!searchParams.get("min_rating") ||
     !!searchParams.get("sort") ||
     !!searchParams.get("lat") ||
-    !!searchParams.get("open_now");
+    !!searchParams.get("open_now") ||
+    !!searchParams.get("trust") ||
+    !!searchParams.get("pos") ||
+    !!searchParams.get("neg") ||
+    !!searchParams.get("score");
 
   function clearAll() {
     setQuery("");
@@ -323,6 +371,137 @@ export function SearchFilters({
             مسح الفلاتر
           </button>
         )}
+      </div>
+
+      {/* ── Review-analysis facets (degself enrichment) ── */}
+      <div className="rounded-2xl border border-border bg-card/40">
+        {/* mobile toggle — keeps these off-screen until tapped */}
+        <button
+          type="button"
+          onClick={() => setInsightsOpen((o) => !o)}
+          className="flex w-full items-center justify-between px-4 py-3 text-sm font-bold sm:hidden"
+          aria-expanded={insightsOpen}
+        >
+          <span>
+            فلاتر التقييم{insightsCount > 0 ? ` (${insightsCount})` : ""}
+          </span>
+          <span aria-hidden>{insightsOpen ? "▲" : "▼"}</span>
+        </button>
+
+        <div
+          className={`${insightsOpen ? "block" : "hidden"} flex-col gap-4 p-4 pt-0 sm:flex sm:pt-4`}
+        >
+          {/* trust level */}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-1 text-xs font-bold text-muted-foreground">
+              مستوى الثقة
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {TRUST_OPTS.map((t) => {
+                const on = isOn("trust", t.value);
+                return (
+                  <button
+                    key={t.value}
+                    type="button"
+                    onClick={() => toggleMulti("trust", t.value)}
+                    className={
+                      "rounded-full border px-3 py-1.5 text-sm font-semibold transition " +
+                      (on
+                        ? "border-primary bg-primary/15 text-primary"
+                        : "border-border text-foreground hover:bg-muted")
+                    }
+                  >
+                    <span aria-hidden>{t.icon}</span> {t.label}{" "}
+                    <span className="text-muted-foreground">({t.count})</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          {/* what sets a garage apart */}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-1 text-xs font-bold text-muted-foreground">
+              ما يميّز الكراج
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {POSITIVE_OPTS.map((p) => {
+                const on = isOn("pos", p.tag);
+                return (
+                  <button
+                    key={p.tag}
+                    type="button"
+                    onClick={() => toggleMulti("pos", p.tag)}
+                    className={
+                      "rounded-full border px-3 py-1.5 text-sm transition " +
+                      (on
+                        ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-200"
+                        : "border-border text-foreground hover:bg-muted")
+                    }
+                  >
+                    {p.tag}{" "}
+                    <span className="text-muted-foreground">({p.count})</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          {/* things to avoid */}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-1 text-xs font-bold text-muted-foreground">
+              تجنّب الكراجات التي فيها…
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {NEGATIVE_OPTS.map((n) => {
+                const on = isOn("neg", n.tag);
+                return (
+                  <button
+                    key={n.tag}
+                    type="button"
+                    onClick={() => toggleMulti("neg", n.tag)}
+                    className={
+                      "rounded-full border px-3 py-1.5 text-sm transition " +
+                      (on
+                        ? "border-orange-500/50 bg-orange-500/15 text-orange-200"
+                        : "border-border text-foreground hover:bg-muted")
+                    }
+                  >
+                    {n.tag}{" "}
+                    <span className="text-muted-foreground">({n.count})</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          {/* score range — single select */}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-1 text-xs font-bold text-muted-foreground">
+              نطاق التقييم
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {SCORE_OPTS.map((s) => {
+                const on = scoreValue === s.value;
+                return (
+                  <button
+                    key={s.value || "all"}
+                    type="button"
+                    onClick={() => updateParam("score", s.value)}
+                    className={
+                      "rounded-full border px-3 py-1.5 text-sm font-semibold transition " +
+                      (on
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border text-foreground hover:bg-muted")
+                    }
+                  >
+                    {s.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
   );
