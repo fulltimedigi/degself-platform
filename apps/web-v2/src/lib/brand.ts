@@ -117,4 +117,5 @@ export const KUWAIT_CENTER: [number, number] = [29.3759, 47.9774];
 export const SOCIAL_SAME_AS = [
   "https://www.instagram.com/degselfkw",
   "https://x.com/degself",
+  "https://www.snapchat.com/add/degself",
 ] as const;
