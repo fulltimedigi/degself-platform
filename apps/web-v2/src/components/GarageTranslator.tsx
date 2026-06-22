@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { track } from "@/lib/track";
 import { StarRating } from "@/components/StarRating";
+import { MicButton } from "@/components/MicButton";
 import { MAX_INPUT_CHARS, categoryToSpecialty, type TranslateResponse } from "@/lib/garageTranslator";
 
 const PLACEHOLDER = "اكتب مشكلة سيارتك… مثلاً: المكيف ما يبرّد بالنهار";
@@ -27,14 +28,21 @@ const CATEGORY_PRICE_RANGE: Record<string, { low: number; high: number; note?: s
 
 export function GarageTranslator() {
   const [input, setInput] = useState("");
+  const [interim, setInterim] = useState(""); // live voice transcript (before final)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TranslateResponse | null>(null);
   const [copied, setCopied] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const text = input.trim();
+    runTranslate(input);
+  }
+
+  // Shared by the form submit and the mic (which passes its final transcript
+  // directly, since setInput state isn't applied yet when it fires).
+  async function runTranslate(raw: string) {
+    const text = raw.trim();
     if (!text || loading) return;
 
     setLoading(true);
@@ -93,14 +101,33 @@ export function GarageTranslator() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_CHARS))}
-          placeholder={PLACEHOLDER}
-          rows={3}
-          maxLength={MAX_INPUT_CHARS}
-          className="w-full resize-none rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-        />
+        <div className="flex items-start gap-3">
+          <div className="relative flex-1">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_CHARS))}
+              placeholder={PLACEHOLDER}
+              rows={3}
+              maxLength={MAX_INPUT_CHARS}
+              className="w-full resize-none rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+            />
+            {interim && (
+              <p className="mt-1 px-1 text-sm italic text-muted-foreground">{interim}</p>
+            )}
+          </div>
+          <MicButton
+            className="mt-1"
+            onResult={(text) => {
+              setInput(text);
+              setInterim("");
+              runTranslate(text);
+            }}
+            onInterim={setInterim}
+          />
+        </div>
+        <p className="text-center text-xs text-muted-foreground">
+          اضغط المايك واشرح المشكلة بصوتك، أو اكتب بيدك
+        </p>
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-muted-foreground">
             {input.length}/{MAX_INPUT_CHARS}
