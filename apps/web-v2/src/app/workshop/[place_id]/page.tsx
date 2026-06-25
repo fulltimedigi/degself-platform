@@ -46,11 +46,32 @@ export async function generateMetadata({
   const w = await getWorkshop(place_id);
   if (!w) return { title: "غير موجود — degself" };
   const loc = w.area ? ` · ${w.area}` : "";
+  const enrichment = getEnrichment(place_id);
+  // Prefer the curated Arabic summary when available — makes each page's
+  // <meta description> unique and information-rich (better SEO + CTR).
+  const summary = enrichment?.summary_ar?.trim();
+  const description = summary
+    ? (summary.length > 155 ? summary.slice(0, 152) + "…" : summary)
+    : `${w.specialty}${loc} — على دق سلف`;
+  const title = `${w.name} — ${w.specialty}${loc} | degself`;
   return {
-    title: `${w.name} — degself`,
-    description: `${w.specialty}${loc} — على دق سلف`,
+    title,
+    description,
     // place_id is case-sensitive — emit it verbatim, never lowercased.
     alternates: { canonical: `${SITE}/workshop/${place_id}` },
+    openGraph: {
+      title: w.name,
+      description,
+      url: `${SITE}/workshop/${place_id}`,
+      type: "website",
+      locale: "ar_KW",
+      siteName: "degself دق سلف",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: w.name,
+      description,
+    },
   };
 }
 
