@@ -12387,5 +12387,1544 @@
     "positive_tags": [],
     "negative_tags": [],
     "summary_ar": "يختص هذا الكراج بصيانة سيارات إم جي في الكويت، إلا أن مراجعات العملاء تشير إلى تدني جودة الخدمة المقدمة. يلاحظ وجود استياء من مستوى التعامل الفني وارتفاع تكاليف قطع الغيار."
+  },
+  {
+    "place_id": "degself-mech-hamdy-shuwaikh-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بتشخيص دقيق لأعطال المحرك مع الحرص على تقديم أسعار عادلة، ويحظى بتقييمات إيجابية من العملاء تُبرز احترافيته وأمانته.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-automax-shuwaikh-general",
+    "smart_score": 75.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [],
+    "negative_tags": [],
+    "summary_ar": "جودة العمل مرتفعة وفق تقييمات متعددة، غير أن مدة التسليم تكون في الغالب أطول من المعتاد وقد تستلزم ترك السيارة لأيام.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-concord-shuwaikh-general",
+    "smart_score": 70.0,
+    "confidence": "medium",
+    "trust_signal": "low",
+    "positive_tags": [],
+    "negative_tags": [],
+    "summary_ar": "مرشَّح من بعض العملاء دون توثيق تجربة مباشرة في المصدر.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-fanjari-shuwaikh-mercedes",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "خبرة عميقة في صيانة سيارات مرسيدس القديمة بأسعار معقولة، وقد أُشيد به من قِبَل عملاء جرّبوا خيارات متعددة قبله.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-nour-alsham-shuwaikh-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يحظى بتوصيات العملاء دون تفاصيل إضافية في المصدر.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-magdy-rifai-shuwaikh-german",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بجودة عمل عالية واحترافية ملحوظة وفق تجارب متكررة للعملاء، مع ارتفاع مستوى الطلب لديه.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-obaida-shuwaikh-german",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في السيارات الألمانية، يُشاد بكفاءته ووضوحه في تشخيص الأعطال وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-fadi-bronze-shuwaikh-german",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُوصَف بالاحترافية في صيانة السيارات الألمانية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-qallaf-shuwaikh-dodge",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص حصري في صيانة سيارات دودج، يُصنَّف ضمن الأفضل في هذا التخصص وفق آراء العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-yahya-rifai-shuwaikh-nissan",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُعدّ مرجعاً متخصصاً في صيانة سيارات نيسان، ويُنصح بالتعامل مع يحيى شخصياً وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ahmed-shuwaikh-infiniti",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في سيارات إنفينيتي مع خلفية عمل سابقة في الوكالة الرسمية، يُشاد بقدرته على حل المشكلات المعقدة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-sajish-shuwaikh-american",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في صيانة سيارات دودج وكرايزلر الأمريكية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-alomam-armenian-shuwaikh-audi",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "كراج أرمني متخصص في صيانة سيارات أودي والسيارات الألمانية، يحظى بتقدير العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-paul-armenian-shuwaikh-audi",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص أرمني في صيانة سيارات أودي، يتميز بجودة العمل وأسعار معقولة وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mohammed-aref-shuwaikh-honda",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتمتع بمستوى عمل دقيق في صيانة سيارات هوندا مع التزام مهني واضح وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-okaycar-mansour-shuwaikh-honda",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في هوندا مع توافر قطع غيار مستوردة من اليابان، يتمتع بقاعدة عملاء وفية تمتد لسنوات طويلة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-ahmed-egyptian-shuwaikh-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في صيانة السيارات اليابانية والأمريكية، يتميز بمستوى عمل مرتفع وأمانة مهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-mohammed-shuwaikh-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُوصَف بالكفاءة المهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-radwan-bakhira-shuwaikh-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يحظى بتوصية مباشرة من العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-alam-shuwaikh-american",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "خبير في صيانة السيارات الأمريكية بمستوى تقني عالٍ وفق تقييمات العملاء، مع أسعار أعلى من المتوسط.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-radwan-imran-shuwaikh-german",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُصنَّف ضمن أبرز المتخصصين في صيانة سيارات فولكس فاغن وفق آراء العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-malik-shuwaikh-german",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالأمانة وأسعار معقولة في صيانة السيارات الألمانية وفق تجربة مباشرة للعملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mustashar-shahid-shuwaikh-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بالأمانة والكفاءة المهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-aslam-shuwaikh-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُوصَى به بشكل مباشر من العملاء دون تفاصيل إضافية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-amr-sharq-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالكفاءة المهنية وأسعار منافسة، يُفضّل عليه كثير من العملاء اعتماداً على تجارب متكررة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-fayyadh-sharq-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتمتع بسمعة راسخة في الأمانة والكفاءة، مع علاقة ثقة طويلة مع عملائه.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-yousuf-rai-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص ذو خبرة مهنية وأسعار في متناول العملاء، يُشاد به بالأمانة والاستعداد للخدمة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-hayat-pakistani-rai-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتمتع بقاعدة عملاء متكررين على مدى سنوات مما يعكس مستوى ثقة مرتفعاً.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mahmoud-abu-abdallah-jabriya-german",
+    "smart_score": 88.2,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "خبير متمكن في السيارات الألمانية وبخاصة مرسيدس، يُعدّ مرجعاً موثوقاً وفق تقييمات متعددة تُبرز مستواه الاستثنائي.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mashariq-adnan-hawalli-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يحظى بتقييمات إيجابية تُشير إلى مستوى مهني مرتفع.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abdallah-hawalli-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتسم بالوضوح والصراحة في تشخيص الأعطال دون توسع في التفاصيل غير الضرورية وفق آراء العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-vijay-hawalli-german",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في السيارات الألمانية مع خبرة سابقة في الوكالة الرسمية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-yasser-hawalli-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بكفاءته وأمانته المهنية بوصفه بديلاً موثوقاً عن الوكالات الرسمية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-zaki-hawalli-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُوصَف بالأمانة المهنية العالية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-ahmed-hawalli-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يلتزم بعدم المبالغة في الأسعار مع الحفاظ على جودة العمل وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-ziyad-hawalli-general",
+    "smart_score": 88.2,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بدقة التشخيص وإيجاد الحلول بأقل تكلفة ممكنة في أعطال المحرك والكهرباء والهيكل، مع توافر جهاز فحص إلكتروني.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-tariq-salmiya-electrical",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في كهرباء سيارات",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في الكهرباء وكشف الأعطال وصيانة القطع الميكانيكية الكبرى، يعمل حالياً بشكل متنقل دون كراج ثابت.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-khaled-ghoneim-salmiya-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بكفاءته وأمانته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-midan-alkhayr-hawalli-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بأسعار تنافسية مقارنة بمنطقة الشويخ الصناعية مع مستوى مهني مُقدَّر وفق آراء العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-saleh-midan-hawalli-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُوصَف بالاحترافية والكفاءة المهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-badran-salmiya-german",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في السيارات الألمانية بأسعار أقل من منطقة الشويخ، يُشاد بأمانته المهنية وفق تجربة مباشرة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ahmed-farwaniya-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالدقة في التشخيص والصدق في تقديم الحلول بأسعار معقولة، خاصة في السيارات الأمريكية كالكمارو.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-rami-farwaniya-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "كراج متكامل يضم متخصصين في مختلف التخصصات بأسعار معقولة، يحظى بتقييمات إيجابية متعددة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-mohammed-farwaniya-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بأمانته المهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-salah-muallem-farwaniya-general",
+    "smart_score": 88.2,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بقدرة على إيجاد حلول اقتصادية لأعطال تُقدِّر جهات أخرى تكلفتها بمبالغ مرتفعة جداً، وفق تجارب متعددة للعملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mahmoud-farwaniya-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بكفاءته المهنية العالية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-majed-maher-farwaniya-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتمتع بعلاقة ثقة طويلة الأمد مع عملائه تمتد لأكثر من عقد ونصف، مع التزام بالأمانة وجودة العمل.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-unknown-farwaniya-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بأسعاره التنافسية وفق توصية العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ihab-khaitan-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالاحترافية والأمانة مع أسعار معقولة وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-yousuf-ahramat-khaitan-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "فني متمكن بأسعار غير مرتفعة وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-hashmat-khaitan-infiniti",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في سيارات إنفينيتي مع خبرة سابقة في الوكالة الرسمية، يُقدَّر بمستواه الفني العالي.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-bashar-khaitan-electrical",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في كهرباء سيارات",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في الكهرباء وتشخيص الأعطال، يُشاد بأمانته واحترافيته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ayman-khaitan-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بإيجاد حلول فعّالة للأعطال التي تُشخَّص خطأً من قِبَل آخرين، وبخاصة في سيارات تويوتا، بتكاليف معقولة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-hajj-rafat-jahra-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتسم بالصدق في تحديد حدود تخصصه وإحالة العملاء عند الضرورة، وهو ما يُقدِّره العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ibrahim-dhaman-fahaheel-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالكفاءة المهنية والأمانة في الأسعار وطيب التعامل وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-ibrahim-venus-abuhalifa-general",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يحظى بثقة عالية من العملاء مع توافر جهاز تشخيص إلكتروني لمعالجة الأعطال الكهربائية.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-unknown-abuhalifa-general",
+    "smart_score": 70.0,
+    "confidence": "medium",
+    "trust_signal": "low",
+    "positive_tags": [],
+    "negative_tags": [],
+    "summary_ar": "مُرشَّح للاستفسار مع احتمالية مساعدة العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mohammed-egyptian-mahboula-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُقدِّم الفحص التشخيصي مجاناً مع أسعار صيانة تنافسية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-abdulrahman-syrian-mahboula-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بأسعار معقولة والحرص على الإصلاح بدلاً من الاستبدال عند إمكانية ذلك، وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-shawkat-indian-mahboula-japanese-korean",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في السيارات اليابانية والكورية حصراً، يُشاد بأمانته واحترافيته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-murad-fahaheel-general-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتخصص في الميكانيكا العامة والهيكل للسيارات اليابانية والكورية والأمريكية، مع حرص على التوفير في التكاليف دون المساس بجودة العمل.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-sheikh-mohammed-abuhalifa-general",
+    "smart_score": 82.8,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتسم بالأمانة في تحديد ما يلزم من أعمال الصيانة دون التوسع غير الضروري وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mahanna-jleeb-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في الميكانيكا العامة دون الكهرباء، يعمل بشكل متنقل، ويُشاد بأمانته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-raman-indian-mobile-general",
+    "smart_score": 88.2,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُقدِّم خدمة الصيانة المتنقلة في موقع العميل ويحظى بتقييم استثنائي من العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-khaled-american-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في السيارات الأمريكية، يتسم بالتشخيص الدقيق والمنهجي حتى تحديد السبب الجذري للعطل وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-shehab-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد باحترافيته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-alsayed-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "فني متمكن يتسم بالكفاءة والأمانة المهنية وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-hussam-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد بكفاءته وأمانته وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-bakr-general",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُشاد به من أعضاء المجموعة بالنصح الصادق وحسن التعامل.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-lutfi-general",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "فني قادر على حل الأعطال بكفاءة عالية وفق تقييمات إيجابية من العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-khudr-altamri-gear",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في قير وفتيس",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُصنَّف من الأفضل في تخصص ناقل الحركة على مستوى الكويت مع أسعار أعلى قليلاً من المتوسط وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-rabia-shuwaikh-gear",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في قير وفتيس",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يحظى بتوصيات واسعة من العملاء ويُعدّ من الأبرز في تخصص ناقل الحركة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-unknown-filipino-american-gear",
+    "smart_score": 81.0,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في قير وفتيس",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في ناقل الحركة للسيارات الأمريكية، يُوصَف بالتميز في هذا التخصص.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mizan-yaqoub-shuwaikh-body",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتمتع بخبرة تفوق ثلاثة عقود في تخصص هيكل السيارة، مما يجعله من أبرز المتخصصين في المنطقة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-mizan-ikhwan-shuwaikh-body",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُصنَّف ضمن الأفضل في تخصص هيكل السيارة بمنطقة الشويخ وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-wael-jleeb-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بجودة العمل والاحترافية في تخصص هيكل السيارة وفق تقييمات متعددة من العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-shani-pakistani-shuwaikh-body",
+    "smart_score": 86.4,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "متخصص في هيكل السيارة لا سيما في محاور العجلات والمكونات المرتبطة بها، مع جودة عمل موثوقة وأسعار معقولة وأمانة مهنية وفق آراء متعددة.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-alamda-shuwaikh-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بأسعار تنافسية وشفافية في التقييم مقارنة بالبدائل الأخرى، وفق توصيات مباشرة من العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-samco-bilal-shuwaikh-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتسم بالأمانة في النصح وعدم التوسع في الاستبدال غير الضروري مع أسعار معقولة وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-aslam-pakistani-shuwaikh-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يُعدّ متخصصاً بارزاً في هيكل سيارات هوندا وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-burhan-shuwaikh-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتميز بالدقة في تحديد موضع العطل وإيصال التشخيص الواضح للعملاء وفق تقييماتهم.",
+    "reviews_total": null,
+    "reviews_analyzed": null
+  },
+  {
+    "place_id": "degself-mech-abu-hamza-pakistani-shuwaikh-body",
+    "smart_score": 84.6,
+    "confidence": "medium",
+    "trust_signal": "medium",
+    "positive_tags": [
+      {
+        "label": "تقييمات إيجابية",
+        "category": "quality",
+        "icon": "⭐",
+        "evidence_count": 1
+      },
+      {
+        "label": "خبرة في بودي وصبغ",
+        "category": "specialty",
+        "icon": "🔧",
+        "evidence_count": 1
+      }
+    ],
+    "negative_tags": [],
+    "summary_ar": "يتسم بالاحترافية والأمانة مع أسعار مناسبة في تخصص الهيكل وفق تقييمات العملاء.",
+    "reviews_total": null,
+    "reviews_analyzed": null
   }
 ]
