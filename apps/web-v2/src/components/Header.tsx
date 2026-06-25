@@ -7,14 +7,17 @@ import { Heart } from "lucide-react";
 import { InstallApp } from "@/components/InstallApp";
 import { BUSINESS_WA_URL } from "@/lib/constants";
 
+// Keep this list to 7 items so the desktop nav doesn't crowd at tablet widths.
+// "كراجات مختارة" (/mukhtarat) takes the slot freed by "الأسئلة الشائعة" (/faq),
+// which remains reachable from the footer and the sitemap.
 const NAV = [
   { href: "/", label: "الرئيسية" },
   { href: "/asaali", label: "اسأل دق سلف", highlight: true },
   { href: "/search", label: "البحث" },
   { href: "/best", label: "الأفضل" },
+  { href: "/mukhtarat", label: "كراجات مختارة" },
   { href: "/map", label: "الخريطة" },
   { href: "/blog", label: "المدونة" },
-  { href: "/faq", label: "الأسئلة الشائعة" },
 ];
 
 // Auth (دخول/تسجيل) is deferred (Checkpoint 5). Button kept in code but hidden
