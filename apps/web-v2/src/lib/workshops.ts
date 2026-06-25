@@ -569,3 +569,58 @@ export const getDistinctAreas = () => distinctColumn("area");
 export const getDistinctNeighborhoods = () => distinctColumn("neighborhood");
 /** Distinct audited specialties (~20 values) for the specialty <select>. */
 export const getDistinctSpecialties = () => distinctColumn("reviewed_specialty");
+
+/**
+ * Up to `limit` workshops "similar" to the current one — for internal linking on
+ * the workshop page. Tries progressively broader matches and stops once it has
+ * enough, never repeating a place (or the current one):
+ *   1. same area + same specialty   (most relevant)
+ *   2. same area
+ *   3. same specialty
+ *   4. top-rated overall            (final fallback so the section can still fill)
+ * Each pass orders by rank_score (relevance) DESC, NULLs last; excludes closed /
+ * out-of-scope rows. The caller decides whether to render (we suggest ≥3).
+ */
+export async function getSimilarWorkshops(
+  currentPlaceId: string,
+  area: string | null,
+  specialty: string | null,
+  limit = 6
+): Promise<Workshop[]> {
+  const baseQuery = () =>
+    supabasePublic
+      .from("workshops")
+      .select("*")
+      .eq("active", true)
+      .eq("permanently_closed", false)
+      .eq("is_automotive", true)
+      .eq("out_of_scope", false)
+      .neq("place_id", currentPlaceId);
+
+  const collected: Workshop[] = [];
+  const seen = new Set<string>([currentPlaceId]);
+
+  const runPass = async (
+    apply: (q: ReturnType<typeof baseQuery>) => ReturnType<typeof baseQuery>
+  ) => {
+    if (collected.length >= limit) return;
+    const { data, error } = await apply(baseQuery())
+      .order("rank_score", { ascending: false, nullsFirst: false })
+      .limit(limit * 3); // over-fetch so dedup across passes still fills the row
+    if (error) throw new Error(`getSimilarWorkshops failed: ${error.message}`);
+    for (const row of (data ?? []) as Workshop[]) {
+      if (collected.length >= limit) break;
+      if (seen.has(row.place_id)) continue;
+      seen.add(row.place_id);
+      collected.push(row);
+    }
+  };
+
+  if (area && specialty)
+    await runPass((q) => q.eq("area", area).eq("reviewed_specialty", specialty));
+  if (area) await runPass((q) => q.eq("area", area));
+  if (specialty) await runPass((q) => q.eq("reviewed_specialty", specialty));
+  await runPass((q) => q); // top-rated overall
+
+  return collected.slice(0, limit);
+}

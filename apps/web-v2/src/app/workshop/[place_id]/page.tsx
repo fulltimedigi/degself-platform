@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
-import { getWorkshop, getAllPlaceIds, getCuratedMechanicPlaceIds } from "@/lib/workshops";
+import {
+  getWorkshop,
+  getAllPlaceIds,
+  getCuratedMechanicPlaceIds,
+  getSimilarWorkshops,
+} from "@/lib/workshops";
 import type { Workshop } from "@/lib/types";
+import { SimilarWorkshops } from "@/components/SimilarWorkshops";
 import { BrandedCover } from "@/components/BrandedCover";
 import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
@@ -90,7 +96,10 @@ export default async function WorkshopPage({
   const w = await getWorkshop(place_id);
   if (!w) notFound();
 
-  const reviewSummary = await getApprovedReviews(place_id);
+  const [reviewSummary, similar] = await Promise.all([
+    getApprovedReviews(place_id),
+    getSimilarWorkshops(w.place_id, w.area, w.reviewed_specialty ?? w.specialty),
+  ]);
   const enrichment = getEnrichment(place_id);
 
   const volume = reviewVolumeLabel(w.google_reviews_count);
@@ -293,6 +302,9 @@ export default async function WorkshopPage({
           <ReviewForm placeId={w.place_id} />
         </div>
       </section>
+
+      {/* Similar garages — internal linking (same area/specialty, rank-ordered) */}
+      <SimilarWorkshops workshops={similar} />
 
       {/* Report this listing to Degself team via business WhatsApp */}
       <section className="mt-4 rounded-xl border border-border bg-card p-4">
