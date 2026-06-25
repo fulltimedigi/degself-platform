@@ -69,7 +69,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { place_id } = await params;
   const w = await getWorkshop(place_id);
-  if (!w) return { title: "غير موجود — degself" };
+  if (!w) return { title: "غير موجود — دق سلف" };
   // Prefer the degself review-analysis summary (rewritten فصحى, never a verbatim
   // Google review) for the meta description — richer, keyword-bearing snippet.
   // When a garage has no review-analysis overlay (e.g. curated mechanics without
@@ -79,8 +79,13 @@ export async function generateMetadata({
   const description = enrichment?.summary_ar
     ? truncate(enrichment.summary_ar, 160)
     : truncate(factualDescription(w), 160);
+  // Keyword-rich, brand-consistent title: name — specialty in area | دق سلف.
+  // Uses the audited specialty when present; omits the location clause when the
+  // garage has no area (e.g. mobile-only mechanics).
+  const titleSpecialty = w.reviewed_specialty ?? w.specialty;
+  const titleLoc = w.area ? ` في ${w.area}` : "";
   return {
-    title: `${w.name} — degself`,
+    title: `${w.name} — ${titleSpecialty}${titleLoc} | دق سلف`,
     description,
     // place_id is case-sensitive — emit it verbatim, never lowercased.
     alternates: { canonical: `${SITE}/workshop/${place_id}` },
