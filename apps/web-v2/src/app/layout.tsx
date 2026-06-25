@@ -17,6 +17,9 @@ const GA_ID = "G-806P73YN0Z";
 // Snapchat Pixel ID — for retargeting and lookalike audiences on Snap Ads.
 const SNAP_PIXEL_ID = "c75b6579-1cd5-40f8-ad85-cda23b0a85e6";
 
+// Microsoft Clarity — free behavior analytics (session recordings + heatmaps).
+const CLARITY_ID = "xcii9sy7bl";
+
 // LocalBusiness node (distinct @id from the homepage Organization node) —
 // drives the Google local pack / business knowledge panel for Kuwait.
 const localBusinessLd = {
@@ -229,6 +232,11 @@ gtag('config', '${GA_ID}');`}
           {`(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function(){a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};a.queue=[];var s='script';r=t.createElement(s);r.async=!0;r.src=n;var u=t.getElementsByTagName(s)[0];u.parentNode.insertBefore(r,u);})(window,document,'https://sc-static.net/scevent.min.js');
 snaptr('init', '${SNAP_PIXEL_ID}');
 snaptr('track', 'PAGE_VIEW');`}
+        </Script>
+
+        {/* Microsoft Clarity — session recordings + heatmaps */}
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "${CLARITY_ID}");`}
         </Script>
       </body>
     </html>
