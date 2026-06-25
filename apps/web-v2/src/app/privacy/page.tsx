@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: "سياسة الخصوصية | دق سلف",
@@ -10,6 +11,12 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-10" dir="rtl">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "سياسة الخصوصية", url: "https://degself.com/privacy" },
+        ]}
+      />
       <h1 className="mb-2 text-2xl font-extrabold">سياسة الخصوصية</h1>
       <p className="mb-8 text-sm text-muted-foreground">آخر تحديث: يونيو 2026</p>
 

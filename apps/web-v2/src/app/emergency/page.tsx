@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Truck, Wrench } from "lucide-react";
 import { searchWorkshops } from "@/lib/workshops";
 import { WorkshopCard } from "@/components/WorkshopCard";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,12 @@ export default async function EmergencyPage({
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-8">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "طوارئ", url: "https://degself.com/emergency" },
+        ]}
+      />
       <h1 className="text-2xl font-extrabold">طوارئ — سطحة وكراج متنقل</h1>
       <p className="mt-1 text-muted-foreground">سيارتك عطلانة؟ دي خدمات بتيجي عندك.</p>
 

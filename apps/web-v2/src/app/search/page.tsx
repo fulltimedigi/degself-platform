@@ -8,6 +8,7 @@ import {
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { SearchTracker } from "@/components/SearchTracker";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { inferSpecialtyFromQuery } from "@/lib/dialect";
 
 export const dynamic = "force-dynamic"; // results depend on the query — never cached
@@ -142,6 +143,12 @@ export default async function SearchPage({
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-8">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "البحث", url: "https://degself.com/search" },
+        ]}
+      />
       <SearchTracker query={sp.q ?? ""} />
       <h1 className="mb-4 text-2xl font-extrabold">نتائج البحث</h1>
 

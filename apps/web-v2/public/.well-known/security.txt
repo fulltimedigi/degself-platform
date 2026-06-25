@@ -1,0 +1,8 @@
+Contact: mailto:security@degself.com
+Contact: https://wa.me/96565799195
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: ar, en
+Canonical: https://degself.com/.well-known/security.txt
+Policy: https://degself.com/privacy
+# تم إعداد هذا الملف وفقاً لـ RFC 9116
+# Set up per RFC 9116 — please report security issues responsibly.

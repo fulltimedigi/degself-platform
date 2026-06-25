@@ -3,22 +3,19 @@ import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { CookieConsent } from "@/components/CookieConsent";
 import { JsonLd } from "@/components/JsonLd";
 import { SOCIAL_SAME_AS } from "@/lib/brand";
 
-// Google Analytics 4 — public Measurement ID.
-const GA_ID = "G-806P73YN0Z";
-
-// Snapchat Pixel ID — for retargeting and lookalike audiences on Snap Ads.
-const SNAP_PIXEL_ID = "c75b6579-1cd5-40f8-ad85-cda23b0a85e6";
-
-// Microsoft Clarity — free behavior analytics (session recordings + heatmaps).
-const CLARITY_ID = "xcii9sy7bl";
+// ملاحظة: Google Analytics + Microsoft Clarity + Snap Pixel انتقلوا إلى
+// <CookieConsent /> ولا يُحمَّلون إلا بعد قبول المستخدم — للامتثال لـ
+// CITRA Resolution 26/2024 (الكويت) و GDPR/ePrivacy.
 
 // LocalBusiness node (distinct @id from the homepage Organization node) —
 // drives the Google local pack / business knowledge panel for Kuwait.
@@ -211,33 +208,11 @@ export default function RootLayout({
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
         <Analytics />
+        <SpeedInsights />
         <ServiceWorkerRegister />
         <PWAInstallBanner />
         <FloatingWhatsApp />
-
-        {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`}
-        </Script>
-
-        {/* Snap Pixel */}
-        <Script id="snap-pixel" strategy="afterInteractive">
-          {`(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function(){a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};a.queue=[];var s='script';r=t.createElement(s);r.async=!0;r.src=n;var u=t.getElementsByTagName(s)[0];u.parentNode.insertBefore(r,u);})(window,document,'https://sc-static.net/scevent.min.js');
-snaptr('init', '${SNAP_PIXEL_ID}');
-snaptr('track', 'PAGE_VIEW');`}
-        </Script>
-
-        {/* Microsoft Clarity — session recordings + heatmaps */}
-        <Script id="ms-clarity" strategy="afterInteractive">
-          {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "${CLARITY_ID}");`}
-        </Script>
+        <CookieConsent />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpen, Clock, Calendar } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { articles } from "./_articles";
 import { formatArabicDate } from "@/lib/utils";
 
@@ -57,6 +58,12 @@ export default function BlogIndexPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "المدونة", url: "https://degself.com/blog" },
+        ]}
+      />
       <JsonLd data={blogLd} />
 
       <header className="flex flex-col gap-2">
