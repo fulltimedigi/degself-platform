@@ -3,9 +3,9 @@ import { AsaaliChat } from "@/components/asaali/AsaaliChat";
 
 const SITE = "https://degself.com";
 
-const TITLE = "اسأل دق سلف بالصوت — توصيل سريع لأنسب كراج | دق سلف";
+const TITLE = "اسأل دق سلف — توصيل سريع لأنسب كراج | دق سلف";
 const DESCRIPTION =
-  "اضغط على المايك واحكِ مشكلة سيارتك بكلامك العادي — ونوصّلك فوراً لأفضل كراج في الكويت مع رسالة جاهزة ترسلها له.";
+  "احكِ مشكلة سيارتك بكلامك العادي — ونوصّلك فوراً لأفضل كراج في الكويت مع رسالة جاهزة ترسلها له.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -41,10 +41,10 @@ export default function AsaaliPage() {
             توصيل سريع لأنسب كراج
           </div>
           <h1 className="mt-3 text-2xl md:text-3xl font-bold text-white">
-            احكِ مشكلة السيارة بصوتك
+            احكِ مشكلة السيارة
           </h1>
           <p className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-            اضغط على المايك واحكِ بكلامك العادي،
+احكِ بكلامك العادي،
             <br />
             وأرشّح لك كراج موثوق مع رسالة جاهزة ترسلها له.
           </p>
