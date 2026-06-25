@@ -72,47 +72,34 @@ ${vehicleLine ? `معلومات السيارة: ${vehicleLine}\n` : ""}
 }
 
 // ============================================================
-// JSON schema for Anthropic structured output
+// JSON parsing helpers — نطلب JSON عبر الـ prompt ونستخرجه robustly
+// (تخلّينا عن output_config لأنه يفرض strict schema validation
+// لا يدعم official_terms array of objects بشكل موثوق)
 // ============================================================
 
-const OUTPUT_SCHEMA = {
-  type: "object",
-  required: ["status"],
-  properties: {
-    status: {
-      type: "string",
-      enum: ["ok", "needs_more_info", "needs_vehicle_info", "out_of_scope"],
-    },
-    problem_summary: { type: "string" },
-    official_terms: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          arabic: { type: "string" },
-          english: { type: "string" },
-          transliteration: { type: "string" },
-        },
-        required: ["arabic", "english"],
-      },
-    },
-    explanation: { type: "string" },
-    warning: {
-      type: "object",
-      properties: {
-        severity: { type: "string", enum: ["safe", "caution", "urgent"] },
-        message: { type: "string" },
-        action: { type: "string" },
-      },
-    },
-    category: {
-      type: "string",
-      enum: ["بنشر", "بودي", "قير", "زيوت", "تكييف", "بطاريات", "كهرباء", "محرك", "فرامل", "none"],
-    },
-    follow_up_question: { type: "string" },
-    whatsapp_message: { type: "string" },
-  },
-};
+function extractJson(raw: string): Record<string, unknown> | null {
+  if (!raw) return null;
+  // محاولة 1: parse مباشر
+  try {
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {}
+  // محاولة 2: استخراج بين أول { وآخر }
+  const first = raw.indexOf("{");
+  const last = raw.lastIndexOf("}");
+  if (first !== -1 && last > first) {
+    try {
+      return JSON.parse(raw.slice(first, last + 1)) as Record<string, unknown>;
+    } catch {}
+  }
+  // محاولة 3: استخراج من ```json ... ```
+  const fence = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fence) {
+    try {
+      return JSON.parse(fence[1]) as Record<string, unknown>;
+    } catch {}
+  }
+  return null;
+}
 
 // ============================================================
 // helpers
@@ -238,10 +225,6 @@ export async function POST(req: NextRequest) {
         },
       ],
       messages,
-      // Anthropic structured output
-      output_config: {
-        format: { type: "json_schema", schema: OUTPUT_SCHEMA },
-      },
     });
 
     inputTokens = message.usage?.input_tokens ?? 0;
@@ -257,11 +240,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const jsonText = message.content
+    const rawText = message.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
       .map((b) => b.text)
       .join("");
-    parsed = JSON.parse(jsonText) as Record<string, unknown>;
+
+    const extracted = extractJson(rawText);
+    if (!extracted) {
+      console.error("asaali: failed to parse JSON from model output", rawText.slice(0, 500));
+      return jsonResponse(
+        { status: "out_of_scope", fallback_message: "حدث خطأ في معالجة الرد، حاولي مرة أخرى." },
+        502
+      );
+    }
+    parsed = extracted;
   } catch (err) {
     console.error("asaali: model call failed", err);
     return jsonResponse(
