@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
 import { getWorkshop, getAllPlaceIds, getCuratedMechanicPlaceIds } from "@/lib/workshops";
+import type { Workshop } from "@/lib/types";
 import { BrandedCover } from "@/components/BrandedCover";
 import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
@@ -12,6 +13,18 @@ import { JsonLd } from "@/components/JsonLd";
 import { CallButton } from "@/components/CallButton";
 
 const SITE = "https://degself.com";
+
+// Factual فصحى meta description for garages without a review-analysis overlay.
+// Uses only the garage's own data fields (specialty, brand focus, area) — never
+// review claims or invented analysis. Keeps "كراج" and avoids exclamation marks.
+function factualDescription(w: Workshop): string {
+  const focus =
+    w.specialty_hints && w.specialty_hints.length > 0
+      ? `${w.specialty} مع تخصص في ${w.specialty_hints.join("، ")}`
+      : w.specialty;
+  const where = w.area ? `في ${w.area} بالكويت` : "في الكويت";
+  return `كراج ${focus} ${where} — تعرّف على العنوان والهاتف وساعات العمل على دق سلف.`;
+}
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SaveButton } from "@/components/SaveButton";
 import { ReviewForm } from "@/components/ReviewForm";
@@ -51,14 +64,15 @@ export async function generateMetadata({
   const { place_id } = await params;
   const w = await getWorkshop(place_id);
   if (!w) return { title: "غير موجود — degself" };
-  const loc = w.area ? ` · ${w.area}` : "";
   // Prefer the degself review-analysis summary (rewritten فصحى, never a verbatim
   // Google review) for the meta description — richer, keyword-bearing snippet.
-  // Fall back to the specialty + location line when a garage has no enrichment.
+  // When a garage has no review-analysis overlay (e.g. curated mechanics without
+  // Google reviews), build a factual فصحى description from its own fields —
+  // specialty, any brand focus, and area — never inventing analysis.
   const enrichment = getEnrichment(place_id);
   const description = enrichment?.summary_ar
     ? truncate(enrichment.summary_ar, 160)
-    : `${w.specialty}${loc} — على دق سلف`;
+    : truncate(factualDescription(w), 160);
   return {
     title: `${w.name} — degself`,
     description,
