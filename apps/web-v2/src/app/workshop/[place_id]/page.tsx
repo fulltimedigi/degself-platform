@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
-import { getWorkshop, getAllPlaceIds } from "@/lib/workshops";
+import { getWorkshop, getAllPlaceIds, getCuratedMechanicPlaceIds } from "@/lib/workshops";
 import { BrandedCover } from "@/components/BrandedCover";
 import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
@@ -17,7 +17,7 @@ import { SaveButton } from "@/components/SaveButton";
 import { ReviewForm } from "@/components/ReviewForm";
 import { getApprovedReviews } from "@/lib/reviews";
 import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
-import { kuwaitWhatsAppDigits, formatArabicDate } from "@/lib/utils";
+import { kuwaitWhatsAppDigits, formatArabicDate, truncate } from "@/lib/utils";
 import { BUSINESS_WA } from "@/lib/constants";
 import { getEnrichment } from "@/lib/enrichment";
 import {
@@ -31,9 +31,15 @@ import { WorkshopViewTracker } from "@/components/WorkshopViewTracker";
 export const revalidate = 3600; // ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
 
-// Pre-render the 100 most-reviewed workshops at build time; the rest are ISR.
+// Pre-render the 100 most-reviewed workshops + every curated mechanic at build
+// time; the rest are ISR. Curated mechanics carry no review count, so they'd
+// never make the top-100 cut — add them explicitly so they ship pre-rendered.
 export async function generateStaticParams() {
-  const ids = await getAllPlaceIds(100);
+  const [topByReviews, curatedMechs] = await Promise.all([
+    getAllPlaceIds(100),
+    getCuratedMechanicPlaceIds(),
+  ]);
+  const ids = Array.from(new Set([...topByReviews, ...curatedMechs]));
   return ids.map((place_id) => ({ place_id }));
 }
 
@@ -46,9 +52,16 @@ export async function generateMetadata({
   const w = await getWorkshop(place_id);
   if (!w) return { title: "غير موجود — degself" };
   const loc = w.area ? ` · ${w.area}` : "";
+  // Prefer the degself review-analysis summary (rewritten فصحى, never a verbatim
+  // Google review) for the meta description — richer, keyword-bearing snippet.
+  // Fall back to the specialty + location line when a garage has no enrichment.
+  const enrichment = getEnrichment(place_id);
+  const description = enrichment?.summary_ar
+    ? truncate(enrichment.summary_ar, 160)
+    : `${w.specialty}${loc} — على دق سلف`;
   return {
     title: `${w.name} — degself`,
-    description: `${w.specialty}${loc} — على دق سلف`,
+    description,
     // place_id is case-sensitive — emit it verbatim, never lowercased.
     alternates: { canonical: `${SITE}/workshop/${place_id}` },
   };
