@@ -8,6 +8,12 @@ import { getEnrichment, allEnrichments, type Enrichment } from "@/lib/enrichment
 // place_ids that carry review-analysis enrichment (smart_score, tags, …).
 const ENRICHED_IDS = Object.keys(allEnrichments());
 
+// PostgREST encodes the `IN (...)` filter into the query string, so passing all
+// 538+ enriched ids at once builds a ~30KB URL that exceeds the platform's
+// request-line limit and surfaces as `TypeError: fetch failed` (same root cause
+// fixed for getEnrichedWorkshops in PR #32). Chunk the ids into safe batches.
+const PLACE_ID_BATCH = 100;
+
 export interface SearchParams {
   query?: string;
   area?: string;
@@ -192,13 +198,20 @@ export async function searchWorkshops(
 
   // ── Path A: review-analysis facets active → enriched-only, ranked by smart_score.
   // Non-enriched rows can never satisfy these facets, so restrict to ENRICHED_IDS.
+  // The id list (538+) is chunked into batches to keep the `IN (...)` URL under
+  // the platform's request-line limit; results are unioned. No SQL range cap is
+  // needed — the enriched set is naturally bounded by ENRICHED_IDS.length, and
+  // a cap would risk dropping enriched rows with NULL rank_score (e.g. the newly
+  // curated mechanics, which sort last). Final ordering is applied JS-side.
   if (enrichmentActive) {
-    const { data, error } = await buildBase(false)
-      .in("place_id", ENRICHED_IDS)
-      .order("rank_score", { ascending: false, nullsFirst: false })
-      .range(0, JS_CANDIDATE_CAP - 1);
-    if (error) throw new Error(`searchWorkshops(enriched) failed: ${error.message}`);
-    let rows = (data ?? []) as Workshop[];
+    const collected: Workshop[] = [];
+    for (let i = 0; i < ENRICHED_IDS.length; i += PLACE_ID_BATCH) {
+      const batch = ENRICHED_IDS.slice(i, i + PLACE_ID_BATCH);
+      const { data, error } = await buildBase(false).in("place_id", batch);
+      if (error) throw new Error(`searchWorkshops(enriched) failed: ${error.message}`);
+      if (data) collected.push(...(data as Workshop[]));
+    }
+    let rows = collected;
     if (open_now) rows = rows.filter((w) => isOpenNow(w.opening_hours));
     const list = sortList(
       rows.map(attach).filter((w) =>
