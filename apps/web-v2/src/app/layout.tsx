@@ -75,13 +75,11 @@ const localBusinessLd = {
   paymentAccepted: "نقد، بطاقة ائتمان، KNET",
   knowsLanguage: ["ar", "en"],
   sameAs: [...SOCIAL_SAME_AS],
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.8",
-    reviewCount: "240",
-    bestRating: "5",
-    worstRating: "1",
-  },
+  // NOTE: no aggregateRating here. A self-applied rating on the directory's own
+  // LocalBusiness node, with no on-page review mechanism for this entity, breaks
+  // Google's structured-data review-snippet policy and risks a manual action /
+  // loss of rich results. Per-workshop AutoRepair nodes carry aggregateRating
+  // only when real visitor reviews exist (see components/WorkshopJsonLd.tsx).
   potentialAction: {
     "@type": "SearchAction",
     target: {
