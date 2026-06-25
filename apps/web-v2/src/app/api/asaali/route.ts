@@ -55,7 +55,7 @@ ${vehicleLine ? `معلومات السيارة: ${vehicleLine}\n` : ""}
   "official_terms": [{"arabic": "...", "english": "...", "transliteration": "..."}],
   "explanation": "شرح بسيط للسبب المحتمل",
   "warning": {"severity": "safe"|"caution"|"urgent", "message": "...", "action": "..."},
-  "category": "بنشر|بودي|قير|زيوت|تكييف|بطاريات|كهرباء|محرك|فرامل|null",
+  "category": "بنشر|بودي|قير|زيوت|تكييف|بطاريات|كهرباء|محرك|فرامل|none",
   "follow_up_question": "السؤال التالي (لو محتاج معلومات أكثر)",
   "whatsapp_message": "رسالة جاهزة للكراج بالفصحى تشرح المشكلة بالمصطلح الصح"
 }
@@ -106,8 +106,8 @@ const OUTPUT_SCHEMA = {
       },
     },
     category: {
-      type: ["string", "null"],
-      enum: ["بنشر", "بودي", "قير", "زيوت", "تكييف", "بطاريات", "كهرباء", "محرك", "فرامل", null],
+      type: "string",
+      enum: ["بنشر", "بودي", "قير", "زيوت", "تكييف", "بطاريات", "كهرباء", "محرك", "فرامل", "none"],
     },
     follow_up_question: { type: "string" },
     whatsapp_message: { type: "string" },
@@ -284,7 +284,10 @@ export async function POST(req: NextRequest) {
 
   // ── attach workshops if we have a category ───────────────
   const categoryRaw = parsed.category;
-  const category = typeof categoryRaw === "string" ? categoryRaw : null;
+  const category =
+    typeof categoryRaw === "string" && categoryRaw !== "none"
+      ? categoryRaw
+      : null;
 
   let workshops: RecommendedWorkshop[] = [];
   if (category && parsed.status === "ok") {
