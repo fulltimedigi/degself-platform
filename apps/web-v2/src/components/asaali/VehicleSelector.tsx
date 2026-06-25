@@ -34,6 +34,9 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
   const [open, setOpen] = useState(defaultOpen);
   const [makeSearch, setMakeSearch] = useState("");
   const [modelSearch, setModelSearch] = useState("");
+  // تحكّم بإظهار الـ dropdown lists — تقفل تلقائياً عند الاختيار
+  const [makeListOpen, setMakeListOpen] = useState(false);
+  const [modelListOpen, setModelListOpen] = useState(false);
 
   const yearOptions = useMemo(() => getYearOptions(), []);
   const modelOptions = useMemo(
@@ -96,66 +99,116 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
           {/* الماركة */}
           <div>
             <label className="mb-1 block text-xs text-neutral-400">الماركة</label>
-            <input
-              type="text"
-              value={makeSearch}
-              onChange={(e) => setMakeSearch(e.target.value)}
-              placeholder="ابحثي عن الماركة"
-              className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
-            />
-            <div className="max-h-40 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
-              {filteredMakes.length === 0 ? (
-                <div className="p-3 text-xs text-neutral-500">لا توجد نتائج</div>
-              ) : (
-                filteredMakes.map((m) => (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => {
-                      onChange({ ...value, make: m.id, model: undefined });
-                      setMakeSearch("");
-                      setModelSearch("");
-                    }}
-                    className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
-                      value.make === m.id ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
-                    }`}
-                  >
-                    {m.name_ar} <span className="text-neutral-500 text-xs">({m.name_en})</span>
-                  </button>
-                ))
-              )}
-            </div>
+            {value.make && !makeListOpen ? (
+              // اختيار جاهز — صف واحد مع زرّ "تغيير"
+              <div className="flex items-center justify-between gap-2 rounded-md border border-yellow-400/40 bg-yellow-400/5 px-3 py-2">
+                <span className="text-sm text-yellow-200">
+                  {findMake(value.make)?.name_ar}
+                  <span className="text-neutral-500 text-xs ml-2">
+                    ({findMake(value.make)?.name_en})
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMakeListOpen(true);
+                    setMakeSearch("");
+                  }}
+                  className="text-xs text-neutral-400 hover:text-yellow-300"
+                >
+                  تغيير
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  value={makeSearch}
+                  onChange={(e) => setMakeSearch(e.target.value)}
+                  placeholder="ابحث عن الماركة"
+                  className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
+                  autoFocus={makeListOpen}
+                />
+                <div className="max-h-40 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
+                  {filteredMakes.length === 0 ? (
+                    <div className="p-3 text-xs text-neutral-500">لا توجد نتائج</div>
+                  ) : (
+                    filteredMakes.map((m) => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => {
+                          onChange({ ...value, make: m.id, model: undefined });
+                          setMakeSearch("");
+                          setModelSearch("");
+                          setMakeListOpen(false);
+                          setModelListOpen(false);
+                        }}
+                        className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
+                          value.make === m.id ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
+                        }`}
+                      >
+                        {m.name_ar} <span className="text-neutral-500 text-xs">({m.name_en})</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* الموديل */}
           {value.make && (
             <div>
               <label className="mb-1 block text-xs text-neutral-400">الموديل</label>
-              <input
-                type="text"
-                value={modelSearch}
-                onChange={(e) => setModelSearch(e.target.value)}
-                placeholder="ابحثي عن الموديل"
-                className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
-              />
-              <div className="max-h-32 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
-                {filteredModels.length === 0 ? (
-                  <div className="p-3 text-xs text-neutral-500">لا توجد موديلات</div>
-                ) : (
-                  filteredModels.map((m) => (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => onChange({ ...value, model: m })}
-                      className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
-                        value.model === m ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  ))
-                )}
-              </div>
+              {value.model && !modelListOpen ? (
+                <div className="flex items-center justify-between gap-2 rounded-md border border-yellow-400/40 bg-yellow-400/5 px-3 py-2">
+                  <span className="text-sm text-yellow-200">{value.model}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModelListOpen(true);
+                      setModelSearch("");
+                    }}
+                    className="text-xs text-neutral-400 hover:text-yellow-300"
+                  >
+                    تغيير
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    value={modelSearch}
+                    onChange={(e) => setModelSearch(e.target.value)}
+                    placeholder="ابحث عن الموديل"
+                    className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
+                    autoFocus={modelListOpen}
+                  />
+                  <div className="max-h-32 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
+                    {filteredModels.length === 0 ? (
+                      <div className="p-3 text-xs text-neutral-500">لا توجد موديلات</div>
+                    ) : (
+                      filteredModels.map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => {
+                            onChange({ ...value, model: m });
+                            setModelSearch("");
+                            setModelListOpen(false);
+                          }}
+                          className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
+                            value.model === m ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
+                          }`}
+                        >
+                          {m}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -211,6 +264,8 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                 onChange({});
                 setMakeSearch("");
                 setModelSearch("");
+                setMakeListOpen(false);
+                setModelListOpen(false);
               }}
               className="text-xs text-neutral-400 hover:text-yellow-300"
             >
