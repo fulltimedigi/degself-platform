@@ -50,6 +50,22 @@ export function Footer() {
           >
             بلّغنا عن كراج ناقص
           </Link>
+
+          {/* الروابط القانونية */}
+          <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+            <Link
+              href="/privacy"
+              className="text-sm text-muted-foreground hover:text-primary"
+            >
+              سياسة الخصوصية
+            </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-muted-foreground hover:text-primary"
+            >
+              شروط الاستخدام
+            </Link>
+          </div>
         </div>
 
         {/* تواصل */}

@@ -14,6 +14,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import {
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_TEL,
@@ -167,6 +168,12 @@ export default function AboutPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "عن دق سلف", url: "https://degself.com/about" },
+        ]}
+      />
       <JsonLd data={jsonLd} />
 
       {/* Hero */}

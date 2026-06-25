@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AsaaliChat } from "@/components/asaali/AsaaliChat";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 const SITE = "https://degself.com";
 
@@ -31,6 +32,12 @@ export const metadata: Metadata = {
 export default function AsaaliPage() {
   return (
     <main className="min-h-screen bg-black">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "الرئيسية", url: "https://degself.com/" },
+          { name: "اسأل دق سلف", url: "https://degself.com/asaali" },
+        ]}
+      />
       <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
         {/* Hero */}
         <header className="mb-8 text-center">

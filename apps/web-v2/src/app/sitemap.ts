@@ -37,6 +37,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE}/bansher-mutanaqil`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/asaar`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/best`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   // "Best garages" per-specialty pages — one per populated specialty.

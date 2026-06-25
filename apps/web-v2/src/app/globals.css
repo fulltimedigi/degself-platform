@@ -43,6 +43,31 @@ body {
 *:focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/*
+ * WCAG 2.2 - 2.5.8 Target Size (Minimum, AA): 24x24 CSS pixels.
+ * نستهدف 44x44 (Apple) للأزرار المستقلة.
+ * نستثني:
+ *   - .target-inline / role="link" داخل الفقرات (inline links)
+ *   - .leaflet-bar a (controls Leaflet لها أبعادها)
+ *   - select, option, input[type=radio|checkbox] (لها native sizes)
+ */
+button:not(.target-inline):not(.leaflet-bar *),
+[role="button"]:not(.target-inline),
+a[href]:not(.target-inline):not(p a):not(li a):not(.leaflet-bar a):not(.leaflet-popup-content a),
+input[type="submit"],
+input[type="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* عناصر الإدخال العادية تلتزم بـ 44px لتتوافق مع touch targets */
+input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),
+select,
+textarea {
+  min-height: 44px;
 }
 
 /* Smooth transitions baseline (ported from v1) */
