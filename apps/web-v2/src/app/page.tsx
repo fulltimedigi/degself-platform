@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getFeaturedWorkshops } from "@/lib/workshops";
+import Link from "next/link";
 import { GarageTranslator } from "@/components/GarageTranslator";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
@@ -274,6 +275,32 @@ export default async function Home() {
           <div className="w-full max-w-2xl">
             <GarageTranslator />
           </div>
+
+          {/* CTA جديد — اسأل دق سلف بالصوت */}
+          <Link
+            href="/asaali"
+            aria-label="اسأل دق سلف بالصوت"
+            className="group inline-flex w-full max-w-2xl items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/15 to-primary/5 px-5 py-3.5 text-sm font-bold shadow-md backdrop-blur transition hover:from-primary/25 hover:to-primary/10 sm:text-base"
+          >
+            <span className="flex items-center gap-3">
+              {/* أيقونة مايك */}
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow transition group-hover:scale-105">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="9" y="3" width="6" height="12" rx="3" />
+                  <path d="M5 11a7 7 0 0 0 14 0" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                  <line x1="8" y1="22" x2="16" y2="22" />
+                </svg>
+              </span>
+              <span className="flex flex-col items-start text-right">
+                <span className="text-foreground">جديد — اسأل دق سلف بالصوت</span>
+                <span className="text-xs font-normal text-muted-foreground">اضغط واشرح مشكلة السيارة — واحصل على المصطلح والكراج المناسب</span>
+              </span>
+            </span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary transition group-hover:-translate-x-1" aria-hidden>
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </Link>
 
           {/* بحث نصي مباشر — ظاهر دايماً */}
           <div className="flex w-full max-w-2xl flex-col gap-2">

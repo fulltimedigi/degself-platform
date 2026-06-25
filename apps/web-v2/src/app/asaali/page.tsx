@@ -3,9 +3,9 @@ import { AsaaliChat } from "@/components/asaali/AsaaliChat";
 
 const SITE = "https://degself.com";
 
-const TITLE = "اسألي — مترجم مشاكل السيارة | دق سلف";
+const TITLE = "اسأل دق سلف — مترجم مشاكل السيارة بالصوت | دق سلف";
 const DESCRIPTION =
-  "اشرحي مشكلة سيارتك بلهجتك، واحصلي على المصطلح الرسمي + الكراج المناسب + رسالة جاهزة للكراج. خدمة من دق سلف للنساء في الكويت.";
+  "اشرح مشكلة سيارتك بالصوت أو الكتابة، واحصل على المصطلح الرسمي + الكراج المناسب + رسالة جاهزة للكراج. خدمة من دق سلف لأصحاب السيارات في الكويت.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,15 +38,15 @@ export default function AsaaliPage() {
             className="inline-block rounded-full px-3 py-1 text-xs font-semibold"
             style={{ background: "#FFD60A", color: "#0A0A0A" }}
           >
-            مترجم دق سلف
+            مترجم دق سلف — بالصوت
           </div>
           <h1 className="mt-3 text-2xl md:text-3xl font-bold text-white">
-            اسألي عن سيارتك بكل ثقة
+            اسأل دق سلف عن سيارتك
           </h1>
           <p className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-            اشرحي المشكلة بلهجتك، وأنا أعطيك المصطلح الصحيح،
+            اضغط على المايك واشرح المشكلة بلهجتك، وأجد لك
             <br />
-            وأرشّحلك كراج موثوق، وأجهّز رسالة جاهزة ترسليها له.
+            المصطلح الصحيح، وأرشّح لك كراج موثوق، وأجهّز رسالة جاهزة ترسلها له.
           </p>
         </header>
 
@@ -57,6 +57,9 @@ export default function AsaaliPage() {
         <footer className="mt-10 text-center text-xs text-neutral-600">
           <p>
             هذه الخدمة استرشادية فقط. لا تغني عن فحص ميكانيكي معتمد.
+          </p>
+          <p className="mt-2 text-neutral-500">
+            تلميح: التسجيل الصوتي يعمل على Chrome و Safari في الجوّال والكمبيوتر.
           </p>
         </footer>
       </div>

@@ -9,6 +9,7 @@ import { BUSINESS_WA_URL } from "@/lib/constants";
 
 const NAV = [
   { href: "/", label: "الرئيسية" },
+  { href: "/asaali", label: "اسأل دق سلف", highlight: true },
   { href: "/search", label: "البحث" },
   { href: "/best", label: "الأفضل" },
   { href: "/map", label: "الخريطة" },
@@ -74,15 +75,31 @@ export function Header() {
 
         {/* Center nav (desktop) */}
         <nav className="hidden items-center gap-6 md:flex">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="text-sm font-semibold text-foreground/80 transition hover:text-primary"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {NAV.map((n) =>
+            n.highlight ? (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1 text-sm font-bold text-primary transition hover:bg-primary/20"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="9" y="3" width="6" height="12" rx="3" />
+                  <path d="M5 11a7 7 0 0 0 14 0" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                  <line x1="8" y1="22" x2="16" y2="22" />
+                </svg>
+                {n.label}
+              </Link>
+            ) : (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="text-sm font-semibold text-foreground/80 transition hover:text-primary"
+              >
+                {n.label}
+              </Link>
+            )
+          )}
         </nav>
 
         {/* Login button (RTL end = left) — hidden until auth ships (SHOW_AUTH) */}
@@ -151,16 +168,33 @@ export function Header() {
       {/* Mobile menu */}
       {open && (
         <nav className="flex flex-col gap-1 border-t border-border px-6 py-3 md:hidden">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="rounded-lg px-2 py-2 text-sm font-semibold text-foreground/80 hover:bg-muted"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {NAV.map((n) =>
+            n.highlight ? (
+              <Link
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-bold text-primary hover:bg-primary/20"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="9" y="3" width="6" height="12" rx="3" />
+                  <path d="M5 11a7 7 0 0 0 14 0" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                  <line x1="8" y1="22" x2="16" y2="22" />
+                </svg>
+                {n.label}
+              </Link>
+            ) : (
+              <Link
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-2 py-2 text-sm font-semibold text-foreground/80 hover:bg-muted"
+              >
+                {n.label}
+              </Link>
+            )
+          )}
 
           {/* WhatsApp business CTA (mobile menu) */}
           <a
