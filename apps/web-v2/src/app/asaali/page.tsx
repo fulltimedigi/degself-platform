@@ -3,9 +3,9 @@ import { AsaaliChat } from "@/components/asaali/AsaaliChat";
 
 const SITE = "https://degself.com";
 
-const TITLE = "اسأل دق سلف — مترجم مشاكل السيارة بالصوت | دق سلف";
+const TITLE = "اسأل دق سلف بالصوت — توصيل سريع لأنسب كراج | دق سلف";
 const DESCRIPTION =
-  "اشرح مشكلة سيارتك بالصوت أو الكتابة، واحصل على المصطلح الرسمي + الكراج المناسب + رسالة جاهزة للكراج. خدمة من دق سلف لأصحاب السيارات في الكويت.";
+  "اضغط على المايك واحكِ مشكلة سيارتك بكلامك العادي — ونوصّلك فوراً لأفضل كراج في الكويت مع رسالة جاهزة ترسلها له.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,15 +38,15 @@ export default function AsaaliPage() {
             className="inline-block rounded-full px-3 py-1 text-xs font-semibold"
             style={{ background: "#FFD60A", color: "#0A0A0A" }}
           >
-            مترجم دق سلف — بالصوت
+            توصيل سريع لأنسب كراج
           </div>
           <h1 className="mt-3 text-2xl md:text-3xl font-bold text-white">
-            اسأل دق سلف عن سيارتك
+            احكِ مشكلة السيارة بصوتك
           </h1>
           <p className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-            اضغط على المايك واشرح المشكلة بلهجتك، وأجد لك
+            اضغط على المايك واحكِ بكلامك العادي،
             <br />
-            المصطلح الصحيح، وأرشّح لك كراج موثوق، وأجهّز رسالة جاهزة ترسلها له.
+            وأرشّح لك كراج موثوق مع رسالة جاهزة ترسلها له.
           </p>
         </header>
 

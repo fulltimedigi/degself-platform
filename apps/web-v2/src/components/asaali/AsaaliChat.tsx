@@ -328,23 +328,6 @@ export function AsaaliChat() {
             </div>
           )}
 
-          {/* المصطلحات الرسمية */}
-          {response.official_terms && response.official_terms.length > 0 && (
-            <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-              <div className="mb-2 text-xs text-neutral-400">المصطلح الصحيح</div>
-              <div className="space-y-2">
-                {response.official_terms.map((t, i) => (
-                  <div key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="text-base font-semibold text-yellow-300">{t.arabic}</span>
-                    <span className="text-sm text-neutral-500" dir="ltr">
-                      {t.english}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* الشرح */}
           {response.explanation && (
             <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
@@ -390,6 +373,25 @@ export function AsaaliChat() {
                 </Link>
               </div>
             </div>
+          )}
+
+          {/* المصطلح الرسمي — معلومة جانبية مطوية */}
+          {response.official_terms && response.official_terms.length > 0 && (
+            <details className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
+              <summary className="cursor-pointer text-xs text-neutral-500 hover:text-neutral-300">
+                الاسم الفني (اختياري)
+              </summary>
+              <div className="mt-3 space-y-2">
+                {response.official_terms.map((t, i) => (
+                  <div key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="text-sm font-medium text-neutral-200">{t.arabic}</span>
+                    <span className="text-xs text-neutral-500" dir="ltr">
+                      {t.english}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </details>
           )}
 
           {/* رسالة واتساب جاهزة */}
