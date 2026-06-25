@@ -63,7 +63,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
     if (m) parts.push(m.name_ar);
     if (value.model) parts.push(value.model);
     if (value.year) parts.push(String(value.year));
-    if (parts.length === 0) return "اختاري سيارتك (اختياري)";
+    if (parts.length === 0) return "اختر السيارة (اختياري)";
     return parts.join(" · ");
   }
 
@@ -173,7 +173,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                 }
                 className="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
               >
-                <option value="">— اختاري —</option>
+                <option value="">— اختر —</option>
                 {yearOptions.map((y) => (
                   <option key={y} value={y}>
                     {y}
@@ -194,7 +194,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                 }
                 className="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
               >
-                <option value="">— اختاري —</option>
+                <option value="">— اختر —</option>
                 {TRANSMISSION_OPTIONS.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.name_ar}

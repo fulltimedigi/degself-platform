@@ -1,20 +1,21 @@
 "use client";
 
 /**
- * AsaaliChat — الواجهة الرئيسية لميزة /asaali
+ * AsaaliChat — الواجهة الرئيسية لميزة /asaali ("اسأل دق سلف")
  *
  * الأدوار:
  *   1. يعرض VehicleSelector (يفتح تلقائياً لو رجع status='needs_vehicle_info')
- *   2. يستقبل نص (مكتوب الآن — الـ mic سيُضاف لاحقاً)
+ *   2. يستقبل نص مكتوب أو مسجّل صوتياً (Web Speech API)
  *   3. يستدعي POST /api/asaali
  *   4. يعرض الرد منظّماً: ملخص + مصطلحات + تحذير + كراجات + رسالة واتساب
  *
  * حالة:
  *   - vehicle: useState (لا localStorage، لا Supabase) — قرار المستخدم
  *   - history: آخر 6 turns تُرسل للـ API لدعم المتابعة
+ *   - listening: حالة تسجيل الصوت
  */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { track } from "@/lib/track";
 import { VehicleSelector } from "./VehicleSelector";
@@ -23,8 +24,24 @@ import type {
   AsaaliResponse,
 } from "@/lib/asaali-schema";
 
-const PLACEHOLDER = "اكتبي مشكلة سيارتك، مثلاً: السيارة تخرج دخان أبيض";
+const PLACEHOLDER = "اكتب مشكلة السيارة أو اضغط على المايك للتسجيل — مثال: السيارة تخرج دخان أبيض";
 const MAX_INPUT = 800;
+
+// تعريفات لـ Web Speech API (غير موجودة في TypeScript lib بشكل موحد)
+// نستخدم unknown + casting داخلياً لتجنّب اختلافات المتصفّحات
+type SpeechRecognitionEventLike = {
+  results: ArrayLike<ArrayLike<{ transcript: string }>>;
+};
+type SpeechRecognitionLike = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((e: SpeechRecognitionEventLike) => void) | null;
+  onend: (() => void) | null;
+  onerror: ((e: { error?: string }) => void) | null;
+  start: () => void;
+  stop: () => void;
+};
 
 interface HistoryItem {
   role: "user" | "assistant";
@@ -40,6 +57,78 @@ export function AsaaliChat() {
   const [response, setResponse] = useState<AsaaliResponse | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
+
+  // تسجيل الصوت (Web Speech API)
+  const [listening, setListening] = useState(false);
+  const [micSupported, setMicSupported] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+
+  useEffect(() => {
+    // اكتشاف دعم المتصفّح لـ SpeechRecognition
+    if (typeof window === "undefined") return;
+    const W = window as unknown as {
+      SpeechRecognition?: new () => SpeechRecognitionLike;
+      webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+    };
+    const Ctor = W.SpeechRecognition ?? W.webkitSpeechRecognition;
+    if (Ctor) setMicSupported(true);
+  }, []);
+
+  function startListening() {
+    if (typeof window === "undefined") return;
+    const W = window as unknown as {
+      SpeechRecognition?: new () => SpeechRecognitionLike;
+      webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+    };
+    const Ctor = W.SpeechRecognition ?? W.webkitSpeechRecognition;
+    if (!Ctor) {
+      setError("المتصفّح لا يدعم التسجيل الصوتي. جرّب Chrome أو Safari.");
+      return;
+    }
+    try {
+      const rec = new Ctor();
+      rec.lang = "ar-KW"; // العربية الكويتية
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.onresult = (e: SpeechRecognitionEventLike) => {
+        const transcript =
+          e.results?.[0]?.[0]?.transcript ?? "";
+        if (transcript) {
+          setInput((prev) =>
+            prev.trim() ? `${prev.trim()} ${transcript}` : transcript
+          );
+        }
+      };
+      rec.onend = () => setListening(false);
+      rec.onerror = (e) => {
+        setListening(false);
+        const code = e?.error ?? "";
+        if (code === "not-allowed" || code === "service-not-allowed") {
+          setError("تمّ رفض الإذن للمايكروفون. فعّل الإذن من إعدادات المتصفّح.");
+        } else if (code === "no-speech") {
+          setError("لم يتم التقاط أي صوت. حاول مرّة أخرى.");
+        } else if (code) {
+          setError("تعذّر التسجيل الصوتي. حاول مرّة أخرى.");
+        }
+      };
+      recognitionRef.current = rec;
+      setError(null);
+      setListening(true);
+      rec.start();
+    } catch {
+      setListening(false);
+      setError("تعذّر التسجيل الصوتي.");
+    }
+  }
+
+  function stopListening() {
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      /* تجاهل */
+    }
+    setListening(false);
+  }
 
   async function submit(textOverride?: string) {
     const text = (textOverride ?? input).trim();
@@ -83,7 +172,7 @@ export function AsaaliChat() {
         source: data.source ?? "llm",
       });
     } catch {
-      setError("تعذّر الاتصال، تأكدي من الإنترنت وحاولي مرة أخرى.");
+      setError("تعذّر الاتصال. تأكّد من الإنترنت وحاول مرّة أخرى.");
     } finally {
       setLoading(false);
     }
@@ -129,15 +218,46 @@ export function AsaaliChat() {
         }}
         className="space-y-3"
       >
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={PLACEHOLDER}
-          rows={4}
-          maxLength={MAX_INPUT}
-          className="w-full rounded-xl bg-neutral-900 border border-neutral-800 px-4 py-3 text-base text-neutral-100 placeholder-neutral-500 outline-none focus:border-yellow-400"
-          disabled={loading}
-        />
+        <div className="relative">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={PLACEHOLDER}
+            rows={4}
+            maxLength={MAX_INPUT}
+            className="w-full rounded-xl bg-neutral-900 border border-neutral-800 px-4 py-3 pl-14 text-base text-neutral-100 placeholder-neutral-500 outline-none focus:border-yellow-400"
+            disabled={loading}
+          />
+          {micSupported && (
+            <button
+              type="button"
+              onClick={listening ? stopListening : startListening}
+              disabled={loading}
+              aria-label={listening ? "إيقاف التسجيل" : "تسجيل صوتي"}
+              title={listening ? "إيقاف التسجيل" : "اضغط للتسجيل الصوتي"}
+              className={`absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full transition ${
+                listening
+                  ? "animate-pulse bg-red-500 text-white shadow-lg shadow-red-500/40"
+                  : "bg-yellow-400 text-black hover:bg-yellow-300"
+              }`}
+              style={listening ? undefined : { background: "#FFD60A" }}
+            >
+              {/* أيقونة مايك */}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="9" y="3" width="6" height="12" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0" />
+                <line x1="12" y1="18" x2="12" y2="22" />
+                <line x1="8" y1="22" x2="16" y2="22" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {listening && (
+          <div className="flex items-center justify-center gap-2 text-xs text-red-400">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" aria-hidden />
+            جارٍ الاستماع… تكلّم الآن
+          </div>
+        )}
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-neutral-500">
             {input.length}/{MAX_INPUT}
@@ -158,7 +278,7 @@ export function AsaaliChat() {
               className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-300 disabled:opacity-50"
               style={{ background: "#FFD60A" }}
             >
-              {loading ? "جاري التشخيص..." : "اسألي"}
+              {loading ? "جارٍ التشخيص…" : "اسأل دق سلف"}
             </button>
           </div>
         </div>
@@ -255,7 +375,7 @@ export function AsaaliChat() {
                         className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-semibold text-black"
                         style={{ background: "#FFD60A" }}
                       >
-                        اتصلي
+                        اتصل
                       </a>
                     )}
                   </div>

@@ -41,9 +41,9 @@ const MAX_HISTORY_TURNS = 6;
 // ============================================================
 
 function buildSystemPrompt(vehicleLine: string): string {
-  return `أنت مساعد ذكي اسمه "اسألي" في منصة "دق سلف" لإصلاح السيارات في الكويت.
+  return `أنت مساعد ذكي اسمه "اسأل دق سلف" في منصة "دق سلف" لإصلاح السيارات في الكويت.
 
-دورك: تساعد المرأة (نورة) اللي عندها مشكلة في سيارتها وتخاف تروح للكراج لأنها مش متأكدة من المصطلح. تشرحلها المشكلة بالفصحى المبسطة، تعطيها المصطلح الرسمي، وترشّحلها كراج موثوق.
+دورك: تساعد الزبون (رجل أو امرأة) اللي عنده مشكلة في سيارته ومحتاج يفهم المصطلح الصحيح قبل يروح للكراج. تشرح المشكلة بالفصحى المبسطة، تعطي المصطلح الرسمي، وترشّح كراج موثوق.
 
 ${vehicleLine ? `معلومات السيارة: ${vehicleLine}\n` : ""}
 
@@ -57,7 +57,7 @@ ${vehicleLine ? `معلومات السيارة: ${vehicleLine}\n` : ""}
   "warning": {"severity": "safe"|"caution"|"urgent", "message": "...", "action": "..."},
   "category": "بنشر|بودي|قير|زيوت|تكييف|بطاريات|كهرباء|محرك|فرامل|none",
   "follow_up_question": "السؤال التالي (لو محتاج معلومات أكثر)",
-  "whatsapp_message": "رسالة جاهزة للكراج بالفصحى تشرح المشكلة بالمصطلح الصح"
+  "whatsapp_message": "رسالة جاهزة للكراج بالفصحى تشرح المشكلة بالمصطلح الصحيح"
 }
 
 قواعد صارمة:
@@ -65,10 +65,11 @@ ${vehicleLine ? `معلومات السيارة: ${vehicleLine}\n` : ""}
 - لو السؤال مش عن السيارات، status='out_of_scope'.
 - لو محتاج توضيح بسيط، status='needs_more_info'.
 - لو فيه خطر (مثل: فرامل لا تستجيب)، severity='urgent' و action واضح.
+- خاطب الزبون بصيغة محايدة (ثاني مفرد مثل: "افحص، توجّه"). لا تستخدم صيغة أنثى (مثل: "افحصي، توجّهي").
 - لا تستخدم علامات تعجب.
 - لا تستخدم emoji.
 - استخدم "كراج" مش "ورشة".
-- كل النصوص بالفصحى المبسطة.`;
+- كل النصوص بالفصحى المبسطة، ماعدا اسم البراند "دق سلف".`;
 }
 
 // ============================================================
@@ -144,7 +145,7 @@ export async function POST(req: NextRequest) {
   const text = (body.text ?? "").trim();
   if (!text) {
     return jsonResponse(
-      { status: "out_of_scope", fallback_message: "اكتب مشكلة سيارتك أولاً." },
+      { status: "out_of_scope", fallback_message: "اكتب مشكلة السيارة أولاً." },
       400
     );
   }
@@ -172,14 +173,14 @@ export async function POST(req: NextRequest) {
     return jsonResponse({
       status: "budget_exceeded",
       fallback_message:
-        "وصلنا الحد اليومي للخدمة، جرّبي بعد ساعات. تقدرين تتصلين بأي كراج مباشرة من صفحة الكراجات.",
+        "وصلنا الحد اليومي للخدمة. جرّب بعد ساعات. يمكنك الاتصال بأي كراج مباشرة من صفحة الكراجات.",
     });
   }
 
   if (!pre.allow && pre.reason === "rate_limited") {
     return jsonResponse({
       status: "rate_limited",
-      fallback_message: "طلبات كثيرة في وقت قصير، جرّبي بعد ساعة.",
+      fallback_message: "طلبات كثيرة في وقت قصير. حاول بعد ساعة.",
       retry_after_seconds: pre.retryAfterSeconds ?? 3600,
     });
   }
@@ -234,7 +235,7 @@ export async function POST(req: NextRequest) {
       return jsonResponse(
         {
           status: "out_of_scope",
-          fallback_message: "تعذّر معالجة الطلب.",
+          fallback_message: "تعذّرت معالجة الطلب. حاول مرّة أخرى.",
         },
         422
       );
@@ -249,7 +250,7 @@ export async function POST(req: NextRequest) {
     if (!extracted) {
       console.error("asaali: failed to parse JSON from model output", rawText.slice(0, 500));
       return jsonResponse(
-        { status: "out_of_scope", fallback_message: "حدث خطأ في معالجة الرد، حاولي مرة أخرى." },
+        { status: "out_of_scope", fallback_message: "حدث خطأ في معالجة الرد. حاول مرّة أخرى." },
         502
       );
     }
@@ -257,7 +258,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("asaali: model call failed", err);
     return jsonResponse(
-      { status: "out_of_scope", fallback_message: "حدث خطأ، حاولي مرة أخرى." },
+      { status: "out_of_scope", fallback_message: "حدث خطأ. حاول مرّة أخرى." },
       502
     );
   }
