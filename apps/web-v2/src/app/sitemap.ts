@@ -9,7 +9,7 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 const KARAJ = encodeURIComponent("كراج");
 const MARKA = encodeURIComponent("ماركة");
 
-export const revalidate = 86400; // rebuild sitemap daily
+export const revalidate = 3600; // rebuild sitemap hourly (newly added garages appear fast)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [workshops, combos, landingLastmod, makes, enriched] = await Promise.all([
@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE}/manatiq`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE}/mukhtarat`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE}/ihsaiyat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE}/karaj-mutanaqil`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/bansher-mutanaqil`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },

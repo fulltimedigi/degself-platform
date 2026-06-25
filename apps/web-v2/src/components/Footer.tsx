@@ -26,6 +26,9 @@ export function Footer() {
           <Link href="/search" className="text-sm text-muted-foreground hover:text-primary">
             البحث
           </Link>
+          <Link href="/mukhtarat" className="text-sm text-muted-foreground hover:text-primary">
+            كراجات مختارة
+          </Link>
           <Link href="/ماركة" className="text-sm text-muted-foreground hover:text-primary">
             تصفّح حسب الماركة
           </Link>

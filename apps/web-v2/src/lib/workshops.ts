@@ -426,6 +426,40 @@ export async function getAllPlaceIds(limit?: number): Promise<string[]> {
   return all;
 }
 
+/**
+ * place_ids of the hand-curated mechanics (place_id LIKE 'degself-mech-%').
+ * They carry no google_reviews_count, so getAllPlaceIds(100) never picks them —
+ * generateStaticParams adds these explicitly so every curated garage is
+ * pre-rendered (not just ISR-on-demand). Bounded (~101 rows): a single query.
+ */
+export async function getCuratedMechanicPlaceIds(): Promise<string[]> {
+  const { data, error } = await supabasePublic
+    .from("workshops")
+    .select("place_id")
+    .eq("active", true)
+    .eq("permanently_closed", false)
+    .like("place_id", "degself-mech-%");
+  if (error) throw new Error(`getCuratedMechanicPlaceIds failed: ${error.message}`);
+  return (data ?? []).map((r) => (r as { place_id: string }).place_id);
+}
+
+/**
+ * Full rows for the hand-curated mechanics — for the /mukhtarat index page.
+ * Ordered area-then-name so the page can group by area without re-sorting.
+ */
+export async function getCuratedMechanics(): Promise<Workshop[]> {
+  const { data, error } = await supabasePublic
+    .from("workshops")
+    .select("*")
+    .eq("active", true)
+    .eq("permanently_closed", false)
+    .like("place_id", "degself-mech-%")
+    .order("area", { ascending: true, nullsFirst: false })
+    .order("name", { ascending: true });
+  if (error) throw new Error(`getCuratedMechanics failed: ${error.message}`);
+  return (data ?? []) as Workshop[];
+}
+
 /** Every active place_id with its updated_at — for accurate sitemap <lastmod>. */
 export async function getAllPlaceIdsWithLastmod(): Promise<
   { place_id: string; updated_at: string | null }[]
