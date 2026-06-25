@@ -103,13 +103,9 @@ function workshopHtml(w) {
   const hashUrl = `${SITE}/#${workshopPath(w)}`;
 
   const title = `${name} — ${spec} في ${area || gov || "الكويت"} | degself`;
-  // Prefer curated Arabic summary as description when present (richer, unique per page)
-  const summary = (w.summary_ar || "").trim();
-  const description = summary
-    ? (summary.length > 155 ? summary.slice(0, 152) + "…" : summary)
-    : `${name} ${spec} يقع في ${addr}.${
-        phone ? ` للتواصل: ${phone}.` : ""
-      } اعثر على كراجات ومراكز صيانة السيارات في الكويت على منصة degself دق سلف.`;
+  const description = `${name} ${spec} يقع في ${addr}.${
+    phone ? ` للتواصل: ${phone}.` : ""
+  } اعثر على كراجات ومراكز صيانة السيارات في الكويت على منصة degself دق سلف.`;
 
   // JSON-LD LocalBusiness / AutoRepair
   const jsonLd = {
@@ -117,7 +113,7 @@ function workshopHtml(w) {
     "@type": "AutoRepair",
     "@id": url,
     name,
-    description: summary || `${spec} في ${addr}`,
+    description: `${spec} في ${addr}`,
     url,
     ...(phone ? { telephone: phone } : {}),
     address: {

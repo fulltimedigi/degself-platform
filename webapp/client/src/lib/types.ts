@@ -7,8 +7,8 @@ export interface WorkshopCard {
   area: string;
   rating: number | null;
   reviews_count: number;
-  latitude: number | null;
-  longitude: number | null;
+  latitude: number;
+  longitude: number;
   main_image: string | null;
   phone_intl: string | null;
 }
@@ -30,8 +30,6 @@ export interface WorkshopDetail extends WorkshopCard {
   category_raw?: string;
   images_count?: number;
   open_now?: boolean;
-  summary_ar?: string;
-  source?: string;
 }
 
 export interface WorkshopsResponse {

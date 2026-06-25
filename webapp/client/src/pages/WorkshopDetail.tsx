@@ -93,14 +93,6 @@ export default function WorkshopDetail() {
                 <MapPin size={16} className="mt-0.5 shrink-0" />
                 <span>{[data.address, data.area, data.governorate].filter(Boolean).join("، ")}</span>
               </p>
-              {data.summary_ar && (
-                <p
-                  className="mt-1 rounded-xl border border-card-border bg-card/60 p-4 text-sm leading-7 text-foreground/90"
-                  data-testid="text-workshop-summary"
-                >
-                  {data.summary_ar}
-                </p>
-              )}
             </div>
 
             {/* Action buttons */}
@@ -201,24 +193,14 @@ export default function WorkshopDetail() {
 
               {/* Map */}
               <section className="overflow-hidden rounded-xl border border-card-border bg-card">
-                {data.latitude != null && data.longitude != null ? (
-                  <iframe
-                    title="الموقع على الخريطة"
-                    className="h-full min-h-[300px] w-full"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude - 0.008}%2C${data.latitude - 0.005}%2C${data.longitude + 0.008}%2C${data.latitude + 0.005}&layer=mapnik&marker=${data.latitude}%2C${data.longitude}`}
-                    data-testid="iframe-map"
-                  />
-                ) : (
-                  <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-2 p-6 text-center">
-                    <MapPin size={28} className="text-muted-foreground" />
-                    <p className="text-sm font-bold">الإحداثيات غير متوفّرة</p>
-                    <p className="text-xs text-muted-foreground">
-                      تواصل مع الكراج مباشرة لتأكيد العنوان قبل الزيارة.
-                    </p>
-                  </div>
-                )}
+                <iframe
+                  title="الموقع على الخريطة"
+                  className="h-full min-h-[300px] w-full"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude - 0.008}%2C${data.latitude - 0.005}%2C${data.longitude + 0.008}%2C${data.latitude + 0.005}&layer=mapnik&marker=${data.latitude}%2C${data.longitude}`}
+                  data-testid="iframe-map"
+                />
               </section>
             </div>
 
