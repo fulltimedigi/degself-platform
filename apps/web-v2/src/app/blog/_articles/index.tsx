@@ -55,6 +55,7 @@ import ArticleNew7, { meta as ArticleNew7Meta } from "./farq-bayn-sabgh-walitlme
 import ArticleNew8, { meta as ArticleNew8Meta } from "./kayf-takhtar-afdal-karaj";
 import ArticleNew9, { meta as ArticleNew9Meta } from "./alamat-tilf-fahmat-faramil";
 import ArticleNew10, { meta as ArticleNew10Meta } from "./afdal-waqt-taghyeer-itarat-kuwait";
+import Overheating, { meta as OverheatingMeta } from "./irtifaa-hararat-muharrik-sayara-kuwait";
 
 export type ArticleMeta = {
   slug: string;
@@ -70,6 +71,7 @@ export type Article = ArticleMeta & { content: ReactNode };
 
 // Ordered newest-first for the blog index.
 export const articles: Article[] = [
+  { ...OverheatingMeta, content: <Overheating /> },
   { ...ArticleNew1Meta, content: <ArticleNew1 /> },
   { ...ArticleNew2Meta, content: <ArticleNew2 /> },
   { ...ArticleNew3Meta, content: <ArticleNew3 /> },
