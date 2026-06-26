@@ -4,9 +4,9 @@ import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 const SITE = "https://degself.com";
 
-const TITLE = "اسأل دق سلف — توصيل سريع لأنسب كراج | دق سلف";
+const TITLE = "اسأل دق سلف — نرشّح لك أنسب كراج | دق سلف";
 const DESCRIPTION =
-  "احكِ مشكلة سيارتك بكلامك العادي — ونوصّلك فوراً لأفضل كراج في الكويت مع رسالة جاهزة ترسلها له.";
+  "اشرح مشكلة سيارتك بكلامك العادي — ونرشّح لك فوراً أفضل كراج في الكويت مع رسالة جاهزة ترسلها له.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -45,15 +45,15 @@ export default function AsaaliPage() {
             className="inline-block rounded-full px-3 py-1 text-xs font-semibold"
             style={{ background: "#FFD60A", color: "#0A0A0A" }}
           >
-            توصيل سريع لأنسب كراج
+            ترشيح سريع لأنسب كراج
           </div>
           <h1 className="mt-3 text-2xl md:text-3xl font-bold text-white">
-            احكِ مشكلة السيارة
+            اشرح مشكلة السيارة
           </h1>
           <p className="mt-2 text-sm md:text-base text-neutral-400 leading-relaxed">
-احكِ بكلامك العادي،
+اشرح بكلامك العادي،
             <br />
-            وأرشّح لك كراج موثوق مع رسالة جاهزة ترسلها له.
+            ونرشّح لك كراج موثوق مع رسالة جاهزة ترسلها له.
           </p>
         </header>
 

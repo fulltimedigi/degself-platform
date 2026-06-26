@@ -24,7 +24,7 @@ import type {
   AsaaliResponse,
 } from "@/lib/asaali-schema";
 
-const PLACEHOLDER = "احكِ أو اكتب مشكلة السيارة — مثال: السيارة تخرج دخان أبيض";
+const PLACEHOLDER = "اشرح أو اكتب مشكلة السيارة — مثال: السيارة تخرج دخان أبيض";
 const MAX_INPUT = 800;
 
 // تعريفات لـ Web Speech API (غير موجودة في TypeScript lib بشكل موحد)
