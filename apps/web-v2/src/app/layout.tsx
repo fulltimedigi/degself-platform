@@ -104,7 +104,13 @@ const cairo = Cairo({
   subsets: ["arabic", "latin"],
   weight: ["400", "600", "700", "800"],
   variable: "--font-cairo",
-  display: "swap",
+  // "optional" (not "swap") eliminates font-driven CLS on slow mobile networks
+  // (Snap-ad traffic): if Cairo isn't ready within the ~100ms block window the
+  // browser keeps the size-adjusted fallback for this pageview instead of
+  // swapping late and reflowing every text block. next/font self-hosts +
+  // preloads the font and generates a metrics-matched fallback (no FOIT), and
+  // Cairo still applies on subsequent cached navigations.
+  display: "optional",
 });
 
 export const metadata: Metadata = {
