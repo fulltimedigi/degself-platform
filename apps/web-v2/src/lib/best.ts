@@ -2,7 +2,7 @@
 // Top workshops ranked by degself smart_score, drawn from the review-analysis
 // overlay joined to the live Supabase rows (only active, automotive, in-scope).
 import { supabasePublic } from "@/lib/supabase/public";
-import { allEnrichments, type Enrichment } from "@/lib/enrichment";
+import { allEnrichments, isReviewBacked, type Enrichment } from "@/lib/enrichment";
 import type { Workshop } from "@/lib/types";
 
 export type BestWorkshop = Workshop & { enrichment: Enrichment };
@@ -33,9 +33,12 @@ export async function getEnrichedWorkshops(): Promise<BestWorkshop[]> {
     if (data) rows.push(...(data as Workshop[]));
   }
 
+  // "Best" must be review-proven: keep only workshops whose smart_score is backed
+  // by analyzed Google reviews. Curated entries (reviews_total = null) are shown
+  // elsewhere (/mukhtarat, search, area pages) but never ranked as "best".
   return rows
     .map((w) => ({ ...w, enrichment: enr[w.place_id] }))
-    .filter((w): w is BestWorkshop => !!w.enrichment)
+    .filter((w): w is BestWorkshop => isReviewBacked(w.enrichment))
     .sort((a, b) => b.enrichment.smart_score - a.enrichment.smart_score);
 }
 
