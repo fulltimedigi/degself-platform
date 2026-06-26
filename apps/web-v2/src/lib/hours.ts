@@ -100,6 +100,47 @@ function parseHours(hours: string): Array<[number, number]> | "24" | "closed" {
   return ranges.length ? ranges : "closed";
 }
 
+export interface OpeningHoursSpec {
+  "@type": "OpeningHoursSpecification";
+  dayOfWeek: string; // schema.org DayOfWeek name (e.g. "Monday")
+  opens: string; // "HH:MM"
+  closes: string; // "HH:MM"
+}
+
+/**
+ * schema.org openingHoursSpecification[] for a workshop's free-text hours, or
+ * null when nothing parses (empty/unknown format). Reuses the SAME parser as the
+ * live "open now" badge, so structured data and UI can never disagree. Closed
+ * days are omitted (schema convention: an absent day means closed). Overnight
+ * spillover is capped at 23:59 to keep each spec inside one calendar day.
+ */
+export function openingHoursSpecification(
+  openingHours: string | null | undefined
+): OpeningHoursSpec[] | null {
+  const rows = parseOpeningHoursString(openingHours);
+  if (!rows.length) return null;
+  const fmt = (min: number) => {
+    const capped = Math.min(min, 23 * 60 + 59);
+    const h = Math.floor(capped / 60);
+    const m = capped % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+  };
+  const specs: OpeningHoursSpec[] = [];
+  for (const row of rows) {
+    if (!DAY_ORDER.includes(row.day)) continue; // skip unknown day tokens
+    const parsed = parseHours(row.hours);
+    if (parsed === "closed") continue; // omit → schema reads day as closed
+    if (parsed === "24") {
+      specs.push({ "@type": "OpeningHoursSpecification", dayOfWeek: row.day, opens: "00:00", closes: "23:59" });
+      continue;
+    }
+    for (const [s, e] of parsed) {
+      specs.push({ "@type": "OpeningHoursSpecification", dayOfWeek: row.day, opens: fmt(s), closes: fmt(e) });
+    }
+  }
+  return specs.length ? specs : null;
+}
+
 /** Canonical English day name for "now" in Kuwait (UTC+3). */
 export function todayName(now: Date = new Date()): string {
   const utcMin = now.getUTCHours() * 60 + now.getUTCMinutes();
