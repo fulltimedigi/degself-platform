@@ -10,6 +10,7 @@ import {
 } from "@/lib/workshops";
 import type { Workshop } from "@/lib/types";
 import { SimilarWorkshops } from "@/components/SimilarWorkshops";
+import { getLandingCombos, LANDING_SPECIALTIES } from "@/lib/landing";
 import { BrandedCover } from "@/components/BrandedCover";
 import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
@@ -101,9 +102,10 @@ export default async function WorkshopPage({
   const w = await getWorkshop(place_id);
   if (!w) notFound();
 
-  const [reviewSummary, similar] = await Promise.all([
+  const [reviewSummary, similar, landingCombos] = await Promise.all([
     getApprovedReviews(place_id),
     getSimilarWorkshops(w.place_id, w.area, w.reviewed_specialty ?? w.specialty),
+    getLandingCombos(),
   ]);
   const enrichment = getEnrichment(place_id);
 
@@ -113,19 +115,37 @@ export default async function WorkshopPage({
   const waDigits = kuwaitWhatsAppDigits(w.phone_intl || w.phone); // mobile-only
   const services = [...new Set([w.specialty, ...(w.specialty_hints ?? [])])].filter(Boolean);
 
+  // Breadcrumb trail that links UP to the matching landing pages when they
+  // exist — passing internal-link equity from every workshop to the specialty
+  // index and the specialty×area page (the SEO target pages). The audited
+  // specialty maps to a landing slug by exact label; areas/specialties without
+  // a valid landing combo fall back to the generic search link (no dead links).
+  const landingSpec = LANDING_SPECIALTIES.find((s) => s.label === w.reviewed_specialty);
+  const slug = landingSpec?.slug;
+  const hasSpecialtyIndex = !!slug && landingCombos.some((c) => c.specialty === slug);
+  const hasAreaLanding =
+    !!slug && !!w.area && landingCombos.some((c) => c.specialty === slug && c.area === w.area);
+
+  const crumbs: { name: string; href: string }[] = [{ name: "الرئيسية", href: "/" }];
+  if (hasSpecialtyIndex && landingSpec) {
+    crumbs.push({ name: `كراجات ${landingSpec.label}`, href: `/كراج/${slug}` });
+  } else {
+    crumbs.push({ name: "الكراجات", href: "/search" });
+  }
+  if (hasAreaLanding && landingSpec) {
+    crumbs.push({ name: `${landingSpec.label} في ${w.area}`, href: `/كراج/${slug}/${w.area}` });
+  }
+  crumbs.push({ name: w.name, href: `/workshop/${w.place_id}` });
+
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "الكراجات", item: `${SITE}/search` },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: w.name,
-        item: `${SITE}/workshop/${place_id}`,
-      },
-    ],
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: `${SITE}${c.href}`,
+    })),
   };
 
   return (
@@ -134,9 +154,24 @@ export default async function WorkshopPage({
       <JsonLd data={breadcrumbLd} />
       <WorkshopViewTracker placeId={w.place_id} />
 
-      <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground">
-        ← رجوع للبحث
-      </Link>
+      {/* Breadcrumb trail (visible + matches the BreadcrumbList JSON-LD) */}
+      <nav aria-label="مسار التنقّل" className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+        {crumbs.map((c, i) => {
+          const last = i === crumbs.length - 1;
+          return (
+            <span key={c.href} className="flex items-center gap-1.5">
+              {i > 0 && <span aria-hidden>/</span>}
+              {last ? (
+                <span className="line-clamp-1 text-foreground/80">{c.name}</span>
+              ) : (
+                <Link href={c.href} className="hover:text-foreground">
+                  {c.name}
+                </Link>
+              )}
+            </span>
+          );
+        })}
+      </nav>
 
       {/* Hero */}
       <div className="mt-4 overflow-hidden rounded-2xl border border-border">
