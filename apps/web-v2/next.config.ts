@@ -131,6 +131,14 @@ const nextConfig: NextConfig = {
       { source: `/${MARKA}`, destination: "/make" },
     ];
   },
+
+  async redirects() {
+    return [
+      // The flagship "اسأل دق سلف" page moved from /asaali (read as the feminine
+      // "اسألي") to /isal-degself. 308 permanent so old links + indexing carry over.
+      { source: "/asaali", destination: "/isal-degself", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -272,7 +272,7 @@ export default async function Home() {
 
           {/* CTA رئيسي — اسأل دق سلف (الـ primary input للموقع) */}
           <Link
-            href="/asaali"
+            href="/isal-degself"
             aria-label="اسأل دق سلف"
             className="group inline-flex w-full max-w-2xl items-center justify-between gap-4 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-6 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
           >

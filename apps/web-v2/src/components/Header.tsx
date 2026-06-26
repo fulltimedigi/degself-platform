@@ -12,7 +12,7 @@ import { BUSINESS_WA_URL } from "@/lib/constants";
 // which remains reachable from the footer and the sitemap.
 const NAV = [
   { href: "/", label: "الرئيسية" },
-  { href: "/asaali", label: "اسأل دق سلف", highlight: true },
+  { href: "/isal-degself", label: "اسأل دق سلف", highlight: true },
   { href: "/search", label: "البحث" },
   { href: "/best", label: "الأفضل" },
   { href: "/mukhtarat", label: "كراجات مختارة" },

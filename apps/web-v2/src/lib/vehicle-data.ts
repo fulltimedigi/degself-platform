@@ -2,7 +2,7 @@
  * vehicle-data.ts
  *
  * بيانات السوق الكويتي للسيارات.
- * تُستخدم في VehicleSelector على /asaali وفي تركيب الـ vehicle context للـ LLM.
+ * تُستخدم في VehicleSelector على /isal-degself وفي تركيب الـ vehicle context للـ LLM.
  *
  * الترتيب يعكس شعبية الماركات في الكويت:
  *   Toyota, Lexus, Nissan أولاً (الأكثر شيوعاً)

@@ -264,7 +264,7 @@ export function PriceCalculator() {
               ابحث عن كراج
             </Link>
             <Link
-              href={`/asaali?service=${encodeURIComponent(result.service.label)}`}
+              href={`/isal-degself?service=${encodeURIComponent(result.service.label)}`}
               className="flex items-center justify-center gap-2 rounded-xl border-2 border-foreground bg-background px-4 py-3 text-sm font-bold text-foreground transition hover:bg-foreground/5"
               onClick={() => {
                 try {

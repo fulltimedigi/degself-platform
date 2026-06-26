@@ -65,8 +65,8 @@ export default function TermsPage() {
           <h2 className="mb-2 text-lg font-bold">3. ميزة «اسأل دق سلف» (الذكاء الاصطناعي)</h2>
           <p>
             ميزة المترجم الذكي (
-            <Link href="/asaali" className="font-bold text-primary hover:underline">
-              /asaali
+            <Link href="/isal-degself" className="font-bold text-primary hover:underline">
+              /isal-degself
             </Link>
             ) تستخدم نماذج ذكاء اصطناعي لتحويل وصف المشكلة بكلامك العادي إلى مصطلحات فنية.
             هذه التوصيات استرشادية وليست بديلاً عن فحص ميكانيكي محترف. لا تتخذ قراراً
