@@ -1,16 +1,18 @@
 import type { Workshop } from "@/lib/types";
 import type { ReviewSummary } from "@/lib/reviews";
+import { openingHoursSpecification } from "@/lib/hours";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 
 /**
- * schema.org/AutoRepair structured data (no reviews yet — Phase 2).
+ * schema.org/AutoRepair structured data.
  * Rendered as a JSON-LD <script>. Google reads JSON-LD anywhere in the document,
  * so placing it in the page body is valid.
  *
- * NOTE: opening_hours is stored as free Arabic text (e.g. "الإثنين: 8 AM to 8 PM | …")
- * which does NOT map to schema.org's "Mo-Su 08:00-20:00" format. Emitting it raw
- * would be invalid markup, so it is intentionally omitted until a parser is added.
+ * opening_hours is stored as free Arabic text (e.g. "الإثنين: 8ص to 9:30م | …");
+ * openingHoursSpecification() parses it (same parser as the live "open now"
+ * badge) into schema.org openingHoursSpecification, enabling hours rich results.
+ * Unparseable/empty hours simply yield no field.
  */
 export function WorkshopJsonLd({
   workshop,
@@ -53,6 +55,10 @@ export function WorkshopJsonLd({
   const tel = phone_intl || phone;
   if (tel) data.telephone = tel;
   if (website) data.sameAs = website;
+
+  // Opening hours → schema.org (enables hours / "open now" rich results).
+  const hours = openingHoursSpecification(workshop.opening_hours);
+  if (hours) data.openingHoursSpecification = hours;
 
   // Genuine, on-page visitor reviews → aggregateRating + a few Review items.
   if (reviews && reviews.count > 0 && reviews.avg != null) {
