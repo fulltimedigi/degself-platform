@@ -85,6 +85,15 @@ const nextConfig: NextConfig = {
   // ميزانية أداء: نسمح بصور أكبر فقط للـ OG/hero
   poweredByHeader: false,
 
+  // Guarantee the Cairo font files are bundled with the dynamic OG/Twitter image
+  // functions. In a monorepo, Vercel's file tracer can miss assets read via
+  // fs at runtime (join(process.cwd(), "assets/…")), which would make the image
+  // 500 in production while working locally. Listing them here makes it explicit.
+  outputFileTracingIncludes: {
+    "/workshop/[place_id]/opengraph-image": ["./assets/Cairo-*.ttf"],
+    "/workshop/[place_id]/twitter-image": ["./assets/Cairo-*.ttf"],
+  },
+
   async headers() {
     return [
       {
