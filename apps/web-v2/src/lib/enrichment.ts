@@ -34,6 +34,17 @@ export function getEnrichment(placeId: string | null | undefined): Enrichment | 
   return ENRICHMENT[placeId] ?? null;
 }
 
+/**
+ * True only when the smart_score is backed by actually-analyzed Google reviews.
+ * Curated entries (e.g. the hand-added mechanics) carry a smart_score derived
+ * from a bare rating with reviews_total = null — trustworthy enough to display,
+ * but NOT enough to outrank review-proven workshops. Ranking surfaces use this
+ * so an unreviewed garage never leapfrogs an established, well-reviewed one.
+ */
+export function isReviewBacked(e: Enrichment | null | undefined): boolean {
+  return !!e && e.reviews_total != null && e.reviews_total > 0;
+}
+
 /** Merge enrichment onto an object carrying a place_id (read-time overlay). */
 export function withEnrichment<T extends { place_id: string }>(
   workshop: T

@@ -3,7 +3,7 @@ import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
 import { isOpenNow } from "@/lib/hours";
 import type { Workshop } from "@/lib/types";
-import { getEnrichment, allEnrichments, type Enrichment } from "@/lib/enrichment";
+import { getEnrichment, allEnrichments, isReviewBacked, type Enrichment } from "@/lib/enrichment";
 
 // place_ids that carry review-analysis enrichment (smart_score, tags, …).
 const ENRICHED_IDS = Object.keys(allEnrichments());
@@ -285,13 +285,18 @@ export async function searchWorkshops(
     if (batch.length < PAGE) break;
   }
   const rows = all.map(attach);
-  const enriched = rows
-    .filter((w) => w.enrichment)
+  // Only REVIEW-BACKED enrichment earns smart_score-first placement. Curated
+  // entries (mechanics with reviews_total = null) carry a smart_score from a
+  // bare rating; ranking them by it let unreviewed garages with no map pin
+  // leapfrog established centers. They fall into the rank_score-ordered tail
+  // instead — present, but never above review-proven workshops.
+  const backed = rows
+    .filter((w) => isReviewBacked(w.enrichment))
     .sort(
       (a, b) => (b.enrichment?.smart_score ?? 0) - (a.enrichment?.smart_score ?? 0)
     );
-  const rest = rows.filter((w) => !w.enrichment); // keep rank_score order
-  const ordered = [...enriched, ...rest];
+  const rest = rows.filter((w) => !isReviewBacked(w.enrichment)); // keep rank_score order
+  const ordered = [...backed, ...rest];
   return { workshops: ordered.slice(offset, offset + limit), total: ordered.length };
 }
 
