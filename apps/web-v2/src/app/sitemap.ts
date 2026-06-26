@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${SITE}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE}/isal-degself`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE}/search`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE}/map`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE}/emergency`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },

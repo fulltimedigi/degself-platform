@@ -11,11 +11,11 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${SITE}/asaali` },
+  alternates: { canonical: `${SITE}/isal-degself` },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: `${SITE}/asaali`,
+    url: `${SITE}/isal-degself`,
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
@@ -35,7 +35,7 @@ export default function AsaaliPage() {
       <BreadcrumbJsonLd
         items={[
           { name: "الرئيسية", url: "https://degself.com/" },
-          { name: "اسأل دق سلف", url: "https://degself.com/asaali" },
+          { name: "اسأل دق سلف", url: "https://degself.com/isal-degself" },
         ]}
       />
       <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
