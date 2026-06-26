@@ -221,7 +221,7 @@ function schedule(posts) {
   return entries;
 }
 
-(async () => {
+if (require.main === module) (async () => {
   const posts = await build();
   console.log("✅ rendered " + posts.length + " images:");
   posts.forEach((p) => console.log("  - " + p.file));
@@ -233,3 +233,6 @@ function schedule(posts) {
   console.error("❌", e);
   process.exit(1);
 });
+
+// Export the proven card layouts so a batch generator can reuse them.
+module.exports = { hero, statement, tipList, bigNumber };

@@ -1,60 +1,482 @@
 [
   {
-    "id": "01-hero",
-    "status": "posted",
-    "publish_at": "2026-06-01T00:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/01-hero.jpg",
-    "caption": "كراجات الكويت كلها في مكان واحد 🔧\n\nدق سلف = أكبر دليل كراجات في الكويت. ابحث بالتخصص والمنطقة، شوف التقييمات، واتصل أو ابعت واتساب بضغطة — مجانًا وبدون تسجيل.\n\nابدأ من اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #ميكانيكي_الكويت #صيانة_سيارات #q8 #kuwait #دق_سلف",
-    "media_id": "17914817733203785",
-    "posted_at": "2026-06-16T22:32:17.357Z"
-  },
-  {
-    "id": "02-translator",
-    "status": "draft",
-    "publish_at": "2026-06-18T18:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/02-translator.jpg",
-    "caption": "مش عارف تشرح العطل للكراج؟ خليه يشرح نفسه 👇\n\nاكتب مشكلة عربيتك بكلامك العادي، ودق سلف يحوّلها رسالة واتساب جاهزة تبعتها للكراج على طول — من غير لف ودوران.\n\nجرّبه مجانًا — اللينك في البايو 👆\n\n#الكويت #سيارات #كراج #ميكانيكي_الكويت #كهرباء_سيارات #q8 #kuwaitcars #دق_سلف"
-  },
-  {
-    "id": "03-sounds",
-    "status": "draft",
-    "publish_at": "2026-06-19T18:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/03-sounds.jpg",
-    "caption": "أصوات السيارة اللي لازم تاخدها بجدية 🔧🚨\n\nاحفظ البوست عشان تفتكرها وقت الحاجة. وأول ما تسمع أي صوت منهم، لاقي أقرب كراج متخصص على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #صيانة_سيارات #ميكانيكي_الكويت #فرامل #كراجات_الكويت #q8 #دق_سلف"
-  },
-  {
-    "id": "04-summer",
-    "status": "draft",
-    "publish_at": "2026-06-20T18:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/04-summer.jpg",
-    "caption": "نصايح صيانة عربيتك في حر الكويت 🌡️🔥\n\nقبل ما الحر يوقفك، جهّز عربيتك. لاقي كراج تكييف أو بطاريات قريب منك على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #صيف_الكويت #تكييف_سيارات #بطاريات #صيانة_سيارات #q8 #كراجات_الكويت #دق_سلف"
-  },
-  {
-    "id": "05-trust",
-    "status": "draft",
-    "publish_at": "2026-06-21T18:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/05-trust.jpg",
-    "caption": "ليه تضيّع وقتك تدوّر؟ 🕒\n\n+١٦٠٠ كراج موثّق في الكويت، مرتّبين بالتخصص والمنطقة. ابحث، قارن، واتصل بضغطة — مجانًا.\n\nابدأ من اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #ميكانيكي_الكويت #q8 #kuwait #دق_سلف"
-  },
-  {
-    "id": "06-howto",
-    "status": "draft",
-    "publish_at": "2026-06-22T18:00:00.000Z",
-    "type": "image",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/06-howto.jpg",
-    "caption": "تلاقي كراج كويس في ٣ خطوات 👇\n\n① اختر التخصص والمنطقة\n② قارن التقييمات والمسافة\n③ اتصل أو ابعت واتساب بضغطة\n\nكله مجانًا — اللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات #ميكانيكي_الكويت #q8 #kuwaitcars #دق_سلف"
-  },
-  {
-    "id": "reel-sounds",
+    "id": "s01",
     "status": "scheduled",
-    "publish_at": "2026-06-23T18:00:00.000Z",
-    "type": "reel",
-    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/reel-sounds.mp4",
-    "caption": "٣ أصوات لو سمعتها في عربيتك… وقّف فورًا 🚨🔧\n\nصرير الفرامل، طقطقة المكينة، واحتكاك عند اللف — كل صوت منهم إنذار. أول ما تسمعه، لاقي أقرب كراج متخصص على دق سلف.\n\nاحفظ الريل 🔖 واللينك في البايو 👆\n\n#الكويت #سيارات_الكويت #كراجات_الكويت #صيانة_سيارات #ميكانيكي_الكويت #q8 #kuwait #دق_سلف"
+    "publish_at": "2026-06-27T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s01.jpg",
+    "caption": "مكيف عربيتك ضعيف في عز الحر؟ ❄️🔥\n\nضعف التبريد له أسباب: غاز ناقص، كباس، أو فلتر متّسخ. لاقي كراج تكييف موثوق قريب منك وقارن التقييمات.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تكييف_سيارات #صيف_الكويت"
+  },
+  {
+    "id": "s02",
+    "status": "scheduled",
+    "publish_at": "2026-06-27T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s02.jpg",
+    "caption": "بطارية عربيتك تعبانة؟ 🔋\n\nتأخر التشغيل وخفوت الأضواء علامات. لاقي أقرب محل بطاريات موثوق على دق سلف وبدّلها قبل ما توقفك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #بطاريات_السيارات"
+  },
+  {
+    "id": "s03",
+    "status": "scheduled",
+    "publish_at": "2026-06-28T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s03.jpg",
+    "caption": "بنشر على الطريق؟ ما يحتاج تتلكّك 🛞\n\nلاقي أقرب بنشر أو خدمة تواير متنقلة في الكويت بضغطة، وقارن قبل ما تروح.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #بنشر #تواير"
+  },
+  {
+    "id": "s04",
+    "status": "scheduled",
+    "publish_at": "2026-06-28T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s04.jpg",
+    "caption": "حادث بسيط أو خدوش؟ 🚗🎨\n\nلاقي كراج سمكرة ودوكو موثوق في الكويت، وقارن التقييمات قبل ما تسلّم عربيتك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #بودي_وصبغ #سمكرة"
+  },
+  {
+    "id": "s05",
+    "status": "scheduled",
+    "publish_at": "2026-06-29T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s05.jpg",
+    "caption": "القير يرجّ أو يتأخر؟ ⚙️\n\nأعطال القير تكبر بسرعة لو اتأجلت. لاقي متخصص فتيس موثوق قريب منك على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #قير #فتيس"
+  },
+  {
+    "id": "s06",
+    "status": "scheduled",
+    "publish_at": "2026-06-29T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s06.jpg",
+    "caption": "مشاكل كهرباء وحساسات؟ ⚡\n\nأعطال الكهرباء تحتاج تشخيص صح. لاقي كهربائي سيارات موثوق قريب منك وقارن التقييمات.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #كهرباء_سيارات"
+  },
+  {
+    "id": "s07",
+    "status": "scheduled",
+    "publish_at": "2026-06-30T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s07.jpg",
+    "caption": "زيت عربيتك متى آخر مرة غيّرته؟ 🛢️\n\nالزيت النظيف يحمي مكينتك من حر الكويت. لاقي أقرب مركز تغيير زيت موثوق وقارن.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تغيير_زيت #صيانة_دورية"
+  },
+  {
+    "id": "s08",
+    "status": "scheduled",
+    "publish_at": "2026-06-30T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s08.jpg",
+    "caption": "فرامل عربيتك تصفّر؟ 🛑\n\nالفرامل أمان حياتك. أول ما تسمع صرير أو تحس بضعف، لاقي كراج فرامل موثوق قريب منك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #فرامل #أمان"
+  },
+  {
+    "id": "s09",
+    "status": "scheduled",
+    "publish_at": "2026-07-01T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s09.jpg",
+    "caption": "لمبة Engine مضيّة؟ 🔧💻\n\nلا تخمّن. فحص الكمبيوتر يحدد العطل بدقة قبل ما تصرف على الفاضي. لاقي كراج تشخيص موثوق.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #فحص_كمبيوتر #تشخيص"
+  },
+  {
+    "id": "s10",
+    "status": "scheduled",
+    "publish_at": "2026-07-01T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s10.jpg",
+    "caption": "عطل مفاجئ على الطريق؟ 🚨\n\nسطحة، بطارية، أو بنشر متنقل — لاقي أقرب خدمة طوارئ في الكويت بأي وقت على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #سطحة #طوارئ"
+  },
+  {
+    "id": "s11",
+    "status": "scheduled",
+    "publish_at": "2026-07-02T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s11.jpg",
+    "caption": "كراجات الشويخ الصناعية كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الشويخ الصناعية حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الشويخ_الصناعية"
+  },
+  {
+    "id": "s12",
+    "status": "scheduled",
+    "publish_at": "2026-07-02T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s12.jpg",
+    "caption": "كراجات حولي كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في حولي حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #حولي"
+  },
+  {
+    "id": "s13",
+    "status": "scheduled",
+    "publish_at": "2026-07-03T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s13.jpg",
+    "caption": "كراجات الفروانية كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الفروانية حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الفروانية"
+  },
+  {
+    "id": "s14",
+    "status": "scheduled",
+    "publish_at": "2026-07-03T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s14.jpg",
+    "caption": "كراجات الجهراء كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الجهراء حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الجهراء"
+  },
+  {
+    "id": "s15",
+    "status": "scheduled",
+    "publish_at": "2026-07-04T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s15.jpg",
+    "caption": "كراجات الفحيحيل والأحمدي كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الفحيحيل والأحمدي حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الفحيحيل_والأحمدي"
+  },
+  {
+    "id": "s16",
+    "status": "scheduled",
+    "publish_at": "2026-07-04T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s16.jpg",
+    "caption": "كراجات السالمية كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في السالمية حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #السالمية"
+  },
+  {
+    "id": "s17",
+    "status": "scheduled",
+    "publish_at": "2026-07-05T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s17.jpg",
+    "caption": "كراجات خيطان كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في خيطان حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #خيطان"
+  },
+  {
+    "id": "s18",
+    "status": "scheduled",
+    "publish_at": "2026-07-05T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s18.jpg",
+    "caption": "كراجات الجابرية كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الجابرية حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الجابرية"
+  },
+  {
+    "id": "s19",
+    "status": "scheduled",
+    "publish_at": "2026-07-06T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s19.jpg",
+    "caption": "كراجات صباح السالم كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في صباح السالم حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صباح_السالم"
+  },
+  {
+    "id": "s20",
+    "status": "scheduled",
+    "publish_at": "2026-07-06T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s20.jpg",
+    "caption": "كراجات الرقعي كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في الرقعي حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #الرقعي"
+  },
+  {
+    "id": "s21",
+    "status": "scheduled",
+    "publish_at": "2026-07-07T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s21.jpg",
+    "caption": "كراجات المنقف كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في المنقف حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #المنقف"
+  },
+  {
+    "id": "s22",
+    "status": "scheduled",
+    "publish_at": "2026-07-07T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s22.jpg",
+    "caption": "كراجات أبو حليفة كلها في مكان واحد 📍\n\nلاقي أقرب كراج موثوق في أبو حليفة حسب التخصص، شوف التقييمات، واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أبو_حليفة"
+  },
+  {
+    "id": "s23",
+    "status": "scheduled",
+    "publish_at": "2026-07-08T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s23.jpg",
+    "caption": "أصوات السيارة اللي ما تتجاهلها 🔧🚨\n\nاحفظ البوست. أول ما تسمع أي صوت منهم، لاقي أقرب كراج متخصص وقارن قبل ما تروح.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صيانة_سيارات"
+  },
+  {
+    "id": "s24",
+    "status": "scheduled",
+    "publish_at": "2026-07-08T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s24.jpg",
+    "caption": "لمبات لوحة القيادة ومعناها 🚦\n\nبعض اللمبات تعني «وقّف فورًا». تعرّف عليها واحفظ البوست، ولو أضاءت لاقي كراج موثوق بسرعة.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #لوحة_القيادة #تشخيص"
+  },
+  {
+    "id": "s25",
+    "status": "scheduled",
+    "publish_at": "2026-07-09T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s25.jpg",
+    "caption": "دخان عربيتك بيقولك إيش العطل 💨\n\nكل لون له معنى. لو لاحظت دخان غير طبيعي، لاقي كراج موثوق وافحص قبل ما تكبر المشكلة.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صيانة_سيارات"
+  },
+  {
+    "id": "s26",
+    "status": "scheduled",
+    "publish_at": "2026-07-09T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s26.jpg",
+    "caption": "متى تغيّر زيت عربيتك؟ 🛢️\n\nفي حر الكويت غيّره أبكر. تعرّف على العلامات واحفظ البوست، ولاقي أقرب مركز موثوق.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تغيير_زيت"
+  },
+  {
+    "id": "s27",
+    "status": "scheduled",
+    "publish_at": "2026-07-10T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s27.jpg",
+    "caption": "فراملك تحذّرك… اسمعها 🛑\n\nتأجيل تيل الفرامل يأذي الهوبات ويرفع الخطر. لاقي كراج فرامل موثوق قريب منك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #فرامل #أمان"
+  },
+  {
+    "id": "s28",
+    "status": "scheduled",
+    "publish_at": "2026-07-10T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s28.jpg",
+    "caption": "بطاريتك على وشك تخذلك؟ 🔋\n\nحر الكويت يقصّر عمر البطارية. تعرّف على العلامات وبدّلها قبل ما توقفك في مكان.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #بطاريات_السيارات"
+  },
+  {
+    "id": "s29",
+    "status": "scheduled",
+    "publish_at": "2026-07-11T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s29.jpg",
+    "caption": "حرارة المكينة طلعت؟ افعل هذا فورًا 🌡️\n\nأطفئ المكيف، شغّل التدفئة، وقّف، ولا تفتح الردياتير ساخن. التفاصيل في مقال المدونة — اللينك بالبايو.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صيف_الكويت #تبريد"
+  },
+  {
+    "id": "s30",
+    "status": "scheduled",
+    "publish_at": "2026-07-11T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s30.jpg",
+    "caption": "تواير عربيتك جاهزة لحر الكويت؟ 🛞🔥\n\nالضغط الزائد والحرارة يرفعان خطر الانفجار. راقب واحفظ البوست، ولاقي بنشر موثوق قريب.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تواير #بنشر"
+  },
+  {
+    "id": "s31",
+    "status": "scheduled",
+    "publish_at": "2026-07-12T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s31.jpg",
+    "caption": "مكيفك يطلّع هوا حار؟ ❄️\n\nالأسباب غالبًا بسيطة. لاقي كراج تكييف موثوق يفحص ويعبّي الغاز، وقارن قبل ما تروح.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تكييف_سيارات"
+  },
+  {
+    "id": "s32",
+    "status": "scheduled",
+    "publish_at": "2026-07-12T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s32.jpg",
+    "caption": "زيت القير… مهمل وكثير ينساه 🛢️⚙️\n\nإهماله يكلّف غالي. تعرّف على العلامات، ولاقي متخصص فتيس موثوق قريب منك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #قير #فتيس"
+  },
+  {
+    "id": "s33",
+    "status": "scheduled",
+    "publish_at": "2026-07-13T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s33.jpg",
+    "caption": "مسافر؟ سوّ التشيك ده الأول 🧳🚗\n\nدقائق فحص توفّر عليك عطل في نص الطريق. لاقي كراج موثوق لفحص شامل قبل السفر.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #نصائح_سياقة"
+  },
+  {
+    "id": "s34",
+    "status": "scheduled",
+    "publish_at": "2026-07-13T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s34.jpg",
+    "caption": "بتشتري سيارة مستعملة؟ 🔍🚗\n\nلا تعتمد على الشكل. فحص محترف يكشف المخفي قبل ما تدفع. لاقي مركز فحص موثوق.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #فحص_فني #سيارات_مستعملة"
+  },
+  {
+    "id": "s35",
+    "status": "scheduled",
+    "publish_at": "2026-07-14T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s35.jpg",
+    "caption": "عربيتك تسحب على جنب؟ ⚖️🛞\n\nالميزان والترصيص يحميان كفراتك ويحسّنان الأمان. لاقي محل موثوق قريب منك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #ترصيص #ميزان"
+  },
+  {
+    "id": "s36",
+    "status": "scheduled",
+    "publish_at": "2026-07-14T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s36.jpg",
+    "caption": "شممت ريحة غريبة في عربيتك؟ 👃🚗\n\nكل ريحة لها معنى — وبعضها خطر. تعرّف عليها واحفظ البوست، ولو لاحظت أي منها افحص فورًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صيانة_سيارات"
+  },
+  {
+    "id": "s37",
+    "status": "scheduled",
+    "publish_at": "2026-07-15T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s37.jpg",
+    "caption": "كراجات الكويت كلها في مكان واحد 🔧\n\nابحث بالتخصص والمنطقة، شوف التقييمات، واتصل أو ابعت واتساب بضغطة — مجانًا وبدون تسجيل.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s38",
+    "status": "scheduled",
+    "publish_at": "2026-07-15T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s38.jpg",
+    "caption": "ليش دق سلف مجاني؟ 🆓\n\nهدفنا نسهّل عليك تلاقي كراج موثوق بدون لف ودوران ولا رسوم ولا تسجيل. جرّبه.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #مجانا"
+  },
+  {
+    "id": "s39",
+    "status": "scheduled",
+    "publish_at": "2026-07-16T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s39.jpg",
+    "caption": "ليش تلف وتدور؟ 🕒\n\nاختر المنطقة والتخصص، وخلّ دق سلف يرتّبلك أقرب الكراجات الموثوقة في ثواني.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s40",
+    "status": "scheduled",
+    "publish_at": "2026-07-16T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s40.jpg",
+    "caption": "قبل ما تختار كراج… اقرأ التقييمات ⭐\n\nتجارب عملاء حقيقيين تساعدك تقرّر صح. كله على دق سلف، شفاف ومجاني.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #تقييمات"
+  },
+  {
+    "id": "s41",
+    "status": "scheduled",
+    "publish_at": "2026-07-17T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s41.jpg",
+    "caption": "قارن… ووفّر 💰\n\nبدل ما تروح أول كراج، قارن الخيارات القريبة منك على دق سلف واختر الأنسب.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s42",
+    "status": "scheduled",
+    "publish_at": "2026-07-17T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s42.jpg",
+    "caption": "تعرف كراج زين مو موجود عندنا؟ 🙌\n\nساعد غيرك — بلّغنا عنه وبنضيفه للدليل. كل واحد يفيد الكل.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s43",
+    "status": "scheduled",
+    "publish_at": "2026-07-18T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s43.jpg",
+    "caption": "ما تعرف تشرح العطل للكراج؟ 🗣️\n\nاحكِ المشكلة بكلامك العادي، ودق سلف يفهمها ويوصّلك لأنسب كراج. جرّبه مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #اسأل_دق_سلف"
+  },
+  {
+    "id": "s44",
+    "status": "scheduled",
+    "publish_at": "2026-07-18T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s44.jpg",
+    "caption": "خلّ دق سلف يكتب رسالتك للكراج ✍️\n\nتكتب مشكلتك، ونطلّعلك رسالة واتساب جاهزة ترسلها للكراج بضغطة. سهلة وسريعة.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #اسأل_دق_سلف"
+  },
+  {
+    "id": "s45",
+    "status": "scheduled",
+    "publish_at": "2026-07-19T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s45.jpg",
+    "caption": "«فيه صوت وما أعرف شنو» 😅\n\nما يحتاج تعرف المصطلح. صف المشكلة بالعامي ودق سلف يفهمها ويرشّحلك الكراج المناسب.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #اسأل_دق_سلف"
+  },
+  {
+    "id": "s46",
+    "status": "scheduled",
+    "publish_at": "2026-07-19T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s46.jpg",
+    "caption": "من المشكلة… لأقرب كراج 🚗➡️🔧\n\nاشرح عطلك، وخلّ دق سلف يوصّلك لأنسب كراج قريب منك بتقييماته. كله مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #اسأل_دق_سلف"
+  },
+  {
+    "id": "s47",
+    "status": "scheduled",
+    "publish_at": "2026-07-20T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s47.jpg",
+    "caption": "+١٨٠٠ كراج في جيبك 📲\n\nأكبر دليل كراجات في الكويت، مرتّب بالتخصص والمنطقة. ابحث وقارن واتصل بضغطة — مجانًا.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s48",
+    "status": "scheduled",
+    "publish_at": "2026-07-20T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s48.jpg",
+    "caption": "نغطّي الكويت كلها 🗺️\n\nكراجات موثوقة في المحافظات الست. أيًا كانت منطقتك، تلاقي الأقرب لك على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s49",
+    "status": "scheduled",
+    "publish_at": "2026-07-21T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s49.jpg",
+    "caption": "بكم؟ ببلاش 🆓\n\nكل خدمات دق سلف مجانية لأصحاب السيارات. بدون رسوم ولا تسجيل.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #مجانا"
+  },
+  {
+    "id": "s50",
+    "status": "scheduled",
+    "publish_at": "2026-07-21T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s50.jpg",
+    "caption": "حر الكويت ما يرحم سيارتك 🔥\n\nقبل ما يوقفك، جهّز المكيف والبطارية والتبريد. لاقي الكراج المناسب على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #صيف_الكويت"
+  },
+  {
+    "id": "s51",
+    "status": "scheduled",
+    "publish_at": "2026-07-22T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s51.jpg",
+    "caption": "تلاقي كراج في ثواني ⚡\n\nبدون لف ودوران. اختر التخصص والمنطقة وخلّ دق سلف يرتّبلك الأقرب.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف"
+  },
+  {
+    "id": "s52",
+    "status": "scheduled",
+    "publish_at": "2026-07-22T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s52.jpg",
+    "caption": "عطل بالليل؟ ما يهم ⏰🚨\n\nخدمات طوارئ على مدار الساعة — سطحة وبطارية وبنشر متنقل. لاقي الأقرب على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #طوارئ #سطحة"
+  },
+  {
+    "id": "s53",
+    "status": "scheduled",
+    "publish_at": "2026-07-23T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s53.jpg",
+    "caption": "كم سعر تغيير الزيت؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s54",
+    "status": "scheduled",
+    "publish_at": "2026-07-23T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s54.jpg",
+    "caption": "كم سعر التواير؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s55",
+    "status": "scheduled",
+    "publish_at": "2026-07-24T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s55.jpg",
+    "caption": "كم سعر البطارية؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s56",
+    "status": "scheduled",
+    "publish_at": "2026-07-24T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s56.jpg",
+    "caption": "كم سعر تصليح المكيف؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s57",
+    "status": "scheduled",
+    "publish_at": "2026-07-25T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s57.jpg",
+    "caption": "كم سعر الفرامل؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s58",
+    "status": "scheduled",
+    "publish_at": "2026-07-25T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s58.jpg",
+    "caption": "كم سعر تصليح القير؟ قارن الأول 💰\n\nالأسعار تختلف من كراج لكراج. قارن الخيارات القريبة منك على دق سلف قبل ما تدفع.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #أسعار_السيارات"
+  },
+  {
+    "id": "s59",
+    "status": "scheduled",
+    "publish_at": "2026-07-26T06:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s59.jpg",
+    "caption": "نفس الخدمة بأسعار مختلفة 😮\n\nالمقارنة توفّر عليك. شوف الكراجات القريبة وقارن قبل ما تقرّر — على دق سلف.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #وفّر"
+  },
+  {
+    "id": "s60",
+    "status": "scheduled",
+    "publish_at": "2026-07-26T18:00:00.000Z",
+    "type": "image",
+    "media_url": "https://xqmwhrimxnvqlpvfzcac.supabase.co/storage/v1/object/public/social/s60.jpg",
+    "caption": "لا تدفع زيادة عن اللازم 🧾\n\nبعض الأسعار مبالغ فيها. قارن واقرأ تقييمات العملاء على دق سلف قبل ما تسلّم عربيتك.\n\nاللينك في البايو 👆\n\n#الكويت #كراجات_الكويت #سيارات_الكويت #q8 #kuwait #دق_سلف #نصائح"
   }
 ]
