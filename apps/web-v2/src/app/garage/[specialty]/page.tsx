@@ -89,9 +89,24 @@ export default async function SpecialtyIndexPage({
     ],
   };
 
+  // The area sub-pages this index links to — exposed as a structured list so
+  // search engines can discover every specialty×area landing page from here.
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `كراجات ${sp.label} حسب المنطقة`,
+    itemListElement: areas.map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: `${sp.label} في ${a}`,
+      url: `${SITE}/كراج/${slug}/${a}`,
+    })),
+  };
+
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
       <JsonLd data={collectionLd} />
+      <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
 
       <h1 className="text-2xl font-extrabold">كراجات {sp.label} في الكويت</h1>
