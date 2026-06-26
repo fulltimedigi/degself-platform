@@ -20,7 +20,7 @@ export const revalidate = 3600; // ISR: rebuild at most once per hour
 export const metadata: Metadata = {
   title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
   description:
-    "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+    "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة — صيانة وبودي وتواير وكهرباء — واكتشف عطل سيارتك واختر الكراج المناسب مجاناً.",
   alternates: { canonical: SITE },
   openGraph: {
     type: "website",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "دق سلف",
     title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+      "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة واكتشف عطل سيارتك واختر الكراج المناسب مجاناً.",
     images: [
       {
         url: OG_IMAGE,
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
     description:
-      "ابحث عن كراج أو خدمة سيارات في الكويت. دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.",
+      "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة واختر الكراج المناسب مجاناً.",
     images: [OG_IMAGE],
   },
 };
@@ -57,7 +57,7 @@ export default async function Home() {
     "@type": "Organization",
     "@id": `${SITE}/#organization`,
     name: "دق سلف",
-    alternateName: ["Deg Self", "Degself", "دقسلف"],
+    alternateName: ["Degself", "degself", "Deg Self", "دقسلف"],
     url: SITE,
     logo: LOGO,
     description:
@@ -262,9 +262,9 @@ export default async function Home() {
           </span>
 
           <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
-            اشرح مشكلة <span className="text-primary">سيارتك</span>{" "}
+            دق سلف — اشرح مشكلة <span className="text-primary">سيارتك</span>{" "}
             <br className="hidden sm:block" />
-            ونوصّلك لأنسب كراج
+            ونوصّلك لأنسب كراج في الكويت
           </h1>
           <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
 احكِ المشكلة بكلامك العادي — نرشّح لك كراج موثوق ونجهّز رسالة جاهزة ترسلها له.
