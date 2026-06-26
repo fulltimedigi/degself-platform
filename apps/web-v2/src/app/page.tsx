@@ -264,10 +264,10 @@ export default async function Home() {
           <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
             دق سلف — اشرح مشكلة <span className="text-primary">سيارتك</span>{" "}
             <br className="hidden sm:block" />
-            ونوصّلك لأنسب كراج في الكويت
+            ونرشّح لك أنسب كراج في الكويت
           </h1>
           <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-احكِ المشكلة بكلامك العادي — نرشّح لك كراج موثوق ونجهّز رسالة جاهزة ترسلها له.
+اشرح المشكلة بكلامك العادي — نرشّح لك كراج موثوق ونجهّز رسالة جاهزة ترسلها له.
           </p>
 
           {/* CTA رئيسي — اسأل دق سلف (الـ primary input للموقع) */}
@@ -288,7 +288,7 @@ export default async function Home() {
               </span>
               <span className="flex flex-col items-start text-right">
                 <span className="text-foreground">اسأل دق سلف</span>
-                <span className="text-sm font-normal text-muted-foreground">احكِ المشكلة ونرشّح لك أنسب كراج</span>
+                <span className="text-sm font-normal text-muted-foreground">اشرح المشكلة ونرشّح لك أنسب كراج</span>
               </span>
             </span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary transition group-hover:-translate-x-1" aria-hidden>
