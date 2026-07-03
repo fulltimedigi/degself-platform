@@ -134,9 +134,11 @@ export async function POST(req: NextRequest) {
   let garages: GarageSuggestion[] = [];
   if (category) {
     try {
+      // الترتيب الافتراضي (صلة/جودة عبر smart_score/rank_score) لا "الأعلى
+      // تقييماً" الخام — وإلا محل بمراجعة واحدة 5 نجوم يتصدّر كراجاً حقيقياً
+      // بمئات المراجعات، فتخرج اقتراحات ضعيفة الصلة للزبون.
       const { workshops } = await searchWorkshops({
         specialty: categoryToSpecialty(category),
-        sort: "top-rated",
         limit: 5,
       });
       garages = workshops.map((w) => ({
