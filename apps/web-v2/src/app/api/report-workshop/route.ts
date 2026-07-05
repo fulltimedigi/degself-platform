@@ -74,10 +74,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "تعذر حفظ التبليغ، حاول لاحقاً." }, { status: 500 });
   }
 
-  // Fire-and-forget WhatsApp notification via CallMeBot (free).
-  // Requires env vars: CALLMEBOT_PHONE (e.g. 96565799195) + CALLMEBOT_APIKEY.
-  // If not configured, silently skip.
-  notifyWhatsApp(payload).catch((e) => console.error("CallMeBot notify failed:", e));
+  // Notify admin via CallMeBot. MUST be awaited — a non-awaited call is frozen by
+  // the serverless runtime after the response and never completes. A notify
+  // failure must not fail the report (it is already saved), so swallow errors.
+  try {
+    await notifyWhatsApp(payload);
+  } catch (e) {
+    console.error("CallMeBot notify failed:", e);
+  }
 
   return NextResponse.json({ ok: true });
 }

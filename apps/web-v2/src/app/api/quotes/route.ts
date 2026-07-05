@@ -179,20 +179,19 @@ export async function POST(req: NextRequest) {
   lines.push(`⏱️ الإلحاح: ${urgency}`);
   lines.push("");
   lines.push(`🔗 ${siteUrl}/admin/quotes/${inserted.id}`);
-  // TEMP DIAGNOSTIC: await the notify and surface CallMeBot's actual result so we
-  // can see (via the response) whether the fetch ran and what CallMeBot returned.
-  // Remove _debug once the root cause is confirmed.
-  let _debug: unknown;
+  // Notify admin over WhatsApp. MUST be awaited — a non-awaited (fire-and-forget)
+  // call is frozen by the serverless runtime after the response and never
+  // completes, so the message would never send. A notify failure must not fail
+  // the request (the quote is already saved), so swallow errors here.
   try {
-    _debug = await sendAdminWhatsApp(lines.join("\n"));
+    await sendAdminWhatsApp(lines.join("\n"));
   } catch (e) {
-    _debug = { error: String(e) };
+    console.error("CallMeBot notify failed:", e);
   }
 
   return NextResponse.json({
     id: inserted.id,
     status: "received",
     message: "وصلنا طلبك — بنرسله لكراجات مختصة وتوصلك العروض قريباً.",
-    _debug,
   });
 }
