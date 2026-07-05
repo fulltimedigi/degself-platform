@@ -32,7 +32,8 @@ const AREAS = [
   "العاصمة",
 ];
 
-const YEARS = Array.from({ length: 2026 - 2010 + 1 }, (_, i) => String(2026 - i));
+// Kuwait has many classics/older models — cover 1980→2026, newest first.
+const YEARS = Array.from({ length: 2026 - 1980 + 1 }, (_, i) => String(2026 - i));
 
 const URGENCIES = ["عادي", "مستعجل", "طارئ"] as const;
 
