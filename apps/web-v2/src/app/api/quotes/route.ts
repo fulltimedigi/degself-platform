@@ -179,13 +179,20 @@ export async function POST(req: NextRequest) {
   lines.push(`⏱️ الإلحاح: ${urgency}`);
   lines.push("");
   lines.push(`🔗 ${siteUrl}/admin/quotes/${inserted.id}`);
-  sendAdminWhatsApp(lines.join("\n")).catch((e) =>
-    console.error("CallMeBot notify failed:", e)
-  );
+  // TEMP DIAGNOSTIC: await the notify and surface CallMeBot's actual result so we
+  // can see (via the response) whether the fetch ran and what CallMeBot returned.
+  // Remove _debug once the root cause is confirmed.
+  let _debug: unknown;
+  try {
+    _debug = await sendAdminWhatsApp(lines.join("\n"));
+  } catch (e) {
+    _debug = { error: String(e) };
+  }
 
   return NextResponse.json({
     id: inserted.id,
     status: "received",
     message: "وصلنا طلبك — بنرسله لكراجات مختصة وتوصلك العروض قريباً.",
+    _debug,
   });
 }
