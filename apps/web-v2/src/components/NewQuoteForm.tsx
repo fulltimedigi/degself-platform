@@ -73,6 +73,18 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       setError("اشرح المشكلة بتفصيل أكثر (١٠ أحرف على الأقل).");
       return;
     }
+    if (!carMake.trim()) {
+      setError("اكتب نوع السيارة.");
+      return;
+    }
+    if (!carModel.trim()) {
+      setError("اكتب موديل السيارة.");
+      return;
+    }
+    if (!carYear) {
+      setError("اختر سنة الصنع.");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -176,7 +188,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label className={labelCls}>نوع السيارة</label>
+          <label className={labelCls}>نوع السيارة {req}</label>
           <input
             type="text"
             value={carMake}
@@ -187,7 +199,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
           />
         </div>
         <div>
-          <label className={labelCls}>الموديل</label>
+          <label className={labelCls}>الموديل {req}</label>
           <input
             type="text"
             value={carModel}
@@ -198,7 +210,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
           />
         </div>
         <div>
-          <label className={labelCls}>سنة الصنع</label>
+          <label className={labelCls}>سنة الصنع {req}</label>
           <select
             value={carYear}
             onChange={(e) => setCarYear(e.target.value)}

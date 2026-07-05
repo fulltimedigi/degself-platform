@@ -77,8 +77,17 @@ export async function POST(req: NextRequest) {
   }
 
   const car_make = str(b.car_make, 60);
+  if (!car_make) {
+    return NextResponse.json({ error: "اكتب نوع السيارة." }, { status: 400 });
+  }
   const car_model = str(b.car_model, 60);
+  if (!car_model) {
+    return NextResponse.json({ error: "اكتب موديل السيارة." }, { status: 400 });
+  }
   const car_year = str(b.car_year, 20);
+  if (!car_year) {
+    return NextResponse.json({ error: "اختر سنة الصنع." }, { status: 400 });
+  }
   const area = str(b.area, 120);
 
   let admin;
