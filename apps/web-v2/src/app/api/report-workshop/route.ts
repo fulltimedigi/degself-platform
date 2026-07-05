@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { sendAdminWhatsApp } from "@/lib/callmebot";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -92,10 +93,6 @@ async function notifyWhatsApp(p: {
   reporter_name: string | null;
   reporter_phone: string | null;
 }) {
-  const phone = process.env.CALLMEBOT_PHONE;
-  const apikey = process.env.CALLMEBOT_APIKEY;
-  if (!phone || !apikey) return;
-
   const lines = [
     "🔔 تبليغ كراج ناقص في دق سلف",
     "",
@@ -111,11 +108,5 @@ async function notifyWhatsApp(p: {
     lines.push("");
     lines.push(`👤 المبلّغ: ${p.reporter_name ?? "-"} | ${p.reporter_phone ?? "-"}`);
   }
-  const text = lines.join("\n");
-
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(
-    phone
-  )}&text=${encodeURIComponent(text)}&apikey=${encodeURIComponent(apikey)}`;
-
-  await fetch(url, { method: "GET" });
+  await sendAdminWhatsApp(lines.join("\n"));
 }
