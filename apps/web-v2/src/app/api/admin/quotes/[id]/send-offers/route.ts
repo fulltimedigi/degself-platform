@@ -4,6 +4,14 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
+import {
+  isWhatsAppEnabled,
+  sendWhatsAppTemplate,
+  offersTemplateName,
+  offersTemplateComponents,
+  offersUrl,
+  adminForwardText,
+} from "@/lib/whatsapp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,11 +19,14 @@ export const dynamic = "force-dynamic";
 // POST /api/admin/quotes/[id]/send-offers — mint the public customer token (if
 // missing), flip status to 'offers_sent', and notify.
 //
-// DELIVERY NOTE: CallMeBot can only message a number that registered its OWN api
-// key — i.e. Ahmed's phone, never an arbitrary customer's. So we can't push the
-// link straight to the customer for free (WABA is deferred). Instead we notify
-// Ahmed with a one-tap wa.me deep-link, pre-filled with the exact customer
-// message, so forwarding it is a single tap. The admin UI also copies the URL.
+// DELIVERY: two paths, chosen at runtime.
+//  • DEFAULT (WHATSAPP_ENABLED != true): the manual concierge flow — CallMeBot
+//    notifies Ahmed with a one-tap wa.me deep-link pre-filled with the customer
+//    message; he forwards it. No Meta API is touched at all.
+//  • AUTO (WHATSAPP_ENABLED == true + Cloud API configured): send the approved
+//    template straight to the customer via Meta Cloud API, record the wamid, and
+//    just ping Ahmed that it went out. On any send failure we fall back to the
+//    manual path so nothing is ever lost.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAdminRequest(req)) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
@@ -62,32 +73,49 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "تعذّر تحديث الطلب." }, { status: 500 });
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
-  const url = `${siteUrl}/offers/${token}`;
+  const name = quote.customer_name as string;
+  const service = quote.service as string;
+  const phone = quote.customer_phone as string;
+  const url = offersUrl(token);
 
-  // The exact message meant for the customer.
-  const customerMsg =
-    `عزيزي ${quote.customer_name}، عندك ${offersCount} عرض سعر جاهز لطلبك.\n` +
-    `اضغط هنا للاطلاع والاختيار:\n${url}`;
+  // ── AUTO path (flag-gated). No Meta call is attempted unless the flag is on. ──
+  let waSent = false;
+  if (isWhatsAppEnabled()) {
+    const digits = kuwaitWhatsAppDigits(phone);
+    if (digits) {
+      const r = await sendWhatsAppTemplate(
+        digits,
+        offersTemplateName(),
+        offersTemplateComponents(name, offersCount, token)
+      );
+      if (r.ok) {
+        waSent = true;
+        await admin
+          .from("quotes")
+          .update({ wa_message_id: r.messageId, wa_status: "sent", offers_sent_at: new Date().toISOString() })
+          .eq("id", id);
+      } else if (!r.skipped) {
+        // API was called and failed → fall through to the manual path below.
+        console.error("WABA send failed, falling back to manual:", r.error);
+      }
+    }
+  }
 
-  // Notify Ahmed with a one-tap forward link (see DELIVERY NOTE above).
-  const digits = kuwaitWhatsAppDigits(quote.customer_phone as string);
-  const adminLines = [
-    "📤 جاهزة للإرسال — عروض طلب",
-    `الطلب: ${quote.customer_name} — ${quote.service}`,
-    `عدد العروض: ${offersCount}`,
-    "",
-    "أرسل هذا للعميل عبر واتساب:",
-    digits ? `https://wa.me/${digits}?text=${encodeURIComponent(customerMsg)}` : `رقم العميل: ${quote.customer_phone}`,
-    "",
-    `رابط العميل: ${url}`,
-  ];
+  // ── Notify Ahmed. Must be awaited (serverless freezes fire-and-forget fetch). ──
   try {
-    await sendAdminWhatsApp(adminLines.join("\n"));
+    if (waSent) {
+      await sendAdminWhatsApp(
+        `✅ أُرسلت العروض تلقائيًا للعميل عبر واتساب.\n` +
+          `الطلب: ${name} — ${service} (${offersCount} عروض)\n${url}`
+      );
+    } else {
+      // DEFAULT manual-forward message — identical to the pre-WABA behavior.
+      await sendAdminWhatsApp(adminForwardText(name, service, offersCount, phone, url));
+    }
   } catch (e) {
     // Notify failure must not fail the request — the token/status are already saved.
     console.error("send-offers notify failed:", e);
   }
 
-  return NextResponse.json({ success: true, url });
+  return NextResponse.json({ success: true, url, wa_sent: waSent });
 }

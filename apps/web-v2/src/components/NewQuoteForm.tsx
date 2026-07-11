@@ -308,6 +308,9 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       <p className="text-center text-xs text-muted-foreground">
         مجاني تماماً — بدون التزام — تصلك العروض خلال ساعات.
       </p>
+      <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
+        بإرسال الطلب، أوافق على تواصل دق سلف معي عبر واتساب بخصوص طلبي.
+      </p>
     </form>
   );
 }
