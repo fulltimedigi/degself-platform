@@ -3,33 +3,32 @@
 import { useState } from "react";
 import { track } from "@/lib/track";
 
-// Labels are the colloquial terms drivers use; VALUES are the real
-// reviewed_specialty values so garage matching stays clean (عفشة/توجيه/ديزل map
-// to their parent specialty — the manual router reads the description for nuance).
-const SERVICES: { label: string; value: string }[] = [
-  { label: "تكييف", value: "تكييف" },
-  { label: "قير / فتيس", value: "قير وفتيس" },
-  { label: "مكينة / محرك", value: "ميكانيكا" },
-  { label: "فرامل / بريكات", value: "فرامل" },
-  { label: "كهرباء", value: "كهرباء سيارات" },
-  { label: "بودي وصبغ / سمكرة", value: "بودي وصبغ" },
-  { label: "عفشة / مساعدات", value: "ميكانيكا" },
-  { label: "بنشر / إطارات", value: "تواير وبنشر" },
-  { label: "توجيه / زوايا", value: "تواير وبنشر" },
-  { label: "ديزل", value: "ميكانيكا" },
-  { label: "صيانة عامة", value: "صيانة عامة" },
-  { label: "غير محدد / استشارة", value: "غير محدد" },
+// Kuwaiti-dialect service categories the driver picks from. The submitted value
+// IS the label text (no normalization) — the founder reads it plus the problem
+// description when routing to a garage manually.
+const SERVICES = [
+  "ميكانيكا ومكينة (توضيب، تجفيت، زيوت)",
+  "قير / جير (تصليح، تجفيت، برمجة)",
+  "كهرباء وكمبيوتر السيارة",
+  "تكييف وفريون",
+  "هيئة أمامية ومساعدات (مقصات، ميزان، دعاميات)",
+  "فرامل (تيل، دسكات، ABS)",
+  "بنشر وتواير وبطاريات",
+  "حدادة وصبغ (سمكرة وحوادث)",
+  "إكسوز / شكمان (فم)",
+  "ديتيلنج وتلميع وحماية (PPF، تظليل)",
+  "ونش / سطحة",
+  "خدمة متنقلة عند البيت",
+  "خدمة أخرى (اكتبها في وصف المشكلة)",
 ];
 
 const AREAS = [
-  "الشويخ الصناعية",
-  "الري",
+  "العاصمة",
+  "حولي",
   "الفروانية",
   "الأحمدي",
   "الجهراء",
-  "حولي",
   "مبارك الكبير",
-  "العاصمة",
 ];
 
 // Kuwait has many classics/older models — cover 1980→2026, newest first.
@@ -38,7 +37,7 @@ const YEARS = Array.from({ length: 2026 - 1980 + 1 }, (_, i) => String(2026 - i)
 const URGENCIES = ["عادي", "مستعجل", "طارئ"] as const;
 
 export function NewQuoteForm({ initialService = "" }: { initialService?: string }) {
-  const serviceIsKnown = SERVICES.some((s) => s.value === initialService);
+  const serviceIsKnown = SERVICES.includes(initialService);
   const [service, setService] = useState(serviceIsKnown ? initialService : "");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -167,8 +166,8 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
         >
           <option value="">— اختر نوع الخدمة —</option>
           {SERVICES.map((s) => (
-            <option key={s.label} value={s.value}>
-              {s.label}
+            <option key={s} value={s}>
+              {s}
             </option>
           ))}
         </select>
