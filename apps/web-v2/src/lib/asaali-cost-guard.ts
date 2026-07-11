@@ -47,24 +47,31 @@ const PRICING = {
     input_per_1k: 0.00015,         // $0.15 / 1M tokens
     output_per_1k: 0.0006,         // $0.60 / 1M tokens
   },
-  // Anthropic Claude Haiku 4.5 — مستخدم في /api/translate و /api/asaali
+  // Anthropic Claude Haiku 4.5 — مستخدم في /api/translate
   'claude-haiku-4-5': {
     input_per_1k: 0.001,           // $1.00 / 1M tokens
     output_per_1k: 0.005,          // $5.00 / 1M tokens
+  },
+  // Anthropic Claude Sonnet 5 — مستخدم في /api/asaali (فهم لهجة أدق).
+  // نستخدم السعر القياسي $3/$15 (لا السعر التمهيدي $2/$10) عمداً حتى يوقف
+  // حارس الميزانية أبكر قليلاً من الإنفاق الحقيقي — أأمن لسقف صلب.
+  'claude-sonnet-5': {
+    input_per_1k: 0.003,           // $3.00 / 1M tokens
+    output_per_1k: 0.015,          // $15.00 / 1M tokens
   },
   'whisper-1': {
     per_minute: 0.006,             // $0.006 / minute
   },
 } as const;
 
-export type ChatModel = 'gpt-4o-mini' | 'claude-haiku-4-5';
+export type ChatModel = 'gpt-4o-mini' | 'claude-haiku-4-5' | 'claude-sonnet-5';
 
 // ============================================================
 // Types
 // ============================================================
 export interface UsageRow {
   ip_hash?: string;
-  model: 'gpt-4o-mini' | 'claude-haiku-4-5' | 'whisper-1';
+  model: 'gpt-4o-mini' | 'claude-haiku-4-5' | 'claude-sonnet-5' | 'whisper-1';
   input_tokens?: number;
   output_tokens?: number;
   audio_seconds?: number;

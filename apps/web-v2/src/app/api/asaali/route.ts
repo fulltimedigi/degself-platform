@@ -32,7 +32,9 @@ import type {
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const MODEL = "claude-haiku-4-5";
+// Sonnet 5 — أدق في فهم اللهجة الكويتية من Haiku. أغلى (~٣× للتوكن)، لكن
+// حارس الميزانية + الكاش + حد المعدّل يضبطون التكلفة. راجع MONTHLY_BUDGET_USD.
+const MODEL = "claude-sonnet-5";
 const MAX_INPUT_CHARS = 800;
 const MAX_HISTORY_TURNS = 6;
 
@@ -271,6 +273,10 @@ export async function POST(req: NextRequest) {
     const message = await client.messages.create({
       model: MODEL,
       max_tokens: 1024,
+      // مهمة استخراج JSON منظّمة — لا نحتاج تفكير موسّع. Sonnet 5 يشغّل
+      // adaptive thinking افتراضياً لو حذفنا الحقل، وهذا يستهلك جزءاً من الـ
+      // 1024 توكن وقد يقطع الـ JSON. نعطّله صراحةً لنحافظ على السلوك والتكلفة.
+      thinking: { type: "disabled" },
       system: [
         {
           type: "text",
