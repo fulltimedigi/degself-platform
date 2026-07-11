@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { statusMeta, urgencyClass } from "@/lib/quotes";
+import { statusMeta, urgencyClass } from "@/lib/quote-status";
 
 export interface QuoteRow {
   id: string;

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchQuote, statusMeta, urgencyClass, type Quote } from "@/lib/quotes";
+import { fetchQuote, fetchOffers, statusMeta, urgencyClass, type Quote, type QuoteOffer } from "@/lib/quotes";
 import { formatArabicDate, relativeArabic, kuwaitWhatsAppDigits } from "@/lib/utils";
+import { QuoteAdminControls } from "@/components/QuoteAdminControls";
 
 export const metadata: Metadata = {
   title: "تفاصيل الطلب",
@@ -77,9 +78,11 @@ export default async function QuoteDetailPage({
   const { id } = await params;
 
   let quote: Quote | null = null;
+  let offers: QuoteOffer[] = [];
   let loadError = false;
   try {
     quote = await fetchQuote(id);
+    if (quote) offers = await fetchOffers(id);
   } catch {
     loadError = true;
   }
@@ -143,6 +146,11 @@ export default async function QuoteDetailPage({
         )}
       </div>
 
+      {/* Interactive admin controls: status, offers, send-to-customer */}
+      <div className="mb-6">
+        <QuoteAdminControls quoteId={q.id} initialStatus={q.status} offers={offers} />
+      </div>
+
       <dl className="rounded-xl border border-border bg-card px-4 py-1">
         <Row label="الخدمة">{q.service}</Row>
         <Row label="وصف المشكلة">
@@ -151,7 +159,6 @@ export default async function QuoteDetailPage({
         <Row label="السيارة">{car || "—"}</Row>
         <Row label="المحافظة">{q.area || "—"}</Row>
         <Row label="الإلحاح">{q.urgency}</Row>
-        <Row label="الحالة">{sm.label}</Row>
         <Row label="مصدر الطلب">{q.source}</Row>
         <Row label="تاريخ الطلب">{fullDate(q.created_at)}</Row>
         {q.updated_at && q.updated_at !== q.created_at && (
