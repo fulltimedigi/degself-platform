@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFeaturedWorkshops } from "@/lib/workshops";
 import Link from "next/link";
+import { ClipboardList } from "lucide-react";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
 import { PriceCalculatorBanner } from "@/components/PriceCalculatorBanner";
@@ -270,31 +271,57 @@ export default async function Home() {
 اشرح المشكلة بكلامك العادي — نرشّح لك كراج موثوق ونجهّز رسالة جاهزة ترسلها له.
           </p>
 
-          {/* CTA رئيسي — اسأل دق سلف (الـ primary input للموقع) */}
-          <Link
-            href="/isal-degself"
-            aria-label="اسأل دق سلف"
-            className="group inline-flex w-full max-w-2xl items-center justify-between gap-4 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-6 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
-          >
-            <span className="flex items-center gap-4">
-              {/* أيقونة مايك دائرية كبيرة */}
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <rect x="9" y="3" width="6" height="12" rx="3" />
-                  <path d="M5 11a7 7 0 0 0 14 0" />
-                  <line x1="12" y1="18" x2="12" y2="22" />
-                  <line x1="8" y1="22" x2="16" y2="22" />
-                </svg>
+          {/* CTA رئيسي مزدوج — مسارَان متساويان: اسأل دق سلف (ترشيح فوري)
+              و اطلب عرض سعر (مقارنة أسعار). مكدّسان على الجوال، جنب بعض على الديسكتوب. */}
+          <div className="flex w-full max-w-2xl flex-col items-stretch gap-3 md:flex-row">
+            {/* المسار ١ — اسأل دق سلف (الـ primary input للموقع) */}
+            <Link
+              href="/isal-degself"
+              aria-label="اسأل دق سلف — اقتراح كراج فوراً بالذكاء الاصطناعي"
+              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                {/* أيقونة مايك دائرية كبيرة */}
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <rect x="9" y="3" width="6" height="12" rx="3" />
+                    <path d="M5 11a7 7 0 0 0 14 0" />
+                    <line x1="12" y1="18" x2="12" y2="22" />
+                    <line x1="8" y1="22" x2="16" y2="22" />
+                  </svg>
+                </span>
+                <span className="flex min-w-0 flex-col items-start text-right">
+                  <span className="text-foreground">اسأل دق سلف</span>
+                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">اقتراح كراج فوراً بالذكاء الاصطناعي</span>
+                </span>
               </span>
-              <span className="flex flex-col items-start text-right">
-                <span className="text-foreground">اسأل دق سلف</span>
-                <span className="text-sm font-normal text-muted-foreground">اشرح المشكلة ونرشّح لك أنسب كراج</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </Link>
+
+            {/* المسار ٢ — اطلب عرض سعر (طلب عروض من عدة كراجات) */}
+            <Link
+              href="/quote/new"
+              data-testid="button-request-quote-hero"
+              aria-label="اطلب عرض سعر — قارن أسعار من كراجات متعددة"
+              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                {/* أيقونة قائمة/عروض دائرية كبيرة */}
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
+                  <ClipboardList size={22} strokeWidth={2.2} aria-hidden />
+                </span>
+                <span className="flex min-w-0 flex-col items-start text-right">
+                  <span className="text-foreground">اطلب عرض سعر</span>
+                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">قارن أسعار من كراجات متعددة</span>
+                </span>
               </span>
-            </span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary transition group-hover:-translate-x-1" aria-hidden>
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </Link>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </Link>
+          </div>
 
           {/* بحث نصي مباشر — ظاهر دايماً */}
           <div className="flex w-full max-w-2xl flex-col gap-2">
