@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { WorkshopCard } from "@/components/WorkshopCard";
+import { ScrollRow } from "@/components/ScrollRow";
 import type { Workshop } from "@/lib/types";
 
 export function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
@@ -23,14 +24,14 @@ export function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
         </Link>
       </div>
 
-      {/* horizontal snap carousel */}
-      <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+      {/* horizontal snap carousel with leading-edge fade affordance */}
+      <ScrollRow className="gap-4 pb-2">
         {workshops.map((w) => (
           <div key={w.place_id} className="w-[340px] shrink-0 snap-start">
             <WorkshopCard workshop={w} />
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </div>
   );
 }

@@ -343,7 +343,7 @@ export default async function Home() {
                 <input
                   type="search"
                   name="q"
-                  placeholder="ابحث باسم الكراج أو المنطقة (مثال: بنشر الجهراء)"
+                  placeholder="ابحث باسم الكراج أو المنطقة"
                   autoComplete="off"
                   aria-label="ابحث عن كراج أو منطقة"
                   className="flex-1 rounded-xl bg-transparent py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none"
@@ -356,6 +356,7 @@ export default async function Home() {
                 ابحث
               </button>
             </form>
+            <p className="mt-1 px-1 text-xs text-muted-foreground">مثال: بنشر، قير، ميكانيكا الشويخ</p>
           </div>
         </div>
       </section>
