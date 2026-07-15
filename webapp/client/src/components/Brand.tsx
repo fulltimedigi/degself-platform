@@ -1,63 +1,42 @@
-import logoKey from "@/assets/logo-key.png";
+import logoArabic from "@/assets/logo-arabic-badge.png";
+import logoLatin from "@/assets/logo-latin-badge.png";
 
 /**
- * LogoEn: لوجو أفقي للهيدر — مفتاح PNG عالي الجودة + نص
+ * LogoEn: بادج دائري لاتيني "degself" — للاستخدام الدولي (Footer, About)
+ * الاسم داخل البادج، لا حاجة لنص خارجي.
  */
 export function LogoEn({ className = "h-8" }: { className?: string }) {
   return (
-    <div
-      className={`inline-flex items-center gap-2 ${className}`}
+    <img
+      src={logoLatin}
+      alt="degself"
+      className={`${className} w-auto select-none`}
+      style={{ aspectRatio: "1 / 1", objectFit: "contain" }}
+      draggable={false}
       data-testid="img-logo-en"
-    >
-      <img
-        src={logoKey}
-        alt=""
-        className="h-full w-auto select-none"
-        style={{ aspectRatio: "1 / 1", objectFit: "contain" }}
-        draggable={false}
-        aria-hidden="true"
-      />
-      <span
-        className="font-en font-extrabold leading-none tracking-tight"
-        style={{ fontSize: "0.7em" }}
-      >
-        <span className="text-foreground">deg</span>
-        <span className="text-primary">self</span>
-      </span>
-    </div>
+    />
   );
 }
 
 /**
- * LogoAr: لوجو أفقي بالعربي
+ * LogoAr: بادج دائري عربي "دق سلف" — للاستخدام الرئيسي والمحلي
+ * الاسم داخل البادج، لا حاجة لنص خارجي.
  */
 export function LogoAr({ className = "h-8" }: { className?: string }) {
   return (
-    <div
-      className={`inline-flex items-center gap-2 ${className}`}
+    <img
+      src={logoArabic}
+      alt="دق سلف"
+      className={`${className} w-auto select-none`}
+      style={{ aspectRatio: "1 / 1", objectFit: "contain" }}
+      draggable={false}
       data-testid="img-logo-ar"
-    >
-      <img
-        src={logoKey}
-        alt=""
-        className="h-full w-auto select-none"
-        style={{ aspectRatio: "1 / 1", objectFit: "contain" }}
-        draggable={false}
-        aria-hidden="true"
-      />
-      <span
-        className="font-ar font-extrabold leading-none"
-        style={{ fontSize: "0.7em" }}
-      >
-        <span className="text-foreground">دق </span>
-        <span className="text-primary">سلف</span>
-      </span>
-    </div>
+    />
   );
 }
 
 /**
- * LogoHero: لوجو عمودي كبير لصفحات Hero — مفتاح + نص متوازنين
+ * LogoHero: بادج كبير لصفحات Hero — البادج العربي بحجم مميز
  */
 export function LogoHero({ className = "" }: { className?: string }) {
   return (
@@ -66,28 +45,24 @@ export function LogoHero({ className = "" }: { className?: string }) {
       data-testid="img-logo-hero"
     >
       <img
-        src={logoKey}
-        alt="degself"
-        className="h-24 w-24 drop-shadow-[0_8px_24px_rgba(255,214,10,0.35)] md:h-28 md:w-28"
+        src={logoArabic}
+        alt="دق سلف - degself"
+        className="h-32 w-32 drop-shadow-[0_8px_24px_rgba(255,214,10,0.35)] md:h-40 md:w-40"
         draggable={false}
       />
-      <span className="mt-4 font-en text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
-        <span className="text-foreground">deg</span>
-        <span className="text-primary">self</span>
-      </span>
     </div>
   );
 }
 
 /**
- * LogoKey: مفتاح PNG فقط بدون نص
+ * LogoKey: البادج العربي فقط (اسم محفوظ للتوافق مع الكود القديم)
  */
 export function LogoKey({ className = "h-9" }: { className?: string }) {
   return (
     <img
-      src={logoKey}
-      alt="degself"
-      className={`${className} select-none`}
+      src={logoArabic}
+      alt="دق سلف"
+      className={`${className} w-auto select-none`}
       style={{ aspectRatio: "1 / 1", objectFit: "contain" }}
       draggable={false}
       data-testid="img-logo-key"
