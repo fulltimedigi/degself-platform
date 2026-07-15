@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Search, Map, Info, Home, Menu, X, Siren } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
-import { LogoEn, TAGLINE, BUSINESS_WA_URL, BUSINESS_PHONE } from "./Brand";
+import { LogoAr, LogoEn, TAGLINE, BUSINESS_WA_URL, BUSINESS_PHONE } from "./Brand";
 
 const NAV = [
   { href: "/", label: "الرئيسية", icon: Home },
@@ -22,7 +22,7 @@ function Header() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2" data-testid="link-home-logo">
-          <LogoEn className="h-8 md:h-9" />
+          <LogoAr className="h-10 md:h-11" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -102,7 +102,7 @@ function Footer() {
     <footer className="border-t border-border bg-card/40">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-3 md:px-6">
         <div className="space-y-3">
-          <LogoEn className="h-8" />
+          <LogoEn className="h-12" />
           <p className="text-sm font-bold text-primary">{TAGLINE}</p>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
             دليل كويتي للكراجات ومراكز الصيانة ومحلات قطع الغيار
