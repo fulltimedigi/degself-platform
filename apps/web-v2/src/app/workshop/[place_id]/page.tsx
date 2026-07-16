@@ -48,15 +48,17 @@ import {
 } from "@/components/ReviewInsights";
 import { WorkshopViewTracker } from "@/components/WorkshopViewTracker";
 
-export const revalidate = 3600; // ISR
-export const dynamicParams = true; // place_ids beyond the pre-rendered 100 build on demand
+export const revalidate = 86400; // daily ISR — reduces rebuild frequency, improves cache HIT rate
+export const dynamicParams = true; // place_ids beyond the pre-rendered set build on demand
 
 // Pre-render the 100 most-reviewed workshops + every curated mechanic at build
 // time; the rest are ISR. Curated mechanics carry no review count, so they'd
 // never make the top-100 cut — add them explicitly so they ship pre-rendered.
 export async function generateStaticParams() {
+  // Prerender top 500 workshops (up from 100) to maximize cache HIT rate.
+  // Combined with curated mechanic list, this covers the highest-traffic pages.
   const [topByReviews, curatedMechs] = await Promise.all([
-    getAllPlaceIds(100),
+    getAllPlaceIds(500),
     getCuratedMechanicPlaceIds(),
   ]);
   const ids = Array.from(new Set([...topByReviews, ...curatedMechs]));

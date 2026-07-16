@@ -8,6 +8,9 @@ import { formatArabicDate } from "@/lib/utils";
 
 const SITE = "https://degself.com";
 
+export const revalidate = 86400; // daily ISR
+export const dynamicParams = false; // only pre-built article slugs are valid
+
 export function generateStaticParams() {
   return articleSlugs.map((slug) => ({ slug }));
 }
