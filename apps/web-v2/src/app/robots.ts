@@ -9,15 +9,41 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/"],
+        // Block utility/dynamic paths that produce no SEO value and would
+        // otherwise burn crawl budget on duplicate or user-specific content.
+        disallow: [
+          "/api/",
+          "/_next/",
+          "/admin/",
+          "/saved",
+          "/quote/new",
+          "/report-workshop",
+          "/search?*", // Only filtered variants — canonical /search stays indexable
+        ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
+        disallow: [
+          "/api/",
+          "/admin/",
+          "/saved",
+          "/quote/new",
+          "/report-workshop",
+          "/search?*",
+        ],
       },
       {
         userAgent: "Bingbot",
         allow: "/",
+        disallow: [
+          "/api/",
+          "/admin/",
+          "/saved",
+          "/quote/new",
+          "/report-workshop",
+          "/search?*",
+        ],
       },
       // Block search engines with no meaningful Kuwait audience
       { userAgent: "Baiduspider", disallow: "/" }, // China

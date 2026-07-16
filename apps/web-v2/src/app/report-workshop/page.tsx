@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "بلّغنا عن كراج ناقص — دق سلف",
   description:
     "ساعدنا في إكمال دليل كراجات الكويت — أبلغنا عن أي كراج غير موجود في دق سلف.",
+  robots: { index: false, follow: true }, // utility form — no SEO value
 };
 
 export default function ReportWorkshopPage() {
