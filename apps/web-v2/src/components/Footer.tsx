@@ -10,7 +10,7 @@ export function Footer() {
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-3">
         {/* عن دق سلف */}
         <div className="flex flex-col gap-3">
-          <Image src="/brand/logo-icon.svg" alt="دق سلف" width={40} height={40} unoptimized />
+          <Image src="/brand/logo-latin-badge.png" alt="degself" width={56} height={56} unoptimized className="h-14 w-14" />
           <p className="text-sm font-bold">دق سلف</p>
           <p className="text-sm text-muted-foreground">
             اكتشف عطل سيارتك الآن واختر الكراج المناسب — دليلك لكراجات وميكانيكي وخدمات السيارات في الكويت.

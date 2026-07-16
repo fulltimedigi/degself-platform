@@ -25,13 +25,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "حاسبة أسعار خدمات السيارات في الكويت 2026 | دق سلف",
     description: "احسب تكلفة خدمات السيارات في الكويت — حاسبة تفاعلية.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

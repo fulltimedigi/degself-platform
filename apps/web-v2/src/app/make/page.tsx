@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "تصفّح كراجات السيارات حسب الماركة في الكويت | دق سلف",
     description: "اعثر على كراجات ومراكز صيانة متخصصة حسب ماركة سيارتك في الكويت.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

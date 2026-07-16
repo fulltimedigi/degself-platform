@@ -16,13 +16,13 @@ export const metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "خريطة كراجات الكويت | دق سلف",
     description: "خريطة تفاعلية تضم 1,757 كراج سيارات في كل محافظات الكويت.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

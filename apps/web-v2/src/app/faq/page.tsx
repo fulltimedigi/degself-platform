@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "الأسئلة الشائعة | دق سلف",
     description: "كل ما تحتاج معرفته عن دق سلف، دليل كراجات الكويت.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

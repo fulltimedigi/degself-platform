@@ -19,13 +19,13 @@ export const metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "سطحة وكراج متنقل في الكويت | خدمة طوارئ السيارات | دق سلف",
     description: "دليل خدمات الطوارئ المتنقلة لسيارتك في جميع محافظات الكويت.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

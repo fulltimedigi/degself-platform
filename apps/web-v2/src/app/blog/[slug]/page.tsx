@@ -36,13 +36,13 @@ export async function generateMetadata({
       siteName: "دق سلف",
       publishedTime: article.datePublished,
       modifiedTime: article.dateModified,
-      images: ["/og-image.jpg"],
+      images: ["/og-image.jpg?v=2"],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.description,
-      images: ["/og-image.jpg"],
+      images: ["/og-image.jpg?v=2"],
     },
   };
 }
@@ -73,7 +73,7 @@ export default async function ArticlePage({
     publisher: {
       "@type": "Organization",
       name: "دق سلف",
-      logo: { "@type": "ImageObject", url: `${SITE}/brand/logo-arabic.png` },
+      logo: { "@type": "ImageObject", url: `${SITE}/brand/logo-arabic-badge.png?v=2` },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };

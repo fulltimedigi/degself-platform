@@ -26,13 +26,13 @@ export const metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "البحث عن كراج في الكويت | دق سلف",
     description: "ابحث في 1,757 كراج موثّق بالكويت.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 

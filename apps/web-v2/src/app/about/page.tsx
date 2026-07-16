@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_KW",
     siteName: "دق سلف",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
   twitter: {
     card: "summary_large_image",
     title: "عن دق سلف — دليلك لكراجات الكويت",
     description: "أول دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpg?v=2"],
   },
 };
 
@@ -138,7 +138,7 @@ export default function AboutPage() {
         name: "دق سلف",
         alternateName: "Deg Self",
         url: SITE,
-        logo: `${SITE}/brand/logo-arabic.png`,
+        logo: `${SITE}/brand/logo-arabic-badge.png?v=2`,
         description:
           "أول دليل ذكي وشامل لكراجات وميكانيكي السيارات في الكويت — مجاناً، دون إعلانات.",
         areaServed: { "@type": "Country", name: "الكويت" },
