@@ -14,7 +14,7 @@ const SITE = "https://degself.com";
 // Social share card (brand-colored, 1200×630).
 const OG_IMAGE = `${SITE}/og-image.jpg`;
 // Brand logo (used for the Organization schema logo, not the social card).
-const LOGO = `${SITE}/brand/logo-arabic.png`;
+const LOGO = `${SITE}/brand/logo-arabic-badge.png?v=2`;
 
 export const revalidate = 3600; // ISR: rebuild at most once per hour
 

@@ -67,12 +67,13 @@ export function Header() {
         {/* Logo (RTL start = right) */}
         <Link href="/" className="flex items-center" aria-label="دق سلف — الرئيسية">
           <Image
-            src="/brand/logo-wordmark.svg"
+            src="/brand/logo-arabic-badge.png"
             alt="دق سلف"
-            width={130}
-            height={41}
+            width={48}
+            height={48}
             priority
             unoptimized
+            className="h-12 w-12"
           />
         </Link>
 
