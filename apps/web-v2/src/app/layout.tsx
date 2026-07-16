@@ -187,6 +187,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ar-KW" dir="rtl" className={`${cairo.variable} antialiased`}>
+      <head>
+        {/* Explicit hreflang tags for Kuwait-Arabic targeting.
+            Next 16 metadata.alternates.languages does not consistently render
+            these into <head>, so we emit them manually to ensure Google/Bing
+            see the ar-KW geo-language signal. */}
+        <link rel="alternate" hrefLang="ar-KW" href="https://degself.com/" />
+        <link rel="alternate" hrefLang="ar" href="https://degself.com/" />
+        <link rel="alternate" hrefLang="x-default" href="https://degself.com/" />
+      </head>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <JsonLd data={localBusinessLd} />
 
