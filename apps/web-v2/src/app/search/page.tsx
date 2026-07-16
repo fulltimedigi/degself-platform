@@ -11,7 +11,10 @@ import { SearchTracker } from "@/components/SearchTracker";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { inferSpecialtyFromQuery } from "@/lib/dialect";
 
-export const dynamic = "force-dynamic"; // results depend on the query — never cached
+// Canonical /search (no params) prerenders + revalidates every 6h so the
+// indexable directory serves from cache. Any /search?param=X is automatically
+// dynamic in Next 15+ because searchParams triggers dynamic rendering per-request.
+export const revalidate = 21600;
 
 export async function generateMetadata({
   searchParams,
