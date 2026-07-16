@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "اطلب عرض سعر — دق سلف",
   description:
     "اشرح مشكلة سيارتك واحصل على عروض أسعار من عدة كراجات مختصة في الكويت — مجاناً وبدون التزام.",
+  robots: { index: false, follow: true }, // utility form — dynamic per user, no SEO value
 };
 
 export default async function NewQuotePage({

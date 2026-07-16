@@ -13,28 +13,43 @@ import { inferSpecialtyFromQuery } from "@/lib/dialect";
 
 export const dynamic = "force-dynamic"; // results depend on the query — never cached
 
-export const metadata = {
-  title: "البحث عن كراج في الكويت | دق سلف",
-  description:
-    "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
-  alternates: { canonical: "https://degself.com/search" },
-  openGraph: {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
+  // Any query params → filtered variant. Canonicalize to /search and mark
+  // noindex to prevent duplicate-content bloat from every filter combo.
+  const hasParams = Object.values(sp).some((v) => v !== undefined && v !== "");
+
+  const base = {
     title: "البحث عن كراج في الكويت | دق سلف",
     description:
-      "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
-    url: "https://degself.com/search",
-    type: "website",
-    locale: "ar_KW",
-    siteName: "دق سلف",
-    images: ["/og-image.jpg?v=2"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "البحث عن كراج في الكويت | دق سلف",
-    description: "ابحث في 1,757 كراج موثّق بالكويت.",
-    images: ["/og-image.jpg?v=2"],
-  },
-};
+      "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
+    alternates: { canonical: "https://degself.com/search" },
+    openGraph: {
+      title: "البحث عن كراج في الكويت | دق سلف",
+      description:
+        "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
+      url: "https://degself.com/search",
+      type: "website" as const,
+      locale: "ar_KW",
+      siteName: "دق سلف",
+      images: ["/og-image.jpg?v=2"],
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "البحث عن كراج في الكويت | دق سلف",
+      description: "ابحث في 1,757 كراج موثّق بالكويت.",
+      images: ["/og-image.jpg?v=2"],
+    },
+  };
+
+  return hasParams
+    ? { ...base, robots: { index: false, follow: true } }
+    : base;
+}
 
 const PAGE_SIZE = 24;
 const GOVERNORATES = [
