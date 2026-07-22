@@ -164,6 +164,31 @@ export function QuoteAdminControls({
     }
   }
 
+  async function copyGarageLink() {
+    setMsg(null);
+    try {
+      const res = await fetch(`/api/admin/quotes/${quoteId}/garage-link`, { method: "POST" });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setMsg({ kind: "err", text: d.error ?? "تعذّر إنشاء رابط الكراجات." });
+        return;
+      }
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(d.url);
+        copied = true;
+      } catch {
+        /* clipboard may be blocked — the URL is still shown below */
+      }
+      setMsg({
+        kind: "ok",
+        text: `رابط تقديم العروض للكراجات${copied ? " (نُسخ للحافظة)" : ""}: ${d.url}`,
+      });
+    } catch {
+      setMsg({ kind: "err", text: "تعذّر الاتصال." });
+    }
+  }
+
   async function sendOffers() {
     if (!window.confirm("سيتم إرسال رسالة واتساب للعميل بجميع العروض. متابعة؟")) return;
     setBusy(true);
@@ -226,16 +251,28 @@ export function QuoteAdminControls({
 
       {/* ── Offers ─────────────────────────────────────────────────── */}
       <section className="rounded-xl border border-border bg-card p-4">
-        <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-bold">العروض المستلمة ({offers.length})</h2>
-          <button
-            type="button"
-            onClick={() => setShowForm((v) => !v)}
-            className="rounded-lg bg-[#FFD60A] px-3 py-1.5 text-xs font-extrabold text-[#0A0A0A]"
-          >
-            {showForm ? "إلغاء" : "إضافة عرض جديد"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={copyGarageLink}
+              className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-bold transition hover:border-[#FFD60A]"
+            >
+              رابط الكراجات 🔗
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowForm((v) => !v)}
+              className="rounded-lg bg-[#FFD60A] px-3 py-1.5 text-xs font-extrabold text-[#0A0A0A]"
+            >
+              {showForm ? "إلغاء" : "إضافة عرض جديد"}
+            </button>
+          </div>
         </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          «رابط الكراجات» = لينك تبعته للكراجات على واتساب ليقدّموا عروضهم بأنفسهم (بدون دخول).
+        </p>
 
         {showForm && (
           <form

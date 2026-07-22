@@ -22,6 +22,7 @@ export interface Quote {
   photos: string[] | null;
   status: string;
   customer_token: string | null;
+  garage_token: string | null;
   matched_workshops: unknown;
   admin_notes: string | null;
   source: string;
