@@ -42,12 +42,20 @@ export default async function AdminQuotesPage() {
             إجمالي الطلبات: <span className="font-bold text-foreground">{rows.length}</span>
           </p>
         </div>
-        <Link
-          href="/admin/quotes"
-          className="rounded-lg border border-border bg-card px-3 py-2 text-sm font-bold transition hover:border-[#FFD60A]"
-        >
-          تحديث ↻
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/settings"
+            className="rounded-lg border border-border bg-card px-3 py-2 text-sm font-bold transition hover:border-[#FFD60A]"
+          >
+            الإعدادات ⚙
+          </Link>
+          <Link
+            href="/admin/quotes"
+            className="rounded-lg border border-border bg-card px-3 py-2 text-sm font-bold transition hover:border-[#FFD60A]"
+          >
+            تحديث ↻
+          </Link>
+        </div>
       </div>
 
       {loadError ? (
