@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { fetchQuoteByToken, fetchOffers } from "@/lib/quotes";
+import { isOfferExpired } from "@/lib/quote-status";
 import { OffersChooser, type PublicOffer } from "@/components/OffersChooser";
 
 export const metadata: Metadata = {
@@ -68,13 +69,25 @@ export default async function OffersPage({
   }
 
   const offers = await fetchOffers(quote.id);
-  // Only offers still on the table (never expose rejected ones to the customer).
+  const now = Date.now();
+  // Show only offers that are still on the table AND still valid:
+  //  • never expose rejected offers to the customer, and
+  //  • drop any whose validity window (created_at + validity_days) has passed.
   const active: PublicOffer[] = offers
     .filter((o) => o.status !== "rejected")
+    .filter((o) => !isOfferExpired(o.created_at, o.validity_days, now))
     .map((o) => ({
       id: o.id,
       workshop_name: o.workshop_name,
+      pricing_type: o.pricing_type,
       price_kwd: Number(o.price_kwd),
+      price_max_kwd: o.price_max_kwd == null ? null : Number(o.price_max_kwd),
+      assumed_diagnosis: o.assumed_diagnosis,
+      inspection_fee_kwd: o.inspection_fee_kwd == null ? null : Number(o.inspection_fee_kwd),
+      parts_type: o.parts_type,
+      validity_days: o.validity_days,
+      warranty_days: o.warranty_days,
+      warranty_note: o.warranty_note,
       estimated_duration: o.estimated_duration,
       notes: o.notes,
     }));

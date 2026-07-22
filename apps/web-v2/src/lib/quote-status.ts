@@ -27,18 +27,93 @@ export interface Quote {
   source: string;
 }
 
-// One offer a workshop sent back for a quote (public.quote_offers, migration 015).
+// Pricing type — the garage picks ONE (migration 017). price_kwd meaning:
+//   fixed       → the price
+//   range       → the lower bound (upper bound = price_max_kwd)
+//   conditional → the single price
+export const PRICING_TYPES = ["fixed", "range", "conditional"] as const;
+export type PricingType = (typeof PRICING_TYPES)[number];
+
+export const PRICING_TYPE_META: Record<
+  PricingType,
+  { label: string; badge: string; className: string }
+> = {
+  fixed: { label: "سعر ثابت", badge: "ثابت", className: "bg-green-600 text-white" },
+  range: { label: "رنج (من–إلى)", badge: "من–إلى", className: "bg-amber-500 text-[#0A0A0A]" },
+  conditional: {
+    label: "مشروط بالتشخيص",
+    badge: "مشروط بالفحص",
+    className: "bg-blue-500 text-white",
+  },
+};
+
+// Parts type enum (migration 017) — the biggest driver of price differences.
+export const PARTS_TYPES = [
+  "original",
+  "commercial_a",
+  "commercial",
+  "used",
+  "labor_only",
+] as const;
+export type PartsType = (typeof PARTS_TYPES)[number];
+
+export const PARTS_TYPE_LABEL: Record<PartsType, string> = {
+  original: "أصلي (وكالة)",
+  commercial_a: "تجاري درجة أولى",
+  commercial: "تجاري",
+  used: "مستعمل",
+  labor_only: "أجرة عمل فقط (بدون قطع)",
+};
+
+// Network rule constants (mirror migration 017 CHECK constraints).
+export const RANGE_MAX_MULTIPLIER = 1.3; // upper ≤ lower × 1.3
+export const MIN_WARRANTY_DAYS = 7; // network minimum
+export const DEFAULT_VALIDITY_DAYS = 3;
+
+// Protection clause — printed verbatim on the customer page for every
+// conditional offer (spec §4). Do not paraphrase.
+export const CONDITIONAL_PROTECTION_CLAUSE =
+  "إذا اختلف التشخيص الفعلي بعد الفحص عن التشخيص المذكور في هذا العرض، يلتزم " +
+  "الكراج بإبلاغ العميل بالسعر الجديد قبل بدء أي عمل، وللعميل حق الانسحاب دون " +
+  "أي تكلفة عدا رسم الكشف المعلن مسبقاً (إن وجد).";
+
+export function pricingTypeMeta(t: string | null | undefined) {
+  return PRICING_TYPE_META[(t ?? "fixed") as PricingType] ?? PRICING_TYPE_META.fixed;
+}
+
+// One offer a workshop sent back for a quote (public.quote_offers, migrations 015 + 017).
 export interface QuoteOffer {
   id: string;
   quote_id: string;
   workshop_name: string;
   workshop_phone: string | null;
-  price_kwd: number;
+  pricing_type: string; // fixed | range | conditional
+  price_kwd: number; // fixed→price, range→min, conditional→price
+  price_max_kwd: number | null; // range upper bound
+  assumed_diagnosis: string | null; // conditional
+  inspection_fee_kwd: number | null; // conditional (0 = free)
+  parts_type: string | null; // original | commercial_a | commercial | used | labor_only
+  validity_days: number; // offer stays live for created_at + validity_days
+  warranty_days: number | null; // ≥ 7 for new offers
+  warranty_note: string | null;
   estimated_duration: string | null;
   notes: string | null;
   status: string; // pending | accepted | rejected
   created_at: string;
   accepted_at: string | null;
+}
+
+// True once created_at + validity_days has passed. Legacy rows always carry a
+// validity_days default of 3, so this stays well-defined for old offers too.
+export function isOfferExpired(
+  createdAt: string,
+  validityDays: number | null | undefined,
+  now: number = Date.now()
+): boolean {
+  const days = validityDays && validityDays > 0 ? validityDays : DEFAULT_VALIDITY_DAYS;
+  const created = new Date(createdAt).getTime();
+  if (!Number.isFinite(created)) return false; // never hide on an unparseable date
+  return created + days * 24 * 60 * 60 * 1000 < now;
 }
 
 // The full quote lifecycle (migration 015 CHECK). Order is the natural funnel.
