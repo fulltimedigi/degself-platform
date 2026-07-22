@@ -14,7 +14,9 @@ const QUOTE_COLUMNS =
   "customer_token,matched_workshops,admin_notes,source";
 
 const OFFER_COLUMNS =
-  "id,quote_id,workshop_name,workshop_phone,price_kwd,estimated_duration,notes,status,created_at,accepted_at";
+  "id,quote_id,workshop_name,workshop_phone,pricing_type,price_kwd,price_max_kwd," +
+  "assumed_diagnosis,inspection_fee_kwd,parts_type,validity_days,warranty_days,warranty_note," +
+  "estimated_duration,notes,status,created_at,accepted_at";
 
 /** All quotes, newest first. Throws on Supabase/config error. */
 export async function fetchQuotes(limit = 500): Promise<Quote[]> {

@@ -1,13 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { QUOTE_STATUSES, statusMeta, type QuoteOffer } from "@/lib/quote-status";
+import {
+  QUOTE_STATUSES,
+  statusMeta,
+  pricingTypeMeta,
+  PARTS_TYPES,
+  PARTS_TYPE_LABEL,
+  PRICING_TYPES,
+  PRICING_TYPE_META,
+  DEFAULT_VALIDITY_DAYS,
+  MIN_WARRANTY_DAYS,
+  type QuoteOffer,
+  type PartsType,
+} from "@/lib/quote-status";
+import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
 
 const OFFER_STATUS_LABEL: Record<string, string> = {
   pending: "بانتظار",
   accepted: "مقبول",
   rejected: "مرفوض",
+};
+
+const EMPTY_FORM = {
+  workshop_name: "",
+  workshop_phone: "",
+  pricing_type: "fixed",
+  price_kwd: "",
+  price_max_kwd: "",
+  assumed_diagnosis: "",
+  inspection_fee_kwd: "",
+  parts_type: "",
+  validity_days: String(DEFAULT_VALIDITY_DAYS),
+  warranty_days: "",
+  warranty_note: "",
+  estimated_duration: "",
+  notes: "",
 };
 
 function Banner({ kind, children }: { kind: "ok" | "err"; children: React.ReactNode }) {
@@ -34,13 +63,31 @@ export function QuoteAdminControls({
 
   // add-offer form
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    workshop_name: "",
-    workshop_phone: "",
-    price_kwd: "",
-    estimated_duration: "",
-    notes: "",
-  });
+  const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [attempted, setAttempted] = useState(false);
+
+  // Live validation — SAME rules the server enforces.
+  const errs: OfferErrors = useMemo(() => {
+    const res = validateOffer(form);
+    return res.errors ?? {};
+  }, [form]);
+  const hasErrors = Object.keys(errs).length > 0;
+
+  const set = (patch: Partial<typeof form>) => setForm((f) => ({ ...f, ...patch }));
+  const markTouched = (name: string) => setTouched((t) => ({ ...t, [name]: true }));
+  const showErr = (name: keyof OfferErrors) =>
+    touched[name as string] || attempted ? errs[name] : undefined;
+
+  const inputCls =
+    "w-full rounded-lg border bg-background px-3 py-2.5 text-base focus:outline-none focus:border-[#FFD60A]";
+  const fieldCls = (name: keyof OfferErrors) =>
+    `${inputCls} ${showErr(name) ? "border-red-500 focus:border-red-500" : "border-border"}`;
+
+  function FieldError({ name }: { name: keyof OfferErrors }) {
+    const e = showErr(name);
+    return e ? <p className="mt-1 text-xs font-bold text-red-400">{e}</p> : null;
+  }
 
   async function changeStatus(next: string) {
     const prev = status;
@@ -68,28 +115,28 @@ export function QuoteAdminControls({
 
   async function addOffer(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.workshop_name.trim()) {
-      setMsg({ kind: "err", text: "اكتب اسم الكراج." });
-      return;
-    }
-    if (!form.price_kwd.trim() || !Number.isFinite(Number(form.price_kwd))) {
-      setMsg({ kind: "err", text: "اكتب سعراً صحيحاً." });
+    setAttempted(true);
+    const res = validateOffer(form);
+    if (res.errors) {
+      setMsg({ kind: "err", text: Object.values(res.errors)[0] ?? "بيانات العرض غير صحيحة." });
       return;
     }
     setBusy(true);
     setMsg(null);
     try {
-      const res = await fetch(`/api/admin/quotes/${quoteId}/offers`, {
+      const r = await fetch(`/api/admin/quotes/${quoteId}/offers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const d = await res.json().catch(() => ({}));
-      if (!res.ok) {
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) {
         setMsg({ kind: "err", text: d.error ?? "تعذّر إضافة العرض." });
         return;
       }
-      setForm({ workshop_name: "", workshop_phone: "", price_kwd: "", estimated_duration: "", notes: "" });
+      setForm({ ...EMPTY_FORM });
+      setTouched({});
+      setAttempted(false);
       setShowForm(false);
       setMsg({ kind: "ok", text: "أُضيف العرض." });
       router.refresh();
@@ -128,7 +175,6 @@ export function QuoteAdminControls({
         setMsg({ kind: "err", text: d.error ?? "تعذّر إرسال العروض." });
         return;
       }
-      // Copy the customer link to the clipboard for easy forwarding.
       let copied = false;
       try {
         await navigator.clipboard.writeText(d.url);
@@ -151,8 +197,7 @@ export function QuoteAdminControls({
 
   const sm = statusMeta(status);
   const canSend = offers.length >= 1 && status !== "offers_sent" && status !== "accepted";
-  const inputCls =
-    "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-base focus:border-[#FFD60A] focus:outline-none";
+  const pt = form.pricing_type;
 
   return (
     <div className="flex flex-col gap-6">
@@ -167,7 +212,7 @@ export function QuoteAdminControls({
         <select
           value={status}
           onChange={(e) => changeStatus(e.target.value)}
-          className={inputCls}
+          className={`${inputCls} border-border`}
         >
           {QUOTE_STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -193,52 +238,219 @@ export function QuoteAdminControls({
         </div>
 
         {showForm && (
-          <form onSubmit={addOffer} className="mb-4 flex flex-col gap-3 rounded-lg border border-border bg-background p-3">
+          <form
+            onSubmit={addOffer}
+            className="mb-4 flex flex-col gap-3 rounded-lg border border-border bg-background p-3"
+          >
+            <div>
+              <input
+                className={fieldCls("workshop_name")}
+                placeholder="اسم الكراج *"
+                value={form.workshop_name}
+                onChange={(e) => set({ workshop_name: e.target.value })}
+                onBlur={() => markTouched("workshop_name")}
+                maxLength={120}
+              />
+              <FieldError name="workshop_name" />
+            </div>
+
+            {/* Pricing type switch */}
+            <div>
+              <label className="mb-1 block text-xs font-bold text-muted-foreground">
+                نوع التسعير *
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {PRICING_TYPES.map((t) => {
+                  const active = pt === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => set({ pricing_type: t })}
+                      className={`rounded-lg border px-2 py-2 text-xs font-bold transition ${
+                        active
+                          ? "border-[#FFD60A] bg-[#FFD60A] text-[#0A0A0A]"
+                          : "border-border bg-card text-foreground"
+                      }`}
+                    >
+                      {PRICING_TYPE_META[t].label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Price fields — switch by pricing type */}
+            {pt === "fixed" && (
+              <div>
+                <input
+                  className={fieldCls("price_kwd")}
+                  inputMode="decimal"
+                  placeholder="السعر الثابت (د.ك) *"
+                  value={form.price_kwd}
+                  onChange={(e) => set({ price_kwd: e.target.value })}
+                  onBlur={() => markTouched("price_kwd")}
+                />
+                <FieldError name="price_kwd" />
+              </div>
+            )}
+
+            {pt === "range" && (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <input
+                    className={fieldCls("price_kwd")}
+                    inputMode="decimal"
+                    placeholder="الحد الأدنى (د.ك) *"
+                    value={form.price_kwd}
+                    onChange={(e) => set({ price_kwd: e.target.value })}
+                    onBlur={() => markTouched("price_kwd")}
+                  />
+                  <FieldError name="price_kwd" />
+                </div>
+                <div>
+                  <input
+                    className={fieldCls("price_max_kwd")}
+                    inputMode="decimal"
+                    placeholder="الحد الأعلى (د.ك) *"
+                    value={form.price_max_kwd}
+                    onChange={(e) => set({ price_max_kwd: e.target.value })}
+                    onBlur={() => markTouched("price_max_kwd")}
+                  />
+                  <FieldError name="price_max_kwd" />
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    الحد الأعلى ≤ الحد الأدنى × ١٫٣
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {pt === "conditional" && (
+              <div className="flex flex-col gap-3">
+                <div>
+                  <textarea
+                    className={fieldCls("assumed_diagnosis")}
+                    placeholder="التشخيص المرجّح: بناءً على شرح العميل، الأقرب إن المشكلة… *"
+                    value={form.assumed_diagnosis}
+                    onChange={(e) => set({ assumed_diagnosis: e.target.value })}
+                    onBlur={() => markTouched("assumed_diagnosis")}
+                    rows={2}
+                    maxLength={300}
+                  />
+                  <FieldError name="assumed_diagnosis" />
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <input
+                      className={fieldCls("price_kwd")}
+                      inputMode="decimal"
+                      placeholder="السعر المشروط (د.ك) *"
+                      value={form.price_kwd}
+                      onChange={(e) => set({ price_kwd: e.target.value })}
+                      onBlur={() => markTouched("price_kwd")}
+                    />
+                    <FieldError name="price_kwd" />
+                  </div>
+                  <div>
+                    <input
+                      className={fieldCls("inspection_fee_kwd")}
+                      inputMode="decimal"
+                      placeholder="رسم الكشف (٠ = مجاني) *"
+                      value={form.inspection_fee_kwd}
+                      onChange={(e) => set({ inspection_fee_kwd: e.target.value })}
+                      onBlur={() => markTouched("inspection_fee_kwd")}
+                    />
+                    <FieldError name="inspection_fee_kwd" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Parts type */}
+            <div>
+              <select
+                className={fieldCls("parts_type")}
+                value={form.parts_type}
+                onChange={(e) => set({ parts_type: e.target.value })}
+                onBlur={() => markTouched("parts_type")}
+              >
+                <option value="">نوع قطع الغيار *</option>
+                {PARTS_TYPES.map((p) => (
+                  <option key={p} value={p}>
+                    {PARTS_TYPE_LABEL[p as PartsType]}
+                  </option>
+                ))}
+              </select>
+              <FieldError name="parts_type" />
+            </div>
+
+            {/* Validity + warranty */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <input
+                  className={fieldCls("validity_days")}
+                  inputMode="numeric"
+                  placeholder="صلاحية العرض (أيام) *"
+                  value={form.validity_days}
+                  onChange={(e) => set({ validity_days: e.target.value })}
+                  onBlur={() => markTouched("validity_days")}
+                />
+                <FieldError name="validity_days" />
+              </div>
+              <div>
+                <input
+                  className={fieldCls("warranty_days")}
+                  inputMode="numeric"
+                  placeholder={`الضمان (أيام، ≥ ${MIN_WARRANTY_DAYS}) *`}
+                  value={form.warranty_days}
+                  onChange={(e) => set({ warranty_days: e.target.value })}
+                  onBlur={() => markTouched("warranty_days")}
+                />
+                <FieldError name="warranty_days" />
+              </div>
+            </div>
+
             <input
-              className={inputCls}
-              placeholder="اسم الكراج *"
-              value={form.workshop_name}
-              onChange={(e) => setForm({ ...form, workshop_name: e.target.value })}
-              maxLength={120}
+              className={`${inputCls} border-border`}
+              placeholder="نطاق الضمان (اختياري — تفاصيل إضافية)"
+              value={form.warranty_note}
+              onChange={(e) => set({ warranty_note: e.target.value })}
+              maxLength={300}
             />
+
+            {/* Time + phone + notes */}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <input
-                className={inputCls}
-                inputMode="decimal"
-                placeholder="السعر (د.ك) *"
-                value={form.price_kwd}
-                onChange={(e) => setForm({ ...form, price_kwd: e.target.value })}
-              />
-              <input
-                className={inputCls}
-                placeholder="المدة (مثال: ٣ أيام)"
+                className={`${inputCls} border-border`}
+                placeholder="المدة التقديرية (مثال: ٣ أيام)"
                 value={form.estimated_duration}
-                onChange={(e) => setForm({ ...form, estimated_duration: e.target.value })}
+                onChange={(e) => set({ estimated_duration: e.target.value })}
                 maxLength={60}
               />
+              <input
+                className={`${inputCls} border-border`}
+                dir="ltr"
+                placeholder="هاتف الكراج (اختياري)"
+                value={form.workshop_phone}
+                onChange={(e) => set({ workshop_phone: e.target.value })}
+                maxLength={20}
+              />
             </div>
-            <input
-              className={inputCls}
-              dir="ltr"
-              placeholder="هاتف الكراج (اختياري)"
-              value={form.workshop_phone}
-              onChange={(e) => setForm({ ...form, workshop_phone: e.target.value })}
-              maxLength={20}
-            />
             <textarea
-              className={inputCls}
-              placeholder="ملاحظات (قطع مشمولة، ضمان…)"
+              className={`${inputCls} border-border`}
+              placeholder="ملاحظات إضافية (اختياري)"
               value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              onChange={(e) => set({ notes: e.target.value })}
               rows={2}
               maxLength={500}
             />
+
             <button
               type="submit"
-              disabled={busy}
-              className="rounded-lg bg-[#FFD60A] px-4 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:opacity-60"
+              disabled={busy || hasErrors}
+              className="rounded-lg bg-[#FFD60A] px-4 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {busy ? "جارٍ الحفظ..." : "حفظ العرض"}
+              {busy ? "جارٍ الحفظ..." : hasErrors ? "أكمل الحقول المطلوبة" : "حفظ العرض"}
             </button>
           </form>
         )}
@@ -251,43 +463,7 @@ export function QuoteAdminControls({
           <ul className="flex flex-col gap-2">
             {offers.map((o) => (
               <li key={o.id} className="rounded-lg border border-border bg-background p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-bold">
-                      {o.workshop_name}
-                      <span
-                        className={`mx-2 rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          o.status === "accepted"
-                            ? "bg-green-600 text-white"
-                            : o.status === "rejected"
-                            ? "bg-neutral-600 text-white"
-                            : "bg-neutral-700 text-white"
-                        }`}
-                      >
-                        {OFFER_STATUS_LABEL[o.status] ?? o.status}
-                      </span>
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-extrabold text-[#FFD60A]">{o.price_kwd} د.ك</span>
-                      {o.estimated_duration && (
-                        <span className="text-muted-foreground"> · {o.estimated_duration}</span>
-                      )}
-                    </p>
-                    {o.workshop_phone && (
-                      <a href={`tel:${o.workshop_phone}`} dir="ltr" className="font-mono text-xs text-[#FFD60A]">
-                        {o.workshop_phone}
-                      </a>
-                    )}
-                    {o.notes && <p className="mt-1 text-xs text-muted-foreground">{o.notes}</p>}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => deleteOffer(o.id)}
-                    className="shrink-0 rounded-lg border border-red-500/40 px-2.5 py-1 text-xs font-bold text-red-400"
-                  >
-                    حذف
-                  </button>
-                </div>
+                <OfferAdminRow offer={o} onDelete={() => deleteOffer(o.id)} />
               </li>
             ))}
           </ul>
@@ -305,6 +481,79 @@ export function QuoteAdminControls({
           {busy ? "جارٍ الإرسال..." : "إرسال العروض للعميل"}
         </button>
       )}
+    </div>
+  );
+}
+
+// Admin-side summary of one received offer (shows all structured fields).
+function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: () => void }) {
+  const meta = pricingTypeMeta(o.pricing_type);
+  const priceText =
+    o.pricing_type === "range" && o.price_max_kwd != null
+      ? `${o.price_kwd} – ${o.price_max_kwd} د.ك`
+      : `${o.price_kwd} د.ك`;
+  const parts =
+    o.parts_type && PARTS_TYPE_LABEL[o.parts_type as PartsType]
+      ? PARTS_TYPE_LABEL[o.parts_type as PartsType]
+      : null;
+
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="flex flex-wrap items-center gap-2 font-bold">
+          {o.workshop_name}
+          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${meta.className}`}>
+            {meta.badge}
+          </span>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+              o.status === "accepted"
+                ? "bg-green-600 text-white"
+                : o.status === "rejected"
+                ? "bg-neutral-600 text-white"
+                : "bg-neutral-700 text-white"
+            }`}
+          >
+            {OFFER_STATUS_LABEL[o.status] ?? o.status}
+          </span>
+        </p>
+        <p className="text-sm">
+          <span className="font-extrabold text-[#FFD60A]">{priceText}</span>
+          {o.estimated_duration && (
+            <span className="text-muted-foreground"> · {o.estimated_duration}</span>
+          )}
+        </p>
+        <div className="mt-1 flex flex-col gap-0.5 text-xs text-muted-foreground">
+          {o.pricing_type === "conditional" && o.assumed_diagnosis && (
+            <span>التشخيص المرجّح: {o.assumed_diagnosis}</span>
+          )}
+          {o.pricing_type === "conditional" && o.inspection_fee_kwd != null && (
+            <span>
+              رسم الكشف: {o.inspection_fee_kwd > 0 ? `${o.inspection_fee_kwd} د.ك` : "مجاني"}
+            </span>
+          )}
+          {parts && <span>قطع الغيار: {parts}</span>}
+          {o.warranty_days != null && (
+            <span>
+              الضمان: {o.warranty_days} يوم{o.warranty_note ? ` — ${o.warranty_note}` : ""}
+            </span>
+          )}
+          <span>صلاحية العرض: {o.validity_days} يوم</span>
+        </div>
+        {o.workshop_phone && (
+          <a href={`tel:${o.workshop_phone}`} dir="ltr" className="font-mono text-xs text-[#FFD60A]">
+            {o.workshop_phone}
+          </a>
+        )}
+        {o.notes && <p className="mt-1 text-xs text-muted-foreground">{o.notes}</p>}
+      </div>
+      <button
+        type="button"
+        onClick={onDelete}
+        className="shrink-0 rounded-lg border border-red-500/40 px-2.5 py-1 text-xs font-bold text-red-400"
+      >
+        حذف
+      </button>
     </div>
   );
 }
