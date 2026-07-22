@@ -11,7 +11,27 @@ export type { Quote, QuoteOffer };
 const QUOTE_COLUMNS =
   "id,created_at,updated_at,expires_at,customer_name,customer_phone,service," +
   "car_make,car_model,car_year,problem_description,area,urgency,photos,status," +
-  "customer_token,matched_workshops,admin_notes,source";
+  "customer_token,garage_token,matched_workshops,admin_notes,source";
+
+// PII-SAFE projection for the garage submission page — deliberately EXCLUDES
+// customer_name and customer_phone. Garages never see who the customer is.
+const GARAGE_QUOTE_COLUMNS =
+  "id,service,car_make,car_model,car_year,problem_description,area,urgency,photos,status,created_at";
+
+// What a garage is allowed to see about a request (no customer PII).
+export interface GarageQuoteView {
+  id: string;
+  service: string;
+  car_make: string | null;
+  car_model: string | null;
+  car_year: string | null;
+  problem_description: string;
+  area: string | null;
+  urgency: string;
+  photos: string[] | null;
+  status: string;
+  created_at: string;
+}
 
 const OFFER_COLUMNS =
   "id,quote_id,workshop_name,workshop_phone,pricing_type,price_kwd,price_max_kwd," +
@@ -52,6 +72,21 @@ export async function fetchQuoteByToken(token: string): Promise<Quote | null> {
     .maybeSingle();
   if (error) throw new Error(error.message);
   return (data as unknown as Quote) ?? null;
+}
+
+/**
+ * A single quote by its public garage_token, PII-safe (no customer name/phone).
+ * Powers the /submit-offer/[token] page. Returns null if not found.
+ */
+export async function fetchQuoteByGarageToken(token: string): Promise<GarageQuoteView | null> {
+  const admin = getSupabaseAdmin();
+  const { data, error } = await admin
+    .from("quotes")
+    .select(GARAGE_QUOTE_COLUMNS)
+    .eq("garage_token", token)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data as unknown as GarageQuoteView) ?? null;
 }
 
 /** All offers for a quote, newest first. */
