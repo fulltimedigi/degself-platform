@@ -8,13 +8,13 @@
  *           is_automotive + out_of_scope + audit_confidence + audit_reviewed_at,
  *           never touches the original `specialty`.
  *
- * Auth: same `MODERATION_PASSWORD` as the review-moderation endpoint.
- *       Send as `Authorization: Bearer <password>`.
+ * Auth: the shared admin password (DB-backed, set in /admin/settings), same key
+ *       as the review-moderation endpoint. Send as `Authorization: Bearer <password>`.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { createHash, timingSafeEqual } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { verifyAdminPassword } from "@/lib/admin-password";
 import corrections from "@/data/audit-corrections.json";
 
 export const runtime = "nodejs";
@@ -22,14 +22,13 @@ export const dynamic = "force-dynamic";
 // audit can take ~30s for ~1800 rows on a slow connection
 export const maxDuration = 60;
 
-function authorized(req: NextRequest): boolean {
-  const expected = process.env.MODERATION_PASSWORD;
-  if (!expected) return false;
+// The ONE admin password (DB-backed, changeable from /admin/settings; falls back
+// to MODERATION_PASSWORD only until first set). verifyAdminPassword does a
+// constant-time hash compare internally. Fail CLOSED.
+async function authorized(req: NextRequest): Promise<boolean> {
   const header = req.headers.get("authorization") ?? "";
   const got = header.startsWith("Bearer ") ? header.slice(7) : "";
-  const a = createHash("sha256").update(got).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
+  return verifyAdminPassword(got);
 }
 
 type Corr = {
@@ -45,7 +44,7 @@ const CORRECTIONS = corrections as Record<string, Corr>;
 
 /** GET → preview summary (no writes). */
 export async function GET(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!(await authorized(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   const entries = Object.entries(CORRECTIONS);
@@ -67,7 +66,7 @@ export async function GET(req: NextRequest) {
 
 /** POST → apply audit in chunks. */
 export async function POST(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!(await authorized(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   let supabaseAdmin;

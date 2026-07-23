@@ -6,16 +6,13 @@ import {
   QUOTE_STATUSES,
   statusMeta,
   pricingTypeMeta,
-  PARTS_TYPES,
   PARTS_TYPE_LABEL,
-  PRICING_TYPES,
-  PRICING_TYPE_META,
   DEFAULT_VALIDITY_DAYS,
-  MIN_WARRANTY_DAYS,
   type QuoteOffer,
   type PartsType,
 } from "@/lib/quote-status";
 import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
+import { StructuredOfferFields } from "@/components/StructuredOfferFields";
 
 const OFFER_STATUS_LABEL: Record<string, string> = {
   pending: "بانتظار",
@@ -81,13 +78,6 @@ export function QuoteAdminControls({
 
   const inputCls =
     "w-full rounded-lg border bg-background px-3 py-2.5 text-base focus:outline-none focus:border-[#FFD60A]";
-  const fieldCls = (name: keyof OfferErrors) =>
-    `${inputCls} ${showErr(name) ? "border-red-500 focus:border-red-500" : "border-border"}`;
-
-  function FieldError({ name }: { name: keyof OfferErrors }) {
-    const e = showErr(name);
-    return e ? <p className="mt-1 text-xs font-bold text-red-400">{e}</p> : null;
-  }
 
   async function changeStatus(next: string) {
     const prev = status;
@@ -222,7 +212,6 @@ export function QuoteAdminControls({
 
   const sm = statusMeta(status);
   const canSend = offers.length >= 1 && status !== "offers_sent" && status !== "accepted";
-  const pt = form.pricing_type;
 
   return (
     <div className="flex flex-col gap-6">
@@ -279,208 +268,7 @@ export function QuoteAdminControls({
             onSubmit={addOffer}
             className="mb-4 flex flex-col gap-3 rounded-lg border border-border bg-background p-3"
           >
-            <div>
-              <input
-                className={fieldCls("workshop_name")}
-                placeholder="اسم الكراج *"
-                value={form.workshop_name}
-                onChange={(e) => set({ workshop_name: e.target.value })}
-                onBlur={() => markTouched("workshop_name")}
-                maxLength={120}
-              />
-              <FieldError name="workshop_name" />
-            </div>
-
-            {/* Pricing type switch */}
-            <div>
-              <label className="mb-1 block text-xs font-bold text-muted-foreground">
-                نوع التسعير *
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {PRICING_TYPES.map((t) => {
-                  const active = pt === t;
-                  return (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => set({ pricing_type: t })}
-                      className={`rounded-lg border px-2 py-2 text-xs font-bold transition ${
-                        active
-                          ? "border-[#FFD60A] bg-[#FFD60A] text-[#0A0A0A]"
-                          : "border-border bg-card text-foreground"
-                      }`}
-                    >
-                      {PRICING_TYPE_META[t].label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Price fields — switch by pricing type */}
-            {pt === "fixed" && (
-              <div>
-                <input
-                  className={fieldCls("price_kwd")}
-                  inputMode="decimal"
-                  placeholder="السعر الثابت (د.ك) *"
-                  value={form.price_kwd}
-                  onChange={(e) => set({ price_kwd: e.target.value })}
-                  onBlur={() => markTouched("price_kwd")}
-                />
-                <FieldError name="price_kwd" />
-              </div>
-            )}
-
-            {pt === "range" && (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div>
-                  <input
-                    className={fieldCls("price_kwd")}
-                    inputMode="decimal"
-                    placeholder="الحد الأدنى (د.ك) *"
-                    value={form.price_kwd}
-                    onChange={(e) => set({ price_kwd: e.target.value })}
-                    onBlur={() => markTouched("price_kwd")}
-                  />
-                  <FieldError name="price_kwd" />
-                </div>
-                <div>
-                  <input
-                    className={fieldCls("price_max_kwd")}
-                    inputMode="decimal"
-                    placeholder="الحد الأعلى (د.ك) *"
-                    value={form.price_max_kwd}
-                    onChange={(e) => set({ price_max_kwd: e.target.value })}
-                    onBlur={() => markTouched("price_max_kwd")}
-                  />
-                  <FieldError name="price_max_kwd" />
-                  <p className="mt-1 text-[11px] text-muted-foreground">
-                    الحد الأعلى ≤ الحد الأدنى × ١٫٣
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {pt === "conditional" && (
-              <div className="flex flex-col gap-3">
-                <div>
-                  <textarea
-                    className={fieldCls("assumed_diagnosis")}
-                    placeholder="التشخيص المرجّح: بناءً على شرح العميل، الأقرب إن المشكلة… *"
-                    value={form.assumed_diagnosis}
-                    onChange={(e) => set({ assumed_diagnosis: e.target.value })}
-                    onBlur={() => markTouched("assumed_diagnosis")}
-                    rows={2}
-                    maxLength={300}
-                  />
-                  <FieldError name="assumed_diagnosis" />
-                </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div>
-                    <input
-                      className={fieldCls("price_kwd")}
-                      inputMode="decimal"
-                      placeholder="السعر المشروط (د.ك) *"
-                      value={form.price_kwd}
-                      onChange={(e) => set({ price_kwd: e.target.value })}
-                      onBlur={() => markTouched("price_kwd")}
-                    />
-                    <FieldError name="price_kwd" />
-                  </div>
-                  <div>
-                    <input
-                      className={fieldCls("inspection_fee_kwd")}
-                      inputMode="decimal"
-                      placeholder="رسم الكشف (٠ = مجاني) *"
-                      value={form.inspection_fee_kwd}
-                      onChange={(e) => set({ inspection_fee_kwd: e.target.value })}
-                      onBlur={() => markTouched("inspection_fee_kwd")}
-                    />
-                    <FieldError name="inspection_fee_kwd" />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Parts type */}
-            <div>
-              <select
-                className={fieldCls("parts_type")}
-                value={form.parts_type}
-                onChange={(e) => set({ parts_type: e.target.value })}
-                onBlur={() => markTouched("parts_type")}
-              >
-                <option value="">نوع قطع الغيار *</option>
-                {PARTS_TYPES.map((p) => (
-                  <option key={p} value={p}>
-                    {PARTS_TYPE_LABEL[p as PartsType]}
-                  </option>
-                ))}
-              </select>
-              <FieldError name="parts_type" />
-            </div>
-
-            {/* Validity + warranty */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div>
-                <input
-                  className={fieldCls("validity_days")}
-                  inputMode="numeric"
-                  placeholder="صلاحية العرض (أيام) *"
-                  value={form.validity_days}
-                  onChange={(e) => set({ validity_days: e.target.value })}
-                  onBlur={() => markTouched("validity_days")}
-                />
-                <FieldError name="validity_days" />
-              </div>
-              <div>
-                <input
-                  className={fieldCls("warranty_days")}
-                  inputMode="numeric"
-                  placeholder={`الضمان (أيام، ≥ ${MIN_WARRANTY_DAYS}) *`}
-                  value={form.warranty_days}
-                  onChange={(e) => set({ warranty_days: e.target.value })}
-                  onBlur={() => markTouched("warranty_days")}
-                />
-                <FieldError name="warranty_days" />
-              </div>
-            </div>
-
-            <input
-              className={`${inputCls} border-border`}
-              placeholder="نطاق الضمان (اختياري — تفاصيل إضافية)"
-              value={form.warranty_note}
-              onChange={(e) => set({ warranty_note: e.target.value })}
-              maxLength={300}
-            />
-
-            {/* Time + phone + notes */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <input
-                className={`${inputCls} border-border`}
-                placeholder="المدة التقديرية (مثال: ٣ أيام)"
-                value={form.estimated_duration}
-                onChange={(e) => set({ estimated_duration: e.target.value })}
-                maxLength={60}
-              />
-              <input
-                className={`${inputCls} border-border`}
-                dir="ltr"
-                placeholder="هاتف الكراج (اختياري)"
-                value={form.workshop_phone}
-                onChange={(e) => set({ workshop_phone: e.target.value })}
-                maxLength={20}
-              />
-            </div>
-            <textarea
-              className={`${inputCls} border-border`}
-              placeholder="ملاحظات إضافية (اختياري)"
-              value={form.notes}
-              onChange={(e) => set({ notes: e.target.value })}
-              rows={2}
-              maxLength={500}
-            />
+            <StructuredOfferFields form={form} onChange={set} onBlur={markTouched} showError={showErr} />
 
             <button
               type="submit"

@@ -1,24 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { createHash, timingSafeEqual } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { verifyAdminPassword } from "@/lib/admin-password";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // ── auth ──────────────────────────────────────────────────────────────────
-// Single shared password in MODERATION_PASSWORD. Fail CLOSED: if it's unset or
-// empty, every request is rejected (no accidental open panel in production).
-function authorized(req: NextRequest): boolean {
-  const expected = process.env.MODERATION_PASSWORD;
-  if (!expected) return false;
+// The ONE admin password (DB-backed, changeable from /admin/settings; falls back
+// to MODERATION_PASSWORD only until first set). Sent as `Authorization: Bearer`.
+// Fail CLOSED. verifyAdminPassword does a constant-time hash compare internally.
+async function authorized(req: NextRequest): Promise<boolean> {
   const header = req.headers.get("authorization") ?? "";
   const got = header.startsWith("Bearer ") ? header.slice(7) : "";
-  // Hash both sides to fixed-length buffers so the compare is constant-time and
-  // never branches on (or leaks) the password length.
-  const a = createHash("sha256").update(got).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
+  return verifyAdminPassword(got);
 }
 
 const STATUSES = ["pending", "approved", "rejected"] as const;
@@ -37,7 +32,7 @@ interface ModRow {
 
 /** GET /api/reviews/moderate?status=pending — list reviews for moderation. */
 export async function GET(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!(await authorized(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 
@@ -80,7 +75,7 @@ export async function GET(req: NextRequest) {
 
 /** PATCH /api/reviews/moderate — body { id, action: 'approve'|'reject' }. */
 export async function PATCH(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!(await authorized(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 
