@@ -63,6 +63,8 @@ export default async function SubmitOfferPage({
   }
 
   const car = [quote.car_make, quote.car_model, quote.car_year].filter(Boolean).join(" ");
+  // Only render https image URLs — never javascript:/data: or other schemes.
+  const safePhotos = (quote.photos ?? []).filter((p) => /^https:\/\//i.test(p));
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -96,9 +98,9 @@ export default async function SubmitOfferPage({
         )}
         <p className="text-muted-foreground">{quote.problem_description}</p>
 
-        {quote.photos && quote.photos.length > 0 && (
+        {safePhotos.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
-            {quote.photos.map((src, i) => (
+            {safePhotos.map((src, i) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={i}
