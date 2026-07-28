@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllPlaceIdsWithLastmod } from "@/lib/workshops";
 import { getLandingCombos, getLandingLastmod, comboKey } from "@/lib/landing";
 import { getMakeCounts } from "@/lib/makes";
-import { articleSlugs } from "@/app/blog/_articles";
+import { articleSlugs } from "@/app/[locale]/blog/_articles";
 import { getEnrichedWorkshops, bestCategories } from "@/lib/best";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";

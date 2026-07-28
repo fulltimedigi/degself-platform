@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { fetchQuoteByGarageToken } from "@/lib/quotes";
 import { urgencyClass } from "@/lib/quote-status";
 import { GarageOfferForm } from "@/components/GarageOfferForm";
@@ -20,6 +21,7 @@ export default async function SubmitOfferPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
+  const t = await getTranslations();
 
   let quote;
   try {
@@ -27,8 +29,8 @@ export default async function SubmitOfferPage({
   } catch {
     return (
       <Shell>
-        <h1 className="mb-2 text-xl font-extrabold">تعذّر تحميل الصفحة</h1>
-        <p className="text-sm text-muted-foreground">حاول مرة أخرى بعد قليل.</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("offers.loadErrorTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("offers.loadErrorBody")}</p>
       </Shell>
     );
   }
@@ -36,9 +38,9 @@ export default async function SubmitOfferPage({
   if (!quote) {
     return (
       <Shell>
-        <p className="mb-2 text-5xl font-extrabold text-[#FFD60A]">٤٠٤</p>
-        <h1 className="mb-2 text-xl font-extrabold">الرابط غير صحيح</h1>
-        <p className="text-sm text-muted-foreground">تأكد من الرابط الذي وصلك.</p>
+        <p className="mb-2 text-5xl font-extrabold text-[#FFD60A]">404</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("offers.invalidTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("offers.invalidBody")}</p>
       </Shell>
     );
   }
@@ -47,8 +49,8 @@ export default async function SubmitOfferPage({
     return (
       <Shell>
         <p className="mb-3 text-4xl">✅</p>
-        <h1 className="mb-2 text-xl font-extrabold">تم إغلاق هذا الطلب</h1>
-        <p className="text-sm text-muted-foreground">اختار العميل عرضاً بالفعل.</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("submit.acceptedTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("submit.acceptedBody")}</p>
       </Shell>
     );
   }
@@ -56,8 +58,8 @@ export default async function SubmitOfferPage({
   if (quote.status === "expired") {
     return (
       <Shell>
-        <h1 className="mb-2 text-xl font-extrabold">انتهت صلاحية هذا الطلب</h1>
-        <p className="text-sm text-muted-foreground">لم يعد بالإمكان تقديم عروض عليه.</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("submit.expiredTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("submit.expiredBody")}</p>
       </Shell>
     );
   }
@@ -69,31 +71,29 @@ export default async function SubmitOfferPage({
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
       <header className="mb-6 text-center">
-        <h1 className="mb-2 text-2xl font-extrabold sm:text-3xl">قدّم عرضك على هذا الطلب</h1>
-        <p className="text-sm text-muted-foreground">
-          املأ عرضك بالصيغة الموحدة — العميل يقارن العروض ويختار.
-        </p>
+        <h1 className="mb-2 text-2xl font-extrabold sm:text-3xl">{t("submit.pageTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("submit.pageSubtitle")}</p>
       </header>
 
       {/* PII-safe request summary — no customer name/phone. */}
       <div className="mb-6 rounded-xl border border-border bg-card p-4 text-sm">
         <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span className="font-bold">تفاصيل الطلب</span>
+          <span className="font-bold">{t("submit.requestDetails")}</span>
           <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${urgencyClass(quote.urgency)}`}>
             {quote.urgency}
           </span>
         </div>
         <p className="mb-1">
-          <span className="text-muted-foreground">الخدمة:</span> {quote.service}
+          <span className="text-muted-foreground">{t("offers.service")}:</span> {quote.service}
         </p>
         {car && (
           <p className="mb-1">
-            <span className="text-muted-foreground">السيارة:</span> {car}
+            <span className="text-muted-foreground">{t("offers.car")}:</span> {car}
           </p>
         )}
         {quote.area && (
           <p className="mb-1">
-            <span className="text-muted-foreground">المنطقة:</span> {quote.area}
+            <span className="text-muted-foreground">{t("submit.area")}:</span> {quote.area}
           </p>
         )}
         <p className="text-muted-foreground">{quote.problem_description}</p>
@@ -105,7 +105,7 @@ export default async function SubmitOfferPage({
               <img
                 key={i}
                 src={src}
-                alt={`صورة ${i + 1}`}
+                alt={t("submit.photoAlt", { n: i + 1 })}
                 className="h-20 w-20 rounded-lg border border-border object-cover"
               />
             ))}
@@ -115,10 +115,7 @@ export default async function SubmitOfferPage({
 
       <GarageOfferForm token={token} />
 
-      <p className="mt-4 text-center text-xs text-muted-foreground">
-        بتقديمك للعرض توافق على الالتزام بالسعر المكتوب، وإعلان رسم الكشف مقدماً، والإبلاغ الفوري عند
-        تغيير التشخيص قبل بدء أي عمل.
-      </p>
+      <p className="mt-4 text-center text-xs text-muted-foreground">{t("submit.agreement")}</p>
     </main>
   );
 }

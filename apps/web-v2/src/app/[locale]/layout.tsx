@@ -1,7 +1,10 @@
-import "./globals.css";
+import "../globals.css";
 import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import Script from "next/script";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Header } from "@/components/Header";
@@ -12,6 +15,12 @@ import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CookieConsent } from "@/components/CookieConsent";
 import { JsonLd } from "@/components/JsonLd";
 import { SOCIAL_SAME_AS } from "@/lib/brand";
+import { routing, LOCALE_DIR, LOCALE_HREFLANG, type Locale } from "@/i18n/routing";
+
+// Prerender the 4 locales. Arabic (default) stays unprefixed at "/".
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 // ملاحظة: Google Analytics + Microsoft Clarity + Snap Pixel انتقلوا إلى
 // <CookieConsent /> ولا يُحمَّلون إلا بعد قبول المستخدم — للامتثال لـ
@@ -113,7 +122,7 @@ const cairo = Cairo({
   display: "optional",
 });
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
   description:
     "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليل شامل لمنشآت صيانة السيارات.",
@@ -178,25 +187,50 @@ export const metadata: Metadata = {
   },
 };
 
+// SEO safety during the multilingual rollout: Arabic (the fully-authored site)
+// stays indexable; en/hi/ur are noindex until their page CONTENT is translated,
+// so Google never indexes partially-translated pages. Flip a locale to indexable
+// here once its content is done. Individual pages' own robots settings still win.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale === "ar") return baseMetadata;
+  return { ...baseMetadata, robots: { index: false, follow: true } };
+}
+
 export const viewport: Viewport = {
   themeColor: "#0a0a0a",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  params,
+}: Readonly<{ children: React.ReactNode; params: Promise<{ locale: string }> }>) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  // Enable static rendering for this locale + load its messages.
+  setRequestLocale(locale);
+  const messages = await getMessages();
+  const dir = LOCALE_DIR[locale as Locale];
+
   return (
-    <html lang="ar-KW" dir="rtl" className={`${cairo.variable} antialiased`}>
+    <html
+      lang={LOCALE_HREFLANG[locale as Locale]}
+      dir={dir}
+      className={`${cairo.variable} antialiased`}
+    >
       <head>
-        {/* Explicit hreflang tags for Kuwait-Arabic targeting.
-            Next 16 metadata.alternates.languages does not consistently render
-            these into <head>, so we emit them manually to ensure Google/Bing
-            see the ar-KW geo-language signal. */}
+        {/* Kuwait-Arabic hreflang signal (homepage-level baseline; per-page
+            alternates are refined in each route's generateMetadata). */}
         <link rel="alternate" hrefLang="ar-KW" href="https://degself.com/" />
         <link rel="alternate" hrefLang="ar" href="https://degself.com/" />
         <link rel="alternate" hrefLang="x-default" href="https://degself.com/" />
       </head>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
+        <NextIntlClientProvider messages={messages}>
         <JsonLd data={localBusinessLd} />
 
         {/* Capture the install prompt as early as possible — it can fire before
@@ -226,6 +260,7 @@ export default function RootLayout({
         <PWAInstallBanner />
         <FloatingWhatsApp />
         <CookieConsent />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

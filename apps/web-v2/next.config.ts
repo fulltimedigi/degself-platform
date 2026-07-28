@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 // "كراج" / "ماركة" percent-encoded — Next matches the rewrite source against the
 // raw (encoded) request path, so the source must be encoded too.
@@ -90,8 +93,8 @@ const nextConfig: NextConfig = {
   // fs at runtime (join(process.cwd(), "assets/…")), which would make the image
   // 500 in production while working locally. Listing them here makes it explicit.
   outputFileTracingIncludes: {
-    "/workshop/[place_id]/opengraph-image": ["./assets/Cairo-*.ttf"],
-    "/workshop/[place_id]/twitter-image": ["./assets/Cairo-*.ttf"],
+    "/[locale]/workshop/[place_id]/opengraph-image": ["./assets/Cairo-*.ttf"],
+    "/[locale]/workshop/[place_id]/twitter-image": ["./assets/Cairo-*.ttf"],
   },
 
   async headers() {
@@ -120,16 +123,23 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
-      // Public Arabic URL → internal ASCII route (Turbopack doesn't register
-      // non-ASCII route folders, so the folder is /garage but the URL stays /كراج).
-      { source: `/${KARAJ}/:specialty/:area`, destination: "/garage/:specialty/:area" },
-      // Specialty index (one level): /كراج/ميكانيكا → /garage/ميكانيكا
-      { source: `/${KARAJ}/:specialty`, destination: "/garage/:specialty" },
-      // Car-make pages: /ماركة/تويوتا → /make/تويوتا  and  /ماركة → /make
-      { source: `/${MARKA}/:brand`, destination: "/make/:brand" },
-      { source: `/${MARKA}`, destination: "/make" },
-    ];
+    // beforeFiles: these run BEFORE the next-intl middleware so the pretty
+    // Arabic URLs resolve to the ASCII routes first; next-intl then maps the
+    // unprefixed path to the default (ar) locale.
+    return {
+      beforeFiles: [
+        // Public Arabic URL → internal ASCII route (Turbopack doesn't register
+        // non-ASCII route folders, so the folder is /garage but the URL stays /كراج).
+        { source: `/${KARAJ}/:specialty/:area`, destination: "/garage/:specialty/:area" },
+        // Specialty index (one level): /كراج/ميكانيكا → /garage/ميكانيكا
+        { source: `/${KARAJ}/:specialty`, destination: "/garage/:specialty" },
+        // Car-make pages: /ماركة/تويوتا → /make/تويوتا  and  /ماركة → /make
+        { source: `/${MARKA}/:brand`, destination: "/make/:brand" },
+        { source: `/${MARKA}`, destination: "/make" },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
 
   async redirects() {
@@ -141,4 +151,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
