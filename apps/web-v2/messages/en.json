@@ -740,5 +740,81 @@
         { "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran", "title": "Signs your car needs a garage right away" }
       ]
     }
+  },
+  "ihsaiyat": {
+    "metaTitle": "Car & garage statistics in Kuwait 2026 | Degself",
+    "metaDescription": "Exclusive numbers and statistics about Kuwait's car sector in 2026. Number of garages, specialties, areas, and average prices. Data from 1,640+ verified garages.",
+    "ogTitle": "Car & garage statistics in Kuwait 2026",
+    "ogDescription": "Exclusive numbers and statistics about Kuwait's car sector in 2026",
+    "datasetName": "Kuwait car & garage sector statistics 2026",
+    "datasetDesc": "Comprehensive data on 1,640+ garages and mechanics in Kuwait across 14 areas and 9 specialties",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "Statistics",
+    "badge": "📊 Exclusive data 2026",
+    "h1": "Kuwait car & garage sector statistics 2026",
+    "heroText": "Exclusive numbers and facts from Kuwait's largest car-services directory. This data is available for use provided the source (Degself) is credited.",
+    "bigNumbers": [
+      { "value": "1,640+", "label": "verified garages" },
+      { "value": "14", "label": "areas in Kuwait" },
+      { "value": "9", "label": "main specialties" },
+      { "value": "15+", "label": "car makes" }
+    ],
+    "areaDistHeading": "Garage distribution by area",
+    "areaRows": [
+      { "area": "Industrial Shuwaikh", "pct": 35, "count": "570+" },
+      { "area": "Farwaniya + Khaitan", "pct": 18, "count": "295+" },
+      { "area": "Fahaheel + Mangaf", "pct": 12, "count": "200+" },
+      { "area": "Hawalli + Salmiya", "pct": 10, "count": "165+" },
+      { "area": "Jahra", "pct": 9, "count": "145+" },
+      { "area": "Al Rai", "pct": 7, "count": "115+" },
+      { "area": "Ahmadi + Sabah Al Salem", "pct": 5, "count": "85+" },
+      { "area": "Other areas", "pct": 4, "count": "65+" }
+    ],
+    "pricesHeading": "Average prices of common services 2026",
+    "colService": "Service",
+    "colAvg": "Average (KWD)",
+    "colRange": "Range",
+    "priceRows": [
+      ["Engine oil change (synthetic)", "18", "12-30"],
+      ["Front brake change", "25", "15-40"],
+      ["A/C freon refill", "10", "5-15"],
+      ["Full A/C cleaning", "18", "10-25"],
+      ["Car computer diagnostics", "8", "5-15"],
+      ["Medium battery (60Ah)", "30", "22-38"],
+      ["Full gearbox overhaul", "700", "400-1500"],
+      ["Full technical inspection", "30", "25-50"],
+      ["Change of 4 tires", "100", "60-180"],
+      ["Full body & paint", "350", "200-600"]
+    ],
+    "specialtyHeading": "Most common specialties",
+    "countSuffix": "garages",
+    "specialties": [
+      { "name": "General maintenance", "count": "780+", "emoji": "🔧" },
+      { "name": "Mechanics", "count": "520+", "emoji": "⚙️" },
+      { "name": "Body & paint", "count": "380+", "emoji": "🎨" },
+      { "name": "Auto electrical", "count": "340+", "emoji": "🔌" },
+      { "name": "A/C", "count": "290+", "emoji": "❄️" },
+      { "name": "Tires & puncture", "count": "260+", "emoji": "🛞" },
+      { "name": "Oils", "count": "220+", "emoji": "🛢️" },
+      { "name": "Gearbox", "count": "180+", "emoji": "🔩" },
+      { "name": "Batteries", "count": "140+", "emoji": "🔋" }
+    ],
+    "insightsHeading": "Key statistics",
+    "insights": [
+      "🏭 <b>35% of Kuwait's garages are in Industrial Shuwaikh</b> — the largest cluster in the country",
+      "🌡️ <b>Kuwait's heat cuts a car battery's life by 30-40%</b> compared to temperate countries",
+      "💰 <b>The price difference between garages can reach 200%</b> for the same service — searching and comparing saves hundreds of dinars",
+      "🚗 <b>Japanese cars are the most in demand</b> — Toyota, Nissan, and Lexus make up 55% of the market",
+      "🔧 <b>Most common summer faults:</b> engine overheating, A/C failure, and dead batteries",
+      "⏰ <b>Peak times:</b> Thursday and Saturday mornings — best time to visit: Monday or Tuesday noon"
+    ],
+    "shareHeading": "📤 Share these statistics",
+    "shareText": "This data is available for use in articles and reports. Use only requires <b>crediting the source with a link</b>:",
+    "shareSource": "Source:",
+    "shareBrand": "Degself - degself.com",
+    "ctaTitle": "Search our database",
+    "ctaSubtitle": "1,640+ garages across 14 areas",
+    "ctaButton": "Start searching",
+    "lastUpdated": "Last updated: June 16, 2026 — data from Degself's database"
   }
 }
