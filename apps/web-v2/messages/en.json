@@ -945,5 +945,72 @@
     "madeIn": "Made with pride in Kuwait — for the Kuwaiti driver.",
     "ctaSearch": "Start searching",
     "ctaEmergency": "Emergency — tow truck & mobile mechanic"
+  },
+  "legal": {
+    "lastUpdated": "Last updated: June 2026",
+    "breadcrumbHome": "Home",
+    "privacy": {
+      "metaTitle": "Privacy Policy | Degself",
+      "metaDescription": "Degself's privacy policy — what data we collect, how we use it, and how to request deletion of your data.",
+      "breadcrumbSelf": "Privacy Policy",
+      "h1": "Privacy Policy",
+      "intro": "Degself (degself.com) is a free directory of car garages, workshops and services in Kuwait. We respect your privacy and collect as little data as possible. This page explains what we collect, how we use it, and how to request its deletion.",
+      "collectHeading": "Data we collect",
+      "collectList": [
+        "<b>The site requires no account</b> — we don't ask for your name, email or number to use the site.",
+        "<b>Usage statistics:</b> we use Google Analytics to measure visit counts and common search terms in aggregate and anonymously, to improve the service.",
+        "<b>Reviews:</b> when you add a review for a garage, we store the review text, star rating and name (if you optionally write it). No login needed.",
+        "<b>Favorites:</b> the garages you save are stored on your device (localStorage) only — they don't reach our servers.",
+        "<b>Geolocation:</b> if you use \"nearest to me\", the browser asks your permission to determine your location once to order the results — and we don't store your location."
+      ],
+      "thirdHeading": "Third-party services",
+      "thirdBody": "We rely on trusted services to run the site: Google Maps, Google Analytics, Vercel (hosting), and Supabase (database). These services are subject to their own privacy policies.",
+      "deleteHeading": "Deleting your data",
+      "deleteBody1": "Since the site requires no account, the only data associated with you may be a review you added. To request deletion of any review or data concerning you, email us at:",
+      "deleteBody2": "State in your message what you want deleted (e.g. the review text and garage name), and we'll carry out the request within a reasonable time. To delete garages saved on your device, clear the site data from your browser settings.",
+      "contactHeading": "Contact us",
+      "contactIntro": "For any privacy inquiry, email us at"
+    },
+    "terms": {
+      "metaTitle": "Terms of Use | Degself",
+      "metaDescription": "Degself's terms of use — users' rights and obligations, and the limits of the platform's liability as a directory of Kuwait's garages.",
+      "breadcrumbSelf": "Terms of Use",
+      "h1": "Terms of Use",
+      "intro": "By using Degself (degself.com) you agree to the following terms. If you don't agree with any of them, please don't use the site.",
+      "s1h": "1. Nature of the service",
+      "s1body": "Degself is a free platform for listing car garages, workshops and maintenance services in the State of Kuwait. Our role is to connect the user with the service provider. We are not a party to the agreement between the user and the garage, and we don't provide car repair services ourselves.",
+      "s2h": "2. Limits of liability",
+      "s2list": [
+        "The prices shown in the price calculator and on garage pages are estimates based on 2026 Kuwait market data; the final price is set between the customer and the garage after inspection.",
+        "We don't guarantee the quality of the service any listed garage provides. Request the quote and warranty details before agreeing.",
+        "We bear no direct or indirect loss resulting from your use of the site or your dealings with any garage you reached through it.",
+        "The information shown (working hours, location, services) is updated regularly, but may change without notice. Contact the garage to confirm."
+      ],
+      "s3h": "3. The \"Ask Degself\" feature (AI)",
+      "s3body": "The smart translator feature (<asaali>/isal-degself</asaali>) uses AI models to turn a description of the problem in your everyday words into technical terms. These recommendations are for guidance and are not a substitute for a professional mechanical inspection. Don't decide to repair or buy parts based on the assistant's reply alone.",
+      "s4h": "4. Acceptable use",
+      "s4intro": "When using the site, you agree to:",
+      "s4list": [
+        "Not submit false reports or fake reviews.",
+        "Not use the site for any illegal activity in the State of Kuwait.",
+        "Not copy or scrape the data except for personal, non-commercial purposes. Commercial use requires written permission.",
+        "Not attempt to hack the site, bypass security measures, or misuse the APIs."
+      ],
+      "s5h": "5. Intellectual property",
+      "s5body1": "The name \"Degself\", its logo and the site's design elements are protected as the owner's intellectual property. You may share links, but republishing the content or reusing it commercially requires written permission.",
+      "s5body2": "Garage data is shown for directory purposes only; each garage retains the rights to its trademark and information.",
+      "s6h": "6. Reviews and submitted content",
+      "s6body": "When you submit a review or report a missing garage, you grant Degself the right to display this content publicly, while retaining the right to edit or delete it if it violates these terms.",
+      "s7h": "7. Listed garages",
+      "s7body": "Degself does not take payment from garages to appear in search results; the ranking is fair and unpaid. If you own a garage and want to edit your data or remove your garage from the directory, contact us via WhatsApp.",
+      "s8h": "8. Changes to the service",
+      "s8body": "We reserve the right to modify, discontinue or add features at any time without prior notice. Unless we notify you via the site, your continued use is considered acceptance of any update.",
+      "s9h": "9. Privacy",
+      "s9body": "See the <privacy>Privacy Policy</privacy> to learn what data we collect and how we handle it. We comply with Kuwait's CITRA decision No. 26/2024 for personal data protection.",
+      "s10h": "10. Governing law",
+      "s10body": "These terms are subject to the laws of the State of Kuwait, and any dispute arising from them is resolved before the competent Kuwaiti courts.",
+      "s11h": "11. Contact",
+      "s11body": "For any inquiry about these terms, contact us at <mail>info@degself.com</mail> or via the official WhatsApp shown on the <about>\"About Degself\" page</about>."
+    }
   }
 }

@@ -1,171 +1,120 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import type { ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
-export const metadata: Metadata = {
-  title: "شروط الاستخدام | دق سلف",
-  description:
-    "شروط استخدام موقع دق سلف — حقوق المستخدمين وواجباتهم، وحدود مسؤولية المنصة كدليل لكراجات الكويت.",
-  alternates: { canonical: "https://degself.com/terms" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal.terms" });
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: "https://degself.com/terms" },
+  };
+}
 
-export default function TermsPage() {
+export default async function TermsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "legal" });
+  const s2list = t.raw("terms.s2list") as string[];
+  const s4list = t.raw("terms.s4list") as string[];
+
+  const linkCls = "font-bold text-primary hover:underline";
+  const asaali = { asaali: (c: ReactNode) => <Link href="/isal-degself" className={linkCls}>{c}</Link> };
+  const privacy = { privacy: (c: ReactNode) => <Link href="/privacy" className={linkCls}>{c}</Link> };
+  const contactTags = {
+    mail: (c: ReactNode) => <a href="mailto:info@degself.com" className={linkCls}>{c}</a>,
+    about: (c: ReactNode) => <Link href="/about" className={linkCls}>{c}</Link>,
+  };
+
   return (
-    <div className="mx-auto w-full max-w-3xl px-6 py-10" dir="rtl">
+    <div className="mx-auto w-full max-w-3xl px-6 py-10">
       <BreadcrumbJsonLd
         items={[
-          { name: "الرئيسية", url: "https://degself.com/" },
-          { name: "شروط الاستخدام", url: "https://degself.com/terms" },
+          { name: t("breadcrumbHome"), url: "https://degself.com/" },
+          { name: t("terms.breadcrumbSelf"), url: "https://degself.com/terms" },
         ]}
       />
-      <h1 className="mb-2 text-2xl font-extrabold">شروط الاستخدام</h1>
-      <p className="mb-8 text-sm text-muted-foreground">آخر تحديث: يونيو 2026</p>
+      <h1 className="mb-2 text-2xl font-extrabold">{t("terms.h1")}</h1>
+      <p className="mb-8 text-sm text-muted-foreground">{t("lastUpdated")}</p>
 
       <div className="flex flex-col gap-6 text-sm leading-relaxed text-foreground/90">
         <section>
-          <p>
-            باستخدامك لموقع «دق سلف» (degself.com) فإنك توافق على الشروط التالية. إن لم
-            توافق على أي بند منها يُرجى عدم استخدام الموقع.
-          </p>
+          <p>{t("terms.intro")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">1. طبيعة الخدمة</h2>
-          <p>
-            «دق سلف» منصة مجانية لعرض كراجات وورش وخدمات صيانة السيارات في دولة الكويت.
-            دورنا هو ربط المستخدم بمزوّد الخدمة. نحن لسنا طرفاً في الاتفاق بين المستخدم
-            والكراج، ولا نقدّم خدمات إصلاح السيارات بأنفسنا.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s1h")}</h2>
+          <p>{t("terms.s1body")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">2. حدود المسؤولية</h2>
-          <ul className="list-disc space-y-2 pr-5">
-            <li>
-              الأسعار المعروضة في حاسبة الأسعار وفي صفحات الكراجات هي أسعار تقديرية
-              مستندة إلى بيانات السوق الكويتي 2026؛ السعر النهائي يتحدّد بين العميل والكراج بعد
-              الفحص.
-            </li>
-            <li>
-              لا نضمن جودة الخدمة التي يقدّمها أي كراج مدرَج. اطلب عرض السعر وتفاصيل
-              الضمان قبل الاتفاق.
-            </li>
-            <li>
-              لا نتحمّل أي خسارة مباشرة أو غير مباشرة ناتجة عن استخدامك للموقع أو
-              تعاملك مع أي كراج وصلت إليه عبره.
-            </li>
-            <li>
-              المعلومات المعروضة (ساعات العمل، الموقع، الخدمات) يتم تحديثها دورياً، لكن
-              قد تتغيّر دون إشعار. تواصل مع الكراج للتأكد.
-            </li>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s2h")}</h2>
+          <ul className="list-disc space-y-2 pe-5">
+            {s2list.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">3. ميزة «اسأل دق سلف» (الذكاء الاصطناعي)</h2>
-          <p>
-            ميزة المترجم الذكي (
-            <Link href="/isal-degself" className="font-bold text-primary hover:underline">
-              /isal-degself
-            </Link>
-            ) تستخدم نماذج ذكاء اصطناعي لتحويل وصف المشكلة بكلامك العادي إلى مصطلحات فنية.
-            هذه التوصيات استرشادية وليست بديلاً عن فحص ميكانيكي محترف. لا تتخذ قراراً
-            بإصلاح أو شراء قطع بناءً على ردّ المساعد فقط.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s3h")}</h2>
+          <p>{t.rich("terms.s3body", asaali)}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">4. استخدام مقبول</h2>
-          <p>عند استخدامك للموقع، تلتزم بأن:</p>
-          <ul className="mt-2 list-disc space-y-2 pr-5">
-            <li>لا تُرسل بلاغات كاذبة أو تقييمات مزيّفة.</li>
-            <li>لا تستخدم الموقع لأي نشاط غير قانوني في دولة الكويت.</li>
-            <li>
-              لا تقوم بنسخ أو سحب البيانات (scraping) إلا للأغراض الشخصية وغير
-              التجارية. الاستخدام التجاري يتطلّب إذناً خطياً.
-            </li>
-            <li>
-              لا تحاول اختراق الموقع أو تجاوز إجراءات الأمان أو إساءة استخدام واجهات
-              برمجة التطبيقات (APIs).
-            </li>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s4h")}</h2>
+          <p>{t("terms.s4intro")}</p>
+          <ul className="mt-2 list-disc space-y-2 pe-5">
+            {s4list.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">5. الملكية الفكرية</h2>
-          <p>
-            اسم «دق سلف» وشعاره والعناصر التصميمية للموقع محميّة كملكية فكرية للمالك.
-            يحقّ لك مشاركة الروابط، لكن إعادة نشر المحتوى أو إعادة استخدامه تجارياً تستلزم
-            إذناً مكتوباً.
-          </p>
-          <p className="mt-2">
-            بيانات الكراجات معروضة لأغراض دليلية فقط؛ كل كراج يحتفظ بحقوق علامته
-            التجارية ومعلوماته.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s5h")}</h2>
+          <p>{t("terms.s5body1")}</p>
+          <p className="mt-2">{t("terms.s5body2")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">6. التقييمات والمحتوى المُرسَل</h2>
-          <p>
-            عند إرسال تقييم أو بلاغ عن كراج ناقص، فإنك تمنح «دق سلف» الحقّ في عرض هذا
-            المحتوى علناً، مع الاحتفاظ بحقّ تعديله أو حذفه إذا خالف هذه الشروط.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s6h")}</h2>
+          <p>{t("terms.s6body")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">7. الكراجات المُدرَجة</h2>
-          <p>
-            «دق سلف» لا يأخذ مقابلاً مالياً من الكراجات للظهور في نتائج البحث؛ الترتيب
-            عادل وغير مدفوع. إذا كنت صاحب كراج وتريد تعديل بياناتك أو حذف كراجك من
-            الدليل، تواصل معنا عبر الواتساب.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s7h")}</h2>
+          <p>{t("terms.s7body")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">8. التغييرات على الخدمة</h2>
-          <p>
-            نحتفظ بحقّ تعديل الميزات أو إيقافها أو إضافة جديدة في أي وقت دون إشعار
-            مسبق. ما لم نُخطركم عبر الموقع، يُعتبر استمرارك في الاستخدام موافقة على أي
-            تحديث.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s8h")}</h2>
+          <p>{t("terms.s8body")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">9. الخصوصية</h2>
-          <p>
-            راجع{" "}
-            <Link href="/privacy" className="font-bold text-primary hover:underline">
-              سياسة الخصوصية
-            </Link>{" "}
-            لمعرفة البيانات التي نجمعها وكيف نتعامل معها. نحن نلتزم بقرار CITRA الكويتي
-            رقم 26/2024 لحماية البيانات الشخصية.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s9h")}</h2>
+          <p>{t.rich("terms.s9body", privacy)}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">10. القانون المُطبَّق</h2>
-          <p>
-            تخضع هذه الشروط لقوانين دولة الكويت، وأي نزاع ينشأ عنها يتمّ حلّه أمام
-            المحاكم الكويتية المختصة.
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s10h")}</h2>
+          <p>{t("terms.s10body")}</p>
         </section>
 
         <section>
-          <h2 className="mb-2 text-lg font-bold">11. التواصل</h2>
-          <p>
-            لأي استفسار حول هذه الشروط، تواصل معنا على:{" "}
-            <a
-              href="mailto:info@degself.com"
-              className="font-bold text-primary hover:underline"
-            >
-              info@degself.com
-            </a>{" "}
-            أو عبر الواتساب الرسمي المعروض في{" "}
-            <Link href="/about" className="font-bold text-primary hover:underline">
-              صفحة «عن دق سلف»
-            </Link>
-            .
-          </p>
+          <h2 className="mb-2 text-lg font-bold">{t("terms.s11h")}</h2>
+          <p>{t.rich("terms.s11body", contactTags)}</p>
         </section>
       </div>
     </div>
