@@ -1,16 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   parseOpeningHoursString,
   todayName,
   formatHours,
   DAY_ORDER,
-  DAY_AR,
 } from "@/lib/hours";
+
+// formatHours returns Arabic special-cases ("مغلق" / "مفتوح ٢٤ ساعة") or a
+// numeric time range; translate the two special-cases, keep numeric ranges as-is.
+function localizeHours(hours: string, t: (k: string) => string): string {
+  const formatted = formatHours(hours);
+  if (formatted === "مغلق") return t("closed");
+  if (formatted.includes("٢٤") || formatted.includes("24")) return t("open24");
+  return formatted;
+}
 
 /** 7-day opening-hours table (Kuwait week, today highlighted client-side). */
 export function HoursTable({ openingHours }: { openingHours: string | null }) {
+  const t = useTranslations("workshop");
   const [today, setToday] = useState<string | null>(null);
   useEffect(() => setToday(todayName()), []);
 
@@ -32,10 +42,10 @@ export function HoursTable({ openingHours }: { openingHours: string | null }) {
             }
           >
             <span>
-              {DAY_AR[day]}
-              {isToday ? " (اليوم)" : ""}
+              {t(`days.${day}`)}
+              {isToday ? ` ${t("today")}` : ""}
             </span>
-            <span dir="ltr">{hours ? formatHours(hours) : "—"}</span>
+            <span dir="ltr">{hours ? localizeHours(hours, t) : "—"}</span>
           </li>
         );
       })}

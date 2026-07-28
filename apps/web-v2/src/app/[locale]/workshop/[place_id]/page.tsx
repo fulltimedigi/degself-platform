@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Check } from "lucide-react";
 import {
   getWorkshop,
@@ -18,25 +19,11 @@ import { HoursTable } from "@/components/HoursTable";
 import { WorkshopJsonLd } from "@/components/WorkshopJsonLd";
 import { JsonLd } from "@/components/JsonLd";
 import { CallButton } from "@/components/CallButton";
-
-const SITE = "https://degself.com";
-
-// Factual فصحى meta description for garages without a review-analysis overlay.
-// Uses only the garage's own data fields (specialty, brand focus, area) — never
-// review claims or invented analysis. Keeps "كراج" and avoids exclamation marks.
-function factualDescription(w: Workshop): string {
-  const focus =
-    w.specialty_hints && w.specialty_hints.length > 0
-      ? `${w.specialty} مع تخصص في ${w.specialty_hints.join("، ")}`
-      : w.specialty;
-  const where = w.area ? `في ${w.area} بالكويت` : "في الكويت";
-  return `كراج ${focus} ${where} — تعرّف على العنوان والهاتف وساعات العمل على دق سلف.`;
-}
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SaveButton } from "@/components/SaveButton";
 import { ReviewForm } from "@/components/ReviewForm";
 import { getApprovedReviews } from "@/lib/reviews";
-import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
+import { serviceModeKey, reviewVolumeKey } from "@/lib/labels";
 import { kuwaitWhatsAppDigits, formatArabicDate, truncate } from "@/lib/utils";
 import { BUSINESS_WA } from "@/lib/constants";
 import { getEnrichment } from "@/lib/enrichment";
@@ -48,15 +35,26 @@ import {
 } from "@/components/ReviewInsights";
 import { WorkshopViewTracker } from "@/components/WorkshopViewTracker";
 
-export const revalidate = 86400; // daily ISR — reduces rebuild frequency, improves cache HIT rate
+const SITE = "https://degself.com";
+
+type Translator = Awaited<ReturnType<typeof getTranslations>>;
+
+// Factual meta description for garages without a review-analysis overlay. Uses
+// only the garage's own data fields (specialty, brand focus, area) — never
+// review claims or invented analysis.
+function factualDescription(w: Workshop, t: Translator): string {
+  const focus =
+    w.specialty_hints && w.specialty_hints.length > 0
+      ? t("descFocusHints", { specialty: w.specialty, hints: w.specialty_hints.join("، ") })
+      : w.specialty;
+  const where = w.area ? t("descWhereArea", { area: w.area }) : t("descWhereGeneric");
+  return t("descTemplate", { focus, where });
+}
+
+export const revalidate = 86400; // daily ISR
 export const dynamicParams = true; // place_ids beyond the pre-rendered set build on demand
 
-// Pre-render the 100 most-reviewed workshops + every curated mechanic at build
-// time; the rest are ISR. Curated mechanics carry no review count, so they'd
-// never make the top-100 cut — add them explicitly so they ship pre-rendered.
 export async function generateStaticParams() {
-  // Prerender top 500 workshops (up from 100) to maximize cache HIT rate.
-  // Combined with curated mechanic list, this covers the highest-traffic pages.
   const [topByReviews, curatedMechs] = await Promise.all([
     getAllPlaceIds(500),
     getCuratedMechanicPlaceIds(),
@@ -68,29 +66,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ place_id: string }>;
+  params: Promise<{ locale: string; place_id: string }>;
 }): Promise<Metadata> {
-  const { place_id } = await params;
+  const { locale, place_id } = await params;
+  const t = await getTranslations({ locale, namespace: "workshop" });
   const w = await getWorkshop(place_id);
-  if (!w) return { title: "غير موجود — دق سلف" };
-  // Prefer the degself review-analysis summary (rewritten فصحى, never a verbatim
-  // Google review) for the meta description — richer, keyword-bearing snippet.
-  // When a garage has no review-analysis overlay (e.g. curated mechanics without
-  // Google reviews), build a factual فصحى description from its own fields —
-  // specialty, any brand focus, and area — never inventing analysis.
+  if (!w) return { title: t("notFound") };
   const enrichment = getEnrichment(place_id);
   const description = enrichment?.summary_ar
     ? truncate(enrichment.summary_ar, 160)
-    : truncate(factualDescription(w), 160);
-  // Keyword-rich, brand-consistent title: name — specialty in area | دق سلف.
-  // Uses the audited specialty when present; omits the location clause when the
-  // garage has no area (e.g. mobile-only mechanics).
+    : truncate(factualDescription(w, t), 160);
   const titleSpecialty = w.reviewed_specialty ?? w.specialty;
-  const titleLoc = w.area ? ` في ${w.area}` : "";
+  const titleLoc = w.area ? ` ${t("inArea", { area: w.area })}` : "";
   return {
     title: `${w.name} — ${titleSpecialty}${titleLoc} | دق سلف`,
     description,
-    // place_id is case-sensitive — emit it verbatim, never lowercased.
     alternates: { canonical: `${SITE}/workshop/${place_id}` },
   };
 }
@@ -98,9 +88,11 @@ export async function generateMetadata({
 export default async function WorkshopPage({
   params,
 }: {
-  params: Promise<{ place_id: string }>;
+  params: Promise<{ locale: string; place_id: string }>;
 }) {
-  const { place_id } = await params; // verbatim — case-sensitive, never transform
+  const { locale, place_id } = await params; // verbatim — case-sensitive, never transform
+  const t = await getTranslations({ locale, namespace: "workshop" });
+  const tc = await getTranslations({ locale, namespace: "card" });
   const w = await getWorkshop(place_id);
   if (!w) notFound();
 
@@ -111,31 +103,26 @@ export default async function WorkshopPage({
   ]);
   const enrichment = getEnrichment(place_id);
 
-  const volume = reviewVolumeLabel(w.google_reviews_count);
+  const volumeKey = reviewVolumeKey(w.google_reviews_count);
   const location = [w.area, w.governorate].filter(Boolean).join(" · ");
   const telHref = (w.phone_intl || w.phone || "").replace(/[^\d+]/g, "");
   const waDigits = kuwaitWhatsAppDigits(w.phone_intl || w.phone); // mobile-only
   const services = [...new Set([w.specialty, ...(w.specialty_hints ?? [])])].filter(Boolean);
 
-  // Breadcrumb trail that links UP to the matching landing pages when they
-  // exist — passing internal-link equity from every workshop to the specialty
-  // index and the specialty×area page (the SEO target pages). The audited
-  // specialty maps to a landing slug by exact label; areas/specialties without
-  // a valid landing combo fall back to the generic search link (no dead links).
   const landingSpec = LANDING_SPECIALTIES.find((s) => s.label === w.reviewed_specialty);
   const slug = landingSpec?.slug;
   const hasSpecialtyIndex = !!slug && landingCombos.some((c) => c.specialty === slug);
   const hasAreaLanding =
     !!slug && !!w.area && landingCombos.some((c) => c.specialty === slug && c.area === w.area);
 
-  const crumbs: { name: string; href: string }[] = [{ name: "الرئيسية", href: "/" }];
+  const crumbs: { name: string; href: string }[] = [{ name: t("breadcrumbHome"), href: "/" }];
   if (hasSpecialtyIndex && landingSpec) {
-    crumbs.push({ name: `كراجات ${landingSpec.label}`, href: `/كراج/${slug}` });
+    crumbs.push({ name: t("breadcrumbSpecialty", { specialty: landingSpec.label }), href: `/كراج/${slug}` });
   } else {
-    crumbs.push({ name: "الكراجات", href: "/search" });
+    crumbs.push({ name: t("breadcrumbAll"), href: "/search" });
   }
   if (hasAreaLanding && landingSpec) {
-    crumbs.push({ name: `${landingSpec.label} في ${w.area}`, href: `/كراج/${slug}/${w.area}` });
+    crumbs.push({ name: t("breadcrumbSpecArea", { specialty: landingSpec.label, area: w.area ?? "" }), href: `/كراج/${slug}/${w.area}` });
   }
   crumbs.push({ name: w.name, href: `/workshop/${w.place_id}` });
 
@@ -157,7 +144,7 @@ export default async function WorkshopPage({
       <WorkshopViewTracker placeId={w.place_id} />
 
       {/* Breadcrumb trail (visible + matches the BreadcrumbList JSON-LD) */}
-      <nav aria-label="مسار التنقّل" className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+      <nav aria-label={t("navAria")} className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
         {crumbs.map((c, i) => {
           const last = i === crumbs.length - 1;
           return (
@@ -188,7 +175,7 @@ export default async function WorkshopPage({
           {location && <p className="mt-1 text-muted-foreground">{location}</p>}
         </div>
         <span className="shrink-0 rounded-md bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-          {serviceModeLabel(w.service_mode)}
+          {tc(serviceModeKey(w.service_mode))}
         </span>
       </div>
 
@@ -206,7 +193,7 @@ export default async function WorkshopPage({
         {w.google_rating != null && (
           <span className="flex items-center gap-2">
             <StarRating rating={w.google_rating} />
-            {volume && <span className="text-muted-foreground">{volume}</span>}
+            {volumeKey && <span className="text-muted-foreground">{tc(volumeKey)}</span>}
           </span>
         )}
         <OpenNowBadge openingHours={w.opening_hours} />
@@ -221,16 +208,16 @@ export default async function WorkshopPage({
 
       {/* Details */}
       <section className="mt-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
-        <h2 className="font-bold">معلومات التواصل</h2>
+        <h2 className="font-bold">{t("contactHeading")}</h2>
         {(w.street || w.address) && (
           <p className="text-sm">
-            <span className="text-muted-foreground">العنوان: </span>
+            <span className="text-muted-foreground">{t("addressLabel")}</span>
             {w.street || w.address}
           </p>
         )}
         {(w.phone_intl || w.phone) && (
           <p className="text-sm">
-            <span className="text-muted-foreground">الهاتف: </span>
+            <span className="text-muted-foreground">{t("phoneLabel")}</span>
             <CallButton
               tel={telHref}
               display={w.phone_intl ?? w.phone ?? ""}
@@ -240,14 +227,14 @@ export default async function WorkshopPage({
         )}
         {w.website && (
           <p className="text-sm">
-            <span className="text-muted-foreground">الموقع: </span>
+            <span className="text-muted-foreground">{t("websiteLabel")}</span>
             <a
               href={w.website}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-primary"
             >
-              زيارة الموقع
+              {t("visitWebsite")}
             </a>
           </p>
         )}
@@ -259,7 +246,7 @@ export default async function WorkshopPage({
       {/* Available services */}
       {w.specialty_hints && w.specialty_hints.length > 0 && (
         <section className="mt-4 rounded-xl border border-border bg-card p-4">
-          <h2 className="mb-3 font-bold">خدمات متوفّرة</h2>
+          <h2 className="mb-3 font-bold">{t("servicesHeading")}</h2>
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {services.map((s) => (
               <li key={s} className="flex items-center gap-2 text-sm">
@@ -275,7 +262,7 @@ export default async function WorkshopPage({
       {w.opening_hours && (
         <section className="mt-4 rounded-xl border border-border bg-card p-4">
           <div className="mb-2 flex items-center justify-between gap-2">
-            <h2 className="font-bold">ساعات العمل</h2>
+            <h2 className="font-bold">{t("hoursHeading")}</h2>
             <OpenNowBadge openingHours={w.opening_hours} />
           </div>
           <HoursTable openingHours={w.opening_hours} />
@@ -285,16 +272,16 @@ export default async function WorkshopPage({
       {/* Map */}
       {w.lat != null && w.lng != null && (
         <section className="mt-4">
-          <h2 className="mb-2 font-bold">الموقع على الخريطة</h2>
+          <h2 className="mb-2 font-bold">{t("mapHeading")}</h2>
           {/* No-API-key embed (output=embed) — geographic pin only, no place photos */}
           <iframe
-            src={`https://www.google.com/maps?q=${w.lat},${w.lng}&output=embed&hl=ar`}
+            src={`https://www.google.com/maps?q=${w.lat},${w.lng}&output=embed&hl=${locale}`}
             width="100%"
             height="400"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             className="rounded-2xl border border-border"
-            title="موقع المنشأة على الخريطة"
+            title={t("mapTitle")}
           />
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${w.lat},${w.lng}&query_place_id=${encodeURIComponent(w.place_id)}`}
@@ -302,7 +289,7 @@ export default async function WorkshopPage({
             rel="noopener noreferrer"
             className="mt-2 inline-block rounded-xl border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
           >
-            افتح في خرائط Google
+            {t("openInGoogle")}
           </a>
         </section>
       )}
@@ -310,7 +297,7 @@ export default async function WorkshopPage({
       {/* Reviews — visitor reviews (manually moderated) */}
       <section className="mt-4 rounded-xl border border-border bg-card p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 className="font-bold">التقييمات</h2>
+          <h2 className="font-bold">{t("reviewsHeading")}</h2>
           {reviewSummary.count > 0 && reviewSummary.avg != null && (
             <span className="flex items-center gap-2 text-sm">
               <StarRating rating={reviewSummary.avg} />
@@ -325,7 +312,7 @@ export default async function WorkshopPage({
               <li key={r.id} className="border-b border-border pb-3 last:border-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <StarRating rating={r.rating} />
-                  <span className="text-sm font-semibold">{r.author_name || "زائر"}</span>
+                  <span className="text-sm font-semibold">{r.author_name || t("visitor")}</span>
                   <span className="text-xs text-muted-foreground">
                     {formatArabicDate(r.created_at.slice(0, 10))}
                   </span>
@@ -335,9 +322,7 @@ export default async function WorkshopPage({
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            لا توجد تقييمات بعد — كن أول من يقيّم هذا الكراج.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("noReviews")}</p>
         )}
 
         <div className="mt-5 border-t border-border pt-4">
@@ -350,19 +335,17 @@ export default async function WorkshopPage({
 
       {/* Report this listing to Degself team via business WhatsApp */}
       <section className="mt-4 rounded-xl border border-border bg-card p-4">
-        <h2 className="mb-2 font-bold">بلّغنا</h2>
-        <p className="mb-3 text-sm text-muted-foreground">
-          إذا لاحظت أي خطأ في بيانات هذا الكراج (رقم، عنوان، ساعات عمل، أو خدمات)، أبلغنا عبر واتساب لنصحّحه خلال ساعات.
-        </p>
+        <h2 className="mb-2 font-bold">{t("reportHeading")}</h2>
+        <p className="mb-3 text-sm text-muted-foreground">{t("reportBody")}</p>
         <a
           href={`https://wa.me/${BUSINESS_WA}?text=${encodeURIComponent(
-            `السلام عليكم، أرغب بالتبليغ عن خطأ في بيانات كراج:\n${w.name}\nhttps://degself.com/workshop/${w.place_id}\n\nالخطأ: `
+            `${t("reportWaText")}\n${w.name}\nhttps://degself.com/workshop/${w.place_id}\n\n${t("reportWaError")}`
           )}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground hover:opacity-90"
         >
-          بلّغنا عبر واتساب
+          {t("reportButton")}
         </a>
       </section>
     </div>
