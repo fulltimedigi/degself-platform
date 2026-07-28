@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { isOpenNow } from "@/lib/hours";
 
 /** Live "open now / closed" badge (computed client-side in Kuwait time). */
 export function OpenNowBadge({ openingHours }: { openingHours: string | null }) {
+  const t = useTranslations("card");
   // null until mounted → avoids SSR/client hydration mismatch
   const [open, setOpen] = useState<boolean | null>(null);
 
@@ -24,7 +26,7 @@ export function OpenNowBadge({ openingHours }: { openingHours: string | null }) 
       <span
         className={"h-2 w-2 rounded-full " + (open ? "bg-green-400" : "bg-muted-foreground")}
       />
-      {open ? "مفتوح الآن" : "مغلق الآن"}
+      {open ? t("openNow") : t("closedNow")}
     </span>
   );
 }

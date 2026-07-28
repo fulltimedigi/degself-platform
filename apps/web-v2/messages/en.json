@@ -282,5 +282,48 @@
     "change": "Change",
     "clear": "Clear selections",
     "choose": "— Choose —"
+  },
+  "search": {
+    "metaTitle": "Find a garage in Kuwait | Degself",
+    "metaDescription": "Search 1,757 verified garages in Kuwait. Filter by specialty (mechanics, tires, body & paint, A/C), area and governorate.",
+    "ogDescription": "Search 1,757 verified garages in Kuwait. Filter by specialty, area and governorate.",
+    "twDescription": "Search 1,757 verified garages in Kuwait.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSearch": "Search",
+    "heading": "Search results",
+    "dialectUnderstood": "We understood you mean:",
+    "dialectExact": "Search literally without dialect understanding",
+    "noResultsTitle": "We couldn't find results matching your search",
+    "noResultsHint": "Try simpler words, or search by the most common specialties:",
+    "resetFilters": "Reset filters and show all →",
+    "knowMissingTitle": "Know a garage that's not listed here?",
+    "reportCta": "Tell us — we'll add it for free",
+    "missingTitle": "Know a garage missing from the directory?",
+    "missingSubtitle": "Help us complete Kuwait's garage directory — adding is free.",
+    "reportMissingCta": "Report a missing garage",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "pills": {
+      "mechanics": "Mechanics",
+      "tires": "Tires",
+      "ac": "A/C",
+      "bodywork": "Body & paint",
+      "batteries": "Batteries",
+      "oils": "Oils & service"
+    }
+  },
+  "card": {
+    "serviceMobile": "Mobile garage",
+    "serviceTow": "Tow truck",
+    "serviceGarage": "Garage",
+    "reviewsMany": "Many reviews",
+    "reviewsGood": "Good reviews",
+    "registered": "Registered garage",
+    "km": "{n} km",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "openNow": "Open now",
+    "closedNow": "Closed now"
   }
 }

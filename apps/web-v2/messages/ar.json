@@ -282,5 +282,48 @@
     "change": "تغيير",
     "clear": "مسح الاختيارات",
     "choose": "— اختر —"
+  },
+  "search": {
+    "metaTitle": "البحث عن كراج في الكويت | دق سلف",
+    "metaDescription": "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
+    "ogDescription": "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
+    "twDescription": "ابحث في 1,757 كراج موثّق بالكويت.",
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbSearch": "البحث",
+    "heading": "نتائج البحث",
+    "dialectUnderstood": "فهمنا قصدك:",
+    "dialectExact": "البحث الكلي بدون فهم اللهجة",
+    "noResultsTitle": "ما لقينا نتائج تطابق بحثك",
+    "noResultsHint": "جرّب كلمات أبسط أو ابحث بأشهر التخصصات:",
+    "resetFilters": "إعادة تعيين الفلاتر وعرض الكل ←",
+    "knowMissingTitle": "تعرف على كراج غير موجود عندنا؟",
+    "reportCta": "بلّغنا عنه — وسنضيفه مجاناً",
+    "missingTitle": "تعرف على كراج مفقود من الدليل؟",
+    "missingSubtitle": "ساعدنا نكمل دليل كراجات الكويت — إضافة مجانية.",
+    "reportMissingCta": "بلّغنا عن كراج ناقص",
+    "prev": "السابق",
+    "next": "التالي",
+    "pageOf": "صفحة {page} من {total}",
+    "pills": {
+      "mechanics": "ميكانيكا",
+      "tires": "تواير",
+      "ac": "تكييف",
+      "bodywork": "بودي وصبغ",
+      "batteries": "بطاريات",
+      "oils": "زيوت وصيانة"
+    }
+  },
+  "card": {
+    "serviceMobile": "كراج متنقل",
+    "serviceTow": "سطحة",
+    "serviceGarage": "كراج",
+    "reviewsMany": "تقييمات كثيرة",
+    "reviewsGood": "تقييمات جيدة",
+    "registered": "كراج مُسجَّل",
+    "km": "{n} كم",
+    "call": "اتصال",
+    "whatsapp": "واتساب",
+    "openNow": "مفتوح الآن",
+    "closedNow": "مغلق الآن"
   }
 }
