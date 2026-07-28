@@ -1,32 +1,85 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { Globe, Check, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { LOCALES, LOCALE_LABEL, type Locale } from "@/i18n/routing";
 
-// Switches locale while staying on the SAME page (usePathname here is
-// locale-agnostic — it returns the path without the locale prefix).
+// Globe-icon language switcher (Airbnb/Booking-style): a compact always-visible
+// button in the header that opens a dropdown of the languages in their native
+// names. Switching keeps you on the same page (usePathname is locale-agnostic).
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const t = useTranslations("lang");
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click / Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    const raf = requestAnimationFrame(() => document.addEventListener("pointerdown", onPointer));
+    document.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  function choose(next: Locale) {
+    setOpen(false);
+    if (next !== locale) router.replace(pathname, { locale: next });
+  }
 
   return (
-    <label className={`inline-flex items-center ${className}`}>
-      <span className="sr-only">{t("switchTo")}</span>
-      <select
-        value={locale}
-        onChange={(e) => router.replace(pathname, { locale: e.target.value as Locale })}
+    <div ref={ref} className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
         aria-label={t("switchTo")}
-        className="rounded-lg border border-border bg-background px-2 py-1.5 text-sm font-semibold text-foreground/80 focus:border-primary focus:outline-none"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-2 text-sm font-bold text-foreground/80 transition hover:border-[#FFD60A] hover:text-primary"
       >
-        {LOCALES.map((l) => (
-          <option key={l} value={l}>
-            {LOCALE_LABEL[l]}
-          </option>
-        ))}
-      </select>
-    </label>
+        <Globe size={18} aria-hidden />
+        <span className="hidden sm:inline">{LOCALE_LABEL[locale]}</span>
+        <ChevronDown size={14} aria-hidden className={`transition ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute z-50 mt-1 min-w-[9rem] overflow-hidden rounded-xl border border-border bg-card py-1 shadow-lg ltr:right-0 rtl:left-0"
+        >
+          {LOCALES.map((l) => {
+            const active = l === locale;
+            return (
+              <li key={l} role="option" aria-selected={active}>
+                <button
+                  type="button"
+                  onClick={() => choose(l)}
+                  dir={l === "ar" || l === "ur" ? "rtl" : "ltr"}
+                  className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-sm transition hover:bg-muted ${
+                    active ? "font-extrabold text-primary" : "font-semibold text-foreground/80"
+                  }`}
+                >
+                  <span>{LOCALE_LABEL[l]}</span>
+                  {active && <Check size={15} aria-hidden />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }

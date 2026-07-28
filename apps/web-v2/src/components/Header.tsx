@@ -125,7 +125,7 @@ export function Header() {
             {t("whatsapp")}
           </a>
 
-          <LanguageSwitcher className="hidden md:inline-flex" />
+          <LanguageSwitcher />
 
           <Link
             href="/saved"
@@ -217,8 +217,6 @@ export function Header() {
             </svg>
             {t("contactWhatsApp")}
           </a>
-
-          <LanguageSwitcher className="mt-1 justify-center" />
 
           {/* Always-available install option (the native prompt isn't shown to
               everyone — iOS never, Android only sometimes) */}
