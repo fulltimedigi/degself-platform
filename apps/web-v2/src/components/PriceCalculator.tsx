@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Calculator, Search, AlertCircle, MessageCircle } from "lucide-react";
 import { track } from "@/lib/track";
 
@@ -61,6 +62,7 @@ function formatKWD(n: number): string {
 }
 
 export function PriceCalculator() {
+  const t = useTranslations("asaar.calc");
   const [serviceId, setServiceId] = useState<string>("");
   const [carCategory, setCarCategory] = useState<string>("");
   const [calculated, setCalculated] = useState(false);
@@ -100,15 +102,15 @@ export function PriceCalculator() {
           <Calculator className="text-primary" size={24} aria-hidden />
         </div>
         <div>
-          <h2 className="text-2xl font-extrabold">حاسبة أسعار خدمات السيارات</h2>
-          <p className="text-sm text-muted-foreground">أسعار السوق الكويتي 2026 — مبنية على بيانات كراجات فعلية</p>
+          <h2 className="text-2xl font-extrabold">{t("heading")}</h2>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <div>
           <label htmlFor="service-select" className="mb-2 block text-sm font-bold">
-            اختر الخدمة
+            {t("chooseService")}
           </label>
           <select
             id="service-select"
@@ -119,18 +121,18 @@ export function PriceCalculator() {
             }}
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base font-medium focus:border-primary focus:outline-none"
           >
-            <option value="">— اختر نوع الخدمة —</option>
-            <optgroup label="خدمات بأسعار محدّدة">
+            <option value="">{t("servicePlaceholder")}</option>
+            <optgroup label={t("groupPriced")}>
               {SERVICES.filter((s) => !s.quoteOnly).map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.label}
+                  {t(`services.${s.id}`)}
                 </option>
               ))}
             </optgroup>
-            <optgroup label="خدمات تحتاج عرض سعر من الكراج">
+            <optgroup label={t("groupQuote")}>
               {SERVICES.filter((s) => s.quoteOnly).map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.label}
+                  {t(`services.${s.id}`)}
                 </option>
               ))}
             </optgroup>
@@ -139,7 +141,7 @@ export function PriceCalculator() {
 
         <div>
           <label htmlFor="car-select" className="mb-2 block text-sm font-bold">
-            فئة السيارة
+            {t("carCategory")}
           </label>
           <select
             id="car-select"
@@ -150,10 +152,10 @@ export function PriceCalculator() {
             }}
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base font-medium focus:border-primary focus:outline-none"
           >
-            <option value="">— اختر فئة سيارتك —</option>
+            <option value="">{t("carPlaceholder")}</option>
             {CAR_CATEGORIES.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.label}
+                {t(`categories.${c.id}`)}
               </option>
             ))}
           </select>
@@ -166,24 +168,22 @@ export function PriceCalculator() {
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-extrabold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30 disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground/70 disabled:shadow-none"
         >
           <Calculator size={18} aria-hidden />
-          احسب السعر
+          {t("calcButton")}
         </button>
       </div>
 
       {calculated && result && result.quoteOnly && (
         <div className="mt-6 space-y-4 rounded-xl border border-amber-500/40 bg-amber-500/5 p-5">
           <div className="flex items-center justify-between border-b border-border pb-3">
-            <span className="font-bold">{result.service.label}</span>
-            <span className="text-sm text-muted-foreground">{result.cat.label}</span>
+            <span className="font-bold">{t(`services.${result.service.id}`)}</span>
+            <span className="text-sm text-muted-foreground">{t(`categories.${result.cat.id}`)}</span>
           </div>
 
           <div className="flex items-start gap-2 rounded-lg bg-background p-4 text-sm">
             <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-600" aria-hidden />
             <div className="space-y-2">
-              <p className="font-bold">هذه الخدمة تختلف كثيراً حسب الموديل والقطع</p>
-              <p className="text-muted-foreground">
-                إعطاءك سعر تقريبي هنا قد يكون مضلّلاً. الأفضل تطلب عرض سعر مباشر من الكراج بعد فحص السيارة.
-              </p>
+              <p className="font-bold">{t("quoteTitle")}</p>
+              <p className="text-muted-foreground">{t("quoteBody")}</p>
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export function PriceCalculator() {
             }}
           >
             <Search size={18} aria-hidden />
-            ابحث عن كراج واطلب عرض السعر
+            {t("quoteSearchBtn")}
           </Link>
         </div>
       )}
@@ -210,39 +210,37 @@ export function PriceCalculator() {
       {calculated && result && !result.quoteOnly && (
         <div className="mt-6 space-y-4 rounded-xl border border-primary/30 bg-primary/5 p-5">
           <div className="flex items-center justify-between border-b border-border pb-3">
-            <span className="font-bold">{result.service.label}</span>
-            <span className="text-sm text-muted-foreground">{result.cat.label}</span>
+            <span className="font-bold">{t(`services.${result.service.id}`)}</span>
+            <span className="text-sm text-muted-foreground">{t(`categories.${result.cat.id}`)}</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-lg bg-background p-3">
-              <div className="text-xs font-bold text-muted-foreground">منخفض</div>
+              <div className="text-xs font-bold text-muted-foreground">{t("low")}</div>
               <div className="mt-1 text-2xl font-extrabold text-green-600">
                 {formatKWD(result.low)}
               </div>
-              <div className="text-xs text-muted-foreground">د.ك</div>
+              <div className="text-xs text-muted-foreground">{t("currency")}</div>
             </div>
             <div className="rounded-lg border-2 border-primary bg-background p-3">
-              <div className="text-xs font-bold text-primary">متوسط</div>
+              <div className="text-xs font-bold text-primary">{t("avg")}</div>
               <div className="mt-1 text-2xl font-extrabold">
                 {formatKWD(result.avg)}
               </div>
-              <div className="text-xs text-muted-foreground">د.ك</div>
+              <div className="text-xs text-muted-foreground">{t("currency")}</div>
             </div>
             <div className="rounded-lg bg-background p-3">
-              <div className="text-xs font-bold text-muted-foreground">مرتفع</div>
+              <div className="text-xs font-bold text-muted-foreground">{t("high")}</div>
               <div className="mt-1 text-2xl font-extrabold text-orange-600">
                 {formatKWD(result.high)}
               </div>
-              <div className="text-xs text-muted-foreground">د.ك</div>
+              <div className="text-xs text-muted-foreground">{t("currency")}</div>
             </div>
           </div>
 
           <div className="flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-sm">
             <AlertCircle size={16} className="mt-0.5 shrink-0 text-amber-600" aria-hidden />
-            <p className="text-muted-foreground">
-              الأسعار تقديرية وتختلف حسب الكراج والقطع المستخدمة. السعر النهائي يتحدد بعد الفحص.
-            </p>
+            <p className="text-muted-foreground">{t("estimateNote")}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -261,10 +259,10 @@ export function PriceCalculator() {
               }}
             >
               <Search size={16} aria-hidden />
-              ابحث عن كراج
+              {t("searchBtn")}
             </Link>
             <Link
-              href={`/isal-degself?service=${encodeURIComponent(result.service.label)}`}
+              href={`/isal-degself?service=${encodeURIComponent(t(`services.${result.service.id}`))}`}
               className="flex items-center justify-center gap-2 rounded-xl border-2 border-foreground bg-background px-4 py-3 text-sm font-bold text-foreground transition hover:bg-foreground/5"
               onClick={() => {
                 try {
@@ -278,7 +276,7 @@ export function PriceCalculator() {
               }}
             >
               <MessageCircle size={16} aria-hidden />
-              اسأل دق سلف
+              {t("askBtn")}
             </Link>
           </div>
         </div>
