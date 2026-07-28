@@ -222,6 +222,15 @@
     "calcSubtitle": "احسب تكلفة الخدمة قبل ما تروح الكراج — أسعار السوق الكويتي 2026",
     "topRatedTitle": "الأعلى تقييماً",
     "topRatedSubtitle": "أفضل الكراجات بناءً على تقييمات Google",
-    "viewAll": "عرض الكل ←"
+    "viewAll": "عرض الكل ←",
+    "specialties": {
+      "general": "صيانة عامة",
+      "mechanics": "ميكانيكا",
+      "electrical": "كهرباء سيارات",
+      "tires": "تواير وبنشر",
+      "bodywork": "بودي وصبغ",
+      "gearbox": "قير",
+      "oils": "زيوت وصيانة"
+    }
   }
 }
