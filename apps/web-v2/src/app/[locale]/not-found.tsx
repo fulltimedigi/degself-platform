@@ -1,23 +1,19 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export const metadata: Metadata = {
-  title: "الصفحة غير موجودة — دق سلف",
-  description:
-    "الصفحة التي تبحث عنها غير موجودة. عد إلى الرئيسية أو ابحث عن كراج في الكويت.",
-  robots: { index: false, follow: true },
-};
+// Note: metadata for not-found is limited; the title is set via the segment.
 
 const QUICK_LINKS = [
-  { href: "/", label: "الرئيسية", icon: "🏠" },
-  { href: "/search", label: "ابحث عن كراج", icon: "🔍" },
-  { href: "/asaar", label: "حاسبة الأسعار", icon: "💰" },
-  { href: "/blog", label: "المدونة", icon: "📖" },
-  { href: "/emergency", label: "طوارئ", icon: "🚨" },
-  { href: "/map", label: "الخريطة", icon: "🗺️" },
-];
+  { href: "/", key: "home", icon: "🏠" },
+  { href: "/search", key: "search", icon: "🔍" },
+  { href: "/asaar", key: "prices", icon: "💰" },
+  { href: "/blog", key: "blog", icon: "📖" },
+  { href: "/emergency", key: "emergency", icon: "🚨" },
+  { href: "/map", key: "map", icon: "🗺️" },
+] as const;
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations("misc.notFound");
   return (
     <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-6 py-16">
       {/* خلفية وهج أصفر */}
@@ -56,18 +52,15 @@ export default function NotFound() {
         </div>
 
         <h1 className="text-3xl font-extrabold sm:text-4xl">
-          الصفحة <span className="text-primary">معطّلة</span> أو غير موجودة
+          {t.rich("h1", { hl: (chunks) => <span className="text-primary">{chunks}</span> })}
         </h1>
-        <p className="max-w-md text-base text-muted-foreground sm:text-lg">
-          الرابط الذي وصلت منه قد يكون قديماً أو غير صحيح. جرّب أحد الروابط أدناه
-          أو ارجع للرئيسية.
-        </p>
+        <p className="max-w-md text-base text-muted-foreground sm:text-lg">{t("body")}</p>
 
         <Link
           href="/"
           className="rounded-xl bg-primary px-8 py-3 font-extrabold text-primary-foreground shadow-md transition hover:opacity-90 hover:shadow-primary/30"
         >
-          العودة للرئيسية
+          {t("backHome")}
         </Link>
 
         {/* روابط سريعة */}
@@ -82,7 +75,7 @@ export default function NotFound() {
                 {l.icon}
               </span>
               <span className="text-sm font-bold transition group-hover:text-primary">
-                {l.label}
+                {t(`links.${l.key}`)}
               </span>
             </Link>
           ))}

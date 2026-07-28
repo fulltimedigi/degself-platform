@@ -816,5 +816,56 @@
     "ctaSubtitle": "1,640+ garages across 14 areas",
     "ctaButton": "Start searching",
     "lastUpdated": "Last updated: June 16, 2026 — data from Degself's database"
+  },
+  "misc": {
+    "notFound": {
+      "metaTitle": "Page not found — Degself",
+      "metaDescription": "The page you're looking for doesn't exist. Go back home or search for a garage in Kuwait.",
+      "h1": "The page is <hl>broken down</hl> or doesn't exist",
+      "body": "The link you came from may be old or incorrect. Try one of the links below or go back home.",
+      "backHome": "Back to home",
+      "links": { "home": "Home", "search": "Find a garage", "prices": "Price calculator", "blog": "Blog", "emergency": "Emergency", "map": "Map" }
+    },
+    "saved": {
+      "metaTitle": "Saved garages | Degself",
+      "metaDescription": "The garages you've saved on Degself.",
+      "h1": "Saved garages",
+      "subtitle": "Saved on this device only — no login needed.",
+      "loading": "Loading…",
+      "empty": "No saved garages yet. Tap the heart icon on any garage to save it here.",
+      "startSearch": "Start searching"
+    },
+    "report": {
+      "metaTitle": "Report a missing garage — Degself",
+      "metaDescription": "Help us complete Kuwait's garage directory — report any garage that's not on Degself.",
+      "h1": "Report a missing garage",
+      "subtitle": "Know a garage in Kuwait that's not on Degself? Send its details and we'll add it for free after verifying. The bigger the directory, the more everyone benefits.",
+      "howHeading": "How do we verify?",
+      "howList": ["We review the data manually.", "We confirm the garage exists via Google Maps.", "We add it to the directory within 3-7 days."],
+      "choose": "— Choose —",
+      "workshopName": "Garage name",
+      "workshopNameEg": "e.g. Mizan Asad Garage",
+      "area": "Area",
+      "areaEg": "e.g. Industrial Shuwaikh",
+      "governorate": "Governorate",
+      "specialty": "Specialty",
+      "phone": "Garage number",
+      "mapsUrl": "Google Maps link",
+      "mapsHint": "The link helps us verify and add it quickly.",
+      "notes": "Additional notes",
+      "notesEg": "Any useful info (hours, car makes it serves, etc.)",
+      "contactLabel": "Your details (optional — to reach you if we need to confirm)",
+      "yourName": "Your name",
+      "yourPhone": "Your number",
+      "submit": "Send report",
+      "submitting": "Sending...",
+      "errName": "Enter the garage name.",
+      "errSend": "Couldn't send.",
+      "errConn": "Connection failed, try again.",
+      "thankYou": "Thank you",
+      "thankYouBody": "We received your report. We'll review it and add the garage within 3-7 days.",
+      "gov": { "capital": "Capital", "hawalli": "Hawalli", "farwaniya": "Farwaniya", "ahmadi": "Ahmadi", "jahra": "Jahra", "mubarak": "Mubarak Al-Kabeer" },
+      "spec": { "general": "General maintenance", "mechanics": "Mechanics", "electrical": "Auto electrical", "tires": "Tires & puncture", "bodywork": "Body & paint", "gearbox": "Gearbox", "oils": "Oils", "ac": "A/C", "batteries": "Batteries", "alignment": "Alignment", "other": "Other" }
+    }
   }
 }
