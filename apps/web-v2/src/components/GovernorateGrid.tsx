@@ -1,8 +1,19 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { MapPin } from "lucide-react";
 import { GOVERNORATES } from "@/lib/constants";
 
-export function GovernorateGrid() {
+const GOV_KEY: Record<string, string> = {
+  "العاصمة": "capital",
+  "حولي": "hawalli",
+  "الفروانية": "farwaniya",
+  "الأحمدي": "ahmadi",
+  "الجهراء": "jahra",
+  "مبارك الكبير": "mubarak",
+};
+
+export async function GovernorateGrid() {
+  const t = await getTranslations("quote.areas");
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {GOVERNORATES.map((g) => (
@@ -13,7 +24,7 @@ export function GovernorateGrid() {
         >
           <span className="flex items-center gap-1.5 font-bold transition group-hover:text-primary">
             <MapPin size={15} className="text-primary" aria-hidden />
-            {g.name}
+            {GOV_KEY[g.name] ? t(GOV_KEY[g.name]) : g.name}
           </span>
           <span className="text-xs text-muted-foreground">{g.areas.join(" · ")}</span>
         </Link>
