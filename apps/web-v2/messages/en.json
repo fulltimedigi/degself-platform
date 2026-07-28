@@ -379,5 +379,65 @@
     "mobile": "Mobile mechanic",
     "viewAll": "View all",
     "noResults": "No results right now."
+  },
+  "faq": {
+    "metaTitle": "FAQ | Degself",
+    "metaDescription": "Everything you need to know about Degself, Kuwait's garage directory — finding a garage, the garage translator, coverage, adding your garage, and privacy.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "FAQ",
+    "h1": "Frequently asked questions",
+    "intro": "Everything you need to know about Degself — for drivers, garage owners, and partners.",
+    "groups": [
+      {
+        "title": "For drivers",
+        "items": [
+          { "q": "What exactly is Degself?", "a": "Degself is the first smart, comprehensive directory of car garages and mechanics in Kuwait. We provide accurate information on 1,757 garages across all of Kuwait's governorates, with search by specialty and area, an interactive map, and a smart translator that helps you describe your car's problem." },
+          { "q": "Is Degself free to use?", "a": "Yes, completely. Degself is free forever for drivers. No subscription, no hidden fees, no sneaky ads." },
+          { "q": "How do I search for a garage?", "a": "Three ways: text search from the main search bar by specialty or area name, the map page to see what's nearest to you geographically, or the garage translator if you're unsure of the problem — it suggests the right specialty for you." },
+          { "q": "What does the garage translator mean?", "a": "An AI-powered assistant that turns a description of the problem in your everyday words into technical terms any mechanic understands. For example, if you tell it your car makes a knocking sound, it suggests the issue might be in the valve lifters or timing chain and recommends a specialist mechanic garage." },
+          { "q": "Are the garages real and operating?", "a": "Yes. All garages were verified through Google Places. Still, working hours may change, so we always advise calling the garage before heading there, especially during holidays or Ramadan." },
+          { "q": "How do I know a garage is open now?", "a": "Every garage page carries an \"Open now\" indicator based on the working hours recorded in Google. On the search page you can use the \"Open now\" filter to see only open garages." },
+          { "q": "Can I book an appointment through Degself?", "a": "For now we show you the contact details (phone and WhatsApp) to reach the garage directly. Direct booking is coming in the next phase during Q3 2026." },
+          { "q": "Can I rate a garage?", "a": "The ratings system is coming in Q3 2026. For now we use Google data as a reference and run regular audits." },
+          { "q": "Does Degself show prices?", "a": "Prices vary widely between garages and by car type. For now we publish price guides on the blog (like tire prices), and live prices will come with the booking system." },
+          { "q": "Do you cover garages outside Kuwait governorate?", "a": "Yes, we cover all six governorates: Capital, Hawalli, Farwaniya, Ahmadi, Jahra, and Mubarak Al-Kabeer." },
+          { "q": "Does the site work on mobile?", "a": "Yes, it works fully with a mobile-first design. You can also add the site to your phone's home screen as a web app (PWA) with no download needed." },
+          { "q": "Can Degself be used outside Kuwait?", "a": "For now we specialize in Kuwait only. Our plan in 2027 is to expand to Saudi Arabia and the UAE." },
+          { "q": "If I find incorrect data, what do I do?", "a": "Email us at hello@degself.com with the garage details and the incorrect information, and we'll update it within 48 hours." },
+          { "q": "Do you work on Fridays and holidays?", "a": "The site is available 24/7. The support team responds during official working hours, Sunday to Thursday, 9am to 6pm." },
+          { "q": "Is my search data recorded?", "a": "We use general analytics to understand usage (which area and which specialty is searched) but with no personal tracking; the site can't identify you from your search, and we don't sell data to anyone." }
+        ]
+      },
+      {
+        "title": "For garage owners",
+        "items": [
+          { "q": "How do I add my garage to Degself?", "a": "Most garages are already listed. If yours isn't, email us at owner@degself.com with the garage name, address, specialty, and phone, and we'll add it within 3 to 7 business days — completely free." },
+          { "q": "How do I update my garage's information?", "a": "Send the updates you need (working hours, phone, specialties) to owner@degself.com and we'll update them for you." },
+          { "q": "Can I add photos of my garage?", "a": "For now photos come from Google Places. In Q3 2026 we'll launch a dashboard for garage owners where you can upload your own photos." },
+          { "q": "Do you take a commission on customers?", "a": "No, zero commission. Degself is free for drivers and free for garages." },
+          { "q": "When the ratings system launches, can you delete a negative review?", "a": "We delete reviews that violate the guidelines (insults, spam, false claims). A genuine negative review is part of the customer experience and is only removed if it breaches the guidelines." },
+          { "q": "How do I get a \"Verified garage\" badge?", "a": "The verification badge is coming in Q3 and Q4 2026, and will require verifying the business license, confirming the address, agreeing to the terms, and a minimum number of positive reviews." },
+          { "q": "I have a complaint about data shown on the site. What do I do?", "a": "Send us the complaint details at legal@degself.com. We are committed to protecting garages' rights and respond within 48 hours." }
+        ]
+      },
+      {
+        "title": "For press & partnerships",
+        "items": [
+          { "q": "What's the Degself story?", "a": "Founder Ahmed Abdel-Halim, a developer, faced a problem in 2025 when his car broke down in the heat and he spent hours searching for a trusted garage, so he decided to build the solution himself. The full story is on the \"About Degself\" page." },
+          { "q": "What are your growth plans?", "a": "Q3 2026: ratings system, appointment booking, and a garage dashboard. Q4 2026: iOS and Android apps and WhatsApp integration. 2027: expansion to Saudi Arabia, the UAE, and Bahrain." },
+          { "q": "What's the revenue model?", "a": "Search is always free for users. In the future we'll offer garages optional paid tools (like updating information, visitor analytics, featuring the garage) — but being on the site and appearing in search stays free." },
+          { "q": "Can we form a partnership?", "a": "Yes. Send the details of your proposal to partnerships@degself.com." },
+          { "q": "What is the Press Kit?", "a": "The Press Kit (logos, images, statistics) is available on request — email press@degself.com." }
+        ]
+      },
+      {
+        "title": "For developers",
+        "items": [
+          { "q": "Can I use your data?", "a": "For now the data is for personal use via the site only. If you need an API for commercial use, contact us." },
+          { "q": "Is there a public API?", "a": "Not for now. It may become available in 2027." },
+          { "q": "What's the tech stack?", "a": "Frontend: Next.js 16 (App Router) with React and TypeScript. Backend: Next.js API Routes with Supabase. Database: PostgreSQL via Supabase. Hosting: Vercel. Maps: Leaflet with OpenStreetMap. AI: Claude AI (claude-haiku-4-5) from Anthropic for the garage translator." }
+        ]
+      }
+    ]
   }
 }
