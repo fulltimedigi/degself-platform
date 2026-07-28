@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 import {
   searchWorkshops,
   getDistinctAreas,
@@ -14,34 +16,39 @@ import { inferSpecialtyFromQuery } from "@/lib/dialect";
 export const dynamic = "force-dynamic"; // results depend on the query — never cached
 
 export async function generateMetadata({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
+  const { locale } = await params;
   const sp = await searchParams;
+  const t = await getTranslations({ locale, namespace: "search" });
+  const url =
+    locale === DEFAULT_LOCALE
+      ? "https://degself.com/search"
+      : `https://degself.com/${locale}/search`;
   // Any query params → filtered variant. Canonicalize to /search and mark
   // noindex to prevent duplicate-content bloat from every filter combo.
   const hasParams = Object.values(sp).some((v) => v !== undefined && v !== "");
 
   const base = {
-    title: "البحث عن كراج في الكويت | دق سلف",
-    description:
-      "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص (ميكانيكا، تواير، بودي وصبغ، تكييف) والمنطقة والمحافظة.",
-    alternates: { canonical: "https://degself.com/search" },
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: url },
     openGraph: {
-      title: "البحث عن كراج في الكويت | دق سلف",
-      description:
-        "ابحث في 1,757 كراج موثّق بالكويت. صفِّ بالتخصص والمنطقة والمحافظة.",
-      url: "https://degself.com/search",
+      title: t("metaTitle"),
+      description: t("ogDescription"),
+      url,
       type: "website" as const,
-      locale: "ar_KW",
       siteName: "دق سلف",
       images: ["/og-image.jpg?v=2"],
     },
     twitter: {
       card: "summary_large_image" as const,
-      title: "البحث عن كراج في الكويت | دق سلف",
-      description: "ابحث في 1,757 كراج موثّق بالكويت.",
+      title: t("metaTitle"),
+      description: t("twDescription"),
       images: ["/og-image.jpg?v=2"],
     },
   };
@@ -63,11 +70,26 @@ const GOVERNORATES = [
 
 type SP = Record<string, string | undefined>;
 
+// empty-state pills: Arabic specialty value drives the search query (DB value),
+// the label is translated for display
+const EMPTY_PILLS = [
+  { value: "ميكانيكا", key: "mechanics" },
+  { value: "تواير", key: "tires" },
+  { value: "تكييف", key: "ac" },
+  { value: "بودي وصبغ", key: "bodywork" },
+  { value: "بطاريات", key: "batteries" },
+  { value: "زيوت وصيانة", key: "oils" },
+] as const;
+
 export default async function SearchPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<SP>;
 }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "search" });
   const sp = await searchParams;
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
   const offset = (page - 1) * PAGE_SIZE;
@@ -160,12 +182,12 @@ export default async function SearchPage({
     <div className="mx-auto w-full max-w-6xl px-6 py-8">
       <BreadcrumbJsonLd
         items={[
-          { name: "الرئيسية", url: "https://degself.com/" },
-          { name: "البحث", url: "https://degself.com/search" },
+          { name: t("breadcrumbHome"), url: "https://degself.com/" },
+          { name: t("breadcrumbSearch"), url: "https://degself.com/search" },
         ]}
       />
       <SearchTracker query={sp.q ?? ""} />
-      <h1 className="mb-4 text-2xl font-extrabold">نتائج البحث</h1>
+      <h1 className="mb-4 text-2xl font-extrabold">{t("heading")}</h1>
 
       <SearchFilters
         areas={areas}
@@ -178,13 +200,14 @@ export default async function SearchPage({
       {dialect && (
         <div className="mt-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm">
           <span>
-            فهمنا قصدك: <span className="font-bold text-primary">{dialect.specialty}</span>
+            {t("dialectUnderstood")}{" "}
+            <span className="font-bold text-primary">{dialect.specialty}</span>
           </span>
           <Link
             href={exactHref()}
             className="font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
           >
-            البحث الكلي بدون فهم اللهجة
+            {t("dialectExact")}
           </Link>
         </div>
       )}
@@ -199,23 +222,23 @@ export default async function SearchPage({
               </svg>
             </div>
             <div className="flex flex-col gap-2">
-              <p className="text-lg font-bold">ما لقينا نتائج تطابق بحثك</p>
-              <p className="text-sm text-muted-foreground">جرّب كلمات أبسط أو ابحث بأشهر التخصصات:</p>
+              <p className="text-lg font-bold">{t("noResultsTitle")}</p>
+              <p className="text-sm text-muted-foreground">{t("noResultsHint")}</p>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
-              {["ميكانيكا","تواير","تكييف","بودي وصبغ","بطاريات","زيوت وصيانة"].map((s) => (
-                <Link key={s} href={`/search?specialty=${encodeURIComponent(s)}`} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary">
-                  {s}
+              {EMPTY_PILLS.map((s) => (
+                <Link key={s.value} href={`/search?specialty=${encodeURIComponent(s.value)}`} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary">
+                  {t(`pills.${s.key}`)}
                 </Link>
               ))}
             </div>
             <Link href="/search" className="text-sm font-semibold text-primary hover:underline">
-              إعادة تعيين الفلاتر وعرض الكل ←
+              {t("resetFilters")}
             </Link>
             <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-5 text-center">
-              <p className="mb-2 text-sm font-bold">تعرف على كراج غير موجود عندنا؟</p>
+              <p className="mb-2 text-sm font-bold">{t("knowMissingTitle")}</p>
               <Link href="/report-workshop" className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90">
-                بلّغنا عنه — وسنضيفه مجاناً
+                {t("reportCta")}
               </Link>
             </div>
           </div>
@@ -237,33 +260,33 @@ export default async function SearchPage({
       {workshops.length > 0 && (
         <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-5 text-center sm:flex-row sm:justify-between sm:text-right">
           <div>
-            <p className="text-sm font-bold">تعرف على كراج مفقود من الدليل؟</p>
-            <p className="text-xs text-muted-foreground">ساعدنا نكمل دليل كراجات الكويت — إضافة مجانية.</p>
+            <p className="text-sm font-bold">{t("missingTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("missingSubtitle")}</p>
           </div>
           <Link href="/report-workshop" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90">
-            بلّغنا عن كراج ناقص
+            {t("reportMissingCta")}
           </Link>
         </div>
       )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <nav className="mt-8 flex items-center justify-center gap-4" dir="rtl">
+        <nav className="mt-8 flex items-center justify-center gap-4">
           {page > 1 ? (
             <Link
               href={pageHref(page - 1)}
               className="rounded-xl border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
             >
-              السابق
+              {t("prev")}
             </Link>
           ) : (
             <span className="rounded-xl border border-border px-4 py-2 text-sm font-semibold text-muted-foreground/40">
-              السابق
+              {t("prev")}
             </span>
           )}
 
           <span className="text-sm text-muted-foreground">
-            صفحة {page} من {totalPages}
+            {t("pageOf", { page, total: totalPages })}
           </span>
 
           {page < totalPages ? (
@@ -271,11 +294,11 @@ export default async function SearchPage({
               href={pageHref(page + 1)}
               className="rounded-xl border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
             >
-              التالي
+              {t("next")}
             </Link>
           ) : (
             <span className="rounded-xl border border-border px-4 py-2 text-sm font-semibold text-muted-foreground/40">
-              التالي
+              {t("next")}
             </span>
           )}
         </nav>
