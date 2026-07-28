@@ -222,6 +222,15 @@
     "calcSubtitle": "Estimate the cost before you go to the garage — Kuwait market prices 2026",
     "topRatedTitle": "Top rated",
     "topRatedSubtitle": "Best garages based on Google reviews",
-    "viewAll": "View all →"
+    "viewAll": "View all →",
+    "specialties": {
+      "general": "General maintenance",
+      "mechanics": "Mechanics",
+      "electrical": "Auto electrical",
+      "tires": "Tires & puncture",
+      "bodywork": "Body & paint",
+      "gearbox": "Gearbox",
+      "oils": "Oils & service"
+    }
   }
 }
