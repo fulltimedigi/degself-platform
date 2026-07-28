@@ -1,10 +1,11 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { SpecialtyCover } from "@/components/SpecialtyCover";
 import { StarRating } from "@/components/StarRating";
 import { OpenNowBadge } from "@/components/OpenNowBadge";
 import { SaveButton } from "@/components/SaveButton";
 import { CardActions } from "@/components/CardActions";
-import { serviceModeLabel, reviewVolumeLabel } from "@/lib/labels";
+import { serviceModeKey, reviewVolumeKey } from "@/lib/labels";
 import { truncate, kuwaitWhatsAppDigits } from "@/lib/utils";
 import type { Workshop } from "@/lib/types";
 import type { Enrichment } from "@/lib/enrichment";
@@ -18,6 +19,7 @@ export function WorkshopCard({
   distanceKm?: number | null;
   enrichment?: Enrichment | null;
 }) {
+  const t = useTranslations("card");
   const {
     place_id,
     name,
@@ -34,7 +36,7 @@ export function WorkshopCard({
     reviewed_specialty,
   } = workshop;
 
-  const volume = reviewVolumeLabel(google_reviews_count);
+  const volumeKey = reviewVolumeKey(google_reviews_count);
   // prefer the Google-authoritative neighborhood (الحي) over the free-text area
   const location = [neighborhood ?? area, governorate].filter(Boolean).join(" · ");
   const tel = (phone_intl || phone || "").replace(/[^\d+]/g, "");
@@ -56,7 +58,7 @@ export function WorkshopCard({
                 {truncate(name, 60)}
               </h3>
               <span className="shrink-0 rounded-md bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                {serviceModeLabel(service_mode)}
+                {t(serviceModeKey(service_mode))}
               </span>
             </div>
 
@@ -88,15 +90,15 @@ export function WorkshopCard({
                 </span>
               ) : (
                 <span className="rounded-md border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                  كراج مُسجَّل
+                  {t("registered")}
                 </span>
               )}
               {google_rating != null && <StarRating rating={google_rating} />}
-              {volume && <span className="text-muted-foreground">{volume}</span>}
+              {volumeKey && <span className="text-muted-foreground">{t(volumeKey)}</span>}
               <OpenNowBadge openingHours={opening_hours} />
               {distanceKm != null && (
                 <span className="rounded-md bg-primary/10 px-2 py-0.5 font-semibold text-primary">
-                  {distanceKm} كم
+                  {t("km", { n: distanceKm })}
                 </span>
               )}
             </div>

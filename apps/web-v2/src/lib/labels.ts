@@ -19,3 +19,28 @@ export function reviewVolumeLabel(count: number | null): string | null {
   if (count >= 50) return "تقييمات جيدة";
   return null; // < 50 → don't show
 }
+
+// ── i18n variants: return a message key under the "card" namespace ──
+// (used by translated surfaces; call site resolves via next-intl)
+
+export function serviceModeKey(
+  mode: string
+): "serviceMobile" | "serviceTow" | "serviceGarage" {
+  switch (mode) {
+    case "mobile":
+      return "serviceMobile";
+    case "tow":
+      return "serviceTow";
+    default:
+      return "serviceGarage";
+  }
+}
+
+export function reviewVolumeKey(
+  count: number | null
+): "reviewsMany" | "reviewsGood" | null {
+  if (count == null) return null;
+  if (count > 100) return "reviewsMany";
+  if (count >= 50) return "reviewsGood";
+  return null; // < 50 → don't show
+}
