@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getFeaturedWorkshops } from "@/lib/workshops";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ClipboardList } from "lucide-react";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const featured = await getFeaturedWorkshops(12);
+  const t = await getTranslations("home");
 
   const organizationLd = {
     "@context": "https://schema.org",
@@ -259,16 +261,16 @@ export default async function Home() {
           {/* Trust badge */}
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary">
             <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-hidden />
-            أول دليل ذكي لكراجات الكويت
+            {t("badge")}
           </span>
 
           <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
-            دق سلف — اشرح مشكلة <span className="text-primary">سيارتك</span>{" "}
-            <br className="hidden sm:block" />
-            ونرشّح لك أنسب كراج في الكويت
+            {t.rich("heroTitle", {
+              hl: (chunks) => <span className="text-primary">{chunks}</span>,
+            })}
           </h1>
           <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-اشرح المشكلة بكلامك العادي — نرشّح لك كراج موثوق ونجهّز رسالة جاهزة ترسلها له.
+            {t("heroSubtitle")}
           </p>
 
           {/* CTA رئيسي مزدوج — مسارَان متساويان: اسأل دق سلف (ترشيح فوري)
@@ -277,7 +279,7 @@ export default async function Home() {
             {/* المسار ١ — اسأل دق سلف (الـ primary input للموقع) */}
             <Link
               href="/isal-degself"
-              aria-label="اسأل دق سلف — اقتراح كراج فوراً بالذكاء الاصطناعي"
+              aria-label={t("askAria")}
               className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
@@ -291,8 +293,8 @@ export default async function Home() {
                   </svg>
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">
-                  <span className="text-foreground">اسأل دق سلف</span>
-                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">اقتراح كراج فوراً بالذكاء الاصطناعي</span>
+                  <span className="text-foreground">{t("askTitle")}</span>
+                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">{t("askSubtitle")}</span>
                 </span>
               </span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
@@ -304,7 +306,7 @@ export default async function Home() {
             <Link
               href="/quote/new"
               data-testid="button-request-quote-hero"
-              aria-label="اطلب عرض سعر — قارن أسعار من كراجات متعددة"
+              aria-label={t("quoteAria")}
               className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
@@ -313,8 +315,8 @@ export default async function Home() {
                   <ClipboardList size={22} strokeWidth={2.2} aria-hidden />
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">
-                  <span className="text-foreground">اطلب عرض سعر</span>
-                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">قارن أسعار من كراجات متعددة</span>
+                  <span className="text-foreground">{t("quoteTitle")}</span>
+                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">{t("quoteSubtitle")}</span>
                 </span>
               </span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
@@ -327,7 +329,7 @@ export default async function Home() {
           <div className="flex w-full max-w-2xl flex-col gap-2">
             <div className="flex items-center justify-center gap-2">
               <span className="h-px flex-1 bg-border" aria-hidden />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">أو</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{t("or")}</span>
               <span className="h-px flex-1 bg-border" aria-hidden />
             </div>
             <form
@@ -343,9 +345,9 @@ export default async function Home() {
                 <input
                   type="search"
                   name="q"
-                  placeholder="ابحث باسم الكراج أو المنطقة"
+                  placeholder={t("searchPlaceholder")}
                   autoComplete="off"
-                  aria-label="ابحث عن كراج أو منطقة"
+                  aria-label={t("searchAria")}
                   className="flex-1 rounded-xl bg-transparent py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
               </div>
@@ -353,10 +355,10 @@ export default async function Home() {
                 type="submit"
                 className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-md transition hover:opacity-90"
               >
-                ابحث
+                {t("searchButton")}
               </button>
             </form>
-            <p className="mt-1 px-1 text-xs text-muted-foreground">مثال: بنشر، قير، ميكانيكا الشويخ</p>
+            <p className="mt-1 px-1 text-xs text-muted-foreground">{t("searchExample")}</p>
           </div>
         </div>
       </section>
@@ -376,8 +378,8 @@ export default async function Home() {
           <div className="flex items-center gap-3">
             <span className="h-7 w-1 rounded-full bg-primary" aria-hidden />
             <div className="flex flex-col">
-              <h2 className="text-xl font-extrabold sm:text-2xl">تصفّح حسب المحافظة</h2>
-              <p className="text-xs text-muted-foreground">اختر محافظتك لعرض أقرب الكراجات</p>
+              <h2 className="text-xl font-extrabold sm:text-2xl">{t("govTitle")}</h2>
+              <p className="text-xs text-muted-foreground">{t("govSubtitle")}</p>
             </div>
           </div>
           <GovernorateGrid />

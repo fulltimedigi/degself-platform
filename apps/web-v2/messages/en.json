@@ -195,5 +195,33 @@
       "jahra": "Jahra",
       "mubarak": "Mubarak Al-Kabeer"
     }
+  },
+  "home": {
+    "badge": "Kuwait's first smart garage guide",
+    "heroTitle": "Degself — describe your <hl>car's</hl> problem and we'll match you with the right garage in Kuwait",
+    "heroSubtitle": "Describe the problem in your own words — we'll match you with a trusted garage and prepare a ready-to-send message.",
+    "askTitle": "Ask Degself",
+    "askSubtitle": "Instant AI garage suggestion",
+    "askAria": "Ask Degself — instant AI garage suggestion",
+    "quoteTitle": "Request a quote",
+    "quoteSubtitle": "Compare prices from multiple garages",
+    "quoteAria": "Request a quote — compare prices from multiple garages",
+    "or": "OR",
+    "searchPlaceholder": "Search by garage name or area",
+    "searchAria": "Search for a garage or area",
+    "searchButton": "Search",
+    "searchExample": "e.g. tires, gearbox, mechanics Shuwaikh",
+    "govTitle": "Browse by governorate",
+    "govSubtitle": "Pick your governorate to see the nearest garages",
+    "emergencyTitle": "Is your car broken down right now?",
+    "emergencySubtitle": "A tow truck or mobile mechanic comes to you",
+    "tow": "Tow truck",
+    "mobileGarage": "Mobile mechanic",
+    "mobileTire": "Mobile tire service",
+    "calcTitle": "Car service price calculator",
+    "calcSubtitle": "Estimate the cost before you go to the garage — Kuwait market prices 2026",
+    "topRatedTitle": "Top rated",
+    "topRatedSubtitle": "Best garages based on Google reviews",
+    "viewAll": "View all →"
   }
 }

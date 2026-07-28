@@ -1,7 +1,9 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { Calculator, ArrowLeft } from "lucide-react";
 
-export function PriceCalculatorBanner() {
+export async function PriceCalculatorBanner() {
+  const t = await getTranslations("home");
   return (
     <Link
       href="/asaar"
@@ -12,10 +14,8 @@ export function PriceCalculatorBanner() {
           <Calculator className="text-primary" size={26} aria-hidden />
         </div>
         <div className="flex flex-col">
-          <h2 className="text-lg font-extrabold sm:text-xl">حاسبة أسعار خدمات السيارات</h2>
-          <p className="text-sm text-muted-foreground">
-            احسب تكلفة الخدمة قبل ما تروح الكراج — أسعار السوق الكويتي 2026
-          </p>
+          <h2 className="text-lg font-extrabold sm:text-xl">{t("calcTitle")}</h2>
+          <p className="text-sm text-muted-foreground">{t("calcSubtitle")}</p>
         </div>
       </div>
       <ArrowLeft

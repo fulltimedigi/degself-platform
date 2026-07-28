@@ -1,9 +1,11 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { ScrollRow } from "@/components/ScrollRow";
 import type { Workshop } from "@/lib/types";
 
-export function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
+export async function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
+  const t = await getTranslations("home");
   if (workshops.length === 0) return null;
 
   return (
@@ -12,15 +14,15 @@ export function TopRatedCarousel({ workshops }: { workshops: Workshop[] }) {
         <div className="flex items-center gap-3">
           <span className="h-7 w-1 rounded-full bg-primary" aria-hidden />
           <div className="flex flex-col">
-            <h2 className="text-xl font-extrabold sm:text-2xl">الأعلى تقييماً</h2>
-            <p className="text-xs text-muted-foreground">أفضل الكراجات بناءً على تقييمات Google</p>
+            <h2 className="text-xl font-extrabold sm:text-2xl">{t("topRatedTitle")}</h2>
+            <p className="text-xs text-muted-foreground">{t("topRatedSubtitle")}</p>
           </div>
         </div>
         <Link
           href="/search?sort=top-rated"
           className="shrink-0 rounded-lg border border-primary/30 px-3 py-1.5 text-sm font-semibold text-primary transition hover:bg-primary/10"
         >
-          عرض الكل ←
+          {t("viewAll")}
         </Link>
       </div>
 
