@@ -325,5 +325,46 @@
     "whatsapp": "WhatsApp",
     "openNow": "Open now",
     "closedNow": "Closed now"
+  },
+  "filters": {
+    "searchPlaceholder": "Search for a garage, area, or service...",
+    "searchButton": "Search",
+    "allGovernorates": "All governorates",
+    "allAreas": "All areas",
+    "neighborhood": "Neighborhood",
+    "allSpecialties": "All specialties",
+    "locating": "Locating you…",
+    "nearMe": "Nearest to me",
+    "openNow": "Open now",
+    "clear": "Clear filters",
+    "advanced": "Advanced filters",
+    "showResults": "Show results",
+    "close": "Close",
+    "geoUnsupported": "Your browser doesn't support location",
+    "geoError": "Couldn't determine your location — enable location permission and try again",
+    "sort": {
+      "relevance": "Best match",
+      "topRated": "Top rated",
+      "mostReviews": "Most reviews",
+      "az": "Alphabetical (A-Z)",
+      "distance": "Nearest to you"
+    },
+    "mode": {
+      "fixed": "Garage",
+      "mobile": "Mobile garage",
+      "tow": "Tow truck"
+    },
+    "score": {
+      "all": "All",
+      "excellent": "Excellent (85+)",
+      "veryGood": "Very good (70+)",
+      "fair": "Fair (55+)"
+    },
+    "group": {
+      "trust": "Trust level",
+      "positive": "What sets a garage apart",
+      "negative": "Avoid garages with…",
+      "score": "Score range"
+    }
   }
 }

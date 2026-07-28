@@ -325,5 +325,46 @@
     "whatsapp": "واتساب",
     "openNow": "مفتوح الآن",
     "closedNow": "مغلق الآن"
+  },
+  "filters": {
+    "searchPlaceholder": "ابحث عن كراج، منطقة، أو خدمة...",
+    "searchButton": "ابحث",
+    "allGovernorates": "كل المحافظات",
+    "allAreas": "كل المناطق",
+    "neighborhood": "الحي",
+    "allSpecialties": "كل التخصصات",
+    "locating": "جارٍ تحديد موقعك…",
+    "nearMe": "الأقرب لي",
+    "openNow": "مفتوح الآن",
+    "clear": "مسح الفلاتر",
+    "advanced": "فلاتر متقدمة",
+    "showResults": "عرض النتائج",
+    "close": "إغلاق",
+    "geoUnsupported": "المتصفح لا يدعم تحديد الموقع",
+    "geoError": "تعذّر تحديد موقعك — فعّل إذن الموقع وحاول مرة أخرى",
+    "sort": {
+      "relevance": "الأنسب",
+      "topRated": "الأعلى تقييماً",
+      "mostReviews": "الأكثر مراجعات",
+      "az": "أبجدي (أ-ي)",
+      "distance": "الأقرب لك"
+    },
+    "mode": {
+      "fixed": "كراج",
+      "mobile": "كراج متنقل",
+      "tow": "سطحة"
+    },
+    "score": {
+      "all": "الكل",
+      "excellent": "ممتاز (85+)",
+      "veryGood": "جيد جداً (70+)",
+      "fair": "مقبول (55+)"
+    },
+    "group": {
+      "trust": "مستوى الثقة",
+      "positive": "ما يميّز الكراج",
+      "negative": "تجنّب الكراجات التي فيها…",
+      "score": "نطاق التقييم"
+    }
   }
 }

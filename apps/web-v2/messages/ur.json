@@ -325,5 +325,46 @@
     "whatsapp": "WhatsApp",
     "openNow": "ابھی کھلا",
     "closedNow": "ابھی بند"
+  },
+  "filters": {
+    "searchPlaceholder": "گیراج، علاقہ یا سروس تلاش کریں...",
+    "searchButton": "تلاش",
+    "allGovernorates": "تمام گورنری",
+    "allAreas": "تمام علاقے",
+    "neighborhood": "محلہ",
+    "allSpecialties": "تمام مہارتیں",
+    "locating": "آپ کا مقام معلوم کیا جا رہا ہے…",
+    "nearMe": "میرے قریب ترین",
+    "openNow": "ابھی کھلا",
+    "clear": "فلٹر صاف کریں",
+    "advanced": "ایڈوانس فلٹر",
+    "showResults": "نتائج دکھائیں",
+    "close": "بند کریں",
+    "geoUnsupported": "آپ کا براؤزر مقام کی سہولت نہیں رکھتا",
+    "geoError": "آپ کا مقام معلوم نہ ہو سکا — مقام کی اجازت فعال کریں اور دوبارہ کوشش کریں",
+    "sort": {
+      "relevance": "سب سے موزوں",
+      "topRated": "سب سے زیادہ ریٹڈ",
+      "mostReviews": "سب سے زیادہ ریویوز",
+      "az": "حروف تہجی (A-Z)",
+      "distance": "آپ کے قریب ترین"
+    },
+    "mode": {
+      "fixed": "گیراج",
+      "mobile": "موبائل گیراج",
+      "tow": "ٹو ٹرک"
+    },
+    "score": {
+      "all": "تمام",
+      "excellent": "بہترین (85+)",
+      "veryGood": "بہت اچھا (70+)",
+      "fair": "مناسب (55+)"
+    },
+    "group": {
+      "trust": "اعتماد کی سطح",
+      "positive": "گیراج کی خوبیاں",
+      "negative": "ان سے بچیں…",
+      "score": "اسکور کی حد"
+    }
   }
 }
