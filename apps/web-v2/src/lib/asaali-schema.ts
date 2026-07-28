@@ -97,8 +97,9 @@ export interface AsaaliResponse {
 // ============================================================
 
 export interface AsaaliRequest {
-  text: string;                    // النص اللي قالته نورة (مفرّغ من Whisper أو Web Speech)
+  text: string;                    // النص اللي قاله الزبون (مفرّغ من Whisper أو Web Speech)
   vehicle?: VehicleContext;        // اختياري
+  locale?: string;                 // لغة الواجهة (ar|en|hi|ur) — تحدّد لغة الرد الظاهر
   conversation_history?: Array<{
     role: "user" | "assistant";
     content: string;

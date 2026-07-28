@@ -39,6 +39,77 @@ const MAX_INPUT_CHARS = 800;
 const MAX_HISTORY_TURNS = 6;
 
 // ============================================================
+// دعم اللغات — لغة الرد الظاهر للمستخدم تتبع لغة الواجهة.
+// whatsapp_message تبقى بالعربية دائماً (تُرسل لكراج كويتي).
+// ============================================================
+const SUPPORTED_LOCALES = ["ar", "en", "hi", "ur"] as const;
+type Locale = (typeof SUPPORTED_LOCALES)[number];
+
+function normalizeLocale(input: unknown): Locale {
+  return SUPPORTED_LOCALES.includes(input as Locale) ? (input as Locale) : "ar";
+}
+
+// اسم اللغة داخل الـ prompt (بالعربية) لتوجيه الموديل
+const LANG_NAME: Record<Locale, string> = {
+  ar: "العربية الفصحى المبسطة",
+  en: "الإنجليزية (English)",
+  hi: "الهندية (हिन्दी)",
+  ur: "الأردية (اردو)",
+};
+
+// رسائل النظام الثابتة (غير مولّدة من الموديل) مترجمة لكل لغة
+const FALLBACKS: Record<Locale, Record<string, string>> = {
+  ar: {
+    notConfigured: "الخدمة غير مهيّأة حالياً.",
+    invalid: "طلب غير صالح.",
+    empty: "اكتب مشكلة السيارة أولاً.",
+    tooLong: `النص طويل جداً (الحد ${MAX_INPUT_CHARS} حرف).`,
+    budget:
+      "وصلنا الحد اليومي للخدمة. جرّب بعد ساعات. يمكنك الاتصال بأي كراج مباشرة من صفحة الكراجات.",
+    rateLimited: "طلبات كثيرة في وقت قصير. حاول بعد ساعة.",
+    refusal: "تعذّرت معالجة الطلب. حاول مرّة أخرى.",
+    parseError: "حدث خطأ في معالجة الرد. حاول مرّة أخرى.",
+    genericError: "حدث خطأ. حاول مرّة أخرى.",
+  },
+  en: {
+    notConfigured: "The service is not available right now.",
+    invalid: "Invalid request.",
+    empty: "Describe your car's problem first.",
+    tooLong: `The text is too long (limit ${MAX_INPUT_CHARS} characters).`,
+    budget:
+      "We've reached today's service limit. Try again in a few hours. You can also contact any garage directly from the garages page.",
+    rateLimited: "Too many requests in a short time. Try again in an hour.",
+    refusal: "Couldn't process the request. Try again.",
+    parseError: "Something went wrong processing the reply. Try again.",
+    genericError: "Something went wrong. Try again.",
+  },
+  hi: {
+    notConfigured: "सेवा अभी उपलब्ध नहीं है।",
+    invalid: "अमान्य अनुरोध।",
+    empty: "पहले अपनी कार की समस्या बताएं।",
+    tooLong: `पाठ बहुत लंबा है (सीमा ${MAX_INPUT_CHARS} अक्षर)।`,
+    budget:
+      "आज की सेवा सीमा पूरी हो गई। कुछ घंटों बाद फिर कोशिश करें। आप गैरेज पेज से किसी भी गैरेज से सीधे संपर्क कर सकते हैं।",
+    rateLimited: "कम समय में बहुत सारे अनुरोध। एक घंटे बाद कोशिश करें।",
+    refusal: "अनुरोध संसाधित नहीं हो सका। फिर से कोशिश करें।",
+    parseError: "उत्तर संसाधित करने में समस्या हुई। फिर से कोशिश करें।",
+    genericError: "कुछ गड़बड़ हो गई। फिर से कोशिश करें।",
+  },
+  ur: {
+    notConfigured: "سروس اس وقت دستیاب نہیں۔",
+    invalid: "غلط درخواست۔",
+    empty: "پہلے اپنی گاڑی کا مسئلہ بتائیں۔",
+    tooLong: `متن بہت طویل ہے (حد ${MAX_INPUT_CHARS} حروف)۔`,
+    budget:
+      "آج کی سروس کی حد پوری ہو گئی۔ چند گھنٹوں بعد دوبارہ کوشش کریں۔ آپ گیراج صفحے سے کسی بھی گیراج سے براہِ راست رابطہ کر سکتے ہیں۔",
+    rateLimited: "کم وقت میں بہت زیادہ درخواستیں۔ ایک گھنٹے بعد کوشش کریں۔",
+    refusal: "درخواست پر عمل نہ ہو سکا۔ دوبارہ کوشش کریں۔",
+    parseError: "جواب پر عمل کرنے میں مسئلہ ہوا۔ دوبارہ کوشش کریں۔",
+    genericError: "کچھ غلط ہو گیا۔ دوبارہ کوشش کریں۔",
+  },
+};
+
+// ============================================================
 // System prompt — يُحقن فيه vehicle context عند الحاجة
 // ============================================================
 
@@ -78,7 +149,21 @@ const FEW_SHOTS = `أمثلة (لتثبيت الفهم فقط):
 - "الدريشة ما تطلع والريموت مايشتغل" ← status=ok، category=كهرباء سيارات.
 - "البريك ما يمسك والدعسة تنزل للآخر" ← status=ok، category=فرامل، severity=urgent.`;
 
-function buildSystemPrompt(vehicleLine: string): string {
+function buildLangDirective(locale: Locale): string {
+  const langName = LANG_NAME[locale];
+  if (locale === "ar") {
+    return `\nلغة الرد: اكتب كل الحقول الظاهرة للمستخدم بـ${langName}.`;
+  }
+  return `
+لغة الرد (مهم جداً):
+- المستخدم يستخدم الواجهة بـ${langName}. لكن قد يكتب مشكلته بالعربية العامية الكويتية أو بلغته — افهم مدخله بأي لغة.
+- اكتب هذه الحقول الظاهرة للمستخدم بـ${langName}: problem_summary، explanation، follow_up_question، وحقلي warning.message و warning.action.
+- اكتب whatsapp_message دائماً بالعربية الفصحى (لأنها تُرسل لكراج كويتي يقرأ العربية) — لا تترجمها.
+- حقل category اتركه دائماً بالقيمة العربية الحرفية من القائمة (لا تترجمه، فهو مفتاح في قاعدة البيانات).
+- official_terms اتركها كما هي: arabic بالعربية و english بالإنجليزية.`;
+}
+
+function buildSystemPrompt(vehicleLine: string, locale: Locale): string {
   return `أنت مساعد ذكي اسمه "اسأل دق سلف" في منصة "دق سلف" لإصلاح السيارات في الكويت.
 
 دورك الأساسي: تساعد الزبون (رجل أو امرأة) يوصل لأنسب كراج موثوق لمشكلته بأسرع وقت، وتجهّز له رسالة واتساب جاهزة يبعتها للكراج. الزبون يبحث عن حل، مش عن دروس.
@@ -124,8 +209,8 @@ ${vehicleLine ? `\nمعلومات السيارة: ${vehicleLine}\n` : ""}
 - لا تستعمل عبارات مثل "خلّينا نعلّمك" أو "المصطلح الصحيح اللي تقوله للفني" — الزبون مش هنا عشان يتعلم.
 - خاطب الزبون بصيغة محايدة (ثاني مفرد مثل: "افحص، توجّه"). لا تستخدم صيغة أنثى.
 - لا تستخدم علامات تعجب ولا emoji.
-- استخدم "كراج" مش "ورشة".
-- كل النصوص بالفصحى المبسطة، ماعدا اسم البراند "دق سلف".`;
+- استخدم "كراج" مش "ورشة" (أو المقابل في لغة الرد).
+${buildLangDirective(locale)}`;
 }
 
 // ============================================================
@@ -181,7 +266,7 @@ export async function POST(req: NextRequest) {
     return jsonResponse(
       {
         status: "budget_exceeded",
-        fallback_message: "الخدمة غير مهيّأة حالياً.",
+        fallback_message: FALLBACKS.ar.notConfigured,
       },
       503
     );
@@ -193,24 +278,24 @@ export async function POST(req: NextRequest) {
     body = (await req.json()) as AsaaliRequest;
   } catch {
     return jsonResponse(
-      { status: "out_of_scope", fallback_message: "طلب غير صالح." },
+      { status: "out_of_scope", fallback_message: FALLBACKS.ar.invalid },
       400
     );
   }
 
+  const locale = normalizeLocale(body.locale);
+  const L = FALLBACKS[locale];
+
   const text = (body.text ?? "").trim();
   if (!text) {
     return jsonResponse(
-      { status: "out_of_scope", fallback_message: "اكتب مشكلة السيارة أولاً." },
+      { status: "out_of_scope", fallback_message: L.empty },
       400
     );
   }
   if (text.length > MAX_INPUT_CHARS) {
     return jsonResponse(
-      {
-        status: "out_of_scope",
-        fallback_message: `النص طويل جداً (الحد ${MAX_INPUT_CHARS} حرف).`,
-      },
+      { status: "out_of_scope", fallback_message: L.tooLong },
       400
     );
   }
@@ -219,8 +304,9 @@ export async function POST(req: NextRequest) {
   const ipHash = hashIp(ip);
   const vehicleLine = formatVehicleForPrompt(body.vehicle);
 
-  // cache key يشمل الـ vehicle عشان نفس الجملة بسيارتين مختلفتين تعطي ردين
-  const cacheText = `${vehicleLine}|${text}`;
+  // cache key يشمل الـ vehicle واللغة عشان نفس الجملة بسيارتين/لغتين مختلفتين
+  // تعطي ردوداً مختلفة (الرد الظاهر يتبع اللغة)
+  const cacheText = `${locale}|${vehicleLine}|${text}`;
 
   // ── preflight: budget + rate limit ─────────────────────
   const pre = await preflightCheck({ text, ip });
@@ -228,15 +314,14 @@ export async function POST(req: NextRequest) {
   if (!pre.allow && pre.reason === "budget_exceeded") {
     return jsonResponse({
       status: "budget_exceeded",
-      fallback_message:
-        "وصلنا الحد اليومي للخدمة. جرّب بعد ساعات. يمكنك الاتصال بأي كراج مباشرة من صفحة الكراجات.",
+      fallback_message: L.budget,
     });
   }
 
   if (!pre.allow && pre.reason === "rate_limited") {
     return jsonResponse({
       status: "rate_limited",
-      fallback_message: "طلبات كثيرة في وقت قصير. حاول بعد ساعة.",
+      fallback_message: L.rateLimited,
       retry_after_seconds: pre.retryAfterSeconds ?? 3600,
     });
   }
@@ -281,7 +366,7 @@ export async function POST(req: NextRequest) {
       system: [
         {
           type: "text",
-          text: buildSystemPrompt(vehicleLine),
+          text: buildSystemPrompt(vehicleLine, locale),
           cache_control: { type: "ephemeral" },
         },
       ],
@@ -295,7 +380,7 @@ export async function POST(req: NextRequest) {
       return jsonResponse(
         {
           status: "out_of_scope",
-          fallback_message: "تعذّرت معالجة الطلب. حاول مرّة أخرى.",
+          fallback_message: L.refusal,
         },
         422
       );
@@ -310,7 +395,7 @@ export async function POST(req: NextRequest) {
     if (!extracted) {
       console.error("asaali: failed to parse JSON from model output", rawText.slice(0, 500));
       return jsonResponse(
-        { status: "out_of_scope", fallback_message: "حدث خطأ في معالجة الرد. حاول مرّة أخرى." },
+        { status: "out_of_scope", fallback_message: L.parseError },
         502
       );
     }
@@ -318,7 +403,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("asaali: model call failed", err);
     return jsonResponse(
-      { status: "out_of_scope", fallback_message: "حدث خطأ. حاول مرّة أخرى." },
+      { status: "out_of_scope", fallback_message: L.genericError },
       502
     );
   }
