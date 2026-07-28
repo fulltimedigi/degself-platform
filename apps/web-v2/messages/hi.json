@@ -478,5 +478,32 @@
       "h1": "गैरेज मैप",
       "subtitle": "मैप पर सभी स्थान — विवरण के लिए किसी भी बिंदु पर टैप करें।"
     }
+  },
+  "landing": {
+    "notFound": "नहीं मिला — Degself",
+    "make": {
+      "metaTitle": "कुवैत में {brand} गैरेज और सर्विस सेंटर | Degself",
+      "metaDescription": "कुवैत में {brand} गैरेज और सर्विस सेंटर की डायरेक्टरी — {brand} रखरखाव और मरम्मत के विशेषज्ञ, पते, फ़ोन और समय के साथ।",
+      "collectionName": "कुवैत में {brand} गैरेज और सर्विस सेंटर",
+      "collectionDesc": "कुवैत में {brand} गैरेज और सर्विस सेंटर की डायरेक्टरी।",
+      "breadcrumbHome": "होम",
+      "breadcrumbMakes": "मेक के अनुसार ब्राउज़ करें",
+      "navMakes": "मेक",
+      "navAria": "ब्रेडक्रंब",
+      "h1": "कुवैत में {brand} गैरेज और सर्विस सेंटर",
+      "intro": "कुवैत में {brand} रखरखाव और मरम्मत में विशेषज्ञ गैरेज और सेंटर — पता, फ़ोन और समय एक ही जगह।",
+      "otherMakes": "अन्य मेक"
+    },
+    "garage": {
+      "metaTitle": "{area} में {specialty} गैरेज | Degself",
+      "metaDescription": "कुवैत के {area} में {specialty} गैरेज की डायरेक्टरी — पते, फ़ोन, समय। अभी अपनी कार की खराबी पहचानें और सही गैरेज चुनें।",
+      "collectionName": "{area} में {specialty} गैरेज",
+      "collectionDesc": "कुवैत के {area} में {specialty} गैरेज की डायरेक्टरी — पते, फ़ोन, समय।",
+      "breadcrumbHome": "होम",
+      "breadcrumbSpecialty": "{specialty} गैरेज",
+      "h1": "{area} में {specialty} गैरेज",
+      "intro": "कुवैत के {area} क्षेत्र में सर्वश्रेष्ठ {specialty} गैरेज और सेंटर के लिए आपकी गाइड — पता, फ़ोन और समय आसानी से पाएं। अभी अपनी कार की खराबी पहचानें और सही गैरेज चुनें।",
+      "otherAreas": "अन्य क्षेत्रों में {specialty}"
+    }
   }
 }

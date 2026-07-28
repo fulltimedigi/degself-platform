@@ -478,5 +478,32 @@
       "h1": "گیراج نقشہ",
       "subtitle": "نقشے پر تمام مقامات — تفصیل کے لیے کسی بھی نقطے پر ٹیپ کریں۔"
     }
+  },
+  "landing": {
+    "notFound": "نہیں ملا — Degself",
+    "make": {
+      "metaTitle": "کویت میں {brand} گیراج اور سروس سینٹر | Degself",
+      "metaDescription": "کویت میں {brand} گیراج اور سروس سینٹر کی ڈائرکٹری — {brand} کی مرمت اور دیکھ بھال کے ماہرین، پتے، فون اور اوقات کے ساتھ۔",
+      "collectionName": "کویت میں {brand} گیراج اور سروس سینٹر",
+      "collectionDesc": "کویت میں {brand} گیراج اور سروس سینٹر کی ڈائرکٹری۔",
+      "breadcrumbHome": "ہوم",
+      "breadcrumbMakes": "میک کے مطابق براؤز کریں",
+      "navMakes": "میک",
+      "navAria": "بریڈ کرمب",
+      "h1": "کویت میں {brand} گیراج اور سروس سینٹر",
+      "intro": "کویت میں {brand} کی مرمت اور دیکھ بھال میں ماہر گیراج اور سینٹر — پتہ، فون اور اوقات ایک ہی جگہ۔",
+      "otherMakes": "دیگر میک"
+    },
+    "garage": {
+      "metaTitle": "{area} میں {specialty} گیراج | Degself",
+      "metaDescription": "کویت کے {area} میں {specialty} گیراج کی ڈائرکٹری — پتے، فون، اوقات۔ ابھی اپنی گاڑی کی خرابی پہچانیں اور صحیح گیراج منتخب کریں۔",
+      "collectionName": "{area} میں {specialty} گیراج",
+      "collectionDesc": "کویت کے {area} میں {specialty} گیراج کی ڈائرکٹری — پتے، فون، اوقات۔",
+      "breadcrumbHome": "ہوم",
+      "breadcrumbSpecialty": "{specialty} گیراج",
+      "h1": "{area} میں {specialty} گیراج",
+      "intro": "کویت کے {area} علاقے میں بہترین {specialty} گیراج اور سینٹر کے لیے آپ کی گائیڈ — پتہ، فون اور اوقات آسانی سے حاصل کریں۔ ابھی اپنی گاڑی کی خرابی پہچانیں اور صحیح گیراج منتخب کریں۔",
+      "otherAreas": "دیگر علاقوں میں {specialty}"
+    }
   }
 }

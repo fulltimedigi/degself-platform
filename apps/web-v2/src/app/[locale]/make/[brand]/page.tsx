@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getMakeWorkshops, getMakeCounts, findMake } from "@/lib/makes";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 
@@ -18,26 +20,28 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ brand: string }>;
+  params: Promise<{ locale: string; brand: string }>;
 }): Promise<Metadata> {
-  const { brand: rb } = await params;
+  const { locale, brand: rb } = await params;
   const slug = decodeURIComponent(rb);
+  const t = await getTranslations({ locale, namespace: "landing" });
   const m = findMake(slug);
-  if (!m) return { title: "غير موجود — دق سلف" };
+  if (!m) return { title: t("notFound") };
 
-  const title = `كراجات ومراكز صيانة ${m.label} في الكويت | دق سلف`;
-  const description = `دليل كراجات ومراكز صيانة ${m.label} في الكويت — متخصصون في صيانة وإصلاح سيارات ${m.label} مع العناوين والهواتف والمواعيد.`;
+  const title = t("make.metaTitle", { brand: m.label });
+  const description = t("make.metaDescription", { brand: m.label });
+  const canonical =
+    locale === DEFAULT_LOCALE ? `/ماركة/${slug}` : `/${locale}/ماركة/${slug}`;
   return {
     title,
     description,
     keywords: [`كراج ${m.label}`, `صيانة ${m.label} الكويت`, `متخصص ${m.label}`, `قطع غيار ${m.label}`],
-    alternates: { canonical: `/ماركة/${slug}` },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
       url: `${SITE}/ماركة/${slug}`,
       type: "website",
-      locale: "ar_KW",
       siteName: "دق سلف",
       images: ["/og-image.jpg?v=2"],
     },
@@ -48,10 +52,11 @@ export async function generateMetadata({
 export default async function MakePage({
   params,
 }: {
-  params: Promise<{ brand: string }>;
+  params: Promise<{ locale: string; brand: string }>;
 }) {
-  const { brand: rb } = await params;
+  const { locale, brand: rb } = await params;
   const slug = decodeURIComponent(rb);
+  const t = await getTranslations({ locale, namespace: "landing" });
   const m = findMake(slug);
   if (!m) notFound();
 
@@ -65,10 +70,10 @@ export default async function MakePage({
   const collectionLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `كراجات ومراكز صيانة ${m.label} في الكويت`,
-    description: `دليل كراجات ومراكز صيانة ${m.label} في الكويت.`,
+    name: t("make.collectionName", { brand: m.label }),
+    description: t("make.collectionDesc", { brand: m.label }),
     url: pageUrl,
-    inLanguage: "ar",
+    inLanguage: locale,
     isPartOf: { "@id": `${SITE}/#website` },
   };
   const itemListLd = {
@@ -85,8 +90,8 @@ export default async function MakePage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "تصفّح حسب الماركة", item: `${SITE}/ماركة` },
+      { "@type": "ListItem", position: 1, name: t("make.breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("make.breadcrumbMakes"), item: `${SITE}/ماركة` },
       { "@type": "ListItem", position: 3, name: m.label, item: pageUrl },
     ],
   };
@@ -97,21 +102,16 @@ export default async function MakePage({
       <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
 
-      <nav className="flex items-center gap-1 text-sm text-muted-foreground" aria-label="مسار التنقّل">
+      <nav className="flex items-center gap-1 text-sm text-muted-foreground" aria-label={t("make.navAria")}>
         <Link href="/ماركة" className="font-semibold text-primary hover:underline">
-          الماركات
+          {t("make.navMakes")}
         </Link>
         <span>/</span>
         <span>{m.label}</span>
       </nav>
 
-      <h1 className="mt-3 text-2xl font-extrabold">
-        كراجات ومراكز صيانة {m.label} في الكويت
-      </h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        كراجات ومراكز متخصصة في صيانة وإصلاح سيارات {m.label} بالكويت — العنوان
-        والهاتف والمواعيد في مكان واحد.
-      </p>
+      <h1 className="mt-3 text-2xl font-extrabold">{t("make.h1", { brand: m.label })}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("make.intro", { brand: m.label })}</p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {res.workshops.map((w) => (
@@ -121,7 +121,7 @@ export default async function MakePage({
 
       {others.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-3 text-lg font-bold">ماركات أخرى</h2>
+          <h2 className="mb-3 text-lg font-bold">{t("make.otherMakes")}</h2>
           <div className="flex flex-wrap gap-2">
             {others.map((o) => (
               <Link
