@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  PARTS_TYPES,
-  PARTS_TYPE_LABEL,
-  PRICING_TYPES,
-  PRICING_TYPE_META,
-  MIN_WARRANTY_DAYS,
-  type PartsType,
-} from "@/lib/quote-status";
+import { useTranslations } from "next-intl";
+import { PARTS_TYPES, PRICING_TYPES, MIN_WARRANTY_DAYS } from "@/lib/quote-status";
 import type { OfferErrors } from "@/lib/offer-validation";
 
 // The structured-offer input fields (workshop name → notes), shared by the admin
@@ -45,6 +39,7 @@ export function StructuredOfferFields({
   /** Returns the error text to display for a field, or undefined to hide it. */
   showError: (name: keyof OfferErrors) => string | undefined;
 }) {
+  const t = useTranslations();
   const cls = (name: keyof OfferErrors) =>
     `${inputCls} ${showError(name) ? "border-red-500 focus:border-red-500" : "border-border"}`;
 
@@ -60,7 +55,7 @@ export function StructuredOfferFields({
       <div>
         <input
           className={cls("workshop_name")}
-          placeholder="اسم الكراج *"
+          placeholder={t("submit.workshopName")}
           value={form.workshop_name}
           onChange={(e) => onChange({ workshop_name: e.target.value })}
           onBlur={() => onBlur("workshop_name")}
@@ -71,22 +66,24 @@ export function StructuredOfferFields({
 
       {/* Pricing type */}
       <div>
-        <label className="mb-1 block text-xs font-bold text-muted-foreground">نوع التسعير *</label>
+        <label className="mb-1 block text-xs font-bold text-muted-foreground">
+          {t("submit.pricingTypeLabel")}
+        </label>
         <div className="grid grid-cols-3 gap-2">
-          {PRICING_TYPES.map((t) => {
-            const active = pt === t;
+          {PRICING_TYPES.map((opt) => {
+            const active = pt === opt;
             return (
               <button
-                key={t}
+                key={opt}
                 type="button"
-                onClick={() => onChange({ pricing_type: t })}
+                onClick={() => onChange({ pricing_type: opt })}
                 className={`rounded-lg border px-2 py-2 text-xs font-bold transition ${
                   active
                     ? "border-[#FFD60A] bg-[#FFD60A] text-[#0A0A0A]"
                     : "border-border bg-background text-foreground"
                 }`}
               >
-                {PRICING_TYPE_META[t].label}
+                {t(`offers.pricingLabel.${opt}`)}
               </button>
             );
           })}
@@ -98,7 +95,7 @@ export function StructuredOfferFields({
           <input
             className={cls("price_kwd")}
             inputMode="decimal"
-            placeholder="السعر الثابت (د.ك) *"
+            placeholder={t("submit.fixedPrice")}
             value={form.price_kwd}
             onChange={(e) => onChange({ price_kwd: e.target.value })}
             onBlur={() => onBlur("price_kwd")}
@@ -113,7 +110,7 @@ export function StructuredOfferFields({
             <input
               className={cls("price_kwd")}
               inputMode="decimal"
-              placeholder="الحد الأدنى (د.ك) *"
+              placeholder={t("submit.rangeMin")}
               value={form.price_kwd}
               onChange={(e) => onChange({ price_kwd: e.target.value })}
               onBlur={() => onBlur("price_kwd")}
@@ -124,13 +121,13 @@ export function StructuredOfferFields({
             <input
               className={cls("price_max_kwd")}
               inputMode="decimal"
-              placeholder="الحد الأعلى (د.ك) *"
+              placeholder={t("submit.rangeMax")}
               value={form.price_max_kwd}
               onChange={(e) => onChange({ price_max_kwd: e.target.value })}
               onBlur={() => onBlur("price_max_kwd")}
             />
             <Err name="price_max_kwd" />
-            <p className="mt-1 text-[11px] text-muted-foreground">الحد الأعلى ≤ الأدنى × ١٫٣</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">{t("submit.rangeHint")}</p>
           </div>
         </div>
       )}
@@ -140,7 +137,7 @@ export function StructuredOfferFields({
           <div>
             <textarea
               className={cls("assumed_diagnosis")}
-              placeholder="التشخيص المرجّح: بناءً على شرح العميل، الأقرب إن المشكلة… *"
+              placeholder={t("submit.condDiagnosis")}
               value={form.assumed_diagnosis}
               onChange={(e) => onChange({ assumed_diagnosis: e.target.value })}
               onBlur={() => onBlur("assumed_diagnosis")}
@@ -154,7 +151,7 @@ export function StructuredOfferFields({
               <input
                 className={cls("price_kwd")}
                 inputMode="decimal"
-                placeholder="السعر المشروط (د.ك) *"
+                placeholder={t("submit.condPrice")}
                 value={form.price_kwd}
                 onChange={(e) => onChange({ price_kwd: e.target.value })}
                 onBlur={() => onBlur("price_kwd")}
@@ -165,7 +162,7 @@ export function StructuredOfferFields({
               <input
                 className={cls("inspection_fee_kwd")}
                 inputMode="decimal"
-                placeholder="رسم الكشف (٠ = مجاني) *"
+                placeholder={t("submit.inspectionFee")}
                 value={form.inspection_fee_kwd}
                 onChange={(e) => onChange({ inspection_fee_kwd: e.target.value })}
                 onBlur={() => onBlur("inspection_fee_kwd")}
@@ -184,10 +181,10 @@ export function StructuredOfferFields({
           onChange={(e) => onChange({ parts_type: e.target.value })}
           onBlur={() => onBlur("parts_type")}
         >
-          <option value="">نوع قطع الغيار *</option>
+          <option value="">{t("submit.partsPlaceholder")}</option>
           {PARTS_TYPES.map((p) => (
             <option key={p} value={p}>
-              {PARTS_TYPE_LABEL[p as PartsType]}
+              {t(`offers.partsLabel.${p}`)}
             </option>
           ))}
         </select>
@@ -200,7 +197,7 @@ export function StructuredOfferFields({
           <input
             className={cls("validity_days")}
             inputMode="numeric"
-            placeholder="صلاحية العرض (أيام) *"
+            placeholder={t("submit.validity")}
             value={form.validity_days}
             onChange={(e) => onChange({ validity_days: e.target.value })}
             onBlur={() => onBlur("validity_days")}
@@ -211,7 +208,7 @@ export function StructuredOfferFields({
           <input
             className={cls("warranty_days")}
             inputMode="numeric"
-            placeholder={`الضمان (أيام، ≥ ${MIN_WARRANTY_DAYS}) *`}
+            placeholder={t("submit.warranty", { min: MIN_WARRANTY_DAYS })}
             value={form.warranty_days}
             onChange={(e) => onChange({ warranty_days: e.target.value })}
             onBlur={() => onBlur("warranty_days")}
@@ -222,7 +219,7 @@ export function StructuredOfferFields({
 
       <input
         className={`${inputCls} border-border`}
-        placeholder="نطاق الضمان (اختياري — تفاصيل إضافية)"
+        placeholder={t("submit.warrantyNote")}
         value={form.warranty_note}
         onChange={(e) => onChange({ warranty_note: e.target.value })}
         maxLength={300}
@@ -231,7 +228,7 @@ export function StructuredOfferFields({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
           className={`${inputCls} border-border`}
-          placeholder="المدة التقديرية (مثال: ٣ أيام)"
+          placeholder={t("submit.duration")}
           value={form.estimated_duration}
           onChange={(e) => onChange({ estimated_duration: e.target.value })}
           maxLength={60}
@@ -239,7 +236,7 @@ export function StructuredOfferFields({
         <input
           className={`${inputCls} border-border`}
           dir="ltr"
-          placeholder="هاتف الكراج (اختياري)"
+          placeholder={t("submit.phone")}
           value={form.workshop_phone}
           onChange={(e) => onChange({ workshop_phone: e.target.value })}
           maxLength={20}
@@ -247,7 +244,7 @@ export function StructuredOfferFields({
       </div>
       <textarea
         className={`${inputCls} border-border`}
-        placeholder="ملاحظات إضافية (اختياري)"
+        placeholder={t("submit.notes")}
         value={form.notes}
         onChange={(e) => onChange({ notes: e.target.value })}
         rows={2}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { DEFAULT_VALIDITY_DAYS } from "@/lib/quote-status";
 import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
 import { StructuredOfferFields } from "@/components/StructuredOfferFields";
@@ -22,6 +23,7 @@ const EMPTY = {
 };
 
 export function GarageOfferForm({ token }: { token: string }) {
+  const t = useTranslations();
   const [form, setForm] = useState({ ...EMPTY });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [attempted, setAttempted] = useState(false);
@@ -33,7 +35,7 @@ export function GarageOfferForm({ token }: { token: string }) {
   const hasErrors = Object.keys(errs).length > 0;
 
   const set = (patch: Partial<typeof form>) => setForm((f) => ({ ...f, ...patch }));
-  const mark = (name: string) => setTouched((t) => ({ ...t, [name]: true }));
+  const mark = (name: string) => setTouched((prev) => ({ ...prev, [name]: true }));
   const showErr = (name: keyof OfferErrors) =>
     touched[name as string] || attempted ? errs[name] : undefined;
 
@@ -42,7 +44,7 @@ export function GarageOfferForm({ token }: { token: string }) {
     setAttempted(true);
     const res = validateOffer(form);
     if (res.errors) {
-      setMsg({ kind: "err", text: Object.values(res.errors)[0] ?? "أكمل الحقول المطلوبة." });
+      setMsg({ kind: "err", text: Object.values(res.errors)[0] ?? t("submit.completeFields") });
       return;
     }
     setBusy(true);
@@ -55,12 +57,12 @@ export function GarageOfferForm({ token }: { token: string }) {
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) {
-        setMsg({ kind: "err", text: d.error ?? "تعذّر إرسال العرض." });
+        setMsg({ kind: "err", text: d.error ?? t("submit.sendError") });
         return;
       }
       setDone(true);
     } catch {
-      setMsg({ kind: "err", text: "تعذّر الاتصال، تأكد من الإنترنت." });
+      setMsg({ kind: "err", text: t("offers.connError") });
     } finally {
       setBusy(false);
     }
@@ -70,10 +72,8 @@ export function GarageOfferForm({ token }: { token: string }) {
     return (
       <div className="rounded-2xl border-2 border-[#FFD60A] bg-card p-8 text-center">
         <p className="mb-3 text-4xl">✅</p>
-        <p className="mb-2 text-lg font-extrabold">تم استلام عرضك</p>
-        <p className="text-sm text-muted-foreground">
-          وصل عرضك للعميل ضمن العروض. لو اخترك، بيتم التواصل معك.
-        </p>
+        <p className="mb-2 text-lg font-extrabold">{t("submit.doneTitle")}</p>
+        <p className="text-sm text-muted-foreground">{t("submit.doneBody")}</p>
       </div>
     );
   }
@@ -99,7 +99,7 @@ export function GarageOfferForm({ token }: { token: string }) {
         disabled={busy || hasErrors}
         className="mt-1 rounded-lg bg-[#FFD60A] px-4 py-3.5 text-base font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {busy ? "جارٍ الإرسال..." : hasErrors ? "أكمل الحقول المطلوبة" : "إرسال العرض"}
+        {busy ? t("submit.submitting") : hasErrors ? t("submit.completeFields") : t("submit.submit")}
       </button>
     </form>
   );

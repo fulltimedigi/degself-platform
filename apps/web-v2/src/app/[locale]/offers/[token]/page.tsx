@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { fetchQuoteByToken, fetchOffers } from "@/lib/quotes";
 import { isOfferExpired } from "@/lib/quote-status";
 import { OffersChooser, type PublicOffer } from "@/components/OffersChooser";
@@ -11,9 +12,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="mx-auto w-full max-w-lg px-6 py-16 text-center">{children}</main>
-  );
+  return <main className="mx-auto w-full max-w-lg px-6 py-16 text-center">{children}</main>;
 }
 
 export default async function OffersPage({
@@ -22,6 +21,7 @@ export default async function OffersPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
+  const t = await getTranslations("offers");
 
   let quote;
   try {
@@ -29,8 +29,8 @@ export default async function OffersPage({
   } catch {
     return (
       <Shell>
-        <h1 className="mb-2 text-xl font-extrabold">تعذّر تحميل الصفحة</h1>
-        <p className="text-sm text-muted-foreground">حاول مرة أخرى بعد قليل.</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("loadErrorTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("loadErrorBody")}</p>
       </Shell>
     );
   }
@@ -38,11 +38,9 @@ export default async function OffersPage({
   if (!quote) {
     return (
       <Shell>
-        <p className="mb-2 text-5xl font-extrabold text-[#FFD60A]">٤٠٤</p>
-        <h1 className="mb-2 text-xl font-extrabold">الرابط غير صحيح</h1>
-        <p className="text-sm text-muted-foreground">
-          تأكد من الرابط الذي وصلك، أو تواصل معنا.
-        </p>
+        <p className="mb-2 text-5xl font-extrabold text-[#FFD60A]">404</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("invalidTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("invalidBody")}</p>
       </Shell>
     );
   }
@@ -50,10 +48,8 @@ export default async function OffersPage({
   if (quote.status === "expired") {
     return (
       <Shell>
-        <h1 className="mb-2 text-xl font-extrabold">انتهت صلاحية هذا الرابط</h1>
-        <p className="text-sm text-muted-foreground">
-          لم يعد بالإمكان عرض هذه الأسعار. تواصل معنا لطلب عروض جديدة.
-        </p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("expiredTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("expiredBody")}</p>
       </Shell>
     );
   }
@@ -62,8 +58,8 @@ export default async function OffersPage({
     return (
       <Shell>
         <p className="mb-3 text-4xl">✅</p>
-        <h1 className="mb-2 text-xl font-extrabold">تم قبول أحد العروض بالفعل</h1>
-        <p className="text-sm text-muted-foreground">سيتواصل معك الكراج المختار قريباً.</p>
+        <h1 className="mb-2 text-xl font-extrabold">{t("acceptedTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("acceptedBody")}</p>
       </Shell>
     );
   }
@@ -97,19 +93,25 @@ export default async function OffersPage({
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
       <header className="mb-6 text-center">
-        <h1 className="mb-2 text-2xl font-extrabold sm:text-3xl">عروض الأسعار الخاصة بطلبك</h1>
-        <p className="text-sm text-muted-foreground">اختر العرض الأنسب لك — والكراج بيتواصل معك.</p>
+        <h1 className="mb-2 text-2xl font-extrabold sm:text-3xl">{t("pageTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("pageSubtitle")}</p>
       </header>
 
       <div className="mb-6 rounded-xl border border-border bg-card p-4 text-sm">
-        <p className="mb-1"><span className="text-muted-foreground">الخدمة:</span> {quote.service}</p>
-        {car && <p className="mb-1"><span className="text-muted-foreground">السيارة:</span> {car}</p>}
+        <p className="mb-1">
+          <span className="text-muted-foreground">{t("service")}:</span> {quote.service}
+        </p>
+        {car && (
+          <p className="mb-1">
+            <span className="text-muted-foreground">{t("car")}:</span> {car}
+          </p>
+        )}
         <p className="text-muted-foreground">{quote.problem_description}</p>
       </div>
 
       {active.length === 0 ? (
         <p className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-          لا توجد عروض متاحة حالياً.
+          {t("noOffers")}
         </p>
       ) : (
         <OffersChooser token={token} offers={active} />

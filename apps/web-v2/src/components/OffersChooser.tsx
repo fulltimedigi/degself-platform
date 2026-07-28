@@ -1,12 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  pricingTypeMeta,
-  PARTS_TYPE_LABEL,
-  CONDITIONAL_PROTECTION_CLAUSE,
-  type PartsType,
-} from "@/lib/quote-status";
+import { useTranslations } from "next-intl";
+import { PARTS_TYPES, type PartsType } from "@/lib/quote-status";
 
 export interface PublicOffer {
   id: string;
@@ -24,8 +20,8 @@ export interface PublicOffer {
   notes: string | null;
 }
 
-// Rough day-count from free-text duration so "الأسرع تنفيذاً" can sort. Unknown
-// text sorts last. Handles digits (Arabic + Latin) and common words.
+// Rough day-count from free-text duration so "fastest" can sort. Unknown text
+// sorts last. Handles digits (Arabic + Latin) and common Arabic words.
 function durationDays(d: string | null): number {
   if (!d) return Number.POSITIVE_INFINITY;
   const latin = d.replace(/[٠-٩]/g, (c) => String("٠١٢٣٤٥٦٧٨٩".indexOf(c)));
@@ -36,13 +32,28 @@ function durationDays(d: string | null): number {
   return Number.POSITIVE_INFINITY;
 }
 
-// Completeness rank: a fixed price is the most certain, then range, then
-// conditional. Lower = more complete = shown first.
+// Completeness rank: fixed price most certain, then range, then conditional.
 const PRICING_RANK: Record<string, number> = { fixed: 0, range: 1, conditional: 2 };
+
+// Badge colour per pricing type (visual only — the label text is translated).
+const PRICING_BADGE_CLASS: Record<string, string> = {
+  fixed: "bg-green-600 text-white",
+  range: "bg-amber-500 text-[#0A0A0A]",
+  conditional: "bg-blue-500 text-white",
+};
 
 type SortKey = "completeness" | "price" | "duration";
 
+function priceLabel(o: PublicOffer, currency: string): string {
+  if (o.pricing_type === "range" && o.price_max_kwd != null) {
+    return `${o.price_kwd} – ${o.price_max_kwd} ${currency}`;
+  }
+  return `${o.price_kwd} ${currency}`;
+}
+
 export function OffersChooser({ token, offers }: { token: string; offers: PublicOffer[] }) {
+  const t = useTranslations("offers");
+  const currency = t("currency");
   // Default sort is completeness (trust), NOT cheapest — see spec §5.
   const [sort, setSort] = useState<SortKey>("completeness");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -56,7 +67,6 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
     } else if (sort === "duration") {
       copy.sort((a, b) => durationDays(a.estimated_duration) - durationDays(b.estimated_duration));
     } else {
-      // completeness: fixed price first, then longer warranty, then cheaper.
       copy.sort((a, b) => {
         const pr = (PRICING_RANK[a.pricing_type] ?? 3) - (PRICING_RANK[b.pricing_type] ?? 3);
         if (pr !== 0) return pr;
@@ -69,7 +79,7 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
   }, [offers, sort]);
 
   async function accept(offer: PublicOffer) {
-    if (!window.confirm("هل أنت متأكد؟ سيتم التواصل معك من الكراج المختار")) return;
+    if (!window.confirm(t("confirmAccept"))) return;
     setBusyId(offer.id);
     setError("");
     try {
@@ -80,12 +90,12 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(d.error ?? "تعذّر اختيار العرض، حاول مرة أخرى.");
+        setError(d.error ?? t("acceptError"));
         return;
       }
       setDone(offer);
     } catch {
-      setError("تعذّر الاتصال، تأكد من الإنترنت.");
+      setError(t("connError"));
     } finally {
       setBusyId(null);
     }
@@ -95,12 +105,15 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
     return (
       <div className="rounded-2xl border-2 border-[#FFD60A] bg-[#0A0A0A] p-8 text-center text-white">
         <p className="mb-3 text-4xl">🎉</p>
-        <p className="mb-2 text-lg font-extrabold">تم اختيار العرض بنجاح</p>
+        <p className="mb-2 text-lg font-extrabold">{t("doneTitle")}</p>
         <p className="text-sm text-gray-300">
-          اخترت <span className="font-bold text-[#FFD60A]">{done.workshop_name}</span> بسعر{" "}
-          <span className="font-bold text-[#FFD60A]">{priceLabel(done)}</span>.
+          {t.rich("doneChose", {
+            name: done.workshop_name,
+            price: priceLabel(done, currency),
+            b: (chunks) => <span className="font-bold text-[#FFD60A]">{chunks}</span>,
+          })}
           <br />
-          سيتواصل معك الكراج قريباً.
+          {t("doneContact")}
         </p>
       </div>
     );
@@ -114,23 +127,15 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <span className="text-xs text-muted-foreground">ترتيب:</span>
-        <button
-          type="button"
-          onClick={() => setSort("completeness")}
-          className={btn(sort === "completeness")}
-        >
-          الأنسب (افتراضي)
+        <span className="text-xs text-muted-foreground">{t("sortLabel")}</span>
+        <button type="button" onClick={() => setSort("completeness")} className={btn(sort === "completeness")}>
+          {t("sortBest")}
         </button>
         <button type="button" onClick={() => setSort("price")} className={btn(sort === "price")}>
-          الأقل سعراً
+          {t("sortCheapest")}
         </button>
-        <button
-          type="button"
-          onClick={() => setSort("duration")}
-          className={btn(sort === "duration")}
-        >
-          الأسرع تنفيذاً
+        <button type="button" onClick={() => setSort("duration")} className={btn(sort === "duration")}>
+          {t("sortFastest")}
         </button>
       </div>
 
@@ -145,6 +150,7 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
           <OfferCard
             key={o.id}
             offer={o}
+            currency={currency}
             busy={busyId !== null}
             choosing={busyId === o.id}
             onAccept={() => accept(o)}
@@ -153,13 +159,6 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
       </ul>
     </div>
   );
-}
-
-function priceLabel(o: PublicOffer): string {
-  if (o.pricing_type === "range" && o.price_max_kwd != null) {
-    return `${o.price_kwd} – ${o.price_max_kwd} د.ك`;
-  }
-  return `${o.price_kwd} د.ك`;
 }
 
 // A meta row: muted label + value, hidden when the value is absent.
@@ -175,58 +174,61 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 
 function OfferCard({
   offer: o,
+  currency,
   busy,
   choosing,
   onAccept,
 }: {
   offer: PublicOffer;
+  currency: string;
   busy: boolean;
   choosing: boolean;
   onAccept: () => void;
 }) {
-  const meta = pricingTypeMeta(o.pricing_type);
+  const t = useTranslations("offers");
+  const badgeClass = PRICING_BADGE_CLASS[o.pricing_type] ?? "bg-neutral-600 text-white";
   const parts =
-    o.parts_type && PARTS_TYPE_LABEL[o.parts_type as PartsType]
-      ? PARTS_TYPE_LABEL[o.parts_type as PartsType]
+    o.parts_type && (PARTS_TYPES as readonly string[]).includes(o.parts_type)
+      ? t(`partsLabel.${o.parts_type as PartsType}`)
       : null;
   const inspection =
     o.inspection_fee_kwd == null
       ? null
       : o.inspection_fee_kwd > 0
-      ? `${o.inspection_fee_kwd} د.ك`
-      : "مجاني";
+      ? `${o.inspection_fee_kwd} ${currency}`
+      : t("free");
   const warranty =
     o.warranty_days != null
-      ? `${o.warranty_days} يوم — على نفس العطل${o.warranty_note ? ` (${o.warranty_note})` : ""}`
+      ? `${t("warranty", { days: o.warranty_days })}${o.warranty_note ? ` (${o.warranty_note})` : ""}`
       : null;
 
   return (
     <li className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <p className="text-lg font-extrabold">{o.workshop_name}</p>
-        <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${meta.className}`}>
-          {meta.badge}
+        <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${badgeClass}`}>
+          {t(`pricingBadge.${o.pricing_type}`)}
         </span>
       </div>
 
       <p className="mb-3">
-        <span className="text-3xl font-extrabold text-[#FFD60A]">{priceLabel(o)}</span>
+        <span className="text-3xl font-extrabold text-[#FFD60A]">{priceLabel(o, currency)}</span>
       </p>
 
       {o.pricing_type === "conditional" && o.assumed_diagnosis && (
-        <Row label="التشخيص المرجّح" value={o.assumed_diagnosis} />
+        <Row label={t("rowDiagnosis")} value={o.assumed_diagnosis} />
       )}
-      <Row label="نوع قطع الغيار" value={parts} />
-      {o.pricing_type === "conditional" && <Row label="رسم الكشف" value={inspection} />}
-      <Row label="المدة التقديرية" value={o.estimated_duration} />
-      <Row label="الضمان" value={warranty} />
-      <Row label="صلاحية العرض" value={`${o.validity_days} يوم`} />
+      <Row label={t("rowParts")} value={parts} />
+      {o.pricing_type === "conditional" && <Row label={t("rowInspection")} value={inspection} />}
+      <Row label={t("rowDuration")} value={o.estimated_duration} />
+      <Row label={t("rowWarranty")} value={warranty} />
+      <Row label={t("rowValidity")} value={t("validityDays", { days: o.validity_days })} />
       {o.notes && <p className="mt-1 text-sm text-muted-foreground">{o.notes}</p>}
 
       {/* Protection clause — mandatory on every conditional offer (spec §4). */}
       {o.pricing_type === "conditional" && (
         <p className="mt-3 rounded-lg border border-blue-500/40 bg-blue-500/10 p-3 text-xs leading-relaxed text-blue-300">
-          🛡️ {CONDITIONAL_PROTECTION_CLAUSE}
+          🛡️ {t("protectionClause")}
         </p>
       )}
 
@@ -236,7 +238,7 @@ function OfferCard({
         disabled={busy}
         className="mt-4 w-full rounded-lg bg-[#FFD60A] px-4 py-3 text-base font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60"
       >
-        {choosing ? "جارٍ الاختيار..." : "اختر هذا العرض"}
+        {choosing ? t("choosing") : t("chooseThis")}
       </button>
     </li>
   );
