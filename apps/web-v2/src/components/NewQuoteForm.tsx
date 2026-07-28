@@ -1,43 +1,52 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { track } from "@/lib/track";
 
-// Kuwaiti-dialect service categories the driver picks from. The submitted value
-// IS the label text (no normalization) — the founder reads it plus the problem
-// description when routing to a garage manually.
-const SERVICES = [
-  "ميكانيكا ومكينة (توضيب، تجفيت، زيوت)",
-  "قير / جير (تصليح، تجفيت، برمجة)",
-  "كهرباء وكمبيوتر السيارة",
-  "تكييف وفريون",
-  "هيئة أمامية ومساعدات (مقصات، ميزان، دعاميات)",
-  "فرامل (تيل، دسكات، ABS)",
-  "بنشر وتواير وبطاريات",
-  "حدادة وصبغ (سمكرة وحوادث)",
-  "إكسوز / شكمان (فم)",
-  "ديتيلنج وتلميع وحماية (PPF، تظليل)",
-  "ونش / سطحة",
-  "خدمة متنقلة عند البيت",
-  "خدمة أخرى (اكتبها في وصف المشكلة)",
+// Service categories. `value` is the Arabic-canonical string that is SUBMITTED
+// (the founder reads it when routing manually), while the visible label is
+// translated per locale — so a Hindi/English user still submits a value the
+// founder can act on.
+const SERVICES: { key: string; value: string }[] = [
+  { key: "mechanics", value: "ميكانيكا ومكينة (توضيب، تجفيت، زيوت)" },
+  { key: "gearbox", value: "قير / جير (تصليح، تجفيت، برمجة)" },
+  { key: "electrical", value: "كهرباء وكمبيوتر السيارة" },
+  { key: "ac", value: "تكييف وفريون" },
+  { key: "suspension", value: "هيئة أمامية ومساعدات (مقصات، ميزان، دعاميات)" },
+  { key: "brakes", value: "فرامل (تيل، دسكات، ABS)" },
+  { key: "tires", value: "بنشر وتواير وبطاريات" },
+  { key: "bodywork", value: "حدادة وصبغ (سمكرة وحوادث)" },
+  { key: "exhaust", value: "إكسوز / شكمان (فم)" },
+  { key: "detailing", value: "ديتيلنج وتلميع وحماية (PPF، تظليل)" },
+  { key: "towing", value: "ونش / سطحة" },
+  { key: "mobile", value: "خدمة متنقلة عند البيت" },
+  { key: "other", value: "خدمة أخرى (اكتبها في وصف المشكلة)" },
 ];
 
-const AREAS = [
-  "العاصمة",
-  "حولي",
-  "الفروانية",
-  "الأحمدي",
-  "الجهراء",
-  "مبارك الكبير",
+// Governorates — submitted value stays Arabic-canonical; label translated.
+const AREAS: { key: string; value: string }[] = [
+  { key: "capital", value: "العاصمة" },
+  { key: "hawalli", value: "حولي" },
+  { key: "farwaniya", value: "الفروانية" },
+  { key: "ahmadi", value: "الأحمدي" },
+  { key: "jahra", value: "الجهراء" },
+  { key: "mubarak", value: "مبارك الكبير" },
 ];
 
 // Kuwait has many classics/older models — cover 1980→2026, newest first.
 const YEARS = Array.from({ length: 2026 - 1980 + 1 }, (_, i) => String(2026 - i));
 
-const URGENCIES = ["عادي", "مستعجل", "طارئ"] as const;
+// Urgency — server validates the Arabic value, so that stays canonical.
+const URGENCIES: { key: string; value: string }[] = [
+  { key: "normal", value: "عادي" },
+  { key: "urgent", value: "مستعجل" },
+  { key: "emergency", value: "طارئ" },
+];
 
 export function NewQuoteForm({ initialService = "" }: { initialService?: string }) {
-  const serviceIsKnown = SERVICES.includes(initialService);
+  const t = useTranslations("quote");
+  const serviceIsKnown = SERVICES.some((s) => s.value === initialService);
   const [service, setService] = useState(serviceIsKnown ? initialService : "");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -46,7 +55,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
   const [carYear, setCarYear] = useState("");
   const [problem, setProblem] = useState("");
   const [area, setArea] = useState("");
-  const [urgency, setUrgency] = useState<(typeof URGENCIES)[number]>("عادي");
+  const [urgency, setUrgency] = useState("عادي");
   const [website, setWebsite] = useState(""); // honeypot
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
@@ -56,34 +65,13 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
     e.preventDefault();
     setError("");
 
-    if (customerName.trim().length < 2) {
-      setError("اكتب اسمك.");
-      return;
-    }
-    if (!/^\d{8}$/.test(customerPhone.trim())) {
-      setError("اكتب رقم واتساب من ٨ أرقام.");
-      return;
-    }
-    if (!service) {
-      setError("اختر نوع الخدمة.");
-      return;
-    }
-    if (problem.trim().length < 10) {
-      setError("اشرح المشكلة بتفصيل أكثر (١٠ أحرف على الأقل).");
-      return;
-    }
-    if (!carMake.trim()) {
-      setError("اكتب نوع السيارة.");
-      return;
-    }
-    if (!carModel.trim()) {
-      setError("اكتب موديل السيارة.");
-      return;
-    }
-    if (!carYear) {
-      setError("اختر سنة الصنع.");
-      return;
-    }
+    if (customerName.trim().length < 2) return setError(t("errName"));
+    if (!/^\d{8}$/.test(customerPhone.trim())) return setError(t("errPhone"));
+    if (!service) return setError(t("errService"));
+    if (problem.trim().length < 10) return setError(t("errProblem"));
+    if (!carMake.trim()) return setError(t("errCarMake"));
+    if (!carModel.trim()) return setError(t("errCarModel"));
+    if (!carYear) return setError(t("errCarYear"));
 
     setStatus("sending");
     try {
@@ -107,7 +95,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       const data = await res.json();
       if (!res.ok) {
         setStatus("error");
-        setError(data.error ?? "تعذر إرسال الطلب، حاول مرة أخرى.");
+        setError(data.error ?? t("errSend"));
         return;
       }
       track("quote_submit", { service });
@@ -115,25 +103,23 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       setStatus("done");
     } catch {
       setStatus("error");
-      setError("تعذر الاتصال، تأكد من الإنترنت وحاول مرة أخرى.");
+      setError(t("errConn"));
     }
   }
 
   if (status === "done") {
     return (
       <div className="rounded-2xl border-2 border-[#FFD60A] bg-[#0A0A0A] p-6 text-center text-white">
-        <p className="mb-3 text-lg font-extrabold">طلبك وصلنا</p>
+        <p className="mb-3 text-lg font-extrabold">{t("doneTitle")}</p>
         {quoteId && (
           <p className="mb-3 text-sm text-gray-300">
-            رقم الطلب:{" "}
+            {t("doneId")}{" "}
             <span dir="ltr" className="font-mono text-[#FFD60A]">
               {quoteId}
             </span>
           </p>
         )}
-        <p className="text-sm text-gray-300">
-          بنرسله لكراجات مختصة، وهنتواصل معاك خلال ساعتين بأنسب العروض.
-        </p>
+        <p className="text-sm text-gray-300">{t("doneBody")}</p>
       </div>
     );
   }
@@ -158,27 +144,27 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       />
 
       <div>
-        <label className={labelCls}>نوع الخدمة {req}</label>
-        <select
-          value={service}
-          onChange={(e) => setService(e.target.value)}
-          className={inputCls}
-        >
-          <option value="">— اختر نوع الخدمة —</option>
+        <label className={labelCls}>
+          {t("serviceLabel")} {req}
+        </label>
+        <select value={service} onChange={(e) => setService(e.target.value)} className={inputCls}>
+          <option value="">{t("servicePlaceholder")}</option>
           {SERVICES.map((s) => (
-            <option key={s} value={s}>
-              {s}
+            <option key={s.key} value={s.value}>
+              {t(`services.${s.key}`)}
             </option>
           ))}
         </select>
       </div>
 
       <div>
-        <label className={labelCls}>وصف المشكلة {req}</label>
+        <label className={labelCls}>
+          {t("problemLabel")} {req}
+        </label>
         <textarea
           value={problem}
           onChange={(e) => setProblem(e.target.value)}
-          placeholder="اشرح مشكلة سيارتك بكلامك"
+          placeholder={t("problemPlaceholder")}
           className={inputCls}
           rows={4}
           maxLength={1000}
@@ -187,35 +173,37 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <label className={labelCls}>نوع السيارة {req}</label>
+          <label className={labelCls}>
+            {t("carMakeLabel")} {req}
+          </label>
           <input
             type="text"
             value={carMake}
             onChange={(e) => setCarMake(e.target.value)}
-            placeholder="مثال: تويوتا"
+            placeholder={t("carMakePlaceholder")}
             className={inputCls}
             maxLength={60}
           />
         </div>
         <div>
-          <label className={labelCls}>الموديل {req}</label>
+          <label className={labelCls}>
+            {t("carModelLabel")} {req}
+          </label>
           <input
             type="text"
             value={carModel}
             onChange={(e) => setCarModel(e.target.value)}
-            placeholder="كامري"
+            placeholder={t("carModelPlaceholder")}
             className={inputCls}
             maxLength={60}
           />
         </div>
         <div>
-          <label className={labelCls}>سنة الصنع {req}</label>
-          <select
-            value={carYear}
-            onChange={(e) => setCarYear(e.target.value)}
-            className={inputCls}
-          >
-            <option value="">— اختر —</option>
+          <label className={labelCls}>
+            {t("carYearLabel")} {req}
+          </label>
+          <select value={carYear} onChange={(e) => setCarYear(e.target.value)} className={inputCls}>
+            <option value="">{t("yearPlaceholder")}</option>
             {YEARS.map((y) => (
               <option key={y} value={y}>
                 {y}
@@ -226,36 +214,32 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       </div>
 
       <div>
-        <label className={labelCls}>المنطقة المفضلة</label>
-        <select
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-          className={inputCls}
-        >
-          <option value="">أي منطقة</option>
+        <label className={labelCls}>{t("areaLabel")}</label>
+        <select value={area} onChange={(e) => setArea(e.target.value)} className={inputCls}>
+          <option value="">{t("areaAny")}</option>
           {AREAS.map((a) => (
-            <option key={a} value={a}>
-              {a}
+            <option key={a.key} value={a.value}>
+              {t(`areas.${a.key}`)}
             </option>
           ))}
         </select>
       </div>
 
       <div>
-        <span className={labelCls}>مستوى الاستعجال</span>
+        <span className={labelCls}>{t("urgencyLabel")}</span>
         <div className="grid grid-cols-3 gap-2">
           {URGENCIES.map((u) => (
             <button
               type="button"
-              key={u}
-              onClick={() => setUrgency(u)}
+              key={u.key}
+              onClick={() => setUrgency(u.value)}
               className={`rounded-lg border py-2 text-sm font-bold transition ${
-                urgency === u
+                urgency === u.value
                   ? "border-[#FFD60A] bg-[#FFD60A] text-[#0A0A0A]"
                   : "border-border bg-card text-foreground"
               }`}
             >
-              {u}
+              {t(`urgency.${u.key}`)}
             </button>
           ))}
         </div>
@@ -263,31 +247,33 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelCls}>اسمك {req}</label>
+          <label className={labelCls}>
+            {t("nameLabel")} {req}
+          </label>
           <input
             type="text"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            placeholder="اسمك"
+            placeholder={t("namePlaceholder")}
             className={inputCls}
             maxLength={60}
           />
         </div>
         <div>
-          <label className={labelCls}>رقم الواتساب {req}</label>
+          <label className={labelCls}>
+            {t("phoneLabel")} {req}
+          </label>
           <input
             type="tel"
             inputMode="numeric"
             value={customerPhone}
             onChange={(e) => setCustomerPhone(e.target.value.replace(/[^\d]/g, ""))}
-            placeholder="٩٩٩٩٩٩٩٩"
+            placeholder={t("phonePlaceholder")}
             className={inputCls}
             dir="ltr"
             maxLength={8}
           />
-          <p className="mt-1 text-xs text-muted-foreground">
-            رقمك مخفي عن الكراجات — نستخدمه للتواصل معك فقط.
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">{t("phoneNote")}</p>
         </div>
       </div>
 
@@ -302,15 +288,11 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
         disabled={status === "sending"}
         className="rounded-lg bg-[#FFD60A] px-4 py-4 text-base font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60"
       >
-        {status === "sending" ? "جارٍ الإرسال..." : "أرسل الطلب"}
+        {status === "sending" ? t("submitting") : t("submit")}
       </button>
 
-      <p className="text-center text-xs text-muted-foreground">
-        مجاني تماماً — بدون التزام — تصلك العروض خلال ساعات.
-      </p>
-      <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
-        بإرسال الطلب، أوافق على تواصل دق سلف معي عبر واتساب بخصوص طلبي.
-      </p>
+      <p className="text-center text-xs text-muted-foreground">{t("footerFree")}</p>
+      <p className="text-center text-[11px] leading-relaxed text-muted-foreground">{t("consent")}</p>
     </form>
   );
 }

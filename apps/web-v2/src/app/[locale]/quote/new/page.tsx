@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { NewQuoteForm } from "@/components/NewQuoteForm";
 
 export const metadata: Metadata = {
@@ -14,14 +15,13 @@ export default async function NewQuotePage({
   searchParams: Promise<{ service?: string }>;
 }) {
   const sp = await searchParams;
+  const t = await getTranslations("quote");
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-10">
       <header className="mb-8 text-center">
-        <h1 className="mb-3 text-2xl font-extrabold sm:text-3xl">اطلب عرض سعر</h1>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          املأ البيانات ونرسل طلبك لعدة كراجات مختصة. تصلك العروض وتختار الأنسب لك.
-        </p>
+        <h1 className="mb-3 text-2xl font-extrabold sm:text-3xl">{t("pageTitle")}</h1>
+        <p className="text-sm text-muted-foreground sm:text-base">{t("pageSubtitle")}</p>
       </header>
 
       <NewQuoteForm initialService={sp.service ?? ""} />
