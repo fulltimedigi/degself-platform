@@ -505,5 +505,51 @@
       "intro": "Your guide to the best {specialty} garages and centers in {area}, Kuwait — find the address, phone and hours easily. Diagnose your car's fault now and pick the right garage.",
       "otherAreas": "{specialty} in other areas"
     }
+  },
+  "manatiq": {
+    "metaTitle": "Kuwait garages by area | Degself",
+    "metaDescription": "Browse the best car garages in Kuwait by area. Shuwaikh, Hawalli, Salmiya, Farwaniya, Jahra, Fahaheel, and more. 1,640+ verified garages.",
+    "ogDescription": "Browse the best car garages in Kuwait by area. 1,640+ verified garages.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "Kuwait garages by area",
+    "navAria": "Breadcrumb",
+    "h1": "Kuwait garages by area",
+    "hero": "Browse the best car garages and mechanics in Kuwait across <b>14 main areas</b>. From industrial Shuwaikh to Fahaheel, find a verified garage near you among <b>1,640+ garages</b>.",
+    "featuredBadge": "⭐ Top area",
+    "featuredTitle": "Industrial Shuwaikh",
+    "featuredText": "Kuwait's largest industrial area — a historic hub of hundreds of garages specialized in every car type: Japanese, German, American, and Korean. Competitive prices and high expertise.",
+    "allAreas": "All areas of Kuwait",
+    "seoHeading": "How to choose the best garage in your area?",
+    "seoP1": "Kuwait has 6 governorates and 14 main areas, and each has its own character in car services. For example, <b>Industrial Shuwaikh</b> is the historic center for every kind of repair, while <b>Salmiya</b> specializes in luxury cars, and <b>Jahra</b> offers excellent economical prices.",
+    "seoP2": "When choosing a garage, look for:",
+    "seoList": [
+      "Proximity to your home or work",
+      "Specialization in your car type (Japanese, German, American)",
+      "A written warranty on the work",
+      "Price transparency before starting",
+      "Reviews and recommendations from previous customers"
+    ],
+    "seoP3": "<b>Degself</b> helps you make the right decision by providing a comprehensive directory of every garage in every area, categorized by specialty and area.",
+    "ctaTitle": "Search 1,640+ verified garages",
+    "ctaSubtitle": "Use advanced search by specialty and area",
+    "ctaButton": "Start searching now",
+    "chip": { "maintenance": "Maintenance", "mechanics": "Mechanics", "bodywork": "Body", "ac": "A/C" },
+    "spec": { "general": "General maintenance", "mechanics": "Mechanics", "electrical": "Auto electrical", "tires": "Tires & puncture", "bodywork": "Body & paint", "gearbox": "Gearbox", "oils": "Oils", "ac": "A/C", "batteries": "Batteries" },
+    "areaDesc": {
+      "shuwaikh": "Kuwait's main industrial area — the largest cluster of garages and mechanics",
+      "hawalli": "Varied garages for European and Japanese cars in the heart of the capital",
+      "salmiya": "Upscale garages for luxury cars and SUVs",
+      "farwaniya": "Economical options and garages specialized in Asian cars",
+      "khaitan": "Commercial garages and quick shops for oil and filter changes",
+      "alrai": "An excellent alternative to Shuwaikh — modern garages at competitive prices",
+      "jahra": "Economically priced garages for residents of northern Kuwait",
+      "fahaheel": "The main hub for car services in southern Kuwait",
+      "sabah": "Quick garages serving residents of the southern area",
+      "rqaie": "Garages specialized in Japanese cars",
+      "ahmadi": "Full maintenance services for residents of Ahmadi governorate",
+      "mangaf": "Nearby garages for residents of the southern coastal area",
+      "jabriya": "Upscale, fast garages in the heart of Kuwait",
+      "salwa": "Garages specialized in luxury and electric cars"
+    }
   }
 }
