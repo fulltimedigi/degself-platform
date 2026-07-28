@@ -1,60 +1,63 @@
 // Review-analysis UI: trust banner, smart score, degself summary, and tag chips.
 // All content is degself-owned analysis (scores/tags/summary) — never raw Google
 // review text. Accents are light tints over the dark theme, not loud brand yellow.
+import { useTranslations } from "next-intl";
 import type { Enrichment, EnrichmentTag, TrustSignal, Confidence } from "@/lib/enrichment";
 
 const TRUST: Record<
   TrustSignal,
-  { label: string; icon: string; box: string; text: string }
+  { key: string; icon: string; box: string; text: string }
 > = {
   high: {
-    label: "موثوق عالياً",
+    key: "trustHigh",
     icon: "✅",
     box: "bg-emerald-500/10 border-emerald-500/30",
     text: "text-emerald-300",
   },
   medium: {
-    label: "متوسط الثقة",
+    key: "trustMedium",
     icon: "⚠️",
     box: "bg-muted border-border",
     text: "text-muted-foreground",
   },
   low: {
-    label: "ثقة محدودة",
+    key: "trustLow",
     icon: "🔻",
     box: "bg-orange-500/10 border-orange-500/30",
     text: "text-orange-300",
   },
   warning: {
-    label: "شكاوى متكررة",
+    key: "trustComplaints",
     icon: "🚩",
     box: "bg-red-500/10 border-red-500/40",
     text: "text-red-300",
   },
 };
 
-const CONFIDENCE_NOTE: Record<Confidence, string> = {
-  high: "بثقة عالية",
-  medium: "بثقة متوسطة",
-  low: "بثقة محدودة",
+const CONFIDENCE_KEY: Record<Confidence, string> = {
+  high: "confHigh",
+  medium: "confMedium",
+  low: "confLow",
 };
 
 /** Trust-signal banner — placed directly after the title. Hidden when absent. */
 export function TrustBanner({ signal }: { signal: TrustSignal | null | undefined }) {
+  const t = useTranslations("workshop.insights");
   if (!signal) return null;
-  const t = TRUST[signal];
+  const s = TRUST[signal];
   return (
     <div
-      className={`mt-4 flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold ${t.box} ${t.text}`}
+      className={`mt-4 flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold ${s.box} ${s.text}`}
     >
-      <span aria-hidden>{t.icon}</span>
-      <span>{t.label}</span>
+      <span aria-hidden>{s.icon}</span>
+      <span>{t(s.key)}</span>
     </div>
   );
 }
 
 /** Smart score (0–100) with confidence — shown alongside Google stars, not instead. */
 export function SmartScore({ enrichment }: { enrichment: Enrichment }) {
+  const t = useTranslations("workshop.insights");
   const score = Math.round(enrichment.smart_score);
   const n = enrichment.reviews_total ?? enrichment.reviews_analyzed;
   return (
@@ -68,12 +71,12 @@ export function SmartScore({ enrichment }: { enrichment: Enrichment }) {
           ⭐
         </span>
         <span className="text-sm text-muted-foreground">
-          ({CONFIDENCE_NOTE[enrichment.confidence]})
+          ({t(CONFIDENCE_KEY[enrichment.confidence])})
         </span>
       </div>
       {n != null && (
         <p className="mt-1.5 text-xs text-muted-foreground">
-          محسوب من تحليل {n.toLocaleString("en-US")} تقييم
+          {t("scoreFrom", { n: n.toLocaleString("en-US") })}
         </p>
       )}
     </div>
@@ -82,13 +85,12 @@ export function SmartScore({ enrichment }: { enrichment: Enrichment }) {
 
 /** degself summary paragraph (rewritten analysis — never a verbatim quote). */
 export function EnrichmentSummary({ summary }: { summary: string | null | undefined }) {
+  const t = useTranslations("workshop.insights");
   if (!summary) return null;
   return (
     <div className="mt-4">
       <p className="text-base leading-relaxed text-foreground/90">{summary}</p>
-      <p className="mt-1.5 text-xs text-muted-foreground">
-        ملخّص مبني على تحليل تقييمات العملاء
-      </p>
+      <p className="mt-1.5 text-xs text-muted-foreground">{t("summaryLabel")}</p>
     </div>
   );
 }
@@ -110,6 +112,7 @@ function Chip({ tag, tone }: { tag: EnrichmentTag; tone: "positive" | "negative"
 
 /** Positive + negative tag chips. Each section hides when its list is empty. */
 export function EnrichmentTags({ enrichment }: { enrichment: Enrichment }) {
+  const t = useTranslations("workshop.insights");
   const pos = enrichment.positive_tags ?? [];
   const neg = enrichment.negative_tags ?? [];
   if (pos.length === 0 && neg.length === 0) return null;
@@ -117,7 +120,7 @@ export function EnrichmentTags({ enrichment }: { enrichment: Enrichment }) {
     <>
       {pos.length > 0 && (
         <section className="mt-4 rounded-xl border border-border bg-card p-4">
-          <h2 className="mb-3 font-bold">ما يميّز هذا الكراج</h2>
+          <h2 className="mb-3 font-bold">{t("tagsPositive")}</h2>
           <div className="flex flex-wrap gap-2">
             {pos.map((t) => (
               <Chip key={t.label} tag={t} tone="positive" />
@@ -127,7 +130,7 @@ export function EnrichmentTags({ enrichment }: { enrichment: Enrichment }) {
       )}
       {neg.length > 0 && (
         <section className="mt-4 rounded-xl border border-border bg-card p-4">
-          <h2 className="mb-3 font-bold">ملاحظات العملاء</h2>
+          <h2 className="mb-3 font-bold">{t("tagsNotes")}</h2>
           <div className="flex flex-wrap gap-2">
             {neg.map((t) => (
               <Chip key={t.label} tag={t} tone="negative" />

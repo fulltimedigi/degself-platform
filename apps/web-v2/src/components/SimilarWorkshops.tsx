@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { getEnrichment } from "@/lib/enrichment";
 import type { Workshop } from "@/lib/types";
@@ -9,11 +10,12 @@ import type { Workshop } from "@/lib/types";
  * overlay attached when available.
  */
 export function SimilarWorkshops({ workshops }: { workshops: Workshop[] }) {
+  const t = useTranslations("workshop");
   if (workshops.length < 3) return null;
 
   return (
     <section className="mt-8">
-      <h2 className="mb-4 text-lg font-bold">كراجات مشابهة</h2>
+      <h2 className="mb-4 text-lg font-bold">{t("similarHeading")}</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {workshops.map((w) => (
           <WorkshopCard
