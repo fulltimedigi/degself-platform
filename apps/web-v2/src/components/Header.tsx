@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { InstallApp } from "@/components/InstallApp";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BUSINESS_WA_URL } from "@/lib/constants";
 
 // Keep this list to 7 items so the desktop nav doesn't crowd at tablet widths.
-// "كراجات مختارة" (/mukhtarat) takes the slot freed by "الأسئلة الشائعة" (/faq),
-// which remains reachable from the footer and the sitemap.
-const NAV = [
-  { href: "/", label: "الرئيسية" },
-  { href: "/isal-degself", label: "اسأل دق سلف", highlight: true },
-  { href: "/search", label: "البحث" },
-  { href: "/best", label: "الأفضل" },
-  { href: "/mukhtarat", label: "كراجات مختارة" },
-  { href: "/map", label: "الخريطة" },
-  { href: "/blog", label: "المدونة" },
+// Labels come from the `nav` message namespace (translated per locale).
+const NAV: ReadonlyArray<{ href: string; key: string; highlight?: boolean }> = [
+  { href: "/", key: "home" },
+  { href: "/isal-degself", key: "asaali", highlight: true },
+  { href: "/search", key: "search" },
+  { href: "/best", key: "best" },
+  { href: "/mukhtarat", key: "picks" },
+  { href: "/map", key: "map" },
+  { href: "/blog", key: "blog" },
 ];
 
 // Auth (دخول/تسجيل) is deferred (Checkpoint 5). Button kept in code but hidden
@@ -25,6 +26,7 @@ const NAV = [
 const SHOW_AUTH = false;
 
 export function Header() {
+  const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -65,7 +67,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
         {/* Logo (RTL start = right) */}
-        <Link href="/" className="flex items-center" aria-label="دق سلف — الرئيسية">
+        <Link href="/" className="flex items-center" aria-label={t("homeAria")}>
           <Image
             src="/brand/logo-arabic-badge.png"
             alt="دق سلف"
@@ -92,7 +94,7 @@ export function Header() {
                   <line x1="12" y1="18" x2="12" y2="22" />
                   <line x1="8" y1="22" x2="16" y2="22" />
                 </svg>
-                {n.label}
+                {t(n.key)}
               </Link>
             ) : (
               <Link
@@ -100,7 +102,7 @@ export function Header() {
                 href={n.href}
                 className="text-sm font-semibold text-foreground/80 transition hover:text-primary"
               >
-                {n.label}
+                {t(n.key)}
               </Link>
             )
           )}
@@ -113,20 +115,22 @@ export function Header() {
             href={BUSINESS_WA_URL}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="تواصل عبر واتساب"
-            title="تواصل عبر واتساب"
+            aria-label={t("contactWhatsApp")}
+            title={t("contactWhatsApp")}
             className="hidden items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90 md:inline-flex"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
             </svg>
-            واتساب
+            {t("whatsapp")}
           </a>
+
+          <LanguageSwitcher className="hidden md:inline-flex" />
 
           <Link
             href="/saved"
-            aria-label="الكراجات المحفوظة"
-            title="المحفوظة"
+            aria-label={t("savedAria")}
+            title={t("saved")}
             className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground/80 transition hover:bg-muted hover:text-primary"
           >
             <Heart size={20} aria-hidden />
@@ -147,7 +151,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label="القائمة"
+            aria-label={t("menu")}
             aria-expanded={open}
             className="md:hidden"
           >
@@ -186,7 +190,7 @@ export function Header() {
                   <line x1="12" y1="18" x2="12" y2="22" />
                   <line x1="8" y1="22" x2="16" y2="22" />
                 </svg>
-                {n.label}
+                {t(n.key)}
               </Link>
             ) : (
               <Link
@@ -195,7 +199,7 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-2 py-2 text-sm font-semibold text-foreground/80 hover:bg-muted"
               >
-                {n.label}
+                {t(n.key)}
               </Link>
             )
           )}
@@ -211,8 +215,10 @@ export function Header() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
             </svg>
-            تواصل عبر واتساب
+            {t("contactWhatsApp")}
           </a>
+
+          <LanguageSwitcher className="mt-1 justify-center" />
 
           {/* Always-available install option (the native prompt isn't shown to
               everyone — iOS never, Android only sometimes) */}

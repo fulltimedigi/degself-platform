@@ -25,8 +25,14 @@
     "about": "About us",
     "faq": "FAQ",
     "privacy": "Privacy Policy",
-    "terms": "Terms & Conditions",
-    "rights": "All rights reserved"
+    "terms": "Terms of Use",
+    "rights": "All rights reserved",
+    "browseByMake": "Browse by make",
+    "emergency": "Tow truck & mobile mechanic",
+    "reportMissing": "Report a missing garage",
+    "contactUs": "Contact us",
+    "callUs": "Call us",
+    "followUs": "Follow us on social media"
   },
   "common": {
     "loading": "Loading...",

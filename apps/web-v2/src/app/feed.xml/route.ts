@@ -1,4 +1,4 @@
-import { articles } from "@/app/blog/_articles";
+import { articles } from "@/app/[locale]/blog/_articles";
 
 const SITE = "https://degself.com";
 
