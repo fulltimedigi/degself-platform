@@ -3,17 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { LOCALES, LOCALE_LABEL, type Locale } from "@/i18n/routing";
 
-// Globe-icon language switcher (Airbnb/Booking-style): a compact always-visible
-// button in the header that opens a dropdown of the languages in their native
-// names. Switching keeps you on the same page (usePathname is locale-agnostic).
+// Globe-icon language switcher (Airbnb/Booking-style): always-visible header
+// button that opens a dropdown of the languages in their native names. Each item
+// is a real <Link> to the SAME page in the target locale (usePathname is
+// locale-agnostic), so switching works as a normal navigation.
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const t = useTranslations("lang");
   const locale = useLocale() as Locale;
   const pathname = usePathname();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,11 +34,6 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
-
-  function choose(next: Locale) {
-    setOpen(false);
-    if (next !== locale) router.replace(pathname, { locale: next });
-  }
 
   return (
     <div ref={ref} className={`relative ${className}`}>
@@ -64,9 +59,10 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             const active = l === locale;
             return (
               <li key={l} role="option" aria-selected={active}>
-                <button
-                  type="button"
-                  onClick={() => choose(l)}
+                <Link
+                  href={pathname}
+                  locale={l}
+                  onClick={() => setOpen(false)}
                   dir={l === "ar" || l === "ur" ? "rtl" : "ltr"}
                   className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-sm transition hover:bg-muted ${
                     active ? "font-extrabold text-primary" : "font-semibold text-foreground/80"
@@ -74,7 +70,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
                 >
                   <span>{LOCALE_LABEL[l]}</span>
                   {active && <Check size={15} aria-hidden />}
-                </button>
+                </Link>
               </li>
             );
           })}
