@@ -1,30 +1,41 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getCuratedMechanics } from "@/lib/workshops";
 import { getEnrichment } from "@/lib/enrichment";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 import type { Workshop } from "@/lib/types";
 
 const SITE = "https://degself.com";
-const OTHER_AREA = "كراجات بخدمة متنقّلة أو غير محدّدة المنطقة";
 
 export const revalidate = 3600; // hourly
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "listing.mukhtarat" });
+  const url =
+    locale === DEFAULT_LOCALE ? `${SITE}/mukhtarat` : `${SITE}/${locale}/mukhtarat`;
   return {
-    title: "كراجات مختارة في الكويت | دق سلف",
-    description:
-      "مجموعة كراجات وميكانيكيي سيارات مختارة في الكويت، مرتّبة حسب المنطقة — صيانة عامة وبودي وصبغ وقير وكهرباء سيارات. العنوان والهاتف وتحليل التقييمات لكل كراج.",
-    alternates: { canonical: `${SITE}/mukhtarat` },
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: url },
   };
 }
 
 /** Group rows by area in their (already area-sorted) order; null area last. */
-function groupByArea(rows: Workshop[]): { area: string; rows: Workshop[] }[] {
+function groupByArea(
+  rows: Workshop[],
+  otherArea: string
+): { area: string; rows: Workshop[] }[] {
   const groups: { area: string; rows: Workshop[] }[] = [];
   const index = new Map<string, number>();
   for (const w of rows) {
-    const key = w.area || OTHER_AREA;
+    const key = w.area || otherArea;
     let at = index.get(key);
     if (at == null) {
       at = groups.length;
@@ -35,20 +46,26 @@ function groupByArea(rows: Workshop[]): { area: string; rows: Workshop[] }[] {
   }
   // keep named areas first, the catch-all bucket last
   return groups.sort((a, b) => {
-    if (a.area === OTHER_AREA) return 1;
-    if (b.area === OTHER_AREA) return -1;
+    if (a.area === otherArea) return 1;
+    if (b.area === otherArea) return -1;
     return 0;
   });
 }
 
-export default async function MukhtaratPage() {
+export default async function MukhtaratPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "listing.mukhtarat" });
   const rows = await getCuratedMechanics();
-  const groups = groupByArea(rows);
+  const groups = groupByArea(rows, t("otherArea"));
 
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "كراجات مختارة في الكويت",
+    name: t("breadcrumbSelf"),
     numberOfItems: rows.length,
     itemListElement: rows.map((w, i) => ({
       "@type": "ListItem",
@@ -62,8 +79,8 @@ export default async function MukhtaratPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "كراجات مختارة", item: `${SITE}/mukhtarat` },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbSelf"), item: `${SITE}/mukhtarat` },
     ],
   };
 
@@ -72,20 +89,14 @@ export default async function MukhtaratPage() {
       <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
 
-      <h1 className="text-2xl font-extrabold">
-        كراجات مختارة في الكويت ({rows.length} كراج)
-      </h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        مجموعة من الكراجات وميكانيكيي السيارات في الكويت اخترناها وراجعنا بياناتها،
-        مرتّبة حسب المنطقة. تشمل الصيانة العامة والبودي والصبغ والقير والكهرباء.
-        اختر كراجاً لتطّلع على العنوان والهاتف وتحليل التقييمات.
-      </p>
+      <h1 className="text-2xl font-extrabold">{t("h1", { count: rows.length })}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("intro")}</p>
 
       {groups.map((g) => (
         <section key={g.area} className="mt-10">
           <h2 className="mb-4 text-lg font-bold">
             {g.area}
-            <span className="mr-2 text-sm font-normal text-muted-foreground">
+            <span className="ms-2 text-sm font-normal text-muted-foreground">
               ({g.rows.length})
             </span>
           </h2>

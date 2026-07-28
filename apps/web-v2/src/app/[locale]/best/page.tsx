@@ -1,37 +1,49 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getEnrichedWorkshops, bestCategories, BEST_LIMIT } from "@/lib/best";
 import { BestList } from "@/components/BestList";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 export const revalidate = 86400; // daily ISR — derived from the static overlay
 
-const TITLE = "أفضل الكراجات في الكويت | دق سلف";
-const DESCRIPTION =
-  "أعلى الكراجات تقييماً في الكويت وفق تحليل دق سلف لتقييمات العملاء — مرتّبة بالتقييم الذكي ومصنّفة حسب التخصص.";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "listing.best" });
+  const url = locale === DEFAULT_LOCALE ? `${SITE}/best` : `${SITE}/${locale}/best`;
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: url },
+    openGraph: {
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      url,
+      type: "website",
+      siteName: "دق سلف",
+      images: ["/og-image.jpg?v=2"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      images: ["/og-image.jpg?v=2"],
+    },
+  };
+}
 
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: `${SITE}/best` },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: `${SITE}/best`,
-    type: "website",
-    locale: "ar_KW",
-    siteName: "دق سلف",
-    images: ["/og-image.jpg?v=2"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og-image.jpg?v=2"],
-  },
-};
-
-export default async function BestPage() {
+export default async function BestPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "listing.best" });
   const all = await getEnrichedWorkshops();
   const top = all.slice(0, BEST_LIMIT);
   const categories = bestCategories(all);
@@ -39,8 +51,8 @@ export default async function BestPage() {
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "أفضل الكراجات في الكويت",
-    description: DESCRIPTION,
+    name: t("h1"),
+    description: t("metaDescription"),
     numberOfItems: top.length,
     itemListElement: top.map((w, i) => ({
       "@type": "ListItem",
@@ -54,8 +66,8 @@ export default async function BestPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "أفضل الكراجات", item: `${SITE}/best` },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbSelf"), item: `${SITE}/best` },
     ],
   };
 
@@ -64,17 +76,14 @@ export default async function BestPage() {
       <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
 
-      <h1 className="text-2xl font-extrabold">أفضل الكراجات في الكويت</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        قائمة بأعلى الكراجات تقييماً في الكويت، مرتّبة بالتقييم الذكي المبني على تحليل
-        دق سلف لتقييمات العملاء. اختر التخصص لتصفّح الأفضل في كل مجال.
-      </p>
+      <h1 className="text-2xl font-extrabold">{t("h1")}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("intro")}</p>
 
       <BestList
         workshops={top}
         categories={categories}
         active={null}
-        shareText="أفضل الكراجات في الكويت على دق سلف"
+        shareText={t("shareText")}
       />
     </div>
   );

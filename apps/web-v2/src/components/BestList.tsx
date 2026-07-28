@@ -1,6 +1,7 @@
 // Presentational pieces for the "best garages" pages: ranked cards, specialty
 // tabs, and WhatsApp/X share buttons. All server-rendered (share = plain links).
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { BestWorkshop, BestCategory } from "@/lib/best";
 
 const SITE = "https://degself.com";
@@ -61,8 +62,9 @@ function BestTabs({
   active,
 }: {
   categories: BestCategory[];
-  active: string | null; // null → "الكل"
+  active: string | null; // null → "all"
 }) {
+  const t = useTranslations("listing.bestList");
   const tab = (href: string, label: string, on: boolean, count?: number) => (
     <Link
       key={href}
@@ -82,7 +84,7 @@ function BestTabs({
   );
   return (
     <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-      {tab("/best", "الكل", active === null)}
+      {tab("/best", t("all"), active === null)}
       {categories.map((c) =>
         tab(`/best/${encodeURIComponent(c.specialty)}`, c.specialty, active === c.specialty, c.count)
       )}
@@ -92,18 +94,19 @@ function BestTabs({
 
 /** WhatsApp + X share for the current (overall or per-specialty) list. */
 function ShareButtons({ url, text }: { url: string; text: string }) {
+  const t = useTranslations("listing.bestList");
   const wa = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
   const x = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">مشاركة:</span>
+      <span className="text-sm text-muted-foreground">{t("share")}</span>
       <a
         href={wa}
         target="_blank"
         rel="noopener noreferrer"
         className="rounded-lg border border-border px-3 py-1.5 text-sm font-semibold transition hover:border-primary hover:text-primary"
       >
-        واتساب
+        {t("whatsapp")}
       </a>
       <a
         href={x}
@@ -129,6 +132,7 @@ export function BestList({
   active: string | null;
   shareText: string;
 }) {
+  const t = useTranslations("listing.bestList");
   const shareUrl = active ? `${SITE}/best/${encodeURIComponent(active)}` : `${SITE}/best`;
   return (
     <>
@@ -140,7 +144,7 @@ export function BestList({
       </div>
 
       {workshops.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">لا توجد كراجات ضمن هذا التخصص بعد.</p>
+        <p className="mt-8 text-muted-foreground">{t("empty")}</p>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {workshops.map((w, i) => (
