@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getEnrichedWorkshops, bestCategories, BEST_LIMIT } from "@/lib/best";
 import { BestList } from "@/components/BestList";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 export const revalidate = 86400; // daily ISR
@@ -17,22 +19,26 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ category: string }>;
+  params: Promise<{ locale: string; category: string }>;
 }): Promise<Metadata> {
-  const { category } = await params;
+  const { locale, category } = await params;
   const specialty = decodeURIComponent(category); // Next passes params percent-encoded
-  const title = `أفضل كراجات ${specialty} في الكويت | دق سلف`;
-  const description = `أعلى كراجات ${specialty} تقييماً في الكويت وفق تحليل دق سلف لتقييمات العملاء — مرتّبة بالتقييم الذكي.`;
+  const t = await getTranslations({ locale, namespace: "listing.best" });
+  const title = t("catTitle", { specialty });
+  const description = t("catDescription", { specialty });
+  const canonical =
+    locale === DEFAULT_LOCALE
+      ? `${SITE}/best/${encodeURIComponent(specialty)}`
+      : `${SITE}/${locale}/best/${encodeURIComponent(specialty)}`;
   return {
     title,
     description,
-    alternates: { canonical: `${SITE}/best/${encodeURIComponent(specialty)}` },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
-      url: `${SITE}/best/${encodeURIComponent(specialty)}`,
+      url: canonical,
       type: "website",
-      locale: "ar_KW",
       siteName: "دق سلف",
       images: ["/og-image.jpg?v=2"],
     },
@@ -43,10 +49,11 @@ export async function generateMetadata({
 export default async function BestCategoryPage({
   params,
 }: {
-  params: Promise<{ category: string }>;
+  params: Promise<{ locale: string; category: string }>;
 }) {
-  const { category } = await params;
+  const { locale, category } = await params;
   const specialty = decodeURIComponent(category);
+  const t = await getTranslations({ locale, namespace: "listing.best" });
 
   const all = await getEnrichedWorkshops();
   const categories = bestCategories(all);
@@ -59,7 +66,7 @@ export default async function BestCategoryPage({
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `أفضل كراجات ${specialty} في الكويت`,
+    name: t("catName", { specialty }),
     numberOfItems: top.length,
     itemListElement: top.map((w, i) => ({
       "@type": "ListItem",
@@ -73,12 +80,12 @@ export default async function BestCategoryPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "أفضل الكراجات", item: `${SITE}/best` },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbSelf"), item: `${SITE}/best` },
       {
         "@type": "ListItem",
         position: 3,
-        name: `أفضل كراجات ${specialty}`,
+        name: t("catBreadcrumb", { specialty }),
         item: `${SITE}/best/${encodeURIComponent(specialty)}`,
       },
     ],
@@ -90,19 +97,16 @@ export default async function BestCategoryPage({
       <JsonLd data={breadcrumbLd} />
 
       <Link href="/best" className="text-sm text-muted-foreground hover:text-foreground">
-        ← كل الأفضل
+        ← {t("backAll")}
       </Link>
-      <h1 className="mt-2 text-2xl font-extrabold">أفضل كراجات {specialty} في الكويت</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        أعلى كراجات {specialty} تقييماً في الكويت، مرتّبة بالتقييم الذكي المبني على تحليل
-        دق سلف لتقييمات العملاء.
-      </p>
+      <h1 className="mt-2 text-2xl font-extrabold">{t("catName", { specialty })}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("catIntro", { specialty })}</p>
 
       <BestList
         workshops={top}
         categories={categories}
         active={specialty}
-        shareText={`أفضل كراجات ${specialty} في الكويت على دق سلف`}
+        shareText={t("catShareText", { specialty })}
       />
     </div>
   );

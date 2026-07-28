@@ -439,5 +439,44 @@
         ]
       }
     ]
+  },
+  "listing": {
+    "best": {
+      "metaTitle": "Best garages in Kuwait | Degself",
+      "metaDescription": "The top-rated garages in Kuwait based on Degself's analysis of customer reviews — ranked by smart score and grouped by specialty.",
+      "breadcrumbHome": "Home",
+      "breadcrumbSelf": "Best garages",
+      "h1": "Best garages in Kuwait",
+      "intro": "A list of the top-rated garages in Kuwait, ranked by the smart score built on Degself's analysis of customer reviews. Pick a specialty to browse the best in each field.",
+      "shareText": "Best garages in Kuwait on Degself",
+      "backAll": "All the best",
+      "catTitle": "Best {specialty} garages in Kuwait | Degself",
+      "catDescription": "The top-rated {specialty} garages in Kuwait based on Degself's analysis of customer reviews — ranked by smart score.",
+      "catName": "Best {specialty} garages in Kuwait",
+      "catBreadcrumb": "Best {specialty} garages",
+      "catIntro": "The top-rated {specialty} garages in Kuwait, ranked by the smart score built on Degself's analysis of customer reviews.",
+      "catShareText": "Best {specialty} garages in Kuwait on Degself"
+    },
+    "bestList": {
+      "all": "All",
+      "share": "Share:",
+      "whatsapp": "WhatsApp",
+      "empty": "No garages in this specialty yet."
+    },
+    "mukhtarat": {
+      "metaTitle": "Curated garages in Kuwait | Degself",
+      "metaDescription": "A curated set of car garages and mechanics in Kuwait, grouped by area — general maintenance, body & paint, gearbox and auto electrical. Address, phone and review analysis for each garage.",
+      "breadcrumbHome": "Home",
+      "breadcrumbSelf": "Curated garages",
+      "h1": "Curated garages in Kuwait ({count} garages)",
+      "intro": "A set of car garages and mechanics in Kuwait we've curated and reviewed, grouped by area. Covers general maintenance, body & paint, gearbox and electrical. Pick a garage to see its address, phone and review analysis.",
+      "otherArea": "Garages with mobile service or unspecified area"
+    },
+    "map": {
+      "metaTitle": "Kuwait garages map | Degself",
+      "metaDescription": "Browse an interactive map of 1,757 car garages across all of Kuwait's governorates. Find the one nearest to you geographically.",
+      "h1": "Garages map",
+      "subtitle": "All locations on the map — tap any point for details."
+    }
   }
 }
