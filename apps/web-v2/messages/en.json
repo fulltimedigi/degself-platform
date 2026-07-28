@@ -551,5 +551,110 @@
       "jabriya": "Upscale, fast garages in the heart of Kuwait",
       "salwa": "Garages specialized in luxury and electric cars"
     }
+  },
+  "asaar": {
+    "metaTitle": "Car service prices in Kuwait 2026 — interactive calculator | Degself",
+    "metaDescription": "Estimate the cost of car services in Kuwait 2026: oil change, brakes, A/C, battery, tires, paint, gearbox, and towing. An interactive calculator with real prices for every car category.",
+    "ogTitle": "Car service price calculator in Kuwait 2026 | Degself",
+    "ogDescription": "Estimate the cost of car services in Kuwait 2026 — an interactive calculator for every car category.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "Price calculator",
+    "h1": "Car service prices in Kuwait",
+    "heroSubtitle": "An interactive calculator with Kuwait market prices for 2026. Pick a service type and your car category to see the expected cost range before you head to the garage.",
+    "popularHeading": "Popular prices at a glance",
+    "popular": [
+      { "service": "Oil + filter change", "range": "8-25 KWD", "category": "Routine maintenance" },
+      { "service": "Brake pads", "range": "20-80 KWD", "category": "Brakes" },
+      { "service": "A/C freon refill", "range": "8-30 KWD", "category": "A/C" },
+      { "service": "New battery", "range": "18-65 KWD", "category": "Batteries" },
+      { "service": "Set of 4 tires", "range": "70-380 KWD", "category": "Tires" },
+      { "service": "Alignment & balancing", "range": "5-20 KWD", "category": "Tires" },
+      { "service": "Gearbox oil change", "range": "15-70 KWD", "category": "Gearbox" },
+      { "service": "Full respray", "range": "130-550 KWD", "category": "Body" },
+      { "service": "Tow (within area)", "range": "10-25 KWD", "category": "Mobile" },
+      { "service": "Computer diagnostics", "range": "5-20 KWD", "category": "Electrical" }
+    ],
+    "tipsHeading": "Golden tips before heading to the garage",
+    "tips": [
+      "<b>Ask for a written quote</b> before starting any service — not after they've taken the car apart.",
+      "<b>Compare at least 3 garages</b> for major jobs (paint, gearbox, engine).",
+      "<b>Ask about the part type</b>: original, commercial, used/scrap — the difference in price and quality is noticeable.",
+      "<b>Keep an invoice for every service</b> — useful for resale and the garage's warranty.",
+      "<b>Don't always chase the cheapest price</b> — the car is an investment, and a very cheap garage may use poor parts."
+    ],
+    "calcHeading": "How do we calculate the prices?",
+    "calcIntro": "The price ranges in the calculator are based on:",
+    "calcBullets": [
+      "Analysis of quotes from more than 100 garages in Kuwait (2025-2026).",
+      "Real impact factors: car category, part type, area.",
+      "A regular update every 3 months to keep pace with market changes.",
+      "Reference prices only — the final price is from the garage."
+    ],
+    "guidesHeading": "Detailed price guides",
+    "guides": [
+      { "href": "/blog/asaar-zayt-mahrek-kuwait-castrol-mobil", "title": "Engine oil prices", "subtitle": "Castrol, Mobil, Shell — detailed prices" },
+      { "href": "/blog/asaar-altawayer-alkuwait-2026", "title": "Tire prices in Kuwait", "subtitle": "Michelin, Bridgestone, Yokohama" },
+      { "href": "/blog/asaar-batariyat-sayara-kuwait", "title": "Battery prices", "subtitle": "AC Delco, Varta, Amaron" },
+      { "href": "/blog/asaar-tasleeh-qair-kuwait-2026", "title": "Gearbox repair prices", "subtitle": "Automatic and manual gearboxes" },
+      { "href": "/blog/asaar-taameen-sayara-kuwait-muqarana", "title": "Insurance prices", "subtitle": "Comparison of 8 insurers" },
+      { "href": "/blog/sat-ha-sayara-kuwait-asaar", "title": "Tow truck prices", "subtitle": "Crane & transport, 24 hours" },
+      { "href": "/blog/asaar-taghyeer-faramil-kuwait", "title": "Brake prices", "subtitle": "Pads and discs" },
+      { "href": "/blog/muqaranat-asaar-karajat-kuwait-2026", "title": "Garage price comparison", "subtitle": "Shuwaikh, Hawalli, Farwaniya" }
+    ],
+    "faq": [
+      { "q": "How much does a car oil change cost in Kuwait in 2026?", "a": "An engine oil change with filter in Kuwait ranges from 8-25 KWD for Japanese and Korean cars, 10-31 KWD for American, 14-44 KWD for European, and 16-50 KWD for luxury cars. The price includes the oil, filter, and labor." },
+      { "q": "Why is there a price difference between Japanese and European cars?", "a": "European and luxury cars need pricier original parts, specialized oils, and technicians trained on their complex electronic systems. The average difference is 1.75-2× the price compared to Japanese cars." },
+      { "q": "Are the calculator's prices 100% accurate?", "a": "The prices are estimates based on 2026 Kuwait market data. They may vary ±20% depending on the garage, area, car condition, and required parts. We recommend requesting a written quote before starting any service." },
+      { "q": "How do I make use of the price range?", "a": "The low price = garages in industrial districts and popular areas. The mid price = garages in commercial areas. The high price = dealerships and specialized centers. Choose according to your budget and the quality level you need." }
+    ],
+    "calc": {
+      "heading": "Car service price calculator",
+      "subtitle": "Kuwait market prices 2026 — built on real garage data",
+      "chooseService": "Choose the service",
+      "servicePlaceholder": "— Choose a service type —",
+      "groupPriced": "Services with set prices",
+      "groupQuote": "Services that need a garage quote",
+      "carCategory": "Car category",
+      "carPlaceholder": "— Choose your car category —",
+      "calcButton": "Calculate price",
+      "low": "Low",
+      "avg": "Average",
+      "high": "High",
+      "currency": "KWD",
+      "quoteTitle": "This service varies a lot by model and parts",
+      "quoteBody": "Giving you an approximate price here could be misleading. It's better to request a direct quote from the garage after inspecting the car.",
+      "quoteSearchBtn": "Find a garage and request a quote",
+      "estimateNote": "Prices are estimates and vary by garage and parts used. The final price is set after inspection.",
+      "searchBtn": "Find a garage",
+      "askBtn": "Ask Degself",
+      "services": {
+        "oil_change_jpn": "Engine oil change + filter",
+        "brake_pads": "Brake pad replacement (front)",
+        "brake_discs": "Brake disc replacement (front)",
+        "ac_gas": "A/C gas refill (freon)",
+        "battery": "New car battery (60Ah)",
+        "tire_single": "Single tire (medium size)",
+        "wheel_align": "Alignment & balancing",
+        "gear_oil": "Gearbox oil change",
+        "engine_check": "Car computer diagnostics",
+        "body_dent": "Single dent repair",
+        "spark_plugs": "Spark plug change (4 cylinders)",
+        "tow": "Tow within the area",
+        "ac_compressor": "A/C compressor repair/replacement",
+        "gear_repair": "Automatic gearbox repair",
+        "timing_belt": "Timing belt change",
+        "body_paint_full": "Full car respray",
+        "tire_set": "Set of 4 tires",
+        "electrical": "Electrical fault repair",
+        "radiator": "Radiator repair/replacement"
+      },
+      "categories": {
+        "japanese": "Japanese (Toyota, Nissan, Honda)",
+        "korean": "Korean (Kia, Hyundai)",
+        "american": "American (GMC, Chevrolet, Ford)",
+        "european": "European (Mercedes, BMW, Audi)",
+        "luxury": "Luxury (Lexus, Porsche, Range Rover)"
+      }
+    }
   }
 }
