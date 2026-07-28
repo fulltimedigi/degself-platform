@@ -122,7 +122,7 @@ const cairo = Cairo({
   display: "optional",
 });
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
   description:
     "ابحث عن كراج، ميكانيكي، أو خدمة سيارات في الكويت. دليل شامل لمنشآت صيانة السيارات.",
@@ -186,6 +186,20 @@ export const metadata: Metadata = {
     "target-country": "KW",
   },
 };
+
+// SEO safety during the multilingual rollout: Arabic (the fully-authored site)
+// stays indexable; en/hi/ur are noindex until their page CONTENT is translated,
+// so Google never indexes partially-translated pages. Flip a locale to indexable
+// here once its content is done. Individual pages' own robots settings still win.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale === "ar") return baseMetadata;
+  return { ...baseMetadata, robots: { index: false, follow: true } };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0a0a0a",
