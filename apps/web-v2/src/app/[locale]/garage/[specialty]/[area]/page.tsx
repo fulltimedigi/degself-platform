@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getLandingCombos, getLandingWorkshops } from "@/lib/landing";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 
@@ -18,28 +20,34 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ specialty: string; area: string }>;
+  params: Promise<{ locale: string; specialty: string; area: string }>;
 }): Promise<Metadata> {
-  const { specialty: rs, area: ra } = await params;
+  const { locale, specialty: rs, area: ra } = await params;
   const specialty = decodeURIComponent(rs); // Next 16 passes params percent-encoded
   const area = decodeURIComponent(ra);
+  const t = await getTranslations({ locale, namespace: "landing" });
   const res = await getLandingWorkshops(specialty, area, 1);
-  if (!res) return { title: "غير موجود — دق سلف" };
+  if (!res) return { title: t("notFound") };
+  const canonical =
+    locale === DEFAULT_LOCALE
+      ? `/كراج/${specialty}/${area}`
+      : `/${locale}/كراج/${specialty}/${area}`;
   return {
-    title: `كراجات ${res.label} في ${area} | دق سلف`,
-    description: `دليل كراجات ${res.label} في ${area} بالكويت — العناوين، الهواتف، المواعيد. اكتشف عطل سيارتك الآن واختر الكراج المناسب.`,
-    alternates: { canonical: `/كراج/${specialty}/${area}` },
+    title: t("garage.metaTitle", { specialty: res.label, area }),
+    description: t("garage.metaDescription", { specialty: res.label, area }),
+    alternates: { canonical },
   };
 }
 
 export default async function LandingPage({
   params,
 }: {
-  params: Promise<{ specialty: string; area: string }>;
+  params: Promise<{ locale: string; specialty: string; area: string }>;
 }) {
-  const { specialty: rs, area: ra } = await params;
+  const { locale, specialty: rs, area: ra } = await params;
   const specialty = decodeURIComponent(rs); // Next 16 passes params percent-encoded
   const area = decodeURIComponent(ra);
+  const t = await getTranslations({ locale, namespace: "landing" });
   const res = await getLandingWorkshops(specialty, area);
   if (!res || res.total === 0) notFound();
 
@@ -55,10 +63,10 @@ export default async function LandingPage({
   const collectionLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `كراجات ${res.label} في ${area}`,
-    description: `دليل كراجات ${res.label} في ${area} بالكويت — العناوين، الهواتف، المواعيد.`,
+    name: t("garage.collectionName", { specialty: res.label, area }),
+    description: t("garage.collectionDesc", { specialty: res.label, area }),
     url: pageUrl,
-    inLanguage: "ar",
+    inLanguage: locale,
     isPartOf: { "@id": `${SITE}/#website` },
   };
 
@@ -77,8 +85,8 @@ export default async function LandingPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: `كراجات ${res.label}`, item: `${SITE}/كراج/${specialty}` },
+      { "@type": "ListItem", position: 1, name: t("garage.breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("garage.breadcrumbSpecialty", { specialty: res.label }), item: `${SITE}/كراج/${specialty}` },
       { "@type": "ListItem", position: 3, name: area, item: pageUrl },
     ],
   };
@@ -88,13 +96,8 @@ export default async function LandingPage({
       <JsonLd data={collectionLd} />
       <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
-      <h1 className="text-2xl font-extrabold">
-        كراجات {res.label} في {area}
-      </h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        دليلك لأفضل كراجات ومراكز {res.label} في منطقة {area} بالكويت — لاقِ العنوان
-        والهاتف والمواعيد بسهولة. اكتشف عطل سيارتك الآن واختر الكراج المناسب.
-      </p>
+      <h1 className="text-2xl font-extrabold">{t("garage.h1", { specialty: res.label, area })}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("garage.intro", { specialty: res.label, area })}</p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {res.workshops.map((w) => (
@@ -105,7 +108,7 @@ export default async function LandingPage({
       {/* internal links — same specialty in other VALID areas (SEO + navigation) */}
       {otherAreas.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-3 text-lg font-bold">{res.label} في مناطق أخرى</h2>
+          <h2 className="mb-3 text-lg font-bold">{t("garage.otherAreas", { specialty: res.label })}</h2>
           <div className="flex flex-wrap gap-2">
             {otherAreas.map((a) => (
               <Link

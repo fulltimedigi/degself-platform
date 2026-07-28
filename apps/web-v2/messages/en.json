@@ -478,5 +478,32 @@
       "h1": "Garages map",
       "subtitle": "All locations on the map — tap any point for details."
     }
+  },
+  "landing": {
+    "notFound": "Not found — Degself",
+    "make": {
+      "metaTitle": "{brand} garages & service centers in Kuwait | Degself",
+      "metaDescription": "A directory of {brand} garages and service centers in Kuwait — specialists in {brand} maintenance and repair, with addresses, phones and hours.",
+      "collectionName": "{brand} garages & service centers in Kuwait",
+      "collectionDesc": "A directory of {brand} garages and service centers in Kuwait.",
+      "breadcrumbHome": "Home",
+      "breadcrumbMakes": "Browse by make",
+      "navMakes": "Makes",
+      "navAria": "Breadcrumb",
+      "h1": "{brand} garages & service centers in Kuwait",
+      "intro": "Garages and centers specialized in {brand} maintenance and repair in Kuwait — address, phone and hours in one place.",
+      "otherMakes": "Other makes"
+    },
+    "garage": {
+      "metaTitle": "{specialty} garages in {area} | Degself",
+      "metaDescription": "A directory of {specialty} garages in {area}, Kuwait — addresses, phones, hours. Diagnose your car's fault now and choose the right garage.",
+      "collectionName": "{specialty} garages in {area}",
+      "collectionDesc": "A directory of {specialty} garages in {area}, Kuwait — addresses, phones, hours.",
+      "breadcrumbHome": "Home",
+      "breadcrumbSpecialty": "{specialty} garages",
+      "h1": "{specialty} garages in {area}",
+      "intro": "Your guide to the best {specialty} garages and centers in {area}, Kuwait — find the address, phone and hours easily. Diagnose your car's fault now and pick the right garage.",
+      "otherAreas": "{specialty} in other areas"
+    }
   }
 }
