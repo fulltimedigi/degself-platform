@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { getFavorites, FAVORITES_EVENT } from "@/lib/favorites";
 import type { Workshop } from "@/lib/types";
 
 export function SavedList() {
+  const t = useTranslations("misc.saved");
   const [ids, setIds] = useState<string[] | null>(null);
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,21 +38,19 @@ export function SavedList() {
   }, [ids]);
 
   if (loading) {
-    return <p className="py-16 text-center text-muted-foreground">جارٍ التحميل…</p>;
+    return <p className="py-16 text-center text-muted-foreground">{t("loading")}</p>;
   }
 
   if (!workshops.length) {
     return (
       <div className="flex flex-col items-center gap-4 py-16 text-center">
         <Heart size={40} className="text-muted-foreground/40" aria-hidden />
-        <p className="text-muted-foreground">
-          لا توجد كراجات محفوظة بعد. اضغط رمز القلب على أي كراج لحفظه هنا.
-        </p>
+        <p className="text-muted-foreground">{t("empty")}</p>
         <Link
           href="/search"
           className="rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground hover:opacity-90"
         >
-          ابدأ البحث
+          {t("startSearch")}
         </Link>
       </div>
     );
