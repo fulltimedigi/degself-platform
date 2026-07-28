@@ -867,5 +867,83 @@
       "gov": { "capital": "Capital", "hawalli": "Hawalli", "farwaniya": "Farwaniya", "ahmadi": "Ahmadi", "jahra": "Jahra", "mubarak": "Mubarak Al-Kabeer" },
       "spec": { "general": "General maintenance", "mechanics": "Mechanics", "electrical": "Auto electrical", "tires": "Tires & puncture", "bodywork": "Body & paint", "gearbox": "Gearbox", "oils": "Oils", "ac": "A/C", "batteries": "Batteries", "alignment": "Alignment", "other": "Other" }
     }
+  },
+  "about": {
+    "metaTitle": "About Degself — your guide to garages, mechanics and car services in Kuwait",
+    "metaDescription": "Kuwait's first smart garage directory — free, no ads, no paid ranking. Meet our team and our methodology for cleaning the data of 1,757 garages.",
+    "ogTitle": "About Degself — your guide to garages, mechanics and car services in Kuwait",
+    "ogDescription": "Kuwait's first smart garage directory — free, no ads, no paid ranking.",
+    "twTitle": "About Degself — your guide to Kuwait's garages",
+    "twDescription": "Kuwait's first smart garage directory — free, no ads.",
+    "orgDescription": "The first smart, comprehensive directory of car garages and mechanics in Kuwait — free, no ads.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "About Degself",
+    "h1": "About Degself",
+    "tagline": "Your guide to garages, mechanics and car services in Kuwait",
+    "heroBody": "<b>Degself</b> is the first smart, comprehensive directory of car garages and mechanics in Kuwait. Kuwait has thousands of garages, but when your car breaks down you need to know who's trustworthy, who specializes in your problem, and who's open now. Google Maps shows thousands of results with no classification — and we solve that.",
+    "stats": [
+      { "value": "1,757", "label": "active verified garages" },
+      { "value": "6", "label": "governorates (all of Kuwait)" },
+      { "value": "+1,760", "label": "precisely mapped neighborhoods" },
+      { "value": "+10", "label": "garage specialties" },
+      { "value": "6 months", "label": "development time" },
+      { "value": "0 KWD", "label": "cost to the user" }
+    ],
+    "whyHeading": "Why did we found Degself?",
+    "whyP1": "In 2025, someone's car broke down in the middle of summer, at 50°C, at eleven at night. He called six garages before finding one open, and even when he did, he found it didn't specialize in his kind of problem. He lost money and a whole day — so the idea was born: there has to be a better way.",
+    "whyP2": "We started by collecting garage data from Google Maps, and discovered the available data was incomplete, outdated, and unclassified, and that it didn't serve the Arabic-speaking user. We spent six months on:",
+    "whyList": [
+      "<b>A clean database:</b> we reviewed 1,798 garages and removed 45 of them (duplicates, closed, or inaccurate).",
+      "<b>Specialty classification:</b> we divided the garages into more than 10 specialties (tires, body, mechanics, gearbox and others).",
+      "<b>Geographic classification:</b> more than 1,760 garages were mapped to their exact neighborhood.",
+      "<b>The garage translator:</b> a smart assistant that turns a description of the problem in your everyday words into technical terms any mechanic understands."
+    ],
+    "methodHeading": "Our methodology for verifying data",
+    "methodIntro": "Our motto: data accuracy first. Every garage on Degself goes through four verification stages:",
+    "methodology": [
+      { "title": "Existence check", "body": "Confirmation via the Google Places API, and verifying open status and address." },
+      { "title": "Specialty check", "body": "Manual review of names and keywords, applying car-industry rules, and excluding any garage unrelated to cars." },
+      { "title": "Geographic check", "body": "Linking each garage to the correct neighborhood from Google Places, and verifying the governorate and coordinates." },
+      { "title": "The golden policy", "body": "When in doubt, remove it. If there's doubt about the accuracy of information, the garage is removed from the active listings." }
+    ],
+    "methodOutro": "We started by collecting 1,798 garages, then cleaned the listings and added discovered, verified garages, reaching today <b>1,757 active verified garages</b>.",
+    "diffHeading": "What sets Degself apart?",
+    "differentiators": [
+      { "title": "Accurate data, no ads", "body": "No paid ranking, and no featured listings for money. All garages appear based on logic alone: specialty, location, open status, and real reviews." },
+      { "title": "The garage translator", "body": "Kuwait's first AI assistant that translates your everyday language into terms any mechanic understands, and matches you with the right specialty for your problem." },
+      { "title": "Interactive map", "body": "All garages on one map. See what's nearest to you, tap for details, and get directions in seconds." },
+      { "title": "Smart search", "body": "Search by specialty (tires, body, mechanics, gearbox, electrical, A/C, batteries), by area and governorate, or by \"open now\" status." },
+      { "title": "Emergency service", "body": "All emergency garages that operate extended hours — tow truck, battery, and emergency tires — in one place." },
+      { "title": "Built for Kuwait", "body": "Arabic-first, not a translation; a properly tuned RTL interface, a mobile-first experience, and Kuwaiti terms every driver understands." }
+    ],
+    "teamHeading": "Our team",
+    "founderName": "Ahmed Abdel-Halim",
+    "founderRole": "Founder of Degself",
+    "founderBio": "Over 10 years of experience in development, product management and AI, with expertise in building digital products and search engine optimization.",
+    "contributorsTitle": "Technical contributors",
+    "contributors": ["Data engineering experts to clean the listings", "Car-industry consultants to audit the classifications", "Kuwaiti drivers who took part in the first trial"],
+    "transparencyHeading": "Our transparency",
+    "transparency": [
+      "No personal tracking without your consent, and no selling your data — we use general analytics only to understand site usage.",
+      "Our main data source is the Google Places API, with manual reviews and audits from our team, and user contributions in the future.",
+      "Garage data is reviewed regularly, and open/closed status comes directly from Google."
+    ],
+    "roadmapHeading": "Our roadmap",
+    "roadmap": [
+      { "period": "Q3 2026", "items": ["A real user ratings system with phone verification", "Direct appointment booking with garages", "A dashboard for garage owners"] },
+      { "period": "Q4 2026", "items": ["iOS and Android apps", "WhatsApp integration for direct contact", "The verified-garages program (badges for trusted ones)"] },
+      { "period": "2027", "items": ["Regional expansion: Saudi Arabia, UAE, Bahrain", "An AI fault-diagnosis tool"] }
+    ],
+    "contactHeading": "Contact us",
+    "whatsappLabel": "WhatsApp",
+    "callLabel": "Call",
+    "contacts": [
+      { "label": "For users", "email": "hello@degself.com" },
+      { "label": "For garage owners", "email": "owner@degself.com" },
+      { "label": "For press & partnerships", "email": "press@degself.com" }
+    ],
+    "madeIn": "Made with pride in Kuwait — for the Kuwaiti driver.",
+    "ctaSearch": "Start searching",
+    "ctaEmergency": "Emergency — tow truck & mobile mechanic"
   }
 }
