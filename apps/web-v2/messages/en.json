@@ -366,5 +366,18 @@
       "negative": "Avoid garages with…",
       "score": "Score range"
     }
+  },
+  "emergency": {
+    "metaTitle": "Tow truck & mobile mechanic in Kuwait | Car emergency service | Degself",
+    "metaDescription": "Need a tow truck or mobile mechanic now? A directory of mobile emergency services for your car across all of Kuwait's governorates.",
+    "breadcrumbHome": "Home",
+    "breadcrumbSelf": "Emergency",
+    "h1": "Emergency — tow truck & mobile mechanic",
+    "subtitle": "Car broken down? These services come to you.",
+    "all": "All",
+    "tow": "Tow truck",
+    "mobile": "Mobile mechanic",
+    "viewAll": "View all",
+    "noResults": "No results right now."
   }
 }
