@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "home": "Home",
+    "asaali": "Ask Degself",
+    "search": "Search",
+    "best": "Best",
+    "picks": "Top Picks",
+    "map": "Map",
+    "blog": "Blog",
+    "whatsapp": "WhatsApp",
+    "contactWhatsApp": "Contact on WhatsApp",
+    "saved": "Saved",
+    "savedAria": "Saved garages",
+    "menu": "Menu",
+    "homeAria": "Degself — Home"
+  },
+  "lang": {
+    "label": "Language",
+    "switchTo": "Change language"
+  },
+  "footer": {
+    "tagline": "Your guide to car garages, mechanics and auto services in Kuwait.",
+    "quickLinks": "Quick links",
+    "legal": "Legal",
+    "about": "About us",
+    "faq": "FAQ",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong, please try again.",
+    "retry": "Retry",
+    "back": "Back",
+    "close": "Close"
+  }
+}
