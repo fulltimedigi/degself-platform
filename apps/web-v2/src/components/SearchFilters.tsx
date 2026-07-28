@@ -1,33 +1,36 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import filterOptions from "@/data/filter_options.json";
 
+// value = query param sent to the server (stable); key = i18n label under "filters"
 const SERVICE_MODES = [
-  { value: "fixed", label: "كراج" },
-  { value: "mobile", label: "كراج متنقل" },
-  { value: "tow", label: "سطحة" },
-];
+  { value: "fixed", key: "fixed" },
+  { value: "mobile", key: "mobile" },
+  { value: "tow", key: "tow" },
+] as const;
 
 const SORT_OPTIONS = [
-  { value: "relevance", label: "الأنسب" },
-  { value: "top-rated", label: "الأعلى تقييماً" },
-  { value: "most-reviews", label: "الأكثر مراجعات" },
-  { value: "az", label: "أبجدي (أ-ي)" },
-];
+  { value: "relevance", key: "relevance" },
+  { value: "top-rated", key: "topRated" },
+  { value: "most-reviews", key: "mostReviews" },
+  { value: "az", key: "az" },
+] as const;
 
 // Review-analysis facets (degself enrichment). Counts come straight from the
 // generated filter_options.json so the UI stays in sync with the data.
+// Note: facet labels/tags are Arabic review-analysis data — kept as-is.
 const TRUST_OPTS = filterOptions.trust_signals; // {value,label,count,icon}
 const POSITIVE_OPTS = filterOptions.positive_filters.slice(0, 8); // top 8 — keep UI light
 const NEGATIVE_OPTS = filterOptions.negative_filters.slice(0, 6); // {tag,count}
 const SCORE_OPTS = [
-  { value: "", label: "الكل" },
-  { value: "85", label: "ممتاز (85+)" },
-  { value: "70", label: "جيد جداً (70+)" },
-  { value: "55", label: "مقبول (55+)" },
-];
+  { value: "", key: "all" },
+  { value: "85", key: "excellent" },
+  { value: "70", key: "veryGood" },
+  { value: "55", key: "fair" },
+] as const;
 
 interface SearchFiltersProps {
   areas: string[];
@@ -42,6 +45,7 @@ export function SearchFilters({
   specialties,
   neighborhoods,
 }: SearchFiltersProps) {
+  const t = useTranslations("filters");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -61,7 +65,7 @@ export function SearchFilters({
   // "near me": ask the browser for the user's location, then sort by distance.
   function nearMe() {
     if (!("geolocation" in navigator)) {
-      setGeoErr("المتصفح لا يدعم تحديد الموقع");
+      setGeoErr(t("geoUnsupported"));
       return;
     }
     setLocating(true);
@@ -78,7 +82,7 @@ export function SearchFilters({
       },
       () => {
         setLocating(false);
-        setGeoErr("تعذّر تحديد موقعك — فعّل إذن الموقع وحاول مرة أخرى");
+        setGeoErr(t("geoError"));
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
@@ -201,7 +205,7 @@ export function SearchFilters({
     <div className="flex flex-col gap-4">
       {/* trust level */}
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 text-xs font-bold text-muted-foreground">مستوى الثقة</legend>
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">{t("group.trust")}</legend>
         <div className="flex flex-wrap gap-2">
           {TRUST_OPTS.map((t) => {
             const on = isOn("trust", t.value);
@@ -227,7 +231,7 @@ export function SearchFilters({
 
       {/* what sets a garage apart */}
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 text-xs font-bold text-muted-foreground">ما يميّز الكراج</legend>
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">{t("group.positive")}</legend>
         <div className="flex flex-wrap gap-2">
           {POSITIVE_OPTS.map((p) => {
             const on = isOn("pos", p.tag);
@@ -253,7 +257,7 @@ export function SearchFilters({
       {/* things to avoid */}
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-xs font-bold text-muted-foreground">
-          تجنّب الكراجات التي فيها…
+          {t("group.negative")}
         </legend>
         <div className="flex flex-wrap gap-2">
           {NEGATIVE_OPTS.map((n) => {
@@ -279,7 +283,7 @@ export function SearchFilters({
 
       {/* score range — single select */}
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 text-xs font-bold text-muted-foreground">نطاق التقييم</legend>
+        <legend className="mb-1 text-xs font-bold text-muted-foreground">{t("group.score")}</legend>
         <div className="flex flex-wrap gap-2">
           {SCORE_OPTS.map((s) => {
             const on = scoreValue === s.value;
@@ -295,7 +299,7 @@ export function SearchFilters({
                     : "border-border text-foreground hover:bg-muted")
                 }
               >
-                {s.label}
+                {t(`score.${s.key}`)}
               </button>
             );
           })}
@@ -312,14 +316,14 @@ export function SearchFilters({
     ) : null;
 
   return (
-    <div className="flex flex-col gap-3" dir="rtl">
+    <div className="flex flex-col gap-3">
       {/* text search — live as you type, plus an explicit button for clarity */}
       <form onSubmit={onSearchSubmit} className="flex gap-2">
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="ابحث عن كراج، منطقة، أو خدمة..."
+          placeholder={t("searchPlaceholder")}
           autoComplete="off"
           className="min-w-0 flex-1 rounded-xl border border-border bg-input px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
         />
@@ -327,7 +331,7 @@ export function SearchFilters({
           type="submit"
           className="shrink-0 rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground transition hover:opacity-90"
         >
-          ابحث
+          {t("searchButton")}
         </button>
       </form>
 
@@ -338,7 +342,7 @@ export function SearchFilters({
           onChange={(e) => updateParam("governorate", e.target.value)}
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
-          <option value="">كل المحافظات</option>
+          <option value="">{t("allGovernorates")}</option>
           {governorates.map((g) => (
             <option key={g} value={g}>
               {g}
@@ -352,7 +356,7 @@ export function SearchFilters({
           onChange={(e) => updateParam("area", e.target.value)}
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
-          <option value="">كل المناطق</option>
+          <option value="">{t("allAreas")}</option>
           {areas.map((a) => (
             <option key={a} value={a}>
               {a}
@@ -366,7 +370,7 @@ export function SearchFilters({
           list="neighborhoods"
           value={nbhd}
           onChange={(e) => setNbhd(e.target.value)}
-          placeholder="الحي"
+          placeholder={t("neighborhood")}
           autoComplete="off"
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
         />
@@ -382,7 +386,7 @@ export function SearchFilters({
           onChange={(e) => updateParam("specialty", e.target.value)}
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
-          <option value="">كل التخصصات</option>
+          <option value="">{t("allSpecialties")}</option>
           {specialties.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -396,10 +400,10 @@ export function SearchFilters({
           onChange={(e) => onSortChange(e.target.value)}
           className="rounded-xl border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
         >
-          {nearActive && <option value="distance">الأقرب لك</option>}
+          {nearActive && <option value="distance">{t("sort.distance")}</option>}
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(`sort.${o.key}`)}
             </option>
           ))}
         </select>
@@ -416,7 +420,7 @@ export function SearchFilters({
               : "border-border text-foreground hover:bg-muted")
           }
         >
-          📍 {locating ? "جارٍ تحديد موقعك…" : nearActive ? "الأقرب لك" : "الأقرب لي"}
+          📍 {locating ? t("locating") : nearActive ? t("sort.distance") : t("nearMe")}
         </button>
       </div>
 
@@ -435,7 +439,7 @@ export function SearchFilters({
               : "border-border text-foreground hover:bg-muted")
           }
         >
-          🟢 مفتوح الآن
+          🟢 {t("openNow")}
         </button>
 
         {SERVICE_MODES.map((m) => {
@@ -452,7 +456,7 @@ export function SearchFilters({
                   : "border-border text-foreground hover:bg-muted")
               }
             >
-              {m.label}
+              {t(`mode.${m.key}`)}
             </button>
           );
         })}
@@ -463,7 +467,7 @@ export function SearchFilters({
             onClick={clearAll}
             className="rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
           >
-            مسح الفلاتر
+            {t("clear")}
           </button>
         )}
       </div>
@@ -477,7 +481,7 @@ export function SearchFilters({
           className="flex items-center gap-2 self-start rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold transition hover:border-primary/60"
         >
           <span aria-hidden>⚙</span>
-          <span>فلاتر متقدمة</span>
+          <span>{t("advanced")}</span>
           {countBadge}
           <span aria-hidden className="text-muted-foreground">
             {advancedOpen ? "▲" : "▼"}
@@ -502,14 +506,14 @@ export function SearchFilters({
             <div className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-muted" aria-hidden />
             <div className="flex items-center justify-between px-4 py-3">
               <h3 className="flex items-center gap-2 font-bold">
-                فلاتر متقدمة {countBadge}
+                {t("advanced")} {countBadge}
               </h3>
               <button
                 type="button"
                 onClick={() => setAdvancedOpen(false)}
                 className="text-sm font-semibold text-muted-foreground hover:text-foreground"
               >
-                إغلاق ✕
+                {t("close")} ✕
               </button>
             </div>
             <div className="overflow-y-auto px-4 pb-2">{advancedGroups}</div>
@@ -519,7 +523,7 @@ export function SearchFilters({
                 onClick={() => setAdvancedOpen(false)}
                 className="w-full rounded-xl bg-primary py-3 font-bold text-primary-foreground transition hover:opacity-90"
               >
-                عرض النتائج
+                {t("showResults")}
               </button>
             </div>
           </div>
