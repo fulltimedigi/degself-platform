@@ -656,5 +656,89 @@
         "luxury": "Luxury (Lexus, Porsche, Range Rover)"
       }
     }
+  },
+  "mobile": {
+    "badge": "Available 24/7",
+    "breadcrumbHome": "Home",
+    "areasHeading": "Coverage areas & arrival time",
+    "faqHeading": "FAQ",
+    "viewAll": "View all",
+    "relatedHeading": "Articles you may like",
+    "timeUnit": "min",
+    "areas": [
+      { "ar": "الشويخ", "en": "Shuwaikh", "time": "15-30" },
+      { "ar": "السالمية", "en": "Salmiya", "time": "20-30" },
+      { "ar": "حولي", "en": "Hawalli", "time": "20-40" },
+      { "ar": "الفروانية", "en": "Farwaniya", "time": "25-45" },
+      { "ar": "الأحمدي", "en": "Ahmadi", "time": "30-60" },
+      { "ar": "الفحيحيل", "en": "Fahaheel", "time": "30-50" },
+      { "ar": "الجهراء", "en": "Jahra", "time": "35-75" },
+      { "ar": "صباح الأحمد", "en": "Sabah Al Ahmad", "time": "40-90" }
+    ],
+    "bansher": {
+      "metaTitle": "Mobile tire repair in Kuwait — 24/7 | Degself",
+      "metaDescription": "Mobile tire repair in Kuwait comes to you wherever you are. Puncture repair, tire replacement, balancing, and pressure checks. Available 24/7 across all governorates. A directory of mobile tire repair near you.",
+      "ogTitle": "Mobile tire repair in Kuwait — 24/7 | Degself",
+      "ogDescription": "Mobile tire repair comes to you wherever you are in Kuwait. Repair and tire replacement 24/7.",
+      "breadcrumbSelf": "Mobile tire repair",
+      "h1": "Mobile tire repair in Kuwait",
+      "heroSubtitle": "A tire technician comes to you wherever you are — repair, tire replacement, balancing, air pressure. Across all of Kuwait's governorates.",
+      "searchBtn": "Find mobile tire repair nearby",
+      "otherBtn": "Mobile mechanic",
+      "servicesHeading": "Mobile tire repair services",
+      "workshopsHeading": "Top mobile tire shops",
+      "services": [
+        { "icon": "🛞", "title": "Puncture repair", "desc": "Patch and fix the tire on the spot" },
+        { "icon": "🔄", "title": "Tire replacement", "desc": "Swap old tires for new ones" },
+        { "icon": "⚖️", "title": "Wheel balancing", "desc": "Adjust and balance the tires" },
+        { "icon": "💨", "title": "Tire pressure", "desc": "Check and fill air" },
+        { "icon": "🧪", "title": "Tire inspection", "desc": "Diagnose the tire's condition and age" },
+        { "icon": "🛠️", "title": "Removal & fitting", "desc": "On-site tire removal and fitting service" }
+      ],
+      "faq": [
+        { "q": "What is mobile tire repair?", "a": "An on-site service where a tire technician comes to you with specialized gear to repair or replace the tire without needing to tow the car." },
+        { "q": "How much does mobile tire repair cost in Kuwait?", "a": "Puncture patch repair 3-7 KWD. Replacing one tire 1-3 KWD. An on-site fee of 3-10 KWD may be added depending on area and time." },
+        { "q": "Is mobile tire repair available 24/7?", "a": "Yes, many mobile tire repair providers in Kuwait operate 24/7 for roadside emergencies." },
+        { "q": "How long does mobile tire repair take to arrive?", "a": "Arrival time ranges from 15 minutes in Shuwaikh and Salmiya to 90 minutes in outlying areas like Sabah Al Ahmad." },
+        { "q": "Can the tire be replaced at my location?", "a": "Yes, mobile tire repair provides tire replacement, removal and fitting at your location with a quality guarantee." }
+      ],
+      "related": [
+        { "href": "/blog/bansher-mutanaqil-kuwait-dalil", "title": "Mobile tire repair in Kuwait — prices & numbers 2026" },
+        { "href": "/blog/karaj-mutanaqil-kuwait-24-saa", "title": "Mobile mechanic in Kuwait 24/7 — the complete guide" },
+        { "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran", "title": "Signs your car needs a garage right away" }
+      ]
+    },
+    "karaj": {
+      "metaTitle": "Mobile mechanic in Kuwait — 24/7 | Degself",
+      "metaDescription": "A mobile mechanic service in Kuwait that comes to you wherever you are. Mobile mechanic, auto electrical, tire repair, batteries. Available 24/7 across all governorates. Search now.",
+      "ogTitle": "Mobile mechanic in Kuwait — 24/7 | Degself",
+      "ogDescription": "Mobile mechanic, electrical, tire repair, batteries. Comes to you wherever you are in Kuwait, 24/7.",
+      "breadcrumbSelf": "Mobile mechanic",
+      "h1": "Mobile mechanic in Kuwait",
+      "heroSubtitle": "A mobile mechanic comes to you wherever you are — maintenance, electrical, tire repair, batteries. Across all of Kuwait's governorates.",
+      "searchBtn": "Find a mobile mechanic nearby",
+      "otherBtn": "Mobile tire repair",
+      "servicesHeading": "Mobile mechanic services",
+      "workshopsHeading": "Top mobile mechanic services",
+      "services": [
+        { "icon": "🔧", "title": "Mobile mechanic", "desc": "Mechanical repairs at your location" },
+        { "icon": "⚡", "title": "Auto electrical", "desc": "Diagnose and fix electrical faults" },
+        { "icon": "🛞", "title": "Mobile tire repair", "desc": "Repair and replace tires" },
+        { "icon": "🔋", "title": "Battery replacement", "desc": "A new battery in 15 minutes" },
+        { "icon": "🛢️", "title": "Oil change", "desc": "Oil and engine at your location" },
+        { "icon": "💨", "title": "A/C", "desc": "Gas refill and A/C repair" }
+      ],
+      "faq": [
+        { "q": "What is a mobile garage?", "a": "An on-site service where a technician comes to you in a vehicle equipped with maintenance and diagnostic tools to fix car faults without needing to tow it." },
+        { "q": "How much does a mobile mechanic cost in Kuwait?", "a": "Inspection fee 5-15 KWD. Electrical or battery repair 10-30 KWD. Simple mechanical faults 15-50 KWD." },
+        { "q": "Is the service available 24/7?", "a": "Yes, most mobile mechanic providers in Kuwait operate 24/7 for emergencies." },
+        { "q": "What's the difference between a mobile mechanic and a tow truck?", "a": "A mobile mechanic fixes on-site. A tow truck hauls the car to a fixed garage when on-site repair isn't possible." }
+      ],
+      "related": [
+        { "href": "/blog/karaj-mutanaqil-kuwait-24-saa", "title": "Mobile mechanic in Kuwait 24/7 — the complete guide 2026" },
+        { "href": "/blog/bansher-mutanaqil-kuwait-dalil", "title": "Mobile tire repair in Kuwait — prices & numbers 2026" },
+        { "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran", "title": "Signs your car needs a garage right away" }
+      ]
+    }
   }
 }
