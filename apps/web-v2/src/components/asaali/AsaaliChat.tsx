@@ -16,7 +16,8 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/track";
 import { VehicleSelector } from "./VehicleSelector";
 import type {
@@ -24,8 +25,15 @@ import type {
   AsaaliResponse,
 } from "@/lib/asaali-schema";
 
-const PLACEHOLDER = "اشرح أو اكتب مشكلة السيارة — مثال: السيارة تخرج دخان أبيض";
 const MAX_INPUT = 800;
+
+// لغة التعرّف الصوتي (Web Speech API) حسب لغة الواجهة
+const SPEECH_LANG: Record<string, string> = {
+  ar: "ar-KW",
+  en: "en-US",
+  hi: "hi-IN",
+  ur: "ur-PK",
+};
 
 // تعريفات لـ Web Speech API (غير موجودة في TypeScript lib بشكل موحد)
 // نستخدم unknown + casting داخلياً لتجنّب اختلافات المتصفّحات
@@ -49,6 +57,8 @@ interface HistoryItem {
 }
 
 export function AsaaliChat() {
+  const t = useTranslations("asaali");
+  const locale = useLocale();
   const [vehicle, setVehicle] = useState<VehicleContextT>({});
   const [vehicleOpen, setVehicleOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -82,12 +92,12 @@ export function AsaaliChat() {
     };
     const Ctor = W.SpeechRecognition ?? W.webkitSpeechRecognition;
     if (!Ctor) {
-      setError("المتصفّح لا يدعم التسجيل الصوتي. جرّب Chrome أو Safari.");
+      setError(t("errMicUnsupported"));
       return;
     }
     try {
       const rec = new Ctor();
-      rec.lang = "ar-KW"; // العربية الكويتية
+      rec.lang = SPEECH_LANG[locale] ?? "ar-KW";
       rec.continuous = false;
       rec.interimResults = false;
       rec.onresult = (e: SpeechRecognitionEventLike) => {
@@ -104,11 +114,11 @@ export function AsaaliChat() {
         setListening(false);
         const code = e?.error ?? "";
         if (code === "not-allowed" || code === "service-not-allowed") {
-          setError("تمّ رفض الإذن للمايكروفون. فعّل الإذن من إعدادات المتصفّح.");
+          setError(t("errMicDenied"));
         } else if (code === "no-speech") {
-          setError("لم يتم التقاط أي صوت. حاول مرّة أخرى.");
+          setError(t("errMicNoSpeech"));
         } else if (code) {
-          setError("تعذّر التسجيل الصوتي. حاول مرّة أخرى.");
+          setError(t("errMicGeneric"));
         }
       };
       recognitionRef.current = rec;
@@ -117,7 +127,7 @@ export function AsaaliChat() {
       rec.start();
     } catch {
       setListening(false);
-      setError("تعذّر التسجيل الصوتي.");
+      setError(t("errMicGeneric"));
     }
   }
 
@@ -146,6 +156,7 @@ export function AsaaliChat() {
           text,
           vehicle,
           conversation_history: history,
+          locale,
         }),
       });
       const data = (await res.json()) as AsaaliResponse;
@@ -172,7 +183,7 @@ export function AsaaliChat() {
         source: data.source ?? "llm",
       });
     } catch {
-      setError("تعذّر الاتصال. تأكّد من الإنترنت وحاول مرّة أخرى.");
+      setError(t("errConn"));
     } finally {
       setLoading(false);
     }
@@ -222,7 +233,7 @@ export function AsaaliChat() {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={PLACEHOLDER}
+            placeholder={t("placeholder")}
             rows={4}
             maxLength={MAX_INPUT}
             className="w-full rounded-xl bg-neutral-900 border border-neutral-800 px-4 py-3 pl-14 text-base text-neutral-100 placeholder-neutral-500 outline-none focus:border-yellow-400"
@@ -233,8 +244,8 @@ export function AsaaliChat() {
               type="button"
               onClick={listening ? stopListening : startListening}
               disabled={loading}
-              aria-label={listening ? "إيقاف التسجيل" : "تسجيل صوتي"}
-              title={listening ? "إيقاف التسجيل" : "اضغط للتسجيل الصوتي"}
+              aria-label={listening ? t("micStop") : t("micStart")}
+              title={listening ? t("micStop") : t("micStartTitle")}
               className={`absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full transition ${
                 listening
                   ? "animate-pulse bg-red-500 text-white shadow-lg shadow-red-500/40"
@@ -255,12 +266,12 @@ export function AsaaliChat() {
         {listening && (
           <div className="flex items-center justify-center gap-2 text-xs text-red-400">
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" aria-hidden />
-            جارٍ الاستماع… تكلّم الآن
+            {t("listening")}
           </div>
         )}
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-neutral-500">
-            {input.length}/{MAX_INPUT}
+            {t("charCount", { count: input.length, max: MAX_INPUT })}
           </span>
           <div className="flex gap-2">
             {response && (
@@ -269,7 +280,7 @@ export function AsaaliChat() {
                 onClick={reset}
                 className="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800"
               >
-                محادثة جديدة
+                {t("newChat")}
               </button>
             )}
             <button
@@ -278,7 +289,7 @@ export function AsaaliChat() {
               className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-300 disabled:opacity-50"
               style={{ background: "#FFD60A" }}
             >
-              {loading ? "جارٍ التشخيص…" : "اسأل دق سلف"}
+              {loading ? t("diagnosing") : t("askButton")}
             </button>
           </div>
         </div>
@@ -304,7 +315,7 @@ export function AsaaliChat() {
           {/* سؤال متابعة */}
           {response.follow_up_question && (
             <div className="rounded-xl border border-yellow-400/40 bg-yellow-400/5 p-4">
-              <div className="mb-1 text-xs text-yellow-400">سؤال للتشخيص الأدق</div>
+              <div className="mb-1 text-xs text-yellow-400">{t("followUpLabel")}</div>
               <p className="text-base text-neutral-100">{response.follow_up_question}</p>
             </div>
           )}
@@ -312,7 +323,7 @@ export function AsaaliChat() {
           {/* الملخص */}
           {response.problem_summary && (
             <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-              <div className="mb-1 text-xs text-neutral-400">ملخص المشكلة</div>
+              <div className="mb-1 text-xs text-neutral-400">{t("summaryLabel")}</div>
               <p className="text-base text-neutral-100">{response.problem_summary}</p>
             </div>
           )}
@@ -321,7 +332,7 @@ export function AsaaliChat() {
           {showWarning && response.warning && (
             <div className={`rounded-xl border p-4 ${warningColor}`}>
               <div className="mb-1 text-xs uppercase tracking-wide">
-                {response.warning.severity === "urgent" ? "تحذير عاجل" : "تنبيه"}
+                {response.warning.severity === "urgent" ? t("warnUrgent") : t("warnCaution")}
               </div>
               <p className="text-sm mb-2">{response.warning.message}</p>
               <p className="text-sm font-medium">→ {response.warning.action}</p>
@@ -331,7 +342,7 @@ export function AsaaliChat() {
           {/* الشرح */}
           {response.explanation && (
             <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-              <div className="mb-1 text-xs text-neutral-400">السبب المحتمل</div>
+              <div className="mb-1 text-xs text-neutral-400">{t("explanationLabel")}</div>
               <p className="text-sm text-neutral-200 leading-relaxed">{response.explanation}</p>
             </div>
           )}
@@ -339,7 +350,7 @@ export function AsaaliChat() {
           {/* الكراجات المقترحة */}
           {response.recommended_workshops && response.recommended_workshops.length > 0 && (
             <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-              <div className="mb-2 text-xs text-neutral-400">كراجات مقترحة</div>
+              <div className="mb-2 text-xs text-neutral-400">{t("workshopsLabel")}</div>
               <div className="space-y-2">
                 {response.recommended_workshops.map((w) => (
                   <div
@@ -358,7 +369,7 @@ export function AsaaliChat() {
                         className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-semibold text-black"
                         style={{ background: "#FFD60A" }}
                       >
-                        اتصل
+                        {t("callBtn")}
                       </a>
                     )}
                   </div>
@@ -369,7 +380,7 @@ export function AsaaliChat() {
                   href="/"
                   className="text-xs text-yellow-300 hover:underline"
                 >
-                  عرض كل الكراجات في الكويت
+                  {t("viewAllWorkshops")}
                 </Link>
               </div>
             </div>
@@ -379,14 +390,14 @@ export function AsaaliChat() {
           {response.official_terms && response.official_terms.length > 0 && (
             <details className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
               <summary className="cursor-pointer text-xs text-neutral-500 hover:text-neutral-300">
-                الاسم الفني (اختياري)
+                {t("officialTermLabel")}
               </summary>
               <div className="mt-3 space-y-2">
-                {response.official_terms.map((t, i) => (
+                {response.official_terms.map((term, i) => (
                   <div key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="text-sm font-medium text-neutral-200">{t.arabic}</span>
+                    <span className="text-sm font-medium text-neutral-200">{term.arabic}</span>
                     <span className="text-xs text-neutral-500" dir="ltr">
-                      {t.english}
+                      {term.english}
                     </span>
                   </div>
                 ))}
@@ -398,17 +409,17 @@ export function AsaaliChat() {
           {response.whatsapp_message && (
             <div className="rounded-xl border border-yellow-400/40 bg-yellow-400/5 p-4">
               <div className="mb-2 flex items-center justify-between">
-                <div className="text-xs text-yellow-300">رسالة جاهزة للكراج</div>
+                <div className="text-xs text-yellow-300">{t("whatsappLabel")}</div>
                 <button
                   type="button"
                   onClick={() => copyMessage(response.whatsapp_message ?? "")}
                   className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-semibold text-black"
                   style={{ background: "#FFD60A" }}
                 >
-                  {copied ? "تم النسخ" : "نسخ الرسالة"}
+                  {copied ? t("copiedBtn") : t("copyBtn")}
                 </button>
               </div>
-              <p className="text-sm text-neutral-100 whitespace-pre-wrap">
+              <p className="text-sm text-neutral-100 whitespace-pre-wrap" dir="rtl">
                 {response.whatsapp_message}
               </p>
             </div>

@@ -15,6 +15,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   VEHICLE_MAKES,
   getYearOptions,
@@ -31,6 +32,14 @@ interface Props {
 }
 
 export function VehicleSelector({ value, onChange, defaultOpen = false }: Props) {
+  const t = useTranslations("asaali");
+  const locale = useLocale();
+  const isAr = locale === "ar";
+  const makeName = (id?: string) => {
+    if (!id) return "";
+    const m = findMake(id);
+    return m ? (isAr ? m.name_ar : m.name_en) : "";
+  };
   const [open, setOpen] = useState(defaultOpen);
   const [makeSearch, setMakeSearch] = useState("");
   const [modelSearch, setModelSearch] = useState("");
@@ -62,11 +71,10 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
 
   function summary(): string {
     const parts: string[] = [];
-    const m = value.make ? findMake(value.make) : undefined;
-    if (m) parts.push(m.name_ar);
+    if (value.make) parts.push(makeName(value.make));
     if (value.model) parts.push(value.model);
     if (value.year) parts.push(String(value.year));
-    if (parts.length === 0) return "اختر السيارة (اختياري)";
+    if (parts.length === 0) return t("vehicleSummaryEmpty");
     return parts.join(" · ");
   }
 
@@ -75,7 +83,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-right"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-start"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2">
@@ -98,14 +106,14 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
         <div className="border-t border-neutral-800 p-4 space-y-4">
           {/* الماركة */}
           <div>
-            <label className="mb-1 block text-xs text-neutral-400">الماركة</label>
+            <label className="mb-1 block text-xs text-neutral-400">{t("makeLabel")}</label>
             {value.make && !makeListOpen ? (
               // اختيار جاهز — صف واحد مع زرّ "تغيير"
               <div className="flex items-center justify-between gap-2 rounded-md border border-yellow-400/40 bg-yellow-400/5 px-3 py-2">
                 <span className="text-sm text-yellow-200">
-                  {findMake(value.make)?.name_ar}
-                  <span className="text-neutral-500 text-xs ml-2">
-                    ({findMake(value.make)?.name_en})
+                  {isAr ? findMake(value.make)?.name_ar : findMake(value.make)?.name_en}
+                  <span className="text-neutral-500 text-xs mx-2">
+                    ({isAr ? findMake(value.make)?.name_en : findMake(value.make)?.name_ar})
                   </span>
                 </span>
                 <button
@@ -116,7 +124,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                   }}
                   className="text-xs text-neutral-400 hover:text-yellow-300"
                 >
-                  تغيير
+                  {t("change")}
                 </button>
               </div>
             ) : (
@@ -125,13 +133,13 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                   type="text"
                   value={makeSearch}
                   onChange={(e) => setMakeSearch(e.target.value)}
-                  placeholder="ابحث عن الماركة"
+                  placeholder={t("searchMake")}
                   className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
                   autoFocus={makeListOpen}
                 />
                 <div className="max-h-40 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
                   {filteredMakes.length === 0 ? (
-                    <div className="p-3 text-xs text-neutral-500">لا توجد نتائج</div>
+                    <div className="p-3 text-xs text-neutral-500">{t("noResults")}</div>
                   ) : (
                     filteredMakes.map((m) => (
                       <button
@@ -144,11 +152,14 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                           setMakeListOpen(false);
                           setModelListOpen(false);
                         }}
-                        className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
+                        className={`block w-full px-3 py-2 text-start text-sm hover:bg-neutral-800 ${
                           value.make === m.id ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
                         }`}
                       >
-                        {m.name_ar} <span className="text-neutral-500 text-xs">({m.name_en})</span>
+                        {isAr ? m.name_ar : m.name_en}{" "}
+                        <span className="text-neutral-500 text-xs">
+                          ({isAr ? m.name_en : m.name_ar})
+                        </span>
                       </button>
                     ))
                   )}
@@ -160,7 +171,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
           {/* الموديل */}
           {value.make && (
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">الموديل</label>
+              <label className="mb-1 block text-xs text-neutral-400">{t("modelLabel")}</label>
               {value.model && !modelListOpen ? (
                 <div className="flex items-center justify-between gap-2 rounded-md border border-yellow-400/40 bg-yellow-400/5 px-3 py-2">
                   <span className="text-sm text-yellow-200">{value.model}</span>
@@ -172,7 +183,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                     }}
                     className="text-xs text-neutral-400 hover:text-yellow-300"
                   >
-                    تغيير
+                    {t("change")}
                   </button>
                 </div>
               ) : (
@@ -181,13 +192,13 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                     type="text"
                     value={modelSearch}
                     onChange={(e) => setModelSearch(e.target.value)}
-                    placeholder="ابحث عن الموديل"
+                    placeholder={t("searchModel")}
                     className="mb-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
                     autoFocus={modelListOpen}
                   />
                   <div className="max-h-32 overflow-y-auto rounded-md border border-neutral-800 bg-neutral-900">
                     {filteredModels.length === 0 ? (
-                      <div className="p-3 text-xs text-neutral-500">لا توجد موديلات</div>
+                      <div className="p-3 text-xs text-neutral-500">{t("noModels")}</div>
                     ) : (
                       filteredModels.map((m) => (
                         <button
@@ -198,7 +209,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                             setModelSearch("");
                             setModelListOpen(false);
                           }}
-                          className={`block w-full px-3 py-2 text-right text-sm hover:bg-neutral-800 ${
+                          className={`block w-full px-3 py-2 text-start text-sm hover:bg-neutral-800 ${
                             value.model === m ? "bg-yellow-400/10 text-yellow-300" : "text-neutral-100"
                           }`}
                         >
@@ -215,7 +226,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
           {/* السنة + ناقل الحركة */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">السنة</label>
+              <label className="mb-1 block text-xs text-neutral-400">{t("yearLabel")}</label>
               <select
                 value={value.year ?? ""}
                 onChange={(e) =>
@@ -226,7 +237,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                 }
                 className="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
               >
-                <option value="">— اختر —</option>
+                <option value="">{t("choose")}</option>
                 {yearOptions.map((y) => (
                   <option key={y} value={y}>
                     {y}
@@ -236,7 +247,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
             </div>
 
             <div>
-              <label className="mb-1 block text-xs text-neutral-400">ناقل الحركة</label>
+              <label className="mb-1 block text-xs text-neutral-400">{t("transmissionLabel")}</label>
               <select
                 value={value.transmission ?? ""}
                 onChange={(e) =>
@@ -247,10 +258,10 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
                 }
                 className="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2 text-sm text-neutral-100 outline-none focus:border-yellow-400"
               >
-                <option value="">— اختر —</option>
-                {TRANSMISSION_OPTIONS.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name_ar}
+                <option value="">{t("choose")}</option>
+                {TRANSMISSION_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {isAr ? opt.name_ar : opt.name_en}
                   </option>
                 ))}
               </select>
@@ -269,7 +280,7 @@ export function VehicleSelector({ value, onChange, defaultOpen = false }: Props)
               }}
               className="text-xs text-neutral-400 hover:text-yellow-300"
             >
-              مسح الاختيارات
+              {t("clear")}
             </button>
           )}
         </div>
