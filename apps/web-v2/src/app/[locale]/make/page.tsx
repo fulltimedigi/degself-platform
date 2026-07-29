@@ -1,45 +1,59 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Car } from "lucide-react";
 import { getMakeCounts } from "@/lib/makes";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 
 export const revalidate = 86400;
 
-export const metadata: Metadata = {
-  title: "تصفّح كراجات السيارات حسب الماركة في الكويت | دق سلف",
-  description:
-    "اعثر على كراجات ومراكز صيانة متخصصة حسب ماركة سيارتك في الكويت — تويوتا، لكزس، نيسان، مرسيدس، بي إم دبليو، هيونداي وغيرها.",
-  keywords: ["كراج حسب الماركة", "صيانة سيارات الكويت", "متخصص تويوتا", "متخصص مرسيدس", "كراجات الكويت"],
-  alternates: { canonical: "/ماركة" },
-  openGraph: {
-    title: "تصفّح كراجات السيارات حسب الماركة في الكويت | دق سلف",
-    description: "اعثر على كراجات ومراكز صيانة متخصصة حسب ماركة سيارتك في الكويت.",
-    url: `${SITE}/ماركة`,
-    type: "website",
-    locale: "ar_KW",
-    siteName: "دق سلف",
-    images: ["/og-image.jpg?v=2"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "تصفّح كراجات السيارات حسب الماركة في الكويت | دق سلف",
-    description: "اعثر على كراجات ومراكز صيانة متخصصة حسب ماركة سيارتك في الكويت.",
-    images: ["/og-image.jpg?v=2"],
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "landing.makesIndex" });
+  const canonical = locale === DEFAULT_LOCALE ? "/ماركة" : `/${locale}/ماركة`;
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical },
+    openGraph: {
+      title: t("metaTitle"),
+      description: t("ogDescription"),
+      url: `${SITE}/ماركة`,
+      type: "website",
+      siteName: "دق سلف",
+      images: ["/og-image.jpg?v=2"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metaTitle"),
+      description: t("ogDescription"),
+      images: ["/og-image.jpg?v=2"],
+    },
+  };
+}
 
-export default async function MakesIndexPage() {
+export default async function MakesIndexPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "landing.makesIndex" });
   const makes = await getMakeCounts();
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: "تصفّح حسب الماركة", item: `${SITE}/ماركة` },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbSelf"), item: `${SITE}/ماركة` },
     ],
   };
 
@@ -48,10 +62,8 @@ export default async function MakesIndexPage() {
       <JsonLd data={breadcrumbLd} />
 
       <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">تصفّح حسب ماركة السيارة</h1>
-        <p className="text-muted-foreground">
-          اختر ماركة سيارتك لتجد الكراجات والمراكز المتخصصة في صيانتها بالكويت.
-        </p>
+        <h1 className="text-3xl font-extrabold sm:text-4xl">{t("h1")}</h1>
+        <p className="text-muted-foreground">{t("intro")}</p>
       </header>
 
       <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">

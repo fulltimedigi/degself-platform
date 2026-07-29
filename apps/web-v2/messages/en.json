@@ -504,6 +504,29 @@
       "h1": "{specialty} garages in {area}",
       "intro": "Your guide to the best {specialty} garages and centers in {area}, Kuwait — find the address, phone and hours easily. Diagnose your car's fault now and pick the right garage.",
       "otherAreas": "{specialty} in other areas"
+    },
+    "makesIndex": {
+      "metaTitle": "Browse car garages by make in Kuwait | Degself",
+      "metaDescription": "Find garages and service centers specialized by your car's make in Kuwait — Toyota, Lexus, Nissan, Mercedes, BMW, Hyundai and more.",
+      "ogDescription": "Find garages and service centers specialized by your car's make in Kuwait.",
+      "breadcrumbHome": "Home",
+      "breadcrumbSelf": "Browse by make",
+      "h1": "Browse by car make",
+      "intro": "Choose your car's make to find garages and centers specialized in servicing it in Kuwait."
+    },
+    "specIndex": {
+      "metaTitle": "{specialty} garages in Kuwait | Degself",
+      "metaDescription": "A directory of {specialty} garages in Kuwait — browse by area and find the address, phone and hours.",
+      "collectionName": "{specialty} garages in Kuwait",
+      "collectionDesc": "A directory of {specialty} garages in Kuwait — browse by area.",
+      "breadcrumbHome": "Home",
+      "breadcrumbSelf": "{specialty} garages",
+      "itemListName": "{specialty} garages by area",
+      "h1": "{specialty} garages in Kuwait",
+      "intro": "Choose your area to browse the best {specialty} garages and centers near you in Kuwait — with the address, phone and hours.",
+      "browseByArea": "Browse by area",
+      "inArea": "{specialty} in {area}",
+      "advancedSearch": "Advanced search across all garages"
     }
   },
   "manatiq": {
