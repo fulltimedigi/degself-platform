@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { MapPin } from "lucide-react";
 import { getLandingCombos, LANDING_SPECIALTIES } from "@/lib/landing";
 import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 
@@ -23,25 +25,27 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ specialty: string }>;
+  params: Promise<{ locale: string; specialty: string }>;
 }): Promise<Metadata> {
-  const { specialty: rs } = await params;
+  const { locale, specialty: rs } = await params;
   const slug = decodeURIComponent(rs); // Next 16 passes params percent-encoded
   const sp = findSpecialty(slug);
-  if (!sp) return { title: "غير موجود — دق سلف" };
+  const t = await getTranslations({ locale, namespace: "landing" });
+  if (!sp) return { title: t("notFound") };
 
-  const title = `كراجات ${sp.label} في الكويت | دق سلف`;
-  const description = `دليل كراجات ${sp.label} في الكويت — تصفّح حسب المنطقة واعثر على العنوان والهاتف والمواعيد.`;
+  const title = t("specIndex.metaTitle", { specialty: sp.label });
+  const description = t("specIndex.metaDescription", { specialty: sp.label });
+  const canonical =
+    locale === DEFAULT_LOCALE ? `/كراج/${slug}` : `/${locale}/كراج/${slug}`;
   return {
     title,
     description,
-    alternates: { canonical: `/كراج/${slug}` },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
       url: `${SITE}/كراج/${slug}`,
       type: "website",
-      locale: "ar_KW",
       siteName: "دق سلف",
       images: ["/og-image.jpg?v=2"],
     },
@@ -57,11 +61,12 @@ export async function generateMetadata({
 export default async function SpecialtyIndexPage({
   params,
 }: {
-  params: Promise<{ specialty: string }>;
+  params: Promise<{ locale: string; specialty: string }>;
 }) {
-  const { specialty: rs } = await params;
+  const { locale, specialty: rs } = await params;
   const slug = decodeURIComponent(rs);
   const sp = findSpecialty(slug);
+  const t = await getTranslations({ locale, namespace: "landing.specIndex" });
   if (!sp) notFound();
 
   const combos = await getLandingCombos();
@@ -73,10 +78,10 @@ export default async function SpecialtyIndexPage({
   const collectionLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `كراجات ${sp.label} في الكويت`,
-    description: `دليل كراجات ${sp.label} في الكويت — تصفّح حسب المنطقة.`,
+    name: t("collectionName", { specialty: sp.label }),
+    description: t("collectionDesc", { specialty: sp.label }),
     url: pageUrl,
-    inLanguage: "ar",
+    inLanguage: locale,
     isPartOf: { "@id": `${SITE}/#website` },
   };
 
@@ -84,8 +89,8 @@ export default async function SpecialtyIndexPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE },
-      { "@type": "ListItem", position: 2, name: `كراجات ${sp.label}`, item: pageUrl },
+      { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: SITE },
+      { "@type": "ListItem", position: 2, name: t("breadcrumbSelf", { specialty: sp.label }), item: pageUrl },
     ],
   };
 
@@ -94,11 +99,11 @@ export default async function SpecialtyIndexPage({
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `كراجات ${sp.label} حسب المنطقة`,
+    name: t("itemListName", { specialty: sp.label }),
     itemListElement: areas.map((a, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      name: `${sp.label} في ${a}`,
+      name: t("inArea", { specialty: sp.label, area: a }),
       url: `${SITE}/كراج/${slug}/${a}`,
     })),
   };
@@ -109,14 +114,11 @@ export default async function SpecialtyIndexPage({
       <JsonLd data={itemListLd} />
       <JsonLd data={breadcrumbLd} />
 
-      <h1 className="text-2xl font-extrabold">كراجات {sp.label} في الكويت</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        اختر منطقتك لتصفّح أفضل كراجات ومراكز {sp.label} القريبة منك بالكويت — مع
-        العنوان والهاتف والمواعيد.
-      </p>
+      <h1 className="text-2xl font-extrabold">{t("h1", { specialty: sp.label })}</h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{t("intro", { specialty: sp.label })}</p>
 
       <section className="mt-8">
-        <h2 className="mb-3 text-lg font-bold">تصفّح حسب المنطقة</h2>
+        <h2 className="mb-3 text-lg font-bold">{t("browseByArea")}</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {areas.map((a) => (
             <Link
@@ -125,7 +127,7 @@ export default async function SpecialtyIndexPage({
               className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 font-semibold transition hover:border-primary hover:text-primary"
             >
               <MapPin size={18} className="shrink-0 text-primary" aria-hidden />
-              {sp.label} في {a}
+              {t("inArea", { specialty: sp.label, area: a })}
             </Link>
           ))}
         </div>
@@ -133,7 +135,7 @@ export default async function SpecialtyIndexPage({
 
       <div className="mt-10">
         <Link href="/search" className="text-sm font-semibold text-primary hover:underline">
-          ← بحث متقدّم في كل الكراجات
+          ← {t("advancedSearch")}
         </Link>
       </div>
     </div>
