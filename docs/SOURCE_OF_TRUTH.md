@@ -29,6 +29,12 @@
 
 لا يوجد في v2 مسار runtime يرجع لملف JSON ككتالوج بديل عن Supabase.
 
+## Rate limits
+
+كل الحدود العامة الحساسة تمر عبر `public.rate_limits` + دالة `bump_rate_limit`
+(buckets مثل `quotes`, `asaali`, `translate`, `reviews`, `workshop_reports`).
+جدول `asaali_rate_limit` أُزيل (migration 021) بعد توحيد المسار.
+
 ## إيقاف Netlify (v1) — قائمة تحقق
 
 موقع Netlify القديم: `luminous-sunburst-002b08`

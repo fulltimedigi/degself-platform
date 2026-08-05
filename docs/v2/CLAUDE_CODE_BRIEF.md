@@ -30,73 +30,23 @@
 5. ⛔ **لا أرقام في الـ UI الرئيسي** (مثلاً "1801 منشأة") — Ahmed لا يحب ذلك.
 6. ⛔ **لا screenshots من Google Maps** للمنشآت — قد تحتوي محتوى غير مناسب. استخدم BrandedCover SVG (موجود في `webapp/client/src/components/BrandedCover.tsx`).
 7. ⛔ **place_ids من Google Maps حساسة لحالة الأحرف** — لا تحوّلها إلى lowercase أبداً.
-8. ⛔ **localStorage ممنوع** — قد تعمل في sandboxed iframe.
-9. ⛔ **لا تحذف الموقع الحالي** — كل عمل v2 على branch جديد `v2-nextjs`. الموقع الحالي يبقى production لحد ما الجديد جاهز 100%.
+8. ⚠️ **localStorage** — مسموح لاستخدامات UX محدودة (المحفوظات، موافقة الكوكيز، بانر PWA). لا تستخدمه كمصدر حقيقة للبيانات الحساسة.
+9. ⛔ **الإنتاج = `apps/web-v2` على Vercel** — لا تطوّر ميزات جديدة على `webapp/` (إرث). انظر `docs/SOURCE_OF_TRUTH.md`.
 10. ⛔ **لا تستخدم Apify scrapers على Facebook Groups** — مخالف قانون البيانات الكويتي. راجع `research/04_facebook_extraction.md`.
 
 ---
 
-## المشروع الحالي (v1) — ما هو موجود
+## المشروع الحي (v2) — ملخص سريع
 
-### الـ Stack الحالي
-- **Frontend:** React + Vite (TypeScript) — Static SPA
-- **Routing:** Hash routing داخل SPA، لكن HTML prerendered لكل صفحة لـ SEO
-- **Data:** ملف static `webapp/client/public/data/workshops.json` (1801 منشأة)
-- **Hosting:** Netlify (project: `luminous-sunburst-002b08`) — auto-deploy من branch `master`
-- **Domain:** degself.com (GoDaddy)
-- **Build:** `npm run build:static` (في فولدر `webapp/`) = `vite build && node scripts/build-seo.mjs`
-- **TypeScript:** Vite **لا يشغّل tsc** — شغّل `npx tsc --noEmit` يدوياً بعد أي تعديل كبير
+| الطبقة | الواقع |
+|---|---|
+| التطبيق | `apps/web-v2` (Next.js App Router) |
+| الاستضافة | Vercel → degself.com |
+| البيانات | Supabase `workshops` (+ overlays في `src/data/`) |
+| الأدمن | `/admin/*` — جلسة كوكي معتمة (`ADMIN_SESSION_SECRET`) |
+| الإرث | `webapp/` + Netlify — مجمّد (`webapp/LEGACY.md`) |
 
-### بنية المجلدات
-```
-degself-platform/
-├── brand/                    # شعار degself + SVG assets
-├── data/                     # CSVs قديمة (لا تلمسها)
-├── data-collection/          # سكريبتات Python للتنظيف
-│   └── audit_and_clean.py    # سكريبت reclassification
-├── docs/
-│   └── v2/                   # ← المكان اللي بتقرأ منه دلوقتي
-├── scripts/
-└── webapp/
-    ├── client/
-    │   ├── public/data/workshops.json   # ⭐ المصدر الوحيد للبيانات
-    │   └── src/
-    │       ├── components/
-    │       │   ├── BrandedCover.tsx     # ⭐ SVG branded cards (بديل صور Google)
-    │       │   └── WorkshopCard.tsx
-    │       ├── pages/                    # Home, Search, WorkshopDetail, Map, Emergency, About
-    │       └── lib/
-    │           ├── api.ts                # WorkshopFilters interface
-    │           └── dataStore.ts          # data fetching logic
-    ├── scripts/build-seo.mjs            # generates prerendered HTML
-    ├── package.json
-    └── vite.config.ts
-```
-
-### الـ Routes
-- `/` — Home
-- `/search` — Browse all (مش `/workshops`)
-- `/workshop/:place_id` — تفاصيل منشأة واحدة
-- `/map` — خريطة
-- `/emergency` — كراج متنقل + سطحات (filter بـ `service_mode` مش `specialty`)
-- `/about` — عن المنصة
-
-### Schema بيانات workshops.json (حقول مهمة)
-```typescript
-{
-  place_id: string;          // Google Place ID — case-sensitive!
-  name: string;              // اسم المنشأة بالعربية
-  specialty: string;         // كراج / ميكانيكي / وكلاء / إلخ
-  entity_type: string;       // workshop / dealer / spare_parts / إلخ
-  service_mode: string;      // fixed / mobile / tow (الأخير = سطحة)
-  area: string;              // الشويخ / حولي / إلخ
-  lat: number;
-  lng: number;
-  phone?: string;
-  rating?: number;           // من Google
-  reviews_count?: number;
-}
-```
+للتفاصيل والمسارات القديمة (v1) التي كانت على Netlify: اقرأ التاريخ في Git فقط، ولا تعتمدها للإنتاج.
 
 ---
 

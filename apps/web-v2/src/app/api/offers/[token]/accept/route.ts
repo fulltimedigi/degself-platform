@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const ACCEPT_PER_HOUR = 30;
 
 // POST /api/offers/[token]/accept — PUBLIC (token-gated, no cookie). Body:
 // { offer_id }. The customer picks one offer; it wins, the rest are rejected,
@@ -11,6 +14,10 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
+
+  if (!(await consumeRateLimit(clientIp(req), "offer_accept", ACCEPT_PER_HOUR))) {
+    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد ساعة." }, { status: 429 });
+  }
 
   let body: Record<string, unknown>;
   try {

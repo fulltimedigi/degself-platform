@@ -8,4 +8,8 @@ Runtime JSON lives under `src/data/` (imported as `@/data/...`):
 - `src/data/filter_options.json`
 - `src/data/audit-corrections.json`
 
-The JSON blobs in this folder (`workshops_enriched.json`, `workshop_scores.json`, etc.) are enrichment pipeline outputs kept for reprocessing/audit — not the live catalog (Supabase is).
+Remaining files here are pipeline-only:
+- `workshops_enriched.json`
+- `workshop_scores.json`
+
+Not the live catalog (Supabase is).

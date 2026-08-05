@@ -1,21 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// best-effort in-memory rate limit (per serverless instance)
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 3;
-const hits = new Map<string, number[]>();
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_PER_WINDOW;
-}
+const REPORTS_PER_HOUR = 10;
 
 function str(v: unknown, max: number): string | null {
   if (typeof v !== "string") return null;
@@ -26,9 +17,9 @@ function str(v: unknown, max: number): string | null {
 
 /** POST /api/report-workshop — submit a missing-workshop report. */
 export async function POST(req: NextRequest) {
-  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
-  if (rateLimited(ip)) {
-    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد قليل." }, { status: 429 });
+  const ip = clientIp(req);
+  if (!(await consumeRateLimit(ip, "workshop_reports", REPORTS_PER_HOUR))) {
+    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد ساعة." }, { status: 429 });
   }
 
   let b: Record<string, unknown>;
