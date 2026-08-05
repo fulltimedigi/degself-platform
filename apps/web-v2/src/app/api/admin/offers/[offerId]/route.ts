@@ -10,7 +10,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ offerId: string }> }
 ) {
-  if (!isAdminRequest(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   const { offerId } = await params;

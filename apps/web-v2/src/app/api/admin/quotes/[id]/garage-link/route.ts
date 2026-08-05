@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 // forwards this link to garages over WhatsApp; they open it and submit their own
 // structured offer without a login. Reuses an existing token so the link is stable.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!isAdminRequest(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   const { id } = await params;

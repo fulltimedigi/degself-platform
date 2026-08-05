@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 // in migration 017 (1.3 range rule, ≥7-day warranty, conditional needs a
 // diagnosis + declared inspection fee).
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!isAdminRequest(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   const { id } = await params;

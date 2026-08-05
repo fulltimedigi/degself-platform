@@ -7,6 +7,13 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const KEYLEN = 64;
 
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
+
 /** Hash a password as "<saltHex>:<keyHex>" (scrypt). */
 export function hashPassword(password: string): string {
   const salt = randomBytes(16);
@@ -51,7 +58,7 @@ export async function verifyAdminPassword(password: string): Promise<boolean> {
   const hash = await getStoredHash();
   if (hash) return verifyPasswordHash(password, hash);
   const bootstrap = process.env.MODERATION_PASSWORD;
-  return !!bootstrap && password === bootstrap;
+  return !!bootstrap && timingSafeEqualStr(password, bootstrap);
 }
 
 /** Persist a new password (writes the single credentials row). */

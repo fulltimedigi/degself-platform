@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminPassword } from "@/lib/admin-password";
+import {
+  ADMIN_SESSION_COOKIE,
+  mintAdminSessionToken,
+} from "@/lib/admin-session";
 import { clientIp, isOverLimit, recordHit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -12,15 +16,15 @@ const MAX_FAILED_LOGINS = 10;
 // the DB-stored hash (public.admin_credentials), falling back to the
 // MODERATION_PASSWORD env bootstrap until a hash is first written.
 //
-// The "admin_session" cookie value is ALWAYS the MODERATION_PASSWORD env token —
-// NOT the typed password — so middleware/admin-auth stay unchanged and existing
-// sessions keep working even after the password is rotated.
+// On success we set an opaque HMAC session cookie (ADMIN_SESSION_SECRET, or
+// MODERATION_PASSWORD used only as key material). The cookie never equals the
+// typed password or the raw bootstrap secret.
 
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days, in seconds
 
 export async function POST(req: NextRequest) {
-  const sessionToken = process.env.MODERATION_PASSWORD;
-  // Fail closed — an unset session token must never mean "everyone is allowed in".
+  const sessionToken = await mintAdminSessionToken();
+  // Fail closed — an unset session secret must never mean "everyone is allowed in".
   if (!sessionToken) {
     return NextResponse.json({ error: "لوحة التحكم غير مهيأة." }, { status: 503 });
   }
@@ -57,7 +61,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.json({ success: true });
-  res.cookies.set("admin_session", sessionToken, {
+  res.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
