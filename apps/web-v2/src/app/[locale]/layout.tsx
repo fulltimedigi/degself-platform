@@ -12,6 +12,7 @@ import { Footer } from "@/components/Footer";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { FloatingConcierge } from "@/components/FloatingConcierge";
 import { CookieConsent } from "@/components/CookieConsent";
 import { JsonLd } from "@/components/JsonLd";
 import { SOCIAL_SAME_AS } from "@/lib/brand";
@@ -259,6 +260,7 @@ export default async function RootLayout({
         <ServiceWorkerRegister />
         <PWAInstallBanner />
         <FloatingWhatsApp />
+        <FloatingConcierge />
         <CookieConsent />
         </NextIntlClientProvider>
       </body>

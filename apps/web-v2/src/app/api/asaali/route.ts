@@ -12,7 +12,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { searchWorkshops } from "@/lib/workshops";
 import { categoryToSpecialty, FAULT_CATEGORIES, CATEGORY_VALUES } from "@/lib/garageTranslator";
 import {
   preflightCheck,
@@ -23,6 +22,10 @@ import {
   hashIp,
 } from "@/lib/asaali-cost-guard";
 import { formatVehicleForPrompt } from "@/lib/vehicle-data";
+import {
+  quoteServiceForCategory,
+  searchConciergeWorkshops,
+} from "@/lib/partners";
 import type {
   AsaaliRequest,
   AsaaliResponse,
@@ -256,6 +259,59 @@ function jsonResponse(body: AsaaliResponse, status = 200): NextResponse {
   return NextResponse.json(body, { status });
 }
 
+/** Prefer partner garages for concierge routing; attach quote_service metadata. */
+async function attachConciergeWorkshops(
+  response: AsaaliResponse,
+  categoryHint?: string | null
+): Promise<AsaaliResponse> {
+  const category =
+    (typeof categoryHint === "string" && categoryHint !== "none"
+      ? categoryHint
+      : null) ??
+    (typeof response.category === "string" && response.category !== "none"
+      ? response.category
+      : null);
+
+  if (response.status !== "ok" || !category) {
+    return {
+      ...response,
+      category: category,
+      quote_service: quoteServiceForCategory(category),
+      from_partners: false,
+    };
+  }
+
+  try {
+    const { workshops: ws, fromPartners } = await searchConciergeWorkshops({
+      specialty: categoryToSpecialty(category),
+      limit: 5,
+    });
+    const workshops: RecommendedWorkshop[] = ws.map((w) => ({
+      id: w.place_id,
+      name: w.name,
+      area: w.area ?? undefined,
+      phone: w.phone_intl ?? w.phone ?? undefined,
+      rating: w.google_rating ?? undefined,
+      specialty: w.reviewed_specialty ?? undefined,
+    }));
+    return {
+      ...response,
+      category,
+      quote_service: quoteServiceForCategory(category),
+      from_partners: fromPartners,
+      recommended_workshops: workshops.length > 0 ? workshops : undefined,
+    };
+  } catch (err) {
+    console.error("asaali: concierge workshop lookup failed", err);
+    return {
+      ...response,
+      category,
+      quote_service: quoteServiceForCategory(category),
+      from_partners: false,
+    };
+  }
+}
+
 // ============================================================
 // POST handler
 // ============================================================
@@ -336,7 +392,9 @@ export async function POST(req: NextRequest) {
       endpoint: "chat",
       cache_hit: true,
     });
-    return jsonResponse({ ...cached.response, source: "cache" });
+    // Refresh partner matching on cache hits so new partners take effect.
+    const refreshed = await attachConciergeWorkshops(cached.response);
+    return jsonResponse({ ...refreshed, source: "cache" });
   }
 
   // ── build messages with history ───────────────────────────
@@ -420,45 +478,26 @@ export async function POST(req: NextRequest) {
     cache_hit: false,
   });
 
-  // ── attach workshops if we have a category ───────────────
+  // ── build base response, then attach partner-preferring workshops ─
   const categoryRaw = parsed.category;
   const category =
     typeof categoryRaw === "string" && categoryRaw !== "none"
       ? categoryRaw
       : null;
 
-  let workshops: RecommendedWorkshop[] = [];
-  if (category && parsed.status === "ok") {
-    try {
-      const { workshops: ws } = await searchWorkshops({
-        specialty: categoryToSpecialty(category),
-        sort: "top-rated",
-        limit: 5,
-      });
-      workshops = ws.map((w) => ({
-        id: w.place_id,
-        name: w.name,
-        area: w.area ?? undefined,
-        phone: w.phone_intl ?? w.phone ?? undefined,
-        rating: w.google_rating ?? undefined,
-      }));
-    } catch (err) {
-      console.error("asaali: workshop lookup failed", err);
-    }
-  }
-
-  // ── build final response ─────────────────────────────────
-  const response: AsaaliResponse = {
+  const base: AsaaliResponse = {
     status: (parsed.status as AsaaliResponse["status"]) ?? "ok",
     problem_summary: parsed.problem_summary as string | undefined,
     official_terms: parsed.official_terms as AsaaliResponse["official_terms"],
     explanation: parsed.explanation as string | undefined,
     warning: parsed.warning as AsaaliResponse["warning"],
-    recommended_workshops: workshops.length > 0 ? workshops : undefined,
     whatsapp_message: parsed.whatsapp_message as string | undefined,
     follow_up_question: parsed.follow_up_question as string | undefined,
+    category,
     source: "llm",
   };
+
+  const response = await attachConciergeWorkshops(base, category);
 
   // ── cache the answer ─────────────────────────────────────
   if (response.status === "ok") {

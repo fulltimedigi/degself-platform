@@ -65,4 +65,9 @@ export interface Workshop {
   neighborhood: string | null; // الحي — authoritative neighborhood from Google
   removal_reason: string | null;
   removed_at: string | null;
+
+  // Concierge partner network (migration 023)
+  is_partner: boolean;
+  partner_priority: number;
+  partner_notes: string | null;
 }
