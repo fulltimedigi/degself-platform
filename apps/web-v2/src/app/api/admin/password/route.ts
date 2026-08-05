@@ -12,7 +12,7 @@ const MIN_LEN = 8;
 // current password server-side before writing the new hash. The session cookie
 // is unaffected, so the admin stays logged in after a change.
 export async function POST(req: NextRequest) {
-  if (!isAdminRequest(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 

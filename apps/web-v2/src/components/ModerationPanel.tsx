@@ -17,75 +17,57 @@ interface ModReview {
   garage_name: string | null;
 }
 
-const PW_KEY = "degself_mod_pw"; // sessionStorage only — cleared when tab closes
-
+// Relies on the httpOnly admin_session cookie from /admin/login (middleware
+// already gates this page). No password in sessionStorage / Bearer headers.
 export function ModerationPanel() {
-  const [pw, setPw] = useState<string | null>(null);
-  const [pwInput, setPwInput] = useState("");
   const [tab, setTab] = useState<Status>("pending");
   const [reviews, setReviews] = useState<ModReview[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  // restore a previously entered password for this tab session
-  useEffect(() => {
-    const saved = sessionStorage.getItem(PW_KEY);
-    if (saved) setPw(saved);
+  const load = useCallback(async (status: Status) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/reviews/moderate?status=${status}`, {
+        credentials: "same-origin",
+      });
+      if (res.status === 401) {
+        setError("انتهت الجلسة. أعد تسجيل الدخول من /admin/login.");
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "تعذّر التحميل.");
+        return;
+      }
+      setReviews(data.reviews ?? []);
+    } catch {
+      setError("تعذّر الاتصال.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const load = useCallback(
-    async (status: Status, password: string) => {
-      setLoading(true);
-      setError("");
-      try {
-        const res = await fetch(`/api/reviews/moderate?status=${status}`, {
-          headers: { Authorization: `Bearer ${password}` },
-        });
-        if (res.status === 401) {
-          setError("كلمة السر غير صحيحة.");
-          setPw(null);
-          sessionStorage.removeItem(PW_KEY);
-          return;
-        }
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? "تعذّر التحميل.");
-          return;
-        }
-        setReviews(data.reviews ?? []);
-      } catch {
-        setError("تعذّر الاتصال.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
-
   useEffect(() => {
-    if (pw) load(tab, pw);
-  }, [pw, tab, load]);
-
-  function submitPw(e: React.FormEvent) {
-    e.preventDefault();
-    if (!pwInput.trim()) return;
-    sessionStorage.setItem(PW_KEY, pwInput);
-    setPw(pwInput);
-    setPwInput("");
-  }
+    load(tab);
+  }, [tab, load]);
 
   async function act(id: string, action: "approve" | "reject") {
-    if (!pw) return;
     setBusyId(id);
     try {
       const res = await fetch("/api/reviews/moderate", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${pw}` },
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, action }),
       });
+      if (res.status === 401) {
+        setError("انتهت الجلسة. أعد تسجيل الدخول من /admin/login.");
+        return;
+      }
       if (res.ok) {
-        // remove from the current list (it left this status bucket)
         setReviews((prev) => prev.filter((r) => r.id !== id));
       } else {
         const data = await res.json();
@@ -98,47 +80,15 @@ export function ModerationPanel() {
     }
   }
 
-  // ── password gate ──
-  if (!pw) {
-    return (
-      <form onSubmit={submitPw} className="flex max-w-sm flex-col gap-3">
-        <label className="text-sm font-bold">كلمة سر المراجعة</label>
-        <input
-          type="password"
-          value={pwInput}
-          onChange={(e) => setPwInput(e.target.value)}
-          autoFocus
-          className="rounded-xl border border-border bg-input px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none"
-        />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          className="w-fit rounded-xl bg-primary px-6 py-2.5 font-bold text-primary-foreground transition hover:opacity-90"
-        >
-          دخول
-        </button>
-      </form>
-    );
-  }
-
-  // ── panel ──
   const TABS: { key: Status; label: string }[] = [
     { key: "pending", label: "قيد المراجعة" },
     { key: "approved", label: "منشورة" },
     { key: "rejected", label: "مرفوضة" },
   ];
 
-  function logout() {
-    sessionStorage.removeItem(PW_KEY);
-    setPw(null);
-    setReviews([]);
-    setError("");
-  }
-
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex gap-2">
+      <div className="flex gap-2">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -152,13 +102,6 @@ export function ModerationPanel() {
             {t.label}
           </button>
         ))}
-        </div>
-        <button
-          onClick={logout}
-          className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition hover:bg-muted"
-        >
-          تغيير كلمة السر
-        </button>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

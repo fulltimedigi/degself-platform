@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic";
 //    just ping Ahmed that it went out. On any send failure we fall back to the
 //    manual path so nothing is ever lost.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  if (!isAdminRequest(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
   const { id } = await params;

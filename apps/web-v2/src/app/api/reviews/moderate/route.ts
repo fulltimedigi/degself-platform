@@ -1,20 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { isAdminRequest } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { verifyAdminPassword } from "@/lib/admin-password";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// ── auth ──────────────────────────────────────────────────────────────────
-// The ONE admin password (DB-backed, changeable from /admin/settings; falls back
-// to MODERATION_PASSWORD only until first set). Sent as `Authorization: Bearer`.
-// Fail CLOSED. verifyAdminPassword does a constant-time hash compare internally.
-async function authorized(req: NextRequest): Promise<boolean> {
-  const header = req.headers.get("authorization") ?? "";
-  const got = header.startsWith("Bearer ") ? header.slice(7) : "";
-  return verifyAdminPassword(got);
-}
+// Auth: same opaque admin_session cookie as /api/admin/* (set by /api/admin/login).
+// Fail CLOSED. No Bearer password / sessionStorage.
 
 const STATUSES = ["pending", "approved", "rejected"] as const;
 type Status = (typeof STATUSES)[number];
@@ -32,7 +25,7 @@ interface ModRow {
 
 /** GET /api/reviews/moderate?status=pending — list reviews for moderation. */
 export async function GET(req: NextRequest) {
-  if (!(await authorized(req))) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 
@@ -75,7 +68,7 @@ export async function GET(req: NextRequest) {
 
 /** PATCH /api/reviews/moderate — body { id, action: 'approve'|'reject' }. */
 export async function PATCH(req: NextRequest) {
-  if (!(await authorized(req))) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 

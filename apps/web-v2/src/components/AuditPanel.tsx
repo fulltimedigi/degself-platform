@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
-const PW_KEY = "degself_mod_pw"; // shared with ModerationPanel
+import { useEffect, useState } from "react";
 
 interface PreviewResponse {
   total_in_audit_file: number;
@@ -19,65 +17,21 @@ interface ApplyResponse {
   failures: { place_id: string; error: string }[];
 }
 
+// Relies on the httpOnly admin_session cookie from /admin/login. No password
+// prompt / sessionStorage / Bearer headers.
 export function AuditPanel() {
-  const [pw, setPw] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    return sessionStorage.getItem(PW_KEY);
-  });
-  const [pwInput, setPwInput] = useState("");
   const [preview, setPreview] = useState<PreviewResponse | null>(null);
   const [result, setResult] = useState<ApplyResponse | null>(null);
   const [loading, setLoading] = useState<"preview" | "apply" | null>(null);
   const [error, setError] = useState("");
 
-  function authHeaders(): HeadersInit {
-    return pw ? { Authorization: `Bearer ${pw}` } : {};
-  }
-
-  function logout() {
-    sessionStorage.removeItem(PW_KEY);
-    setPw(null);
-    setPreview(null);
-    setResult(null);
-    setError("");
-  }
-
-  async function handlePwSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    const trimmed = pwInput.trim();
-    if (!trimmed) return;
-    // verify by hitting preview endpoint
-    setLoading("preview");
-    try {
-      const res = await fetch("/api/admin/audit", {
-        headers: { Authorization: `Bearer ${trimmed}` },
-      });
-      if (res.status === 401) {
-        setError("كلمة سر غير صحيحة.");
-        setLoading(null);
-        return;
-      }
-      const data: PreviewResponse = await res.json();
-      sessionStorage.setItem(PW_KEY, trimmed);
-      setPw(trimmed);
-      setPwInput("");
-      setPreview(data);
-    } catch (err) {
-      setError(`خطأ في الاتصال: ${(err as Error).message}`);
-    } finally {
-      setLoading(null);
-    }
-  }
-
   async function loadPreview() {
     setError("");
     setLoading("preview");
     try {
-      const res = await fetch("/api/admin/audit", { headers: authHeaders() });
+      const res = await fetch("/api/admin/audit", { credentials: "same-origin" });
       if (res.status === 401) {
-        logout();
-        setError("انتهت الجلسة. أعد إدخال كلمة السر.");
+        setError("انتهت الجلسة. أعد تسجيل الدخول من /admin/login.");
         return;
       }
       setPreview(await res.json());
@@ -88,6 +42,10 @@ export function AuditPanel() {
     }
   }
 
+  useEffect(() => {
+    void loadPreview();
+  }, []);
+
   async function applyAudit() {
     if (!confirm("تطبيق التدقيق على قاعدة البيانات؟ هذا الإجراء يحدّث حقول التدقيق فقط ولا يحذف بيانات.")) return;
     setError("");
@@ -96,11 +54,10 @@ export function AuditPanel() {
     try {
       const res = await fetch("/api/admin/audit", {
         method: "POST",
-        headers: authHeaders(),
+        credentials: "same-origin",
       });
       if (res.status === 401) {
-        logout();
-        setError("انتهت الجلسة. أعد إدخال كلمة السر.");
+        setError("انتهت الجلسة. أعد تسجيل الدخول من /admin/login.");
         return;
       }
       const data: ApplyResponse = await res.json();
@@ -112,31 +69,6 @@ export function AuditPanel() {
     }
   }
 
-  // ── login screen ───────────────────────────────────────────────
-  if (!pw) {
-    return (
-      <form onSubmit={handlePwSubmit} className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
-        <label className="text-sm font-bold">كلمة سر المراجعة</label>
-        <input
-          type="password"
-          value={pwInput}
-          onChange={(e) => setPwInput(e.target.value)}
-          autoFocus
-          className="rounded-lg border border-border bg-background px-3 py-2 focus:border-primary focus:outline-none"
-        />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading === "preview"}
-          className="self-end rounded-lg bg-primary px-5 py-2 font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
-        >
-          {loading === "preview" ? "جارٍ التحقق..." : "دخول"}
-        </button>
-      </form>
-    );
-  }
-
-  // ── panel ───────────────────────────────────────────────────────
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between gap-2">
@@ -146,12 +78,6 @@ export function AuditPanel() {
           className="rounded-lg border border-primary/40 px-4 py-2 text-sm font-bold text-primary transition hover:bg-primary/10 disabled:opacity-50"
         >
           {loading === "preview" ? "جارٍ القراءة..." : "تحديث المعاينة"}
-        </button>
-        <button
-          onClick={logout}
-          className="rounded-lg border border-border px-3 py-1.5 text-xs font-bold text-muted-foreground transition hover:bg-muted"
-        >
-          تغيير كلمة السر
         </button>
       </div>
 
