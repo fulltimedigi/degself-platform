@@ -21,6 +21,11 @@ jobs:
     defaults:
       run:
         working-directory: apps/web-v2
+    env:
+      # Secretless compile/build placeholders (no real backend calls during build).
+      NEXT_PUBLIC_SITE_URL: https://degself.com
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: public-anon-placeholder
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,3 +39,5 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
+      - name: Build
+        run: npm run build

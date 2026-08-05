@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { validateOffer } from "@/lib/offer-validation";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
-import { clientIp, isOverLimit, recordHit } from "@/lib/rate-limit";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
 
   const ip = clientIp(req);
-  if (await isOverLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR)) {
+  if (!(await consumeRateLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR))) {
     return NextResponse.json({ error: "عروض كثيرة — حاول بعد ساعة." }, { status: 429 });
   }
 
@@ -94,9 +94,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     console.error("submit-offer insert error:", insErr);
     return NextResponse.json({ error: "تعذّر حفظ العرض." }, { status: 500 });
   }
-
-  // Count this accepted submission against the per-IP hourly budget.
-  await recordHit(ip, "garage_offer");
 
   // Let the founder know a garage responded (must be awaited on serverless).
   try {
