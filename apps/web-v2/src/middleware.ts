@@ -5,48 +5,49 @@ import {
   ADMIN_SESSION_COOKIE,
   verifyAdminSessionToken,
 } from "@/lib/admin-session";
+import { copyCookies, updateSession } from "@/lib/supabase/middleware";
 
-// Two responsibilities, composed:
-//  1) Admin gate — every /admin/* page (in any locale) requires a valid opaque
-//     admin_session cookie; otherwise redirect to /admin/login.
-//  2) Locale routing — next-intl maps the URL to a locale. Arabic (default)
-//     stays unprefixed at "/"; en/hi/ur are prefixed.
+// Responsibilities, composed:
+//  1) Refresh end-user Supabase Auth cookies
+//  2) Admin gate — /admin/* (except login) needs opaque admin_session
+//  3) Locale routing via next-intl
 //
-// IMPORTANT: always hand page requests to intlMiddleware. Returning
-// NextResponse.next() skips the default-locale rewrite into /[locale]/…,
-// so unprefixed Arabic admin URLs 404 (while /en/admin/… still works).
+// /auth/* is excluded from the matcher (OAuth callback must not be rewritten).
 
 const intlMiddleware = createMiddleware(routing);
 
-// Remove a leading locale prefix (/en, /hi, /ur) to get the logical path.
 function stripLocale(pathname: string): string {
   const m = pathname.match(/^\/(en|hi|ur)(\/.*)?$/);
   return m ? m[2] ?? "/" : pathname;
 }
 
 export async function middleware(req: NextRequest) {
+  // Refresh user session first (may mutate request cookies + produce Set-Cookie).
+  const sessionRes = await updateSession(req);
+
   const logical = stripLocale(req.nextUrl.pathname);
 
   if (logical === "/admin" || logical.startsWith("/admin/")) {
-    // Login stays reachable without a session — but still needs locale rewrite.
     if (logical !== "/admin/login") {
       const session = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
       if (!(await verifyAdminSessionToken(session))) {
         const url = req.nextUrl.clone();
-        url.pathname = "/admin/login"; // canonical (unprefixed) login
+        url.pathname = "/admin/login";
         url.search = "";
         url.searchParams.set("next", logical);
-        return NextResponse.redirect(url);
+        const redirect = NextResponse.redirect(url);
+        return copyCookies(sessionRes, redirect);
       }
     }
-    return intlMiddleware(req);
+    const intlRes = intlMiddleware(req);
+    return copyCookies(sessionRes, intlRes);
   }
 
-  return intlMiddleware(req);
+  const intlRes = intlMiddleware(req);
+  return copyCookies(sessionRes, intlRes);
 }
 
 export const config = {
-  // Run on all routes except API, Next internals, and any file with an
-  // extension (feed.xml, sitemap.xml, robots.txt, images, …).
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // Skip API, auth callback, Next internals, and static files.
+  matcher: ["/((?!api|auth|_next|_vercel|.*\\..*).*)"],
 };

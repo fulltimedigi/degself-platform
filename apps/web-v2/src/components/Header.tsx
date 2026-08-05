@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { InstallApp } from "@/components/InstallApp";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { UserAuthMenu } from "@/components/UserAuthMenu";
 import { BUSINESS_WA_URL } from "@/lib/constants";
 
 // Keep this list to 7 items so the desktop nav doesn't crowd at tablet widths.
@@ -20,10 +21,6 @@ const NAV: ReadonlyArray<{ href: string; key: string; highlight?: boolean }> = [
   { href: "/map", key: "map" },
   { href: "/blog", key: "blog" },
 ];
-
-// Auth (دخول/تسجيل) is deferred (Checkpoint 5). Button kept in code but hidden
-// from the UI — flip to true and wire the real link when accounts ship.
-const SHOW_AUTH = false;
 
 export function Header() {
   const t = useTranslations("nav");
@@ -108,7 +105,6 @@ export function Header() {
           )}
         </nav>
 
-        {/* Login button (RTL end = left) — hidden until auth ships (SHOW_AUTH) */}
         <div className="flex items-center gap-2">
           {/* WhatsApp business CTA — desktop only, mobile shows in hamburger */}
           <a
@@ -136,16 +132,9 @@ export function Header() {
             <Heart size={20} aria-hidden />
           </Link>
 
-          {SHOW_AUTH && (
-            <button
-              type="button"
-              disabled
-              title="قريباً"
-              className="hidden cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60 md:block"
-            >
-              دخول / تسجيل
-            </button>
-          )}
+          <div className="hidden md:block">
+            <UserAuthMenu />
+          </div>
 
           {/* Mobile hamburger */}
           <button
@@ -225,15 +214,9 @@ export function Header() {
             className="mt-1 flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/20"
           />
 
-          {SHOW_AUTH && (
-            <button
-              type="button"
-              disabled
-              className="mt-1 cursor-not-allowed rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground opacity-60"
-            >
-              دخول / تسجيل
-            </button>
-          )}
+          <div className="mt-2" onClick={() => setOpen(false)}>
+            <UserAuthMenu />
+          </div>
         </nav>
       )}
     </header>

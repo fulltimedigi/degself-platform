@@ -12,7 +12,21 @@
     "saved": "Saved",
     "savedAria": "Saved garages",
     "menu": "Menu",
-    "homeAria": "Degself — Home"
+    "homeAria": "Degself — Home",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "account": "Account"
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "Use Google to save garages and interact with Degself.",
+    "google": "Continue with Google",
+    "error": "Sign-in failed. Please try again.",
+    "termsHint": "By continuing you agree to our",
+    "privacy": "Privacy Policy",
+    "accountTitle": "My account",
+    "accountFallback": "User",
+    "savedLink": "Saved garages"
   },
   "lang": {
     "label": "Language",
