@@ -11,6 +11,10 @@ import {
 //     admin_session cookie; otherwise redirect to /admin/login.
 //  2) Locale routing — next-intl maps the URL to a locale. Arabic (default)
 //     stays unprefixed at "/"; en/hi/ur are prefixed.
+//
+// IMPORTANT: always hand page requests to intlMiddleware. Returning
+// NextResponse.next() skips the default-locale rewrite into /[locale]/…,
+// so unprefixed Arabic admin URLs 404 (while /en/admin/… still works).
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -24,15 +28,18 @@ export async function middleware(req: NextRequest) {
   const logical = stripLocale(req.nextUrl.pathname);
 
   if (logical === "/admin" || logical.startsWith("/admin/")) {
-    // The login page must stay reachable without a session.
-    if (logical === "/admin/login") return NextResponse.next();
-    const session = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-    if (await verifyAdminSessionToken(session)) return NextResponse.next();
-    const url = req.nextUrl.clone();
-    url.pathname = "/admin/login"; // canonical (unprefixed) login
-    url.search = "";
-    url.searchParams.set("next", logical);
-    return NextResponse.redirect(url);
+    // Login stays reachable without a session — but still needs locale rewrite.
+    if (logical !== "/admin/login") {
+      const session = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+      if (!(await verifyAdminSessionToken(session))) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/admin/login"; // canonical (unprefixed) login
+        url.search = "";
+        url.searchParams.set("next", logical);
+        return NextResponse.redirect(url);
+      }
+    }
+    return intlMiddleware(req);
   }
 
   return intlMiddleware(req);
