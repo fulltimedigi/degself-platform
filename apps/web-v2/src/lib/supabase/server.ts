@@ -31,7 +31,7 @@ export async function createServerClient() {
           );
         } catch {
           // Called from a Server Component where cookies are read-only — safe to
-          // ignore. Session refresh will be handled by middleware in Checkpoint 5.
+          // ignore. Session refresh is handled by middleware (updateSession).
         }
       },
     },

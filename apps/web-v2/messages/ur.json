@@ -12,7 +12,21 @@
     "saved": "محفوظ",
     "savedAria": "محفوظ گیراج",
     "menu": "مینو",
-    "homeAria": "دق سلف — ہوم"
+    "homeAria": "دق سلف — ہوم",
+    "login": "سائن ان",
+    "logout": "سائن آؤٹ",
+    "account": "اکاؤنٹ"
+  },
+  "auth": {
+    "title": "سائن ان کریں",
+    "subtitle": "گیراج محفوظ کرنے اور Degself استعمال کے لیے Google سے داخل ہوں۔",
+    "google": "Google کے ساتھ جاری رکھیں",
+    "error": "سائن ان ناکام۔ دوبارہ کوشش کریں۔",
+    "termsHint": "جاری رکھ کر آپ متفق ہیں",
+    "privacy": "رازداری کی پالیسی",
+    "accountTitle": "میرا اکاؤنٹ",
+    "accountFallback": "صارف",
+    "savedLink": "محفوظ گیراج"
   },
   "lang": {
     "label": "زبان",

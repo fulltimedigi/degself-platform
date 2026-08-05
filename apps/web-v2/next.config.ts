@@ -88,6 +88,12 @@ const nextConfig: NextConfig = {
   // ميزانية أداء: نسمح بصور أكبر فقط للـ OG/hero
   poweredByHeader: false,
 
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+    ],
+  },
+
   // Guarantee the Cairo font files are bundled with the dynamic OG/Twitter image
   // functions. In a monorepo, Vercel's file tracer can miss assets read via
   // fs at runtime (join(process.cwd(), "assets/…")), which would make the image

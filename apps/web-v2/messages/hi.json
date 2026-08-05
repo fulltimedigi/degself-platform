@@ -12,7 +12,21 @@
     "saved": "सहेजे गए",
     "savedAria": "सहेजे गए गैरेज",
     "menu": "मेन्यू",
-    "homeAria": "दक़ सल्फ़ — होम"
+    "homeAria": "दक़ सल्फ़ — होम",
+    "login": "साइन इन",
+    "logout": "साइन आउट",
+    "account": "खाता"
+  },
+  "auth": {
+    "title": "साइन इन करें",
+    "subtitle": "गैरेज सेव करने और Degself उपयोग के लिए Google से प्रवेश करें।",
+    "google": "Google से जारी रखें",
+    "error": "साइन इन विफल। फिर कोशिश करें।",
+    "termsHint": "जारी रखकर आप सहमत हैं",
+    "privacy": "गोपनीयता नीति",
+    "accountTitle": "मेरा खाता",
+    "accountFallback": "उपयोगकर्ता",
+    "savedLink": "सहेजे गए गैरेज"
   },
   "lang": {
     "label": "भाषा",
