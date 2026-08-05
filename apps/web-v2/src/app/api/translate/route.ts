@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { searchWorkshops } from "@/lib/workshops";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import {
   SYSTEM_PROMPT,
   OUTPUT_SCHEMA,
@@ -16,24 +17,8 @@ import {
 // الـ SDK محتاج Node runtime (مش edge).
 export const runtime = "nodejs";
 
-// ── rate limiting بسيط best-effort (في الذاكرة، لكل instance) ──
-// instances الـ serverless مؤقتة فده حماية تقريبية فقط؛ نكمّل بـ Upstash لاحقاً لو احتجنا.
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 8;
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_PER_WINDOW;
-}
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  return fwd ? fwd.split(",")[0].trim() : "unknown";
-}
+// Atomic hourly cap (public.rate_limits) — translate calls Anthropic and costs money.
+const TRANSLATE_LIMIT_PER_HOUR = 30;
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -44,9 +29,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (rateLimited(clientIp(req))) {
+  if (!(await consumeRateLimit(clientIp(req), "translate", TRANSLATE_LIMIT_PER_HOUR))) {
     return NextResponse.json(
-      { error: "طلبات كثيرة، حاول بعد دقيقة." },
+      { error: "طلبات كثيرة، حاول بعد ساعة." },
       { status: 429 }
     );
   }

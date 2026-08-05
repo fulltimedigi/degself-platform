@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchQuotes } from "@/lib/quotes";
 import { relativeArabic } from "@/lib/utils";
 import { AdminQuotesList, type QuoteRow } from "@/components/AdminQuotesList";
+import { AdminLogoutButton } from "@/components/AdminLogoutButton";
 
 export const metadata: Metadata = {
   title: "طلبات عروض الأسعار",
@@ -55,6 +56,7 @@ export default async function AdminQuotesPage() {
           >
             تحديث ↻
           </Link>
+          <AdminLogoutButton />
         </div>
       </div>
 

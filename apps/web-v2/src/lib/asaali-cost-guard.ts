@@ -30,6 +30,7 @@
 import crypto from 'node:crypto';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { normalizeArabic } from '@/lib/normalize';
+import { consumeRateLimit } from '@/lib/rate-limit';
 
 // ============================================================
 // إعدادات قابلة للضبط
@@ -107,8 +108,20 @@ export interface CachedAnswer<T = unknown> {
 
 /** Hash لعنوان IP — لا نخزن الـ IP خام */
 export function hashIp(ip: string): string {
-  const salt = process.env.IP_HASH_SALT ?? 'asaali-default-salt-change-me';
-  return crypto.createHash('sha256').update(`${salt}:${ip}`).digest('hex').slice(0, 32);
+  // Prefer a dedicated salt; fall back to other server secrets so we never use
+  // a public default string that would make hashes rainbow-tableable.
+  const salt =
+    process.env.IP_HASH_SALT?.trim() ||
+    process.env.ADMIN_SESSION_SECRET?.trim() ||
+    process.env.MODERATION_PASSWORD?.trim();
+  if (!salt) {
+    console.error('[asaali-cost-guard] IP_HASH_SALT unset — configure it in env');
+  }
+  return crypto
+    .createHash('sha256')
+    .update(`${salt || 'asaali-unconfigured'}:${ip}`)
+    .digest('hex')
+    .slice(0, 32);
 }
 
 /** Hash للنص المُطبَّع — مفتاح الكاش */
@@ -149,13 +162,13 @@ export async function isWithinBudget(): Promise<BudgetCheck> {
 
   if (error) {
     console.error('[asaali-cost-guard] budget check failed:', error);
-    // في حالة الخطأ، نسمح (fail-open) لكن نسجّل
+    // Fail-CLOSED on infra errors — a blind allow can blow the hard $25 cap.
     return {
-      ok: true,
+      ok: false,
       spent_usd: 0,
       budget_usd: ASAALI_CONFIG.MONTHLY_BUDGET_USD,
-      percent_used: 0,
-      warn: false,
+      percent_used: 100,
+      warn: true,
     };
   }
 
@@ -173,55 +186,21 @@ export async function isWithinBudget(): Promise<BudgetCheck> {
 }
 
 // ============================================================
-// 2) Rate Limit
+// 2) Rate Limit — atomic via public.rate_limits / bump_rate_limit RPC
 // ============================================================
 export async function checkRateLimit(ipHash: string): Promise<RateLimitCheck> {
-  const supabase = getSupabaseAdmin();
-  const now = new Date();
-  const bucketStart = new Date(now);
-  bucketStart.setUTCMinutes(0, 0, 0); // بداية الساعة الحالية
-  const bucketIso = bucketStart.toISOString();
-
-  // upsert: إذا الصف موجود، +1، وإلا أنشئ جديد بعدّ 1
-  const { data: existing, error: selErr } = await supabase
-    .from('asaali_rate_limit')
-    .select('id, request_count')
-    .eq('ip_hash', ipHash)
-    .eq('bucket_start', bucketIso)
-    .maybeSingle();
-
-  if (selErr) {
-    console.error('[asaali-cost-guard] rate-limit select failed:', selErr);
-    return { ok: true, remaining: ASAALI_CONFIG.RATE_LIMIT_PER_HOUR, retryAfterSeconds: 0 };
-  }
-
   const max = ASAALI_CONFIG.RATE_LIMIT_PER_HOUR;
-  const current = existing?.request_count ?? 0;
-
-  if (current >= max) {
+  // Store the hash in rate_limits.ip (text) — never the raw IP.
+  const allowed = await consumeRateLimit(ipHash, 'asaali', max);
+  if (!allowed) {
+    const now = new Date();
+    const bucketStart = new Date(now);
+    bucketStart.setUTCMinutes(0, 0, 0);
     const nextHour = new Date(bucketStart.getTime() + 60 * 60 * 1000);
     const retryAfter = Math.max(0, Math.floor((nextHour.getTime() - now.getTime()) / 1000));
     return { ok: false, remaining: 0, retryAfterSeconds: retryAfter };
   }
-
-  if (existing) {
-    const { error: updErr } = await supabase
-      .from('asaali_rate_limit')
-      .update({ request_count: current + 1 })
-      .eq('id', existing.id);
-    if (updErr) console.error('[asaali-cost-guard] rate-limit update failed:', updErr);
-  } else {
-    const { error: insErr } = await supabase
-      .from('asaali_rate_limit')
-      .insert({ ip_hash: ipHash, bucket_start: bucketIso, request_count: 1 });
-    if (insErr) console.error('[asaali-cost-guard] rate-limit insert failed:', insErr);
-  }
-
-  return {
-    ok: true,
-    remaining: max - current - 1,
-    retryAfterSeconds: 0,
-  };
+  return { ok: true, remaining: Math.max(0, max - 1), retryAfterSeconds: 0 };
 }
 
 // ============================================================

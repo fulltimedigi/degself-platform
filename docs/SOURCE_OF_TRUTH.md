@@ -25,8 +25,18 @@
 | إثراء التقييمات / smart_score | `apps/web-v2/src/data/workshops_enriched_lookup.json` |
 | بذرة الاستيراد التاريخية | `webapp/client/public/data/workshops.json` (سكربت import فقط) |
 | أرشيف قديم | `data/workshops_master.json` — **لا يقرأه التطبيق الحي** |
+| مخرجات pipeline فقط | `apps/web-v2/data/*.json` — ليست runtime (انظر `apps/web-v2/data/README.md`) |
 
 لا يوجد في v2 مسار runtime يرجع لملف JSON ككتالوج بديل عن Supabase.
+
+## إيقاف Netlify (v1) — قائمة تحقق
+
+موقع Netlify القديم: `luminous-sunburst-002b08`
+
+1. افتح https://app.netlify.com → الموقع أعلاه  
+2. **Site configuration → Build & deploy → Continuous Deployment**: أوقف Auto publishing / Disconnect repository  
+3. تأكد أن DNS لـ `degself.com` يشير إلى **Vercel فقط**  
+4. لا تحذف `webapp/` من Git بعد — مجمّد للأرشيف (`webapp/LEGACY.md`)
 
 ## المسارات الحساسة
 

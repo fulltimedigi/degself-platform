@@ -14,6 +14,12 @@
 - اعتبار `netlify.toml` مصدر نشر حي بدون تحقق صريح
 - تعديل `workshops.json` على أنه كتالوج الموقع الحالي
 
+## أوقف Netlify
+
+1. https://app.netlify.com → موقع `luminous-sunburst-002b08`
+2. أوقف Auto publishing أو افصل المستودع من Continuous Deployment
+3. تأكد أن `degself.com` على Vercel فقط
+
 إذا احتجت تشغيله محلياً للرجوع فقط:
 
 ```bash
