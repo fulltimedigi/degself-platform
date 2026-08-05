@@ -21,8 +21,8 @@ export default function AdminSettingsPage() {
       <section className="rounded-xl border border-border bg-card p-5">
         <h2 className="mb-1 font-bold">تغيير كلمة السر</h2>
         <p className="mb-4 text-sm text-muted-foreground">
-          كلمة سر لوحة التحكم المشتركة. تغييرها لا يُخرج الجلسات المفتوحة حالياً — يُطلب استخدامها في
-          الدخول القادم فقط.
+          كلمة سر لوحة التحكم المشتركة. تغييرها يُلغي دخول الأجهزة الأخرى فوراً، وتبقى جلستك الحالية
+          فعّالة على هذا المتصفح.
         </p>
         <ChangePasswordForm />
       </section>

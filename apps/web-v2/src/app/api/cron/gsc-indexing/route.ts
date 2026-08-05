@@ -8,9 +8,19 @@ export const dynamic = "force-dynamic";
 
 // Vercel automatically sends `Authorization: Bearer <CRON_SECRET>` on cron
 // invocations when CRON_SECRET is set, which also gates manual curls.
+function timingSafeEqualStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let out = 0;
+  for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return out === 0;
+}
+
 function verifyAuth(request: Request) {
-  const auth = request.headers.get("authorization");
-  return !!process.env.CRON_SECRET && auth === `Bearer ${process.env.CRON_SECRET}`;
+  const expected = process.env.CRON_SECRET?.trim();
+  if (!expected) return false;
+  const auth = request.headers.get("authorization") ?? "";
+  const got = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  return timingSafeEqualStr(got, expected);
 }
 
 export async function GET(request: Request) {

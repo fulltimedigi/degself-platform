@@ -3,9 +3,9 @@
 -- the database (stored as a scrypt hash, never plaintext), so it can be rotated
 -- from the admin panel instead of a Vercel redeploy.
 --
--- The MODERATION_PASSWORD env var KEEPS being the internal session-cookie token
--- (middleware/admin-auth are unchanged) and the bootstrap password used only
--- until the first DB row exists. Login now verifies against this table first.
+-- MODERATION_PASSWORD remains the bootstrap login password until the first DB
+-- row exists. The admin_session cookie is an opaque HMAC token (see
+-- admin-session.ts / ADMIN_SESSION_SECRET), NOT the password itself.
 --
 -- Single-row table: id is pinned to 1.
 

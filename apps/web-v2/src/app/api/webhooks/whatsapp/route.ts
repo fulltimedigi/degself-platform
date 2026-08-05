@@ -21,8 +21,13 @@ export async function GET(req: NextRequest) {
   const mode = p.get("hub.mode");
   const token = p.get("hub.verify_token");
   const challenge = p.get("hub.challenge") ?? "";
-  const expected = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
-  if (mode === "subscribe" && expected && token === expected) {
+  const expected = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ?? "";
+  const got = token ?? "";
+  const tokenOk =
+    !!expected &&
+    got.length === expected.length &&
+    timingSafeEqual(Buffer.from(got), Buffer.from(expected));
+  if (mode === "subscribe" && tokenOk) {
     return new NextResponse(challenge, { status: 200 });
   }
   return new NextResponse("Forbidden", { status: 403 });
