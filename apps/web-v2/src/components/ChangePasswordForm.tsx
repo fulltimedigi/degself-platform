@@ -39,7 +39,10 @@ export function ChangePasswordForm() {
       setCurrent("");
       setNext("");
       setConfirm("");
-      setMsg({ kind: "ok", text: "تم تغيير كلمة السر. استخدمها في الدخول القادم." });
+      setMsg({
+        kind: "ok",
+        text: "تم تغيير كلمة السر. جلستك هنا مستمرة، وأي جهاز آخر يحتاج دخول من جديد.",
+      });
     } catch {
       setMsg({ kind: "err", text: "تعذّر الاتصال، تأكد من الإنترنت." });
     } finally {

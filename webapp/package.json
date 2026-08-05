@@ -1,6 +1,8 @@
 {
-  "name": "rest-express",
+  "name": "degself-webapp-v1-legacy",
   "version": "1.0.0",
+  "private": true,
+  "description": "LEGACY v1 — do not deploy. Production is apps/web-v2 on Vercel. See webapp/LEGACY.md",
   "license": "MIT",
   "type": "module",
   "scripts": {

@@ -1,7 +1,7 @@
-# Netlify config for degself.com — fully static deploy of the webapp.
-# This file lives at the repo root so Netlify auto-detects it.
-# The actual app lives in webapp/, so the build runs with base = "webapp"
-# and publishes webapp/dist/public.
+# LEGACY v1 Netlify config. Production is apps/web-v2 on Vercel (degself.com).
+# Prefer disabling auto-deploys for site luminous-sunburst-002b08.
+# See webapp/LEGACY.md and docs/SOURCE_OF_TRUTH.md.
+# base = "webapp" → publishes webapp/dist/public.
 
 [build]
   base = "webapp"

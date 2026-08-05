@@ -14,6 +14,7 @@
 | قاعدة البيانات | Supabase (Postgres + RLS) |
 
 `webapp/` + `netlify.toml` = **إرث v1**. لا تُعامل كإنتاج إلا إذا أُثبت نشر نشط بخلاف ما سبق.
+انظر أيضاً `webapp/LEGACY.md`. يُفضّل إيقاف النشر التلقائي لموقع Netlify `luminous-sunburst-002b08` من لوحة Netlify.
 
 ## البيانات
 

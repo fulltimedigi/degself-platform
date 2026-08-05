@@ -3,6 +3,7 @@
 // bootstrap value used until the first hash is written. NEVER import from a
 // client component — this uses node:crypto and the service-role Supabase client.
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
+import { clearSessionEpochCache } from "@/lib/admin-session";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const KEYLEN = 64;
@@ -61,11 +62,28 @@ export async function verifyAdminPassword(password: string): Promise<boolean> {
   return !!bootstrap && timingSafeEqualStr(password, bootstrap);
 }
 
-/** Persist a new password (writes the single credentials row). */
-export async function setAdminPassword(password: string): Promise<void> {
+/**
+ * Persist a new password and bump session_epoch so existing admin cookies die.
+ * Returns the new epoch (for minting a fresh cookie for the caller).
+ */
+export async function setAdminPassword(password: string): Promise<number> {
   const admin = getSupabaseAdmin();
-  const { error } = await admin
+  const { data: row } = await admin
     .from("admin_credentials")
-    .upsert({ id: 1, password_hash: hashPassword(password), updated_at: new Date().toISOString() });
+    .select("session_epoch")
+    .eq("id", 1)
+    .maybeSingle();
+  const prev = Number(row?.session_epoch);
+  const nextEpoch = Number.isFinite(prev) && prev >= 1 ? prev + 1 : 2;
+
+  const { error } = await admin.from("admin_credentials").upsert({
+    id: 1,
+    password_hash: hashPassword(password),
+    session_epoch: nextEpoch,
+    updated_at: new Date().toISOString(),
+  });
   if (error) throw new Error(error.message);
+
+  clearSessionEpochCache();
+  return nextEpoch;
 }

@@ -1,16 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { verifyAdminPassword, setAdminPassword } from "@/lib/admin-password";
+import {
+  ADMIN_SESSION_COOKIE,
+  mintAdminSessionToken,
+} from "@/lib/admin-session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MIN_LEN = 8;
+const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 // POST /api/admin/password — change the admin login password.
 // Body: { current, next, confirm }. Gated by the admin session; verifies the
-// current password server-side before writing the new hash. The session cookie
-// is unaffected, so the admin stays logged in after a change.
+// current password server-side before writing the new hash. Bumps
+// session_epoch (invalidates other browsers) and remints this browser's cookie.
 export async function POST(req: NextRequest) {
   if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
@@ -43,15 +48,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  let newEpoch: number;
   try {
     if (!(await verifyAdminPassword(current))) {
       return NextResponse.json({ error: "كلمة السر الحالية غير صحيحة." }, { status: 401 });
     }
-    await setAdminPassword(next);
+    newEpoch = await setAdminPassword(next);
   } catch (e) {
     console.error("admin password change error:", e);
     return NextResponse.json({ error: "تعذّر تغيير كلمة السر." }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
+  const sessionToken = await mintAdminSessionToken(newEpoch);
+  const res = NextResponse.json({ success: true });
+  if (sessionToken) {
+    res.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_MAX_AGE,
+    });
+  }
+  return res;
 }

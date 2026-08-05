@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 
@@ -18,18 +19,6 @@ function str(v: unknown, max: number): string | null {
   const t = v.trim();
   if (!t) return null;
   return t.slice(0, max);
-}
-
-function clientIp(req: NextRequest): string {
-  return (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
-}
-
-// Fixed hourly bucket so requests in the same clock hour collide on the
-// rate_limits primary key (ip, bucket, window_start) and increment `count`.
-function hourBucketISO(): string {
-  const d = new Date();
-  d.setMinutes(0, 0, 0);
-  return d.toISOString();
 }
 
 export async function POST(req: NextRequest) {
@@ -97,36 +86,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
   }
 
-  // ---- rate limit: RATE_LIMIT_PER_HOUR per IP per hour (rate_limits table) ----
+  // ---- rate limit: atomic bump via bump_rate_limit RPC ----
   const ip = clientIp(req);
-  const windowStart = hourBucketISO();
-  try {
-    const { data: existing } = await admin
-      .from("rate_limits")
-      .select("count")
-      .eq("ip", ip)
-      .eq("bucket", "quotes")
-      .eq("window_start", windowStart)
-      .maybeSingle();
-    const current = (existing?.count as number | undefined) ?? 0;
-    if (current >= RATE_LIMIT_PER_HOUR) {
-      return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
-    }
-    if (existing) {
-      await admin
-        .from("rate_limits")
-        .update({ count: current + 1 })
-        .eq("ip", ip)
-        .eq("bucket", "quotes")
-        .eq("window_start", windowStart);
-    } else {
-      await admin
-        .from("rate_limits")
-        .insert({ ip, bucket: "quotes", window_start: windowStart, count: 1 });
-    }
-  } catch (e) {
-    // fail-open on limiter errors — never block a real customer over infra hiccups
-    console.error("rate_limits check failed (allowing):", e);
+  if (!(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR))) {
+    return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
   }
 
   // ---- anti-spam: reject the same phone submitted within the last 30 minutes ----
