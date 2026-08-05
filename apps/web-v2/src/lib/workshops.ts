@@ -32,6 +32,7 @@ export interface SearchParams {
   positive?: string[]; // must have ALL selected positive tag labels
   negative?: string[]; // exclude if it has ANY selected negative tag label
   score_min?: number; // smart_score >= score_min
+  partners_only?: boolean; // concierge network (~50 partners)
   limit?: number;
   offset?: number;
 }
@@ -144,6 +145,7 @@ export async function searchWorkshops(
     positive,
     negative,
     score_min,
+    partners_only,
     limit = 24,
     offset = 0,
   } = params;
@@ -182,6 +184,7 @@ export async function searchWorkshops(
     if (entity_type) q = q.eq("entity_type", entity_type);
     if (service_mode) q = q.eq("service_mode", service_mode);
     if (min_rating) q = q.gte("google_rating", min_rating);
+    if (partners_only) q = q.eq("is_partner", true);
     return q;
   };
 

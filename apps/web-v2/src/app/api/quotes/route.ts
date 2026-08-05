@@ -11,8 +11,35 @@ export const dynamic = "force-dynamic";
 // via the service-role key. Customer phone is PII and never surfaced to garages.
 
 const URGENCY = ["عادي", "مستعجل", "طارئ"] as const;
-const SOURCES = ["quote_bar", "translator"] as const;
+const SOURCES = ["quote_bar", "translator", "asaali", "concierge"] as const;
 const RATE_LIMIT_PER_HOUR = 5;
+
+type MatchedWorkshop = {
+  place_id: string;
+  name: string;
+  phone?: string;
+};
+
+function parseMatchedWorkshops(raw: unknown): MatchedWorkshop[] {
+  if (!Array.isArray(raw)) return [];
+  const out: MatchedWorkshop[] = [];
+  for (const item of raw.slice(0, 8)) {
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    const place_id =
+      typeof o.place_id === "string"
+        ? o.place_id.trim()
+        : typeof o.id === "string"
+          ? o.id.trim()
+          : "";
+    const name = typeof o.name === "string" ? o.name.trim().slice(0, 120) : "";
+    if (!place_id || !name) continue;
+    const phone =
+      typeof o.phone === "string" ? o.phone.trim().slice(0, 30) : undefined;
+    out.push(phone ? { place_id, name, phone } : { place_id, name });
+  }
+  return out;
+}
 
 function str(v: unknown, max: number): string | null {
   if (typeof v !== "string") return null;
@@ -111,6 +138,8 @@ export async function POST(req: NextRequest) {
     console.error("duplicate-phone check failed (allowing):", e);
   }
 
+  const matched_workshops = parseMatchedWorkshops(b.matched_workshops);
+
   // ---- insert ----
   const { data: inserted, error } = await admin
     .from("quotes")
@@ -126,6 +155,7 @@ export async function POST(req: NextRequest) {
       urgency,
       photos,
       source,
+      matched_workshops,
     })
     .select("id")
     .single();
@@ -149,6 +179,12 @@ export async function POST(req: NextRequest) {
   }
   if (area) lines.push(`📍 ${area}`);
   lines.push(`⏱️ الإلحاح: ${urgency}`);
+  lines.push(`📎 المصدر: ${source}`);
+  if (matched_workshops.length > 0) {
+    lines.push(
+      `🤝 مرشّحون: ${matched_workshops.map((w) => w.name).join(" · ")}`
+    );
+  }
   lines.push("");
   lines.push(`🔗 ${siteUrl}/admin/quotes/${inserted.id}`);
   // Notify admin over WhatsApp. MUST be awaited — a non-awaited (fire-and-forget)

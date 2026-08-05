@@ -88,6 +88,11 @@ export interface AsaaliResponse {
   fallback_message?: string;       // رسالة للمستخدم
   retry_after_seconds?: number;    // عند rate_limited
 
+  // Concierge / quote routing (populated server-side after LLM)
+  category?: string | null;
+  quote_service?: string;
+  from_partners?: boolean;
+
   // metadata
   source?: "llm" | "cache" | "dictionary";
 }
