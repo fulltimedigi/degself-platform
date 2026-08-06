@@ -3,7 +3,7 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { normalizeCatalogCountClaims } from "@/lib/catalog-stats";
 
-type Messages = typeof import("../../messages/ar.json")["default"];
+type Messages = Record<string, unknown>;
 
 const normalizedMessageCache = new Map<string, Messages>();
 
