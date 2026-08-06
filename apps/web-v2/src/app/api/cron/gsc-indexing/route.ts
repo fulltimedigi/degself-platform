@@ -23,6 +23,20 @@ function verifyAuth(request: Request) {
   return timingSafeEqualStr(got, expected);
 }
 
+/** Only our public site URLs — blocks SSRF via poisoned queue rows. */
+function isAllowedIndexingUrl(raw: unknown): raw is string {
+  if (typeof raw !== "string") return false;
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return false;
+    if (u.username || u.password) return false;
+    const host = u.hostname.toLowerCase();
+    return host === "degself.com" || host === "www.degself.com";
+  } catch {
+    return false;
+  }
+}
+
 export async function GET(request: Request) {
   if (!verifyAuth(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -51,9 +65,28 @@ export async function GET(request: Request) {
 
   const target = pendingUrls[0];
 
+  if (!isAllowedIndexingUrl(target.url)) {
+    await supabase
+      .from("gsc_indexing_queue")
+      .update({
+        status: "error",
+        error_message: "URL not on allowlist (degself.com https only)",
+        attempted_at: new Date().toISOString(),
+      })
+      .eq("id", target.id);
+    return NextResponse.json(
+      { error: "URL not allowlisted", url: target.url },
+      { status: 400 }
+    );
+  }
+
   // 2. Pre-check: don't ask Google to index a URL that isn't reachable.
   try {
-    const check = await fetch(target.url, { method: "HEAD" });
+    const check = await fetch(target.url, {
+      method: "HEAD",
+      redirect: "manual",
+      signal: AbortSignal.timeout(8_000),
+    });
     if (!check.ok) {
       await supabase
         .from("gsc_indexing_queue")

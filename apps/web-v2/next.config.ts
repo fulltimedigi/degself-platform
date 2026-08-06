@@ -21,7 +21,8 @@ const MARKA = "%D9%85%D8%A7%D8%B1%D9%83%D8%A9";
 // scripts و JSON-LD. لو احتجنا nonces نعمل تحديث لاحق.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://sc-static.net https://*.snapchat.com https://va.vercel-scripts.com https://vercel.live",
+  // Dropped 'unsafe-eval' — Next 16 + our scripts don't need it; shrink XSS blast radius.
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://sc-static.net https://*.snapchat.com https://va.vercel-scripts.com https://vercel.live",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https: https://www.google-analytics.com https://*.clarity.ms https://*.googleusercontent.com",

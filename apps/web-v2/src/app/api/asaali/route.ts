@@ -22,6 +22,7 @@ import {
   computeChatCost,
   hashIp,
 } from "@/lib/asaali-cost-guard";
+import { clientIp } from "@/lib/rate-limit";
 import { formatVehicleForPrompt } from "@/lib/vehicle-data";
 import {
   quoteServiceForCategory,
@@ -250,11 +251,6 @@ function extractJson(raw: string): Record<string, unknown> | null {
 // ============================================================
 // helpers
 // ============================================================
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  return fwd ? fwd.split(",")[0].trim() : "unknown";
-}
 
 function jsonResponse(body: AsaaliResponse, status = 200): NextResponse {
   return NextResponse.json(body, { status });

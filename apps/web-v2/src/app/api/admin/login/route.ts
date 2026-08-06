@@ -30,8 +30,13 @@ export async function POST(req: NextRequest) {
   }
 
   // Block IPs that have already burned through the failed-attempt budget.
+  // Fail closed: limiter outage must not open unbounded password guessing.
   const ip = clientIp(req);
-  if (await isOverLimit(ip, "admin_login", MAX_FAILED_LOGINS)) {
+  if (
+    await isOverLimit(ip, "admin_login", MAX_FAILED_LOGINS, {
+      failClosed: true,
+    })
+  ) {
     return NextResponse.json(
       { error: "محاولات دخول كثيرة — حاول بعد ساعة." },
       { status: 429 }
