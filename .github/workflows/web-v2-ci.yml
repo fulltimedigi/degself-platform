@@ -22,10 +22,11 @@ jobs:
       run:
         working-directory: apps/web-v2
     env:
-      # Secretless compile/build placeholders (no real backend calls during build).
+      # These are public browser credentials, not secrets. Build-time pages read
+      # the same public catalog used by production; writes remain protected by RLS.
       NEXT_PUBLIC_SITE_URL: https://degself.com
-      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: public-anon-placeholder
+      NEXT_PUBLIC_SUPABASE_URL: https://xqmwhrimxnvqlpvfzcac.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
