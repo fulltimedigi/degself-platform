@@ -1,6 +1,21 @@
 import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { normalizeCatalogCountClaims } from "@/lib/catalog-stats";
+
+type Messages = typeof import("../../messages/ar.json")["default"];
+
+const normalizedMessageCache = new Map<string, Messages>();
+
+async function loadMessages(locale: string): Promise<Messages> {
+  const cached = normalizedMessageCache.get(locale);
+  if (cached) return cached;
+
+  const raw = (await import(`../../messages/${locale}.json`)).default as Messages;
+  const normalized = normalizeCatalogCountClaims(raw);
+  normalizedMessageCache.set(locale, normalized);
+  return normalized;
+}
 
 // Loads the message dictionary for the active request's locale. Falls back to
 // the default locale (ar) for an unknown/invalid locale. Missing keys fall back
@@ -11,9 +26,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
-  const messages = (await import(`../../messages/${locale}.json`)).default;
-  const arMessages =
-    locale === "ar" ? messages : (await import("../../messages/ar.json")).default;
+  const messages = await loadMessages(locale);
+  const arMessages = locale === "ar" ? messages : await loadMessages("ar");
 
   return {
     locale,
