@@ -42,7 +42,9 @@ jobs:
           cache-dependency-path: apps/web-v2/package-lock.json
       - name: Refresh secure dependency lock
         if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
-        run: npm install next@16.3.0 --save-exact --package-lock-only --ignore-scripts
+        run: |
+          npm install next@16.3.0 --save-exact --package-lock-only --ignore-scripts
+          npm audit fix --omit=dev --package-lock-only --ignore-scripts
       - name: Commit generated dependency lock
         if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
         working-directory: .
