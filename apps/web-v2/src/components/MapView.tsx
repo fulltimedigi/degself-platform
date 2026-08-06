@@ -4,7 +4,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { LOCALE_DIR, type Locale } from "@/i18n/routing";
 import type { MapPoint } from "@/lib/workshops";
 
 const KUWAIT_CENTER: [number, number] = [29.3759, 47.9774];
@@ -19,6 +21,10 @@ const PIN = L.divIcon({
 });
 
 export default function MapView({ points }: { points: MapPoint[] }) {
+  const t = useTranslations("listing.map");
+  const locale = useLocale() as Locale;
+  const dir = LOCALE_DIR[locale] ?? "rtl";
+
   return (
     <MapContainer
       center={KUWAIT_CENTER}
@@ -38,10 +44,10 @@ export default function MapView({ points }: { points: MapPoint[] }) {
         {points.map((p) => (
           <Marker key={p.place_id} position={[p.lat, p.lng]} icon={PIN}>
             <Popup>
-              <div dir="rtl" style={{ minWidth: 160 }}>
+              <div dir={dir} style={{ minWidth: 160 }}>
                 <strong>{p.name}</strong>
                 <br />
-                <Link href={`/workshop/${p.place_id}`}>التفاصيل ←</Link>
+                <Link href={`/workshop/${p.place_id}`}>{t("details")}</Link>
               </div>
             </Popup>
           </Marker>

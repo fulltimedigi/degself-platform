@@ -2,16 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Download, Share, Plus, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-// The browser fires this before showing its own install prompt; we capture it
-// and replay it on demand from our own button. iOS Safari never fires it.
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-// The event is captured app-wide (layout inline script) into window.__bipEvent,
-// because it can fire before this component — which lives in the menu — mounts.
 declare global {
   interface Window {
     __bipEvent: BeforeInstallPromptEvent | null;
@@ -25,13 +22,13 @@ export function InstallApp({
   className?: string;
   onDone?: () => void;
 }) {
+  const t = useTranslations("pwa");
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [installed, setInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
-    // already running as an installed app → hide the option entirely
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;
@@ -42,11 +39,8 @@ export function InstallApp({
 
     const ua = window.navigator.userAgent;
     setIsIOS(/iphone|ipad|ipod/i.test(ua));
-
-    // pick up an event that may have already fired before we mounted
     setDeferred(window.__bipEvent ?? null);
 
-    // the global capture re-broadcasts via 'bipchange' whenever it changes
     const onChange = () => setDeferred(window.__bipEvent ?? null);
     const onInstalled = () => {
       setInstalled(true);
@@ -64,15 +58,13 @@ export function InstallApp({
 
   async function handleClick() {
     if (deferred) {
-      // Android / Chrome: native install dialog — no instructions needed
       await deferred.prompt();
       await deferred.userChoice.catch(() => {});
-      window.__bipEvent = null; // a prompt can only be used once
+      window.__bipEvent = null;
       setDeferred(null);
       onDone?.();
       return;
     }
-    // iOS Safari, or a browser that hasn't fired the event → manual steps
     setShowHelp(true);
   }
 
@@ -80,7 +72,7 @@ export function InstallApp({
     <>
       <button type="button" onClick={handleClick} className={className}>
         <Download size={18} aria-hidden />
-        تثبيت التطبيق
+        {t("menuInstall")}
       </button>
 
       {showHelp && (
@@ -96,10 +88,10 @@ export function InstallApp({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-extrabold">تثبيت التطبيق</h2>
+              <h2 className="text-lg font-extrabold">{t("menuInstall")}</h2>
               <button
                 type="button"
-                aria-label="إغلاق"
+                aria-label={t("close")}
                 onClick={() => {
                   setShowHelp(false);
                   onDone?.();
@@ -113,38 +105,38 @@ export function InstallApp({
             {isIOS ? (
               <ol className="flex flex-col gap-3 text-sm leading-relaxed">
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">١.</span>
+                  <span className="font-bold text-primary">1.</span>
                   <span className="flex flex-wrap items-center gap-1">
-                    اضغط زر المشاركة
+                    {t("ios1Before")}
                     <Share size={16} className="inline text-primary" aria-hidden />
-                    في شريط Safari بالأسفل.
+                    {t("ios1AfterMenu")}
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٢.</span>
+                  <span className="font-bold text-primary">2.</span>
                   <span className="flex flex-wrap items-center gap-1">
-                    اختر «إضافة إلى الشاشة الرئيسية»
+                    {t("ios2")}
                     <Plus size={16} className="inline text-primary" aria-hidden />.
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٣.</span>
-                  <span>اضغط «إضافة» — وهيظهر أيقونة «دق سلف» على شاشتك.</span>
+                  <span className="font-bold text-primary">3.</span>
+                  <span>{t("ios3Long")}</span>
                 </li>
               </ol>
             ) : (
               <ol className="flex flex-col gap-3 text-sm leading-relaxed">
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">١.</span>
-                  <span>افتح قائمة المتصفح (⋮) من أعلى الصفحة.</span>
+                  <span className="font-bold text-primary">1.</span>
+                  <span>{t("android1Long")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٢.</span>
-                  <span>اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».</span>
+                  <span className="font-bold text-primary">2.</span>
+                  <span>{t("android2Long")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٣.</span>
-                  <span>أكّد — وهيظهر أيقونة «دق سلف» على شاشتك.</span>
+                  <span className="font-bold text-primary">3.</span>
+                  <span>{t("android3")}</span>
                 </li>
               </ol>
             )}

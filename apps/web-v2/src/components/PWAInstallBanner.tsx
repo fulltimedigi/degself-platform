@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, X, Share, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { track } from "@/lib/track";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -18,27 +19,24 @@ declare global {
 const VISITS_KEY = "degself_visits";
 const DISMISSED_KEY = "degself_pwa_dismissed";
 const VISITS_TO_SHOW = 2;
-// 14 يوم قبل إعادة الظهور بعد الرفض
 const DISMISS_DAYS = 14;
 
 export function PWAInstallBanner() {
+  const t = useTranslations("pwa");
   const [visible, setVisible] = useState(false);
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
-    // لو التطبيق مثبت بالفعل — ما نظهرش حاجة
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;
     if (standalone) return;
 
-    // عدّاد الزيارات
     const visits = parseInt(localStorage.getItem(VISITS_KEY) ?? "0", 10) + 1;
     localStorage.setItem(VISITS_KEY, String(visits));
 
-    // اتقفل قبل كده؟ نتأكد إن المدة عدّت
     const dismissedAt = localStorage.getItem(DISMISSED_KEY);
     if (dismissedAt) {
       const daysSince = (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
@@ -54,10 +52,9 @@ export function PWAInstallBanner() {
     const onChange = () => setDeferred(window.__bipEvent ?? null);
     window.addEventListener("bipchange", onChange);
 
-    // أظهر بعد 3 ثواني — بدون مفاجأة
-    const t = setTimeout(() => setVisible(true), 3000);
+    const timer = setTimeout(() => setVisible(true), 3000);
     return () => {
-      clearTimeout(t);
+      clearTimeout(timer);
       window.removeEventListener("bipchange", onChange);
     };
   }, []);
@@ -81,7 +78,6 @@ export function PWAInstallBanner() {
       }
       return;
     }
-    // iOS / browsers without BIP
     setShowHelp(true);
   }
 
@@ -95,22 +91,20 @@ export function PWAInstallBanner() {
             <Download size={22} className="text-primary" aria-hidden />
           </div>
           <div className="flex flex-1 flex-col gap-0.5">
-            <span className="text-sm font-extrabold">ثبّت دق سلف على جوالك</span>
-            <span className="text-xs text-muted-foreground">
-              وصول أسرع بدون متصفح، يعمل أوفلاين
-            </span>
+            <span className="text-sm font-extrabold">{t("bannerTitle")}</span>
+            <span className="text-xs text-muted-foreground">{t("bannerSubtitle")}</span>
           </div>
           <button
             type="button"
             onClick={install}
             className="shrink-0 rounded-xl bg-primary px-4 py-2 text-sm font-extrabold text-primary-foreground shadow-md transition hover:opacity-90"
           >
-            تثبيت
+            {t("install")}
           </button>
           <button
             type="button"
             onClick={dismiss}
-            aria-label="إغلاق"
+            aria-label={t("close")}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-foreground/70 hover:bg-muted"
           >
             <X size={18} />
@@ -128,10 +122,10 @@ export function PWAInstallBanner() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-extrabold">طريقة التثبيت</h2>
+              <h2 className="text-lg font-extrabold">{t("howTitle")}</h2>
               <button
                 type="button"
-                aria-label="إغلاق"
+                aria-label={t("close")}
                 onClick={() => setShowHelp(false)}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground/70 hover:bg-muted"
               >
@@ -142,34 +136,34 @@ export function PWAInstallBanner() {
             {isIOS ? (
               <ol className="flex flex-col gap-3 text-sm leading-relaxed">
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">١.</span>
+                  <span className="font-bold text-primary">1.</span>
                   <span className="flex flex-wrap items-center gap-1">
-                    اضغط زر المشاركة
+                    {t("ios1Before")}
                     <Share size={16} className="inline text-primary" aria-hidden />
-                    في شريط Safari.
+                    {t("ios1After")}
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٢.</span>
+                  <span className="font-bold text-primary">2.</span>
                   <span className="flex flex-wrap items-center gap-1">
-                    اختر «إضافة إلى الشاشة الرئيسية»
+                    {t("ios2")}
                     <Plus size={16} className="inline text-primary" aria-hidden />.
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٣.</span>
-                  <span>اضغط «إضافة».</span>
+                  <span className="font-bold text-primary">3.</span>
+                  <span>{t("ios3")}</span>
                 </li>
               </ol>
             ) : (
               <ol className="flex flex-col gap-3 text-sm leading-relaxed">
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">١.</span>
-                  <span>افتح قائمة المتصفح (⋮).</span>
+                  <span className="font-bold text-primary">1.</span>
+                  <span>{t("android1")}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="font-bold text-primary">٢.</span>
-                  <span>اختر «تثبيت التطبيق».</span>
+                  <span className="font-bold text-primary">2.</span>
+                  <span>{t("android2")}</span>
                 </li>
               </ol>
             )}

@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/track";
 import { BUSINESS_WA } from "@/lib/constants";
 
+// Prefill to Kuwaiti support — keep Arabic (outbound WhatsApp to local team).
 const WA_MESSAGE = encodeURIComponent(
   "السلام عليكم، تواصلت معكم من موقع دق سلف (degself.com) وأحتاج مساعدة"
 );
 
-// ويدجت طوارئ عائم في الزاوية اليمنى السفلية لكل الصفحات.
-// يفتح قائمة فيها: سطحة، كراج متنقل، بنشر متنقل، تواصل.
 export function FloatingWhatsApp() {
+  const t = useTranslations("emergencyFab");
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -22,12 +23,10 @@ export function FloatingWhatsApp() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ما نظهرش لو فوق الصفحة (Hero لسه ظاهر) — تجربة أنظف
   if (!scrolled) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
-      {/* القائمة */}
       {open && (
         <div className="absolute bottom-16 right-0 w-64 origin-bottom-right">
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
@@ -43,8 +42,8 @@ export function FloatingWhatsApp() {
                   </svg>
                 </span>
                 <div>
-                  <p className="text-sm font-extrabold text-red-500">خدمات الطوارئ</p>
-                  <p className="text-[11px] text-muted-foreground">سيارتك عطلانة؟ اختر الخدمة</p>
+                  <p className="text-sm font-extrabold text-red-500">{t("title")}</p>
+                  <p className="text-[11px] text-muted-foreground">{t("subtitle")}</p>
                 </div>
               </div>
             </div>
@@ -62,8 +61,8 @@ export function FloatingWhatsApp() {
                     🚨
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold">سطحة طوارئ</span>
-                    <span className="text-[11px] text-muted-foreground">سحب فوري</span>
+                    <span className="text-sm font-bold">{t("tow")}</span>
+                    <span className="text-[11px] text-muted-foreground">{t("towHint")}</span>
                   </div>
                 </Link>
               </li>
@@ -80,8 +79,8 @@ export function FloatingWhatsApp() {
                     🔧
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold">كراج متنقل</span>
-                    <span className="text-[11px] text-muted-foreground">ييجي عندك</span>
+                    <span className="text-sm font-bold">{t("mobile")}</span>
+                    <span className="text-[11px] text-muted-foreground">{t("mobileHint")}</span>
                   </div>
                 </Link>
               </li>
@@ -98,8 +97,8 @@ export function FloatingWhatsApp() {
                     🛞
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold">بنشر متنقل</span>
-                    <span className="text-[11px] text-muted-foreground">إصلاح تواير في مكانك</span>
+                    <span className="text-sm font-bold">{t("tire")}</span>
+                    <span className="text-[11px] text-muted-foreground">{t("tireHint")}</span>
                   </div>
                 </Link>
               </li>
@@ -116,12 +115,11 @@ export function FloatingWhatsApp() {
                     💰
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold">احسب التكلفة</span>
-                    <span className="text-[11px] text-muted-foreground">قبل ما تروح الكراج</span>
+                    <span className="text-sm font-bold">{t("calc")}</span>
+                    <span className="text-[11px] text-muted-foreground">{t("calcHint")}</span>
                   </div>
                 </Link>
               </li>
-              {/* تواصل واتساب مباشر — داخل القائمة */}
               <li>
                 <a
                   href={`https://wa.me/${BUSINESS_WA}?text=${WA_MESSAGE}`}
@@ -139,8 +137,8 @@ export function FloatingWhatsApp() {
                     </svg>
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold">تواصل مباشر</span>
-                    <span className="text-[11px] text-muted-foreground">عبر الواتساب</span>
+                    <span className="text-sm font-bold">{t("whatsapp")}</span>
+                    <span className="text-[11px] text-muted-foreground">{t("whatsappHint")}</span>
                   </div>
                 </a>
               </li>
@@ -149,18 +147,16 @@ export function FloatingWhatsApp() {
         </div>
       )}
 
-      {/* الزرار العائم - سارينة طوارئ */}
       <button
         type="button"
         onClick={() => {
           setOpen((v) => !v);
           if (!open) track("floating_widget", { action: "open" });
         }}
-        aria-label={open ? "إغلاق قائمة الطوارئ" : "خدمات الطوارئ السريعة"}
+        aria-label={open ? t("close") : t("open")}
         aria-expanded={open}
         className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-2xl shadow-red-600/40 transition hover:scale-105 hover:bg-red-500 hover:shadow-red-500/60"
       >
-        {/* وهج نابض أحمر للطوارئ */}
         {!open && (
           <>
             <span
@@ -190,7 +186,6 @@ export function FloatingWhatsApp() {
             <line x1="18" y1="6" x2="6" y2="18" />
           </svg>
         ) : (
-          // أيقونة سارينة الطوارئ (Emergency Siren / Beacon Light)
           <svg
             width="28"
             height="28"
@@ -203,17 +198,12 @@ export function FloatingWhatsApp() {
             aria-hidden
             className="relative"
           >
-            {/* خطوط الإشعاع العلوية */}
             <path d="M12 2v2" />
             <path d="M5.6 4.6l1.4 1.4" />
             <path d="M18.4 4.6L17 6" />
-            {/* القبة العلوية للسارينة */}
             <path d="M7 11a5 5 0 0 1 10 0" fill="currentColor" fillOpacity="0.3" />
-            {/* جسم السارينة المستطيل */}
             <rect x="5" y="11" width="14" height="5" rx="1" fill="currentColor" fillOpacity="0.2" />
-            {/* قاعدة السارينة */}
             <rect x="4" y="16" width="16" height="3" rx="1" />
-            {/* نقطة الضوء في المنتصف */}
             <circle cx="12" cy="13.5" r="1" fill="currentColor" />
           </svg>
         )}
