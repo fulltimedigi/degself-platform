@@ -36,6 +36,10 @@ export const routing = defineRouting({
   defaultLocale: DEFAULT_LOCALE,
   // Default locale (ar) has NO prefix; others are prefixed. Keeps Arabic at "/".
   localePrefix: "as-needed",
+  // Do NOT auto-switch from Accept-Language / NEXT_LOCALE cookie.
+  // Kuwait platform default is Arabic on open/refresh of "/"; English/Hindi/Urdu
+  // only via explicit /en /hi /ur (or the language switcher).
+  localeDetection: false,
   // We manage <link rel=alternate hreflang> ourselves in the layout/metadata.
   alternateLinks: false,
 });
