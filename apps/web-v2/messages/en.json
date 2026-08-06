@@ -619,7 +619,7 @@
           },
           {
             "q": "What's the tech stack?",
-            "a": "Frontend: Next.js 16 (App Router) with React and TypeScript. Backend: Next.js API Routes with Supabase. Database: PostgreSQL via Supabase. Hosting: Vercel. Maps: Leaflet with OpenStreetMap. AI: Claude AI (claude-haiku-4-5) from Anthropic for the garage translator."
+            "a": "Frontend: Next.js 16 (App Router) with React and TypeScript. Backend: Next.js API Routes with Supabase. Database: PostgreSQL via Supabase. Hosting: Vercel. Maps: Leaflet with OpenStreetMap. AI: Claude models from Anthropic."
           }
         ]
       }
