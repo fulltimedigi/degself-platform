@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Clock, MapPin } from "lucide-react";
@@ -36,8 +37,6 @@ export async function generateMetadata({
   };
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function KarajMutanaqilPage({
   params,
 }: {
@@ -47,7 +46,11 @@ export default async function KarajMutanaqilPage({
   const t = await getTranslations({ locale, namespace: "mobile" });
   const tk = await getTranslations({ locale, namespace: "mobile.karaj" });
   const isAr = locale === "ar";
-  const { workshops } = await searchWorkshops({ service_mode: "mobile", limit: 18 });
+  const { workshops } = await unstable_cache(
+    () => searchWorkshops({ service_mode: "mobile", limit: 18 }),
+    ["karaj-mutanaqil-workshops"],
+    { revalidate: 300 }
+  )();
 
   const services = tk.raw("services") as Service[];
   const areas = t.raw("areas") as Area[];

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
@@ -7,7 +8,13 @@ import { searchWorkshops } from "@/lib/workshops";
 import { WorkshopCard } from "@/components/WorkshopCard";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
-export const dynamic = "force-dynamic";
+// Catalog for tow/mobile changes slowly — cache under traffic spikes.
+const cachedEmergencyList = (service_mode: string) =>
+  unstable_cache(
+    () => searchWorkshops({ service_mode, limit: 12 }),
+    ["emergency-workshops", service_mode],
+    { revalidate: 300 }
+  )();
 
 export async function generateMetadata({
   params,
@@ -70,7 +77,7 @@ export default async function EmergencyPage({
 
   const sections = await Promise.all(
     shown.map(async (item) => {
-      const { workshops } = await searchWorkshops({ service_mode: item.value, limit: 12 });
+      const { workshops } = await cachedEmergencyList(item.value);
       return { ...item, workshops };
     })
   );

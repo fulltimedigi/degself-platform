@@ -17,6 +17,13 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return response;
 
+  // Anonymous traffic (majority of pageviews) has no sb-* auth cookie — skip
+  // Auth API round-trips so crawlers/spikes don't burn Supabase Auth RPS.
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("auth"));
+  if (!hasAuthCookie) return response;
+
   const supabase = createServerClient(url, key, {
     cookies: {
       getAll() {

@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
@@ -113,10 +114,6 @@ function haversineMeters(aLat: number, aLng: number, bLat: number, bLng: number)
 // matches, then filters/sorts in JS. Real filtered searches are well under this;
 // an unfiltered browse takes the top-N relevant.
 const JS_CANDIDATE_CAP = 500;
-
-// Default smart-ordered browse pages the whole filtered catalog into JS to put
-// enriched (scored) workshops first. Bounded so catalog growth can't run away.
-const FULL_CATALOG_CAP = 3000;
 
 /**
  * Filtered, paginated search. Free-text `query` is normalized (Arabic-aware)
@@ -271,36 +268,60 @@ export async function searchWorkshops(
     return { workshops: (data ?? []).map((w) => attach(w as Workshop)), total: count ?? 0 };
   }
 
-  // ── Path D (default): smart ordering across the whole filtered set — enriched
-  // first by smart_score desc, then the rest in relevance (rank_score) order.
-  // Loading the matched set is cheap for faceted queries; the unfiltered browse
-  // pages the full catalog (bounded by FULL_CATALOG_CAP).
-  const PAGE = 1000;
-  const all: Workshop[] = [];
-  for (let from = 0; from < FULL_CATALOG_CAP; from += PAGE) {
-    const to = Math.min(from + PAGE, FULL_CATALOG_CAP) - 1;
-    const { data, error } = await buildBase(false)
-      .order("rank_score", { ascending: false, nullsFirst: false })
-      .range(from, to);
-    if (error) throw new Error(`searchWorkshops(default) failed: ${error.message}`);
-    const batch = (data ?? []) as Workshop[];
-    all.push(...batch);
-    if (batch.length < PAGE) break;
+  // ── Path D (default): review-backed enrichment first (smart_score), then
+  // rank_score. Under load we must NOT page the whole catalog into JS (old
+  // Path D pulled up to FULL_CATALOG_CAP × select *). Instead:
+  //   1) load only the enriched id set that matches filters (≤ ~538)
+  //   2) exact total via count
+  //   3) fill the rest of the window from a bounded rank_score page
+  const collected: Workshop[] = [];
+  for (let i = 0; i < ENRICHED_IDS.length; i += PLACE_ID_BATCH) {
+    const batch = ENRICHED_IDS.slice(i, i + PLACE_ID_BATCH);
+    const { data, error } = await buildBase(false).in("place_id", batch);
+    if (error) {
+      throw new Error(`searchWorkshops(default/enriched) failed: ${error.message}`);
+    }
+    if (data) collected.push(...(data as Workshop[]));
   }
-  const rows = all.map(attach);
-  // Only REVIEW-BACKED enrichment earns smart_score-first placement. Curated
-  // entries (mechanics with reviews_total = null) carry a smart_score from a
-  // bare rating; ranking them by it let unreviewed garages with no map pin
-  // leapfrog established centers. They fall into the rank_score-ordered tail
-  // instead — present, but never above review-proven workshops.
-  const backed = rows
+  const enrichedRows = collected.map(attach);
+  // Only REVIEW-BACKED enrichment earns smart_score-first placement.
+  const backed = enrichedRows
     .filter((w) => isReviewBacked(w.enrichment))
     .sort(
       (a, b) => (b.enrichment?.smart_score ?? 0) - (a.enrichment?.smart_score ?? 0)
     );
-  const rest = rows.filter((w) => !isReviewBacked(w.enrichment)); // keep rank_score order
+  const backedIds = new Set(backed.map((w) => w.place_id));
+
+  const { count, error: countErr } = await buildBase(true).range(0, 0);
+  if (countErr) {
+    throw new Error(`searchWorkshops(default/count) failed: ${countErr.message}`);
+  }
+  const total = count ?? backed.length;
+
+  const windowEnd = offset + limit;
+  // Deep pages beyond the smart window: SQL rank_score pagination.
+  if (windowEnd > backed.length + JS_CANDIDATE_CAP) {
+    const { data, error } = await buildBase(false)
+      .order("rank_score", { ascending: false, nullsFirst: false })
+      .range(offset, offset + limit - 1);
+    if (error) throw new Error(`searchWorkshops(default/deep) failed: ${error.message}`);
+    return {
+      workshops: (data ?? []).map((w) => attach(w as Workshop)),
+      total,
+    };
+  }
+
+  const { data: rankPage, error: rankErr } = await buildBase(false)
+    .order("rank_score", { ascending: false, nullsFirst: false })
+    .range(0, JS_CANDIDATE_CAP - 1);
+  if (rankErr) {
+    throw new Error(`searchWorkshops(default/rank) failed: ${rankErr.message}`);
+  }
+  const rest = ((rankPage ?? []) as Workshop[])
+    .map(attach)
+    .filter((w) => !backedIds.has(w.place_id));
   const ordered = [...backed, ...rest];
-  return { workshops: ordered.slice(offset, offset + limit), total: ordered.length };
+  return { workshops: ordered.slice(offset, offset + limit), total };
 }
 
 /** Single workshop by place_id. ⚠️ place_id is case-sensitive — never transform it. */
@@ -571,12 +592,25 @@ async function distinctColumn(
   return [...set].sort((a, b) => a.localeCompare(b, "ar"));
 }
 
-/** Distinct area names for the Search filter dropdown. */
-export const getDistinctAreas = () => distinctColumn("area");
+/** Distinct area names for the Search filter dropdown (cached — heavy under traffic). */
+export const getDistinctAreas = () =>
+  unstable_cache(() => distinctColumn("area"), ["workshop-distinct-area"], {
+    revalidate: 3600,
+  })();
 /** Distinct neighborhoods (الحي) — 500+ values, use a datalist not a <select>. */
-export const getDistinctNeighborhoods = () => distinctColumn("neighborhood");
+export const getDistinctNeighborhoods = () =>
+  unstable_cache(
+    () => distinctColumn("neighborhood"),
+    ["workshop-distinct-neighborhood"],
+    { revalidate: 3600 }
+  )();
 /** Distinct audited specialties (~20 values) for the specialty <select>. */
-export const getDistinctSpecialties = () => distinctColumn("reviewed_specialty");
+export const getDistinctSpecialties = () =>
+  unstable_cache(
+    () => distinctColumn("reviewed_specialty"),
+    ["workshop-distinct-specialty"],
+    { revalidate: 3600 }
+  )();
 
 /**
  * Up to `limit` workshops "similar" to the current one — for internal linking on

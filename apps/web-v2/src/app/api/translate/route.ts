@@ -4,6 +4,12 @@ import { searchWorkshops } from "@/lib/workshops";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import {
+  isWithinBudget,
+  logUsage,
+  computeChatCost,
+  hashIp,
+} from "@/lib/asaali-cost-guard";
+import {
   SYSTEM_PROMPT,
   OUTPUT_SCHEMA,
   MAX_INPUT_CHARS,
@@ -17,8 +23,9 @@ import {
 // الـ SDK محتاج Node runtime (مش edge).
 export const runtime = "nodejs";
 
-// Atomic hourly cap (public.rate_limits) — translate calls Anthropic and costs money.
-const TRANSLATE_LIMIT_PER_HOUR = 30;
+// Atomic hourly cap — translate calls Anthropic and shares the monthly $ budget
+// with /api/asaali so a scrape can't bypass the hard spend cap.
+const TRANSLATE_LIMIT_PER_HOUR = 15;
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -50,17 +57,37 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const budget = await isWithinBudget();
+  if (!budget.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "وصلنا الحد اليومي للخدمة. جرّب بعد ساعات أو تواصل مع كراج من صفحة البحث.",
+      },
+      { status: 503 }
+    );
+  }
+
   // Rate-limit only after validation — empty/invalid POSTs must not burn quota.
-  if (!(await consumeRateLimit(clientIp(req), "translate", TRANSLATE_LIMIT_PER_HOUR))) {
+  // Fail closed: limiter outage must not open paid Haiku calls.
+  if (
+    !(await consumeRateLimit(clientIp(req), "translate", TRANSLATE_LIMIT_PER_HOUR, {
+      failClosed: true,
+    }))
+  ) {
     return NextResponse.json(
       { error: "طلبات كثيرة، حاول بعد ساعة." },
       { status: 429 }
     );
   }
 
+  const ipHash = hashIp(clientIp(req));
+
   // ── نداء واحد لـ Haiku: الفلتر + التوليد (structured output) ──
   const client = new Anthropic({ apiKey });
   let parsed: TranslatorModelOutput;
+  let inputTokens = 0;
+  let outputTokens = 0;
   try {
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
@@ -77,6 +104,9 @@ export async function POST(req: NextRequest) {
         format: { type: "json_schema", schema: OUTPUT_SCHEMA },
       },
     });
+
+    inputTokens = message.usage?.input_tokens ?? 0;
+    outputTokens = message.usage?.output_tokens ?? 0;
 
     if (message.stop_reason === "refusal") {
       return NextResponse.json(
@@ -97,6 +127,17 @@ export async function POST(req: NextRequest) {
       { status: 502 }
     );
   }
+
+  const cost = computeChatCost(inputTokens, outputTokens, "claude-haiku-4-5");
+  await logUsage({
+    ip_hash: ipHash,
+    model: "claude-haiku-4-5",
+    input_tokens: inputTokens,
+    output_tokens: outputTokens,
+    cost_usd: cost,
+    endpoint: "translate",
+    cache_hit: false,
+  });
 
   // مدخل خارج الموضوع → نرجّع الرفض بدون استعلام DB (توفير).
   if (!parsed.is_car_related) {

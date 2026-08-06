@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Clock, MapPin } from "lucide-react";
@@ -36,8 +37,6 @@ export async function generateMetadata({
   };
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function BansherMutanaqilPage({
   params,
 }: {
@@ -47,7 +46,11 @@ export default async function BansherMutanaqilPage({
   const t = await getTranslations({ locale, namespace: "mobile" });
   const tb = await getTranslations({ locale, namespace: "mobile.bansher" });
   const isAr = locale === "ar";
-  const { workshops } = await searchWorkshops({ specialty: "بنشر", limit: 18 });
+  const { workshops } = await unstable_cache(
+    () => searchWorkshops({ specialty: "بنشر", limit: 18 }),
+    ["bansher-mutanaqil-workshops"],
+    { revalidate: 300 }
+  )();
 
   const services = tb.raw("services") as Service[];
   const areas = t.raw("areas") as Area[];

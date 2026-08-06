@@ -1,28 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// best-effort in-memory rate limit (per serverless instance)
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 3;
-const hits = new Map<string, number[]>();
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_PER_WINDOW;
-}
+// Atomic hourly cap (survives serverless fan-out; in-memory Maps do not).
+const REVIEWS_LIMIT_PER_HOUR = 10;
 
 /** POST /api/reviews — submit an anonymous review (stored as 'pending'). */
 export async function POST(req: NextRequest) {
-  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
-  if (rateLimited(ip)) {
-    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد قليل." }, { status: 429 });
-  }
-
   let b: Record<string, unknown>;
   try {
     b = await req.json();
@@ -30,9 +17,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 
-  // honeypot — bots fill hidden fields; silently accept and drop
+  // honeypot — bots fill hidden fields; silently accept and drop (before RL).
   if (typeof b.website === "string" && b.website.trim() !== "") {
     return NextResponse.json({ ok: true });
+  }
+
+  if (
+    !(await consumeRateLimit(clientIp(req), "reviews", REVIEWS_LIMIT_PER_HOUR, {
+      failClosed: true,
+    }))
+  ) {
+    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد قليل." }, { status: 429 });
   }
 
   const place_id = typeof b.place_id === "string" ? b.place_id.trim() : "";

@@ -134,7 +134,11 @@ export async function POST(req: NextRequest) {
 
   // ---- rate limit: atomic bump via bump_rate_limit RPC ----
   const ip = clientIp(req);
-  if (!(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR))) {
+  if (
+    !(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR, {
+      failClosed: true,
+    }))
+  ) {
     return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
   }
 
