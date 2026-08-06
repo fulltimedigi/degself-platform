@@ -55,3 +55,16 @@ test("Asaali budget guard RPC exists and stays service-role only", async () => {
   assert.match(migration, /revoke all on function public\.asaali_current_month_cost\(\) from anon, authenticated/);
   assert.match(migration, /grant execute on function public\.asaali_current_month_cost\(\) to service_role/);
 });
+
+test("RLS policies and backend tables remain least-privilege", async () => {
+  const migration = await source("../../../supabase/migrations/028_rls_policy_and_fk_index_hardening.sql");
+
+  assert.match(migration, /create policy "profiles select own"[\s\S]*to authenticated[\s\S]*\(select auth\.uid\(\)\)/);
+  assert.match(migration, /create policy "users can update own profile"[\s\S]*with check \(\(select auth\.uid\(\)\) = id\)/);
+  assert.match(migration, /create policy "workshops viewable by everyone"[\s\S]*to anon, authenticated/);
+  assert.doesNotMatch(migration, /create policy "only admins can modify workshops"/);
+  assert.match(migration, /revoke all on table public\.admins from anon, authenticated/);
+  assert.match(migration, /'admin_credentials'[\s\S]*'asaali_cache'[\s\S]*'quotes'[\s\S]*'rate_limits'/);
+  assert.match(migration, /community_mentions_matched_by_idx/);
+  assert.match(migration, /workshops_claimed_by_idx/);
+});
