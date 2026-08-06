@@ -43,3 +43,15 @@ test("login divider never renders a raw translation key", async () => {
   assert.match(login, /OR_LABEL/);
   assert.doesNotMatch(login, /t\([\"']or[\"']\)/);
 });
+
+test("Asaali budget guard RPC exists and stays service-role only", async () => {
+  const guard = await source("../asaali-cost-guard.ts");
+  const migration = await source("../../../supabase/migrations/027_restore_asaali_budget_rpcs.sql");
+
+  assert.match(guard, /rpc\([\"']asaali_current_month_cost[\"']\)/);
+  assert.match(migration, /create or replace function public\.asaali_current_month_cost\(\)/);
+  assert.match(migration, /security invoker/);
+  assert.match(migration, /cache_hit is not true/);
+  assert.match(migration, /revoke all on function public\.asaali_current_month_cost\(\) from anon, authenticated/);
+  assert.match(migration, /grant execute on function public\.asaali_current_month_cost\(\) to service_role/);
+});
