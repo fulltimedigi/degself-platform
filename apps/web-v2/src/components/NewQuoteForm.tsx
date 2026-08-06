@@ -44,16 +44,53 @@ const URGENCIES: { key: string; value: string }[] = [
   { key: "emergency", value: "طارئ" },
 ];
 
-export function NewQuoteForm({ initialService = "" }: { initialService?: string }) {
+export type QuoteMatchedWorkshop = {
+  place_id: string;
+  name: string;
+  phone?: string;
+};
+
+export type QuoteFormPrefill = {
+  service?: string;
+  problem?: string;
+  carMake?: string;
+  carModel?: string;
+  carYear?: string;
+  matchedWorkshops?: QuoteMatchedWorkshop[];
+  source?: "quote_bar" | "translator" | "asaali" | "concierge";
+};
+
+export function NewQuoteForm({
+  initialService = "",
+  initialProblem = "",
+  initialCarMake = "",
+  initialCarModel = "",
+  initialCarYear = "",
+  initialMatchedWorkshops,
+  source = "quote_bar",
+  compact = false,
+  onDone,
+}: {
+  initialService?: string;
+  initialProblem?: string;
+  initialCarMake?: string;
+  initialCarModel?: string;
+  initialCarYear?: string;
+  initialMatchedWorkshops?: QuoteMatchedWorkshop[];
+  source?: QuoteFormPrefill["source"];
+  /** Tighter spacing for embedding inside the concierge panel */
+  compact?: boolean;
+  onDone?: (quoteId: string) => void;
+}) {
   const t = useTranslations("quote");
   const serviceIsKnown = SERVICES.some((s) => s.value === initialService);
   const [service, setService] = useState(serviceIsKnown ? initialService : "");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const [carMake, setCarMake] = useState("");
-  const [carModel, setCarModel] = useState("");
-  const [carYear, setCarYear] = useState("");
-  const [problem, setProblem] = useState("");
+  const [carMake, setCarMake] = useState(initialCarMake);
+  const [carModel, setCarModel] = useState(initialCarModel);
+  const [carYear, setCarYear] = useState(initialCarYear);
+  const [problem, setProblem] = useState(initialProblem);
   const [area, setArea] = useState("");
   const [urgency, setUrgency] = useState("عادي");
   const [website, setWebsite] = useState(""); // honeypot
@@ -88,7 +125,8 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
           problem_description: problem,
           area,
           urgency,
-          source: "quote_bar",
+          source,
+          matched_workshops: initialMatchedWorkshops ?? [],
           website,
         }),
       });
@@ -98,9 +136,11 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
         setError(data.error ?? t("errSend"));
         return;
       }
-      track("quote_submit", { service });
-      setQuoteId(data.id ?? "");
+      track("quote_submit", { service, source });
+      const id = typeof data.id === "string" ? data.id : "";
+      setQuoteId(id);
       setStatus("done");
+      onDone?.(id);
     } catch {
       setStatus("error");
       setError(t("errConn"));
@@ -109,8 +149,14 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
 
   if (status === "done") {
     return (
-      <div className="rounded-2xl border-2 border-[#FFD60A] bg-[#0A0A0A] p-6 text-center text-white">
-        <p className="mb-3 text-lg font-extrabold">{t("doneTitle")}</p>
+      <div
+        className={`rounded-2xl border-2 border-[#FFD60A] bg-[#0A0A0A] text-center text-white ${
+          compact ? "p-4" : "p-6"
+        }`}
+      >
+        <p className={`mb-3 font-extrabold ${compact ? "text-base" : "text-lg"}`}>
+          {t("doneTitle")}
+        </p>
         {quoteId && (
           <p className="mb-3 text-sm text-gray-300">
             {t("doneId")}{" "}
@@ -124,13 +170,20 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
     );
   }
 
-  const inputCls =
-    "w-full rounded-lg border border-border bg-card px-3 py-3 text-base focus:border-[#FFD60A] focus:outline-none";
-  const labelCls = "mb-1 block text-sm font-bold";
+  const inputCls = compact
+    ? "w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:border-[#FFD60A] focus:outline-none"
+    : "w-full rounded-lg border border-border bg-card px-3 py-3 text-base focus:border-[#FFD60A] focus:outline-none";
+  const labelCls = compact
+    ? "mb-1 block text-xs font-bold text-neutral-300"
+    : "mb-1 block text-sm font-bold";
   const req = <span className="text-red-500">*</span>;
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+    <form
+      onSubmit={submit}
+      className={`flex flex-col ${compact ? "gap-3" : "gap-4"}`}
+      noValidate
+    >
       {/* honeypot — hidden from users, bots fill it */}
       <input
         type="text"
@@ -166,12 +219,14 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
           onChange={(e) => setProblem(e.target.value)}
           placeholder={t("problemPlaceholder")}
           className={inputCls}
-          rows={4}
+          rows={compact ? 3 : 4}
           maxLength={1000}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div
+        className={`grid grid-cols-1 ${compact ? "gap-3" : "gap-4 sm:grid-cols-3"}`}
+      >
         <div>
           <label className={labelCls}>
             {t("carMakeLabel")} {req}
@@ -245,7 +300,7 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className={`grid grid-cols-1 ${compact ? "gap-3" : "gap-4 sm:grid-cols-2"}`}>
         <div>
           <label className={labelCls}>
             {t("nameLabel")} {req}
@@ -273,12 +328,20 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
             dir="ltr"
             maxLength={8}
           />
-          <p className="mt-1 text-xs text-muted-foreground">{t("phoneNote")}</p>
+          {!compact && (
+            <p className="mt-1 text-xs text-muted-foreground">{t("phoneNote")}</p>
+          )}
         </div>
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+        <div
+          className={
+            compact
+              ? "rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300"
+              : "rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700"
+          }
+        >
           {error}
         </div>
       )}
@@ -286,13 +349,21 @@ export function NewQuoteForm({ initialService = "" }: { initialService?: string 
       <button
         type="submit"
         disabled={status === "sending"}
-        className="rounded-lg bg-[#FFD60A] px-4 py-4 text-base font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60"
+        className={`rounded-lg bg-[#FFD60A] font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60 ${
+          compact ? "px-4 py-3 text-sm" : "px-4 py-4 text-base"
+        }`}
       >
         {status === "sending" ? t("submitting") : t("submit")}
       </button>
 
-      <p className="text-center text-xs text-muted-foreground">{t("footerFree")}</p>
-      <p className="text-center text-[11px] leading-relaxed text-muted-foreground">{t("consent")}</p>
+      {!compact && (
+        <>
+          <p className="text-center text-xs text-muted-foreground">{t("footerFree")}</p>
+          <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
+            {t("consent")}
+          </p>
+        </>
+      )}
     </form>
   );
 }
