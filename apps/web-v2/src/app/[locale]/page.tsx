@@ -10,6 +10,7 @@ import { GovernorateGrid } from "@/components/GovernorateGrid";
 import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
 import { SOCIAL_SAME_AS } from "@/lib/brand";
+import { DEFAULT_LOCALE, LOCALE_HREFLANG, type Locale } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
 // Social share card (brand-colored, 1200×630).
@@ -19,37 +20,52 @@ const LOGO = `${SITE}/brand/logo-arabic-badge.png?v=2`;
 
 export const revalidate = 3600; // ISR: rebuild at most once per hour
 
-export const metadata: Metadata = {
-  title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
-  description:
-    "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة — صيانة وبودي وتواير وكهرباء — واكتشف عطل سيارتك واختر الكراج المناسب مجاناً.",
-  alternates: { canonical: SITE },
-  openGraph: {
-    type: "website",
-    url: SITE,
-    locale: "ar_KW",
-    siteName: "دق سلف",
-    title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
-    description:
-      "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة واكتشف عطل سيارتك واختر الكراج المناسب مجاناً.",
-    images: [
-      {
-        url: OG_IMAGE,
-        width: 1200,
-        height: 630,
-        type: "image/jpeg",
-        alt: "دق سلف — دليل كراجات الكويت",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "دق سلف — دليلك لكراجات وميكانيكي السيارات في الكويت",
-    description:
-      "دق سلف هو دليلك لأكثر من 1,800 كراج وميكانيكي في الكويت. ابحث حسب التخصص والمنطقة واختر الكراج المناسب مجاناً.",
-    images: [OG_IMAGE],
-  },
-};
+type Params = { locale: string };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "homeMeta" });
+  const url = locale === DEFAULT_LOCALE ? SITE : `${SITE}/${locale}`;
+  const title = t("title");
+  const description = t("description");
+  const ogLocale = (LOCALE_HREFLANG[locale as Locale] || "ar-KW").replace(
+    "-",
+    "_"
+  );
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      url,
+      locale: ogLocale,
+      siteName: t("siteName"),
+      title,
+      description: t("ogDescription"),
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          type: "image/jpeg",
+          alt: t("ogAlt"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: t("twDescription"),
+      images: [OG_IMAGE],
+    },
+  };
+}
 
 export default async function Home() {
   const featured = await getFeaturedWorkshops(12);

@@ -13,7 +13,7 @@ export async function Footer() {
         {/* عن دق سلف */}
         <div className="flex flex-col gap-3">
           <Image src="/brand/logo-latin-badge.png" alt="degself" width={56} height={56} unoptimized className="h-14 w-14" />
-          <p className="text-sm font-bold">دق سلف</p>
+          <p className="text-sm font-bold">{t("footer.brand")}</p>
           <p className="text-sm text-muted-foreground">{t("footer.tagline")}</p>
         </div>
 
@@ -148,12 +148,12 @@ export async function Footer() {
       <div className="border-t border-border bg-card/50 px-6 py-5">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <p className="text-xs font-bold text-muted-foreground">
-            ليه تثق في دق سلف؟
+            {t("footer.trustWhy")}
           </p>
           <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4 sm:gap-6">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-base font-extrabold text-primary">دليل شامل</span>
-              <span className="text-[10px] text-muted-foreground">لكراجات الكويت</span>
+              <span className="text-base font-extrabold text-primary">{t("footer.trustGuide")}</span>
+              <span className="text-[10px] text-muted-foreground">{t("footer.trustGuideHint")}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <span className="flex items-center gap-1 text-base font-extrabold text-primary">
@@ -162,22 +162,22 @@ export async function Footer() {
                 </svg>
                 Google
               </span>
-              <span className="text-[10px] text-muted-foreground">تقييمات حقيقية</span>
+              <span className="text-[10px] text-muted-foreground">{t("footer.trustGoogleHint")}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <span className="text-base font-extrabold text-primary">مجانًا</span>
-              <span className="text-[10px] text-muted-foreground">بدون اشتراك</span>
+              <span className="text-base font-extrabold text-primary">{t("footer.trustFree")}</span>
+              <span className="text-[10px] text-muted-foreground">{t("footer.trustFreeHint")}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <span className="text-base font-extrabold text-primary">بدون ترتيب مدفوع</span>
-              <span className="text-[10px] text-muted-foreground">نتائج عادلة</span>
+              <span className="text-base font-extrabold text-primary">{t("footer.trustFair")}</span>
+              <span className="text-[10px] text-muted-foreground">{t("footer.trustFairHint")}</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="border-t border-border px-6 py-4 text-center text-xs text-muted-foreground">
-        © {year} دق سلف. {t("footer.rights")}.
+        © {year} {t("footer.brand")}. {t("footer.rights")}.
       </div>
     </footer>
   );

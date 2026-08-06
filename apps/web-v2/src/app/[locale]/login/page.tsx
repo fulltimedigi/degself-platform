@@ -3,10 +3,18 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 
-export const metadata: Metadata = {
-  title: "تسجيل الدخول",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return {
+    title: t("metaTitle"),
+    robots: { index: false, follow: false },
+  };
+}
 
 type Props = {
   searchParams: Promise<{ next?: string; error?: string }>;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
 type Props = {
@@ -11,11 +12,13 @@ type Props = {
 
 export function GoogleSignInButton({
   next = "/",
-  label = "المتابعة مع Google",
+  label,
   className = "",
 }: Props) {
+  const t = useTranslations("auth");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const buttonLabel = label ?? t("google");
 
   async function signIn() {
     if (busy) return;
@@ -30,12 +33,11 @@ export function GoogleSignInButton({
         options: { redirectTo },
       });
       if (err) {
-        setError(err.message || "تعذّر بدء تسجيل الدخول.");
+        setError(err.message || t("errorStart"));
         setBusy(false);
       }
-      // On success the browser navigates away to Google.
     } catch {
-      setError("تعذّر الاتصال. حاول مرة أخرى.");
+      setError(t("errorConn"));
       setBusy(false);
     }
   }
@@ -52,7 +54,7 @@ export function GoogleSignInButton({
         }
       >
         <GoogleIcon />
-        {busy ? "جارٍ التحويل…" : label}
+        {busy ? t("redirecting") : buttonLabel}
       </button>
       {error && <p className="text-center text-sm text-red-500">{error}</p>}
     </div>

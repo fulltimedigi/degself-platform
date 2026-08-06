@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { track } from "@/lib/track";
 import { isFavorite, toggleFavorite, FAVORITES_EVENT } from "@/lib/favorites";
 
@@ -13,6 +14,7 @@ export function SaveButton({
   placeId: string;
   variant?: "overlay" | "inline";
 }) {
+  const t = useTranslations("save");
   const [saved, setSaved] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -32,7 +34,7 @@ export function SaveButton({
     if (now) track("save", { place_id: placeId });
   }
 
-  const label = saved ? "إزالة من المحفوظة" : "حفظ";
+  const label = saved ? t("remove") : t("save");
 
   if (variant === "inline") {
     return (
@@ -50,7 +52,7 @@ export function SaveButton({
         }
       >
         <Heart size={18} fill={mounted && saved ? "currentColor" : "none"} aria-hidden />
-        {saved ? "محفوظ" : "حفظ"}
+        {saved ? t("saved") : t("save")}
       </button>
     );
   }

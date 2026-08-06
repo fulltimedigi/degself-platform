@@ -26,7 +26,12 @@
     "privacy": "Privacy Policy",
     "accountTitle": "My account",
     "accountFallback": "User",
-    "savedLink": "Saved garages"
+    "savedLink": "Saved garages",
+    "redirecting": "Redirecting…",
+    "errorStart": "Couldn't start sign-in.",
+    "errorConn": "Connection failed. Try again.",
+    "metaTitle": "Sign in",
+    "accountMetaTitle": "My account"
   },
   "lang": {
     "label": "Language",
@@ -46,7 +51,16 @@
     "reportMissing": "Report a missing garage",
     "contactUs": "Contact us",
     "callUs": "Call us",
-    "followUs": "Follow us on social media"
+    "followUs": "Follow us on social media",
+    "trustWhy": "Why trust Degself?",
+    "trustGuide": "Full directory",
+    "trustGuideHint": "of Kuwait garages",
+    "trustGoogleHint": "Real reviews",
+    "trustFree": "Free",
+    "trustFreeHint": "No subscription",
+    "trustFair": "No paid ranking",
+    "trustFairHint": "Fair results",
+    "brand": "Degself"
   },
   "common": {
     "loading": "Loading...",
@@ -246,7 +260,9 @@
       "ahmadi": "Ahmadi",
       "jahra": "Jahra",
       "mubarak": "Mubarak Al-Kabeer"
-    }
+    },
+    "metaTitle": "Request a quote — Degself",
+    "metaDescription": "Describe your car problem and get quotes from specialized garages in Kuwait — free, no commitment."
   },
   "home": {
     "badge": "Kuwait's first smart garage guide",
@@ -468,51 +484,141 @@
       {
         "title": "For drivers",
         "items": [
-          { "q": "What exactly is Degself?", "a": "Degself is the first smart, comprehensive directory of car garages and mechanics in Kuwait. We provide accurate information on 1,757 garages across all of Kuwait's governorates, with search by specialty and area, an interactive map, and a smart translator that helps you describe your car's problem." },
-          { "q": "Is Degself free to use?", "a": "Yes, completely. Degself is free forever for drivers. No subscription, no hidden fees, no sneaky ads." },
-          { "q": "How do I search for a garage?", "a": "Three ways: text search from the main search bar by specialty or area name, the map page to see what's nearest to you geographically, or the garage translator if you're unsure of the problem — it suggests the right specialty for you." },
-          { "q": "What does the garage translator mean?", "a": "An AI-powered assistant that turns a description of the problem in your everyday words into technical terms any mechanic understands. For example, if you tell it your car makes a knocking sound, it suggests the issue might be in the valve lifters or timing chain and recommends a specialist mechanic garage." },
-          { "q": "Are the garages real and operating?", "a": "Yes. All garages were verified through Google Places. Still, working hours may change, so we always advise calling the garage before heading there, especially during holidays or Ramadan." },
-          { "q": "How do I know a garage is open now?", "a": "Every garage page carries an \"Open now\" indicator based on the working hours recorded in Google. On the search page you can use the \"Open now\" filter to see only open garages." },
-          { "q": "Can I book an appointment through Degself?", "a": "For now we show you the contact details (phone and WhatsApp) to reach the garage directly. Direct booking is coming in the next phase during Q3 2026." },
-          { "q": "Can I rate a garage?", "a": "The ratings system is coming in Q3 2026. For now we use Google data as a reference and run regular audits." },
-          { "q": "Does Degself show prices?", "a": "Prices vary widely between garages and by car type. For now we publish price guides on the blog (like tire prices), and live prices will come with the booking system." },
-          { "q": "Do you cover garages outside Kuwait governorate?", "a": "Yes, we cover all six governorates: Capital, Hawalli, Farwaniya, Ahmadi, Jahra, and Mubarak Al-Kabeer." },
-          { "q": "Does the site work on mobile?", "a": "Yes, it works fully with a mobile-first design. You can also add the site to your phone's home screen as a web app (PWA) with no download needed." },
-          { "q": "Can Degself be used outside Kuwait?", "a": "For now we specialize in Kuwait only. Our plan in 2027 is to expand to Saudi Arabia and the UAE." },
-          { "q": "If I find incorrect data, what do I do?", "a": "Email us at hello@degself.com with the garage details and the incorrect information, and we'll update it within 48 hours." },
-          { "q": "Do you work on Fridays and holidays?", "a": "The site is available 24/7. The support team responds during official working hours, Sunday to Thursday, 9am to 6pm." },
-          { "q": "Is my search data recorded?", "a": "We use general analytics to understand usage (which area and which specialty is searched) but with no personal tracking; the site can't identify you from your search, and we don't sell data to anyone." }
+          {
+            "q": "What exactly is Degself?",
+            "a": "Degself is the first smart, comprehensive directory of car garages and mechanics in Kuwait. We provide accurate information on 1,757 garages across all of Kuwait's governorates, with search by specialty and area, an interactive map, and a smart translator that helps you describe your car's problem."
+          },
+          {
+            "q": "Is Degself free to use?",
+            "a": "Yes, completely. Degself is free forever for drivers. No subscription, no hidden fees, no sneaky ads."
+          },
+          {
+            "q": "How do I search for a garage?",
+            "a": "Three ways: text search from the main search bar by specialty or area name, the map page to see what's nearest to you geographically, or the garage translator if you're unsure of the problem — it suggests the right specialty for you."
+          },
+          {
+            "q": "What does the garage translator mean?",
+            "a": "An AI-powered assistant that turns a description of the problem in your everyday words into technical terms any mechanic understands. For example, if you tell it your car makes a knocking sound, it suggests the issue might be in the valve lifters or timing chain and recommends a specialist mechanic garage."
+          },
+          {
+            "q": "Are the garages real and operating?",
+            "a": "Yes. All garages were verified through Google Places. Still, working hours may change, so we always advise calling the garage before heading there, especially during holidays or Ramadan."
+          },
+          {
+            "q": "How do I know a garage is open now?",
+            "a": "Every garage page carries an \"Open now\" indicator based on the working hours recorded in Google. On the search page you can use the \"Open now\" filter to see only open garages."
+          },
+          {
+            "q": "Can I book an appointment through Degself?",
+            "a": "For now we show you the contact details (phone and WhatsApp) to reach the garage directly. Direct booking is coming in the next phase during Q3 2026."
+          },
+          {
+            "q": "Can I rate a garage?",
+            "a": "The ratings system is coming in Q3 2026. For now we use Google data as a reference and run regular audits."
+          },
+          {
+            "q": "Does Degself show prices?",
+            "a": "Prices vary widely between garages and by car type. For now we publish price guides on the blog (like tire prices), and live prices will come with the booking system."
+          },
+          {
+            "q": "Do you cover garages outside Kuwait governorate?",
+            "a": "Yes, we cover all six governorates: Capital, Hawalli, Farwaniya, Ahmadi, Jahra, and Mubarak Al-Kabeer."
+          },
+          {
+            "q": "Does the site work on mobile?",
+            "a": "Yes, it works fully with a mobile-first design. You can also add the site to your phone's home screen as a web app (PWA) with no download needed."
+          },
+          {
+            "q": "Can Degself be used outside Kuwait?",
+            "a": "For now we specialize in Kuwait only. Our plan in 2027 is to expand to Saudi Arabia and the UAE."
+          },
+          {
+            "q": "If I find incorrect data, what do I do?",
+            "a": "Email us at hello@degself.com with the garage details and the incorrect information, and we'll update it within 48 hours."
+          },
+          {
+            "q": "Do you work on Fridays and holidays?",
+            "a": "The site is available 24/7. The support team responds during official working hours, Sunday to Thursday, 9am to 6pm."
+          },
+          {
+            "q": "Is my search data recorded?",
+            "a": "We use general analytics to understand usage (which area and which specialty is searched) but with no personal tracking; the site can't identify you from your search, and we don't sell data to anyone."
+          }
         ]
       },
       {
         "title": "For garage owners",
         "items": [
-          { "q": "How do I add my garage to Degself?", "a": "Most garages are already listed. If yours isn't, email us at owner@degself.com with the garage name, address, specialty, and phone, and we'll add it within 3 to 7 business days — completely free." },
-          { "q": "How do I update my garage's information?", "a": "Send the updates you need (working hours, phone, specialties) to owner@degself.com and we'll update them for you." },
-          { "q": "Can I add photos of my garage?", "a": "For now photos come from Google Places. In Q3 2026 we'll launch a dashboard for garage owners where you can upload your own photos." },
-          { "q": "Do you take a commission on customers?", "a": "No, zero commission. Degself is free for drivers and free for garages." },
-          { "q": "When the ratings system launches, can you delete a negative review?", "a": "We delete reviews that violate the guidelines (insults, spam, false claims). A genuine negative review is part of the customer experience and is only removed if it breaches the guidelines." },
-          { "q": "How do I get a \"Verified garage\" badge?", "a": "The verification badge is coming in Q3 and Q4 2026, and will require verifying the business license, confirming the address, agreeing to the terms, and a minimum number of positive reviews." },
-          { "q": "I have a complaint about data shown on the site. What do I do?", "a": "Send us the complaint details at legal@degself.com. We are committed to protecting garages' rights and respond within 48 hours." }
+          {
+            "q": "How do I add my garage to Degself?",
+            "a": "Most garages are already listed. If yours isn't, email us at owner@degself.com with the garage name, address, specialty, and phone, and we'll add it within 3 to 7 business days — completely free."
+          },
+          {
+            "q": "How do I update my garage's information?",
+            "a": "Send the updates you need (working hours, phone, specialties) to owner@degself.com and we'll update them for you."
+          },
+          {
+            "q": "Can I add photos of my garage?",
+            "a": "For now photos come from Google Places. In Q3 2026 we'll launch a dashboard for garage owners where you can upload your own photos."
+          },
+          {
+            "q": "Do you take a commission on customers?",
+            "a": "No, zero commission. Degself is free for drivers and free for garages."
+          },
+          {
+            "q": "When the ratings system launches, can you delete a negative review?",
+            "a": "We delete reviews that violate the guidelines (insults, spam, false claims). A genuine negative review is part of the customer experience and is only removed if it breaches the guidelines."
+          },
+          {
+            "q": "How do I get a \"Verified garage\" badge?",
+            "a": "The verification badge is coming in Q3 and Q4 2026, and will require verifying the business license, confirming the address, agreeing to the terms, and a minimum number of positive reviews."
+          },
+          {
+            "q": "I have a complaint about data shown on the site. What do I do?",
+            "a": "Send us the complaint details at legal@degself.com. We are committed to protecting garages' rights and respond within 48 hours."
+          }
         ]
       },
       {
         "title": "For press & partnerships",
         "items": [
-          { "q": "What's the Degself story?", "a": "Founder Ahmed Abdel-Halim, a developer, faced a problem in 2025 when his car broke down in the heat and he spent hours searching for a trusted garage, so he decided to build the solution himself. The full story is on the \"About Degself\" page." },
-          { "q": "What are your growth plans?", "a": "Q3 2026: ratings system, appointment booking, and a garage dashboard. Q4 2026: iOS and Android apps and WhatsApp integration. 2027: expansion to Saudi Arabia, the UAE, and Bahrain." },
-          { "q": "What's the revenue model?", "a": "Search is always free for users. In the future we'll offer garages optional paid tools (like updating information, visitor analytics, featuring the garage) — but being on the site and appearing in search stays free." },
-          { "q": "Can we form a partnership?", "a": "Yes. Send the details of your proposal to partnerships@degself.com." },
-          { "q": "What is the Press Kit?", "a": "The Press Kit (logos, images, statistics) is available on request — email press@degself.com." }
+          {
+            "q": "What's the Degself story?",
+            "a": "Founder Ahmed Abdel-Halim, a developer, faced a problem in 2025 when his car broke down in the heat and he spent hours searching for a trusted garage, so he decided to build the solution himself. The full story is on the \"About Degself\" page."
+          },
+          {
+            "q": "What are your growth plans?",
+            "a": "Q3 2026: ratings system, appointment booking, and a garage dashboard. Q4 2026: iOS and Android apps and WhatsApp integration. 2027: expansion to Saudi Arabia, the UAE, and Bahrain."
+          },
+          {
+            "q": "What's the revenue model?",
+            "a": "Search is always free for users. In the future we'll offer garages optional paid tools (like updating information, visitor analytics, featuring the garage) — but being on the site and appearing in search stays free."
+          },
+          {
+            "q": "Can we form a partnership?",
+            "a": "Yes. Send the details of your proposal to partnerships@degself.com."
+          },
+          {
+            "q": "What is the Press Kit?",
+            "a": "The Press Kit (logos, images, statistics) is available on request — email press@degself.com."
+          }
         ]
       },
       {
         "title": "For developers",
         "items": [
-          { "q": "Can I use your data?", "a": "For now the data is for personal use via the site only. If you need an API for commercial use, contact us." },
-          { "q": "Is there a public API?", "a": "Not for now. It may become available in 2027." },
-          { "q": "What's the tech stack?", "a": "Frontend: Next.js 16 (App Router) with React and TypeScript. Backend: Next.js API Routes with Supabase. Database: PostgreSQL via Supabase. Hosting: Vercel. Maps: Leaflet with OpenStreetMap. AI: Claude AI (claude-haiku-4-5) from Anthropic for the garage translator." }
+          {
+            "q": "Can I use your data?",
+            "a": "For now the data is for personal use via the site only. If you need an API for commercial use, contact us."
+          },
+          {
+            "q": "Is there a public API?",
+            "a": "Not for now. It may become available in 2027."
+          },
+          {
+            "q": "What's the tech stack?",
+            "a": "Frontend: Next.js 16 (App Router) with React and TypeScript. Backend: Next.js API Routes with Supabase. Database: PostgreSQL via Supabase. Hosting: Vercel. Maps: Leaflet with OpenStreetMap. AI: Claude AI (claude-haiku-4-5) from Anthropic for the garage translator."
+          }
         ]
       }
     ]
@@ -553,7 +659,9 @@
       "metaTitle": "Kuwait garages map | Degself",
       "metaDescription": "Browse an interactive map of 1,757 car garages across all of Kuwait's governorates. Find the one nearest to you geographically.",
       "h1": "Garages map",
-      "subtitle": "All locations on the map — tap any point for details."
+      "subtitle": "All locations on the map — tap any point for details.",
+      "loading": "Loading map…",
+      "details": "Details →"
     }
   },
   "landing": {
@@ -633,8 +741,23 @@
     "ctaTitle": "Search 1,640+ verified garages",
     "ctaSubtitle": "Use advanced search by specialty and area",
     "ctaButton": "Start searching now",
-    "chip": { "maintenance": "Maintenance", "mechanics": "Mechanics", "bodywork": "Body", "ac": "A/C" },
-    "spec": { "general": "General maintenance", "mechanics": "Mechanics", "electrical": "Auto electrical", "tires": "Tires & puncture", "bodywork": "Body & paint", "gearbox": "Gearbox", "oils": "Oils", "ac": "A/C", "batteries": "Batteries" },
+    "chip": {
+      "maintenance": "Maintenance",
+      "mechanics": "Mechanics",
+      "bodywork": "Body",
+      "ac": "A/C"
+    },
+    "spec": {
+      "general": "General maintenance",
+      "mechanics": "Mechanics",
+      "electrical": "Auto electrical",
+      "tires": "Tires & puncture",
+      "bodywork": "Body & paint",
+      "gearbox": "Gearbox",
+      "oils": "Oils",
+      "ac": "A/C",
+      "batteries": "Batteries"
+    },
     "areaDesc": {
       "shuwaikh": "Kuwait's main industrial area — the largest cluster of garages and mechanics",
       "hawalli": "Varied garages for European and Japanese cars in the heart of the capital",
@@ -663,16 +786,56 @@
     "heroSubtitle": "An interactive calculator with Kuwait market prices for 2026. Pick a service type and your car category to see the expected cost range before you head to the garage.",
     "popularHeading": "Popular prices at a glance",
     "popular": [
-      { "service": "Oil + filter change", "range": "8-25 KWD", "category": "Routine maintenance" },
-      { "service": "Brake pads", "range": "20-80 KWD", "category": "Brakes" },
-      { "service": "A/C freon refill", "range": "8-30 KWD", "category": "A/C" },
-      { "service": "New battery", "range": "18-65 KWD", "category": "Batteries" },
-      { "service": "Set of 4 tires", "range": "70-380 KWD", "category": "Tires" },
-      { "service": "Alignment & balancing", "range": "5-20 KWD", "category": "Tires" },
-      { "service": "Gearbox oil change", "range": "15-70 KWD", "category": "Gearbox" },
-      { "service": "Full respray", "range": "130-550 KWD", "category": "Body" },
-      { "service": "Tow (within area)", "range": "10-25 KWD", "category": "Mobile" },
-      { "service": "Computer diagnostics", "range": "5-20 KWD", "category": "Electrical" }
+      {
+        "service": "Oil + filter change",
+        "range": "8-25 KWD",
+        "category": "Routine maintenance"
+      },
+      {
+        "service": "Brake pads",
+        "range": "20-80 KWD",
+        "category": "Brakes"
+      },
+      {
+        "service": "A/C freon refill",
+        "range": "8-30 KWD",
+        "category": "A/C"
+      },
+      {
+        "service": "New battery",
+        "range": "18-65 KWD",
+        "category": "Batteries"
+      },
+      {
+        "service": "Set of 4 tires",
+        "range": "70-380 KWD",
+        "category": "Tires"
+      },
+      {
+        "service": "Alignment & balancing",
+        "range": "5-20 KWD",
+        "category": "Tires"
+      },
+      {
+        "service": "Gearbox oil change",
+        "range": "15-70 KWD",
+        "category": "Gearbox"
+      },
+      {
+        "service": "Full respray",
+        "range": "130-550 KWD",
+        "category": "Body"
+      },
+      {
+        "service": "Tow (within area)",
+        "range": "10-25 KWD",
+        "category": "Mobile"
+      },
+      {
+        "service": "Computer diagnostics",
+        "range": "5-20 KWD",
+        "category": "Electrical"
+      }
     ],
     "tipsHeading": "Golden tips before heading to the garage",
     "tips": [
@@ -692,20 +855,64 @@
     ],
     "guidesHeading": "Detailed price guides",
     "guides": [
-      { "href": "/blog/asaar-zayt-mahrek-kuwait-castrol-mobil", "title": "Engine oil prices", "subtitle": "Castrol, Mobil, Shell — detailed prices" },
-      { "href": "/blog/asaar-altawayer-alkuwait-2026", "title": "Tire prices in Kuwait", "subtitle": "Michelin, Bridgestone, Yokohama" },
-      { "href": "/blog/asaar-batariyat-sayara-kuwait", "title": "Battery prices", "subtitle": "AC Delco, Varta, Amaron" },
-      { "href": "/blog/asaar-tasleeh-qair-kuwait-2026", "title": "Gearbox repair prices", "subtitle": "Automatic and manual gearboxes" },
-      { "href": "/blog/asaar-taameen-sayara-kuwait-muqarana", "title": "Insurance prices", "subtitle": "Comparison of 8 insurers" },
-      { "href": "/blog/sat-ha-sayara-kuwait-asaar", "title": "Tow truck prices", "subtitle": "Crane & transport, 24 hours" },
-      { "href": "/blog/asaar-taghyeer-faramil-kuwait", "title": "Brake prices", "subtitle": "Pads and discs" },
-      { "href": "/blog/muqaranat-asaar-karajat-kuwait-2026", "title": "Garage price comparison", "subtitle": "Shuwaikh, Hawalli, Farwaniya" }
+      {
+        "href": "/blog/asaar-zayt-mahrek-kuwait-castrol-mobil",
+        "title": "Engine oil prices",
+        "subtitle": "Castrol, Mobil, Shell — detailed prices"
+      },
+      {
+        "href": "/blog/asaar-altawayer-alkuwait-2026",
+        "title": "Tire prices in Kuwait",
+        "subtitle": "Michelin, Bridgestone, Yokohama"
+      },
+      {
+        "href": "/blog/asaar-batariyat-sayara-kuwait",
+        "title": "Battery prices",
+        "subtitle": "AC Delco, Varta, Amaron"
+      },
+      {
+        "href": "/blog/asaar-tasleeh-qair-kuwait-2026",
+        "title": "Gearbox repair prices",
+        "subtitle": "Automatic and manual gearboxes"
+      },
+      {
+        "href": "/blog/asaar-taameen-sayara-kuwait-muqarana",
+        "title": "Insurance prices",
+        "subtitle": "Comparison of 8 insurers"
+      },
+      {
+        "href": "/blog/sat-ha-sayara-kuwait-asaar",
+        "title": "Tow truck prices",
+        "subtitle": "Crane & transport, 24 hours"
+      },
+      {
+        "href": "/blog/asaar-taghyeer-faramil-kuwait",
+        "title": "Brake prices",
+        "subtitle": "Pads and discs"
+      },
+      {
+        "href": "/blog/muqaranat-asaar-karajat-kuwait-2026",
+        "title": "Garage price comparison",
+        "subtitle": "Shuwaikh, Hawalli, Farwaniya"
+      }
     ],
     "faq": [
-      { "q": "How much does a car oil change cost in Kuwait in 2026?", "a": "An engine oil change with filter in Kuwait ranges from 8-25 KWD for Japanese and Korean cars, 10-31 KWD for American, 14-44 KWD for European, and 16-50 KWD for luxury cars. The price includes the oil, filter, and labor." },
-      { "q": "Why is there a price difference between Japanese and European cars?", "a": "European and luxury cars need pricier original parts, specialized oils, and technicians trained on their complex electronic systems. The average difference is 1.75-2× the price compared to Japanese cars." },
-      { "q": "Are the calculator's prices 100% accurate?", "a": "The prices are estimates based on 2026 Kuwait market data. They may vary ±20% depending on the garage, area, car condition, and required parts. We recommend requesting a written quote before starting any service." },
-      { "q": "How do I make use of the price range?", "a": "The low price = garages in industrial districts and popular areas. The mid price = garages in commercial areas. The high price = dealerships and specialized centers. Choose according to your budget and the quality level you need." }
+      {
+        "q": "How much does a car oil change cost in Kuwait in 2026?",
+        "a": "An engine oil change with filter in Kuwait ranges from 8-25 KWD for Japanese and Korean cars, 10-31 KWD for American, 14-44 KWD for European, and 16-50 KWD for luxury cars. The price includes the oil, filter, and labor."
+      },
+      {
+        "q": "Why is there a price difference between Japanese and European cars?",
+        "a": "European and luxury cars need pricier original parts, specialized oils, and technicians trained on their complex electronic systems. The average difference is 1.75-2× the price compared to Japanese cars."
+      },
+      {
+        "q": "Are the calculator's prices 100% accurate?",
+        "a": "The prices are estimates based on 2026 Kuwait market data. They may vary ±20% depending on the garage, area, car condition, and required parts. We recommend requesting a written quote before starting any service."
+      },
+      {
+        "q": "How do I make use of the price range?",
+        "a": "The low price = garages in industrial districts and popular areas. The mid price = garages in commercial areas. The high price = dealerships and specialized centers. Choose according to your budget and the quality level you need."
+      }
     ],
     "calc": {
       "heading": "Car service price calculator",
@@ -766,14 +973,46 @@
     "relatedHeading": "Articles you may like",
     "timeUnit": "min",
     "areas": [
-      { "ar": "الشويخ", "en": "Shuwaikh", "time": "15-30" },
-      { "ar": "السالمية", "en": "Salmiya", "time": "20-30" },
-      { "ar": "حولي", "en": "Hawalli", "time": "20-40" },
-      { "ar": "الفروانية", "en": "Farwaniya", "time": "25-45" },
-      { "ar": "الأحمدي", "en": "Ahmadi", "time": "30-60" },
-      { "ar": "الفحيحيل", "en": "Fahaheel", "time": "30-50" },
-      { "ar": "الجهراء", "en": "Jahra", "time": "35-75" },
-      { "ar": "صباح الأحمد", "en": "Sabah Al Ahmad", "time": "40-90" }
+      {
+        "ar": "الشويخ",
+        "en": "Shuwaikh",
+        "time": "15-30"
+      },
+      {
+        "ar": "السالمية",
+        "en": "Salmiya",
+        "time": "20-30"
+      },
+      {
+        "ar": "حولي",
+        "en": "Hawalli",
+        "time": "20-40"
+      },
+      {
+        "ar": "الفروانية",
+        "en": "Farwaniya",
+        "time": "25-45"
+      },
+      {
+        "ar": "الأحمدي",
+        "en": "Ahmadi",
+        "time": "30-60"
+      },
+      {
+        "ar": "الفحيحيل",
+        "en": "Fahaheel",
+        "time": "30-50"
+      },
+      {
+        "ar": "الجهراء",
+        "en": "Jahra",
+        "time": "35-75"
+      },
+      {
+        "ar": "صباح الأحمد",
+        "en": "Sabah Al Ahmad",
+        "time": "40-90"
+      }
     ],
     "bansher": {
       "metaTitle": "Mobile tire repair in Kuwait — 24/7 | Degself",
@@ -788,24 +1027,72 @@
       "servicesHeading": "Mobile tire repair services",
       "workshopsHeading": "Top mobile tire shops",
       "services": [
-        { "icon": "🛞", "title": "Puncture repair", "desc": "Patch and fix the tire on the spot" },
-        { "icon": "🔄", "title": "Tire replacement", "desc": "Swap old tires for new ones" },
-        { "icon": "⚖️", "title": "Wheel balancing", "desc": "Adjust and balance the tires" },
-        { "icon": "💨", "title": "Tire pressure", "desc": "Check and fill air" },
-        { "icon": "🧪", "title": "Tire inspection", "desc": "Diagnose the tire's condition and age" },
-        { "icon": "🛠️", "title": "Removal & fitting", "desc": "On-site tire removal and fitting service" }
+        {
+          "icon": "🛞",
+          "title": "Puncture repair",
+          "desc": "Patch and fix the tire on the spot"
+        },
+        {
+          "icon": "🔄",
+          "title": "Tire replacement",
+          "desc": "Swap old tires for new ones"
+        },
+        {
+          "icon": "⚖️",
+          "title": "Wheel balancing",
+          "desc": "Adjust and balance the tires"
+        },
+        {
+          "icon": "💨",
+          "title": "Tire pressure",
+          "desc": "Check and fill air"
+        },
+        {
+          "icon": "🧪",
+          "title": "Tire inspection",
+          "desc": "Diagnose the tire's condition and age"
+        },
+        {
+          "icon": "🛠️",
+          "title": "Removal & fitting",
+          "desc": "On-site tire removal and fitting service"
+        }
       ],
       "faq": [
-        { "q": "What is mobile tire repair?", "a": "An on-site service where a tire technician comes to you with specialized gear to repair or replace the tire without needing to tow the car." },
-        { "q": "How much does mobile tire repair cost in Kuwait?", "a": "Puncture patch repair 3-7 KWD. Replacing one tire 1-3 KWD. An on-site fee of 3-10 KWD may be added depending on area and time." },
-        { "q": "Is mobile tire repair available 24/7?", "a": "Yes, many mobile tire repair providers in Kuwait operate 24/7 for roadside emergencies." },
-        { "q": "How long does mobile tire repair take to arrive?", "a": "Arrival time ranges from 15 minutes in Shuwaikh and Salmiya to 90 minutes in outlying areas like Sabah Al Ahmad." },
-        { "q": "Can the tire be replaced at my location?", "a": "Yes, mobile tire repair provides tire replacement, removal and fitting at your location with a quality guarantee." }
+        {
+          "q": "What is mobile tire repair?",
+          "a": "An on-site service where a tire technician comes to you with specialized gear to repair or replace the tire without needing to tow the car."
+        },
+        {
+          "q": "How much does mobile tire repair cost in Kuwait?",
+          "a": "Puncture patch repair 3-7 KWD. Replacing one tire 1-3 KWD. An on-site fee of 3-10 KWD may be added depending on area and time."
+        },
+        {
+          "q": "Is mobile tire repair available 24/7?",
+          "a": "Yes, many mobile tire repair providers in Kuwait operate 24/7 for roadside emergencies."
+        },
+        {
+          "q": "How long does mobile tire repair take to arrive?",
+          "a": "Arrival time ranges from 15 minutes in Shuwaikh and Salmiya to 90 minutes in outlying areas like Sabah Al Ahmad."
+        },
+        {
+          "q": "Can the tire be replaced at my location?",
+          "a": "Yes, mobile tire repair provides tire replacement, removal and fitting at your location with a quality guarantee."
+        }
       ],
       "related": [
-        { "href": "/blog/bansher-mutanaqil-kuwait-dalil", "title": "Mobile tire repair in Kuwait — prices & numbers 2026" },
-        { "href": "/blog/karaj-mutanaqil-kuwait-24-saa", "title": "Mobile mechanic in Kuwait 24/7 — the complete guide" },
-        { "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran", "title": "Signs your car needs a garage right away" }
+        {
+          "href": "/blog/bansher-mutanaqil-kuwait-dalil",
+          "title": "Mobile tire repair in Kuwait — prices & numbers 2026"
+        },
+        {
+          "href": "/blog/karaj-mutanaqil-kuwait-24-saa",
+          "title": "Mobile mechanic in Kuwait 24/7 — the complete guide"
+        },
+        {
+          "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran",
+          "title": "Signs your car needs a garage right away"
+        }
       ]
     },
     "karaj": {
@@ -821,23 +1108,68 @@
       "servicesHeading": "Mobile mechanic services",
       "workshopsHeading": "Top mobile mechanic services",
       "services": [
-        { "icon": "🔧", "title": "Mobile mechanic", "desc": "Mechanical repairs at your location" },
-        { "icon": "⚡", "title": "Auto electrical", "desc": "Diagnose and fix electrical faults" },
-        { "icon": "🛞", "title": "Mobile tire repair", "desc": "Repair and replace tires" },
-        { "icon": "🔋", "title": "Battery replacement", "desc": "A new battery in 15 minutes" },
-        { "icon": "🛢️", "title": "Oil change", "desc": "Oil and engine at your location" },
-        { "icon": "💨", "title": "A/C", "desc": "Gas refill and A/C repair" }
+        {
+          "icon": "🔧",
+          "title": "Mobile mechanic",
+          "desc": "Mechanical repairs at your location"
+        },
+        {
+          "icon": "⚡",
+          "title": "Auto electrical",
+          "desc": "Diagnose and fix electrical faults"
+        },
+        {
+          "icon": "🛞",
+          "title": "Mobile tire repair",
+          "desc": "Repair and replace tires"
+        },
+        {
+          "icon": "🔋",
+          "title": "Battery replacement",
+          "desc": "A new battery in 15 minutes"
+        },
+        {
+          "icon": "🛢️",
+          "title": "Oil change",
+          "desc": "Oil and engine at your location"
+        },
+        {
+          "icon": "💨",
+          "title": "A/C",
+          "desc": "Gas refill and A/C repair"
+        }
       ],
       "faq": [
-        { "q": "What is a mobile garage?", "a": "An on-site service where a technician comes to you in a vehicle equipped with maintenance and diagnostic tools to fix car faults without needing to tow it." },
-        { "q": "How much does a mobile mechanic cost in Kuwait?", "a": "Inspection fee 5-15 KWD. Electrical or battery repair 10-30 KWD. Simple mechanical faults 15-50 KWD." },
-        { "q": "Is the service available 24/7?", "a": "Yes, most mobile mechanic providers in Kuwait operate 24/7 for emergencies." },
-        { "q": "What's the difference between a mobile mechanic and a tow truck?", "a": "A mobile mechanic fixes on-site. A tow truck hauls the car to a fixed garage when on-site repair isn't possible." }
+        {
+          "q": "What is a mobile garage?",
+          "a": "An on-site service where a technician comes to you in a vehicle equipped with maintenance and diagnostic tools to fix car faults without needing to tow it."
+        },
+        {
+          "q": "How much does a mobile mechanic cost in Kuwait?",
+          "a": "Inspection fee 5-15 KWD. Electrical or battery repair 10-30 KWD. Simple mechanical faults 15-50 KWD."
+        },
+        {
+          "q": "Is the service available 24/7?",
+          "a": "Yes, most mobile mechanic providers in Kuwait operate 24/7 for emergencies."
+        },
+        {
+          "q": "What's the difference between a mobile mechanic and a tow truck?",
+          "a": "A mobile mechanic fixes on-site. A tow truck hauls the car to a fixed garage when on-site repair isn't possible."
+        }
       ],
       "related": [
-        { "href": "/blog/karaj-mutanaqil-kuwait-24-saa", "title": "Mobile mechanic in Kuwait 24/7 — the complete guide 2026" },
-        { "href": "/blog/bansher-mutanaqil-kuwait-dalil", "title": "Mobile tire repair in Kuwait — prices & numbers 2026" },
-        { "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran", "title": "Signs your car needs a garage right away" }
+        {
+          "href": "/blog/karaj-mutanaqil-kuwait-24-saa",
+          "title": "Mobile mechanic in Kuwait 24/7 — the complete guide 2026"
+        },
+        {
+          "href": "/blog/bansher-mutanaqil-kuwait-dalil",
+          "title": "Mobile tire repair in Kuwait — prices & numbers 2026"
+        },
+        {
+          "href": "/blog/alamaat-sayartak-tahtaj-karaj-foran",
+          "title": "Signs your car needs a garage right away"
+        }
       ]
     }
   },
@@ -854,50 +1186,170 @@
     "h1": "Kuwait car & garage sector statistics 2026",
     "heroText": "Exclusive numbers and facts from Kuwait's largest car-services directory. This data is available for use provided the source (Degself) is credited.",
     "bigNumbers": [
-      { "value": "1,640+", "label": "verified garages" },
-      { "value": "14", "label": "areas in Kuwait" },
-      { "value": "9", "label": "main specialties" },
-      { "value": "15+", "label": "car makes" }
+      {
+        "value": "1,640+",
+        "label": "verified garages"
+      },
+      {
+        "value": "14",
+        "label": "areas in Kuwait"
+      },
+      {
+        "value": "9",
+        "label": "main specialties"
+      },
+      {
+        "value": "15+",
+        "label": "car makes"
+      }
     ],
     "areaDistHeading": "Garage distribution by area",
     "areaRows": [
-      { "area": "Industrial Shuwaikh", "pct": 35, "count": "570+" },
-      { "area": "Farwaniya + Khaitan", "pct": 18, "count": "295+" },
-      { "area": "Fahaheel + Mangaf", "pct": 12, "count": "200+" },
-      { "area": "Hawalli + Salmiya", "pct": 10, "count": "165+" },
-      { "area": "Jahra", "pct": 9, "count": "145+" },
-      { "area": "Al Rai", "pct": 7, "count": "115+" },
-      { "area": "Ahmadi + Sabah Al Salem", "pct": 5, "count": "85+" },
-      { "area": "Other areas", "pct": 4, "count": "65+" }
+      {
+        "area": "Industrial Shuwaikh",
+        "pct": 35,
+        "count": "570+"
+      },
+      {
+        "area": "Farwaniya + Khaitan",
+        "pct": 18,
+        "count": "295+"
+      },
+      {
+        "area": "Fahaheel + Mangaf",
+        "pct": 12,
+        "count": "200+"
+      },
+      {
+        "area": "Hawalli + Salmiya",
+        "pct": 10,
+        "count": "165+"
+      },
+      {
+        "area": "Jahra",
+        "pct": 9,
+        "count": "145+"
+      },
+      {
+        "area": "Al Rai",
+        "pct": 7,
+        "count": "115+"
+      },
+      {
+        "area": "Ahmadi + Sabah Al Salem",
+        "pct": 5,
+        "count": "85+"
+      },
+      {
+        "area": "Other areas",
+        "pct": 4,
+        "count": "65+"
+      }
     ],
     "pricesHeading": "Average prices of common services 2026",
     "colService": "Service",
     "colAvg": "Average (KWD)",
     "colRange": "Range",
     "priceRows": [
-      ["Engine oil change (synthetic)", "18", "12-30"],
-      ["Front brake change", "25", "15-40"],
-      ["A/C freon refill", "10", "5-15"],
-      ["Full A/C cleaning", "18", "10-25"],
-      ["Car computer diagnostics", "8", "5-15"],
-      ["Medium battery (60Ah)", "30", "22-38"],
-      ["Full gearbox overhaul", "700", "400-1500"],
-      ["Full technical inspection", "30", "25-50"],
-      ["Change of 4 tires", "100", "60-180"],
-      ["Full body & paint", "350", "200-600"]
+      [
+        "Engine oil change (synthetic)",
+        "18",
+        "12-30"
+      ],
+      [
+        "Front brake change",
+        "25",
+        "15-40"
+      ],
+      [
+        "A/C freon refill",
+        "10",
+        "5-15"
+      ],
+      [
+        "Full A/C cleaning",
+        "18",
+        "10-25"
+      ],
+      [
+        "Car computer diagnostics",
+        "8",
+        "5-15"
+      ],
+      [
+        "Medium battery (60Ah)",
+        "30",
+        "22-38"
+      ],
+      [
+        "Full gearbox overhaul",
+        "700",
+        "400-1500"
+      ],
+      [
+        "Full technical inspection",
+        "30",
+        "25-50"
+      ],
+      [
+        "Change of 4 tires",
+        "100",
+        "60-180"
+      ],
+      [
+        "Full body & paint",
+        "350",
+        "200-600"
+      ]
     ],
     "specialtyHeading": "Most common specialties",
     "countSuffix": "garages",
     "specialties": [
-      { "name": "General maintenance", "count": "780+", "emoji": "🔧" },
-      { "name": "Mechanics", "count": "520+", "emoji": "⚙️" },
-      { "name": "Body & paint", "count": "380+", "emoji": "🎨" },
-      { "name": "Auto electrical", "count": "340+", "emoji": "🔌" },
-      { "name": "A/C", "count": "290+", "emoji": "❄️" },
-      { "name": "Tires & puncture", "count": "260+", "emoji": "🛞" },
-      { "name": "Oils", "count": "220+", "emoji": "🛢️" },
-      { "name": "Gearbox", "count": "180+", "emoji": "🔩" },
-      { "name": "Batteries", "count": "140+", "emoji": "🔋" }
+      {
+        "name": "General maintenance",
+        "count": "780+",
+        "emoji": "🔧"
+      },
+      {
+        "name": "Mechanics",
+        "count": "520+",
+        "emoji": "⚙️"
+      },
+      {
+        "name": "Body & paint",
+        "count": "380+",
+        "emoji": "🎨"
+      },
+      {
+        "name": "Auto electrical",
+        "count": "340+",
+        "emoji": "🔌"
+      },
+      {
+        "name": "A/C",
+        "count": "290+",
+        "emoji": "❄️"
+      },
+      {
+        "name": "Tires & puncture",
+        "count": "260+",
+        "emoji": "🛞"
+      },
+      {
+        "name": "Oils",
+        "count": "220+",
+        "emoji": "🛢️"
+      },
+      {
+        "name": "Gearbox",
+        "count": "180+",
+        "emoji": "🔩"
+      },
+      {
+        "name": "Batteries",
+        "count": "140+",
+        "emoji": "🔋"
+      }
     ],
     "insightsHeading": "Key statistics",
     "insights": [
@@ -924,7 +1376,14 @@
       "h1": "The page is <hl>broken down</hl> or doesn't exist",
       "body": "The link you came from may be old or incorrect. Try one of the links below or go back home.",
       "backHome": "Back to home",
-      "links": { "home": "Home", "search": "Find a garage", "prices": "Price calculator", "blog": "Blog", "emergency": "Emergency", "map": "Map" }
+      "links": {
+        "home": "Home",
+        "search": "Find a garage",
+        "prices": "Price calculator",
+        "blog": "Blog",
+        "emergency": "Emergency",
+        "map": "Map"
+      }
     },
     "saved": {
       "metaTitle": "Saved garages | Degself",
@@ -941,7 +1400,11 @@
       "h1": "Report a missing garage",
       "subtitle": "Know a garage in Kuwait that's not on Degself? Send its details and we'll add it for free after verifying. The bigger the directory, the more everyone benefits.",
       "howHeading": "How do we verify?",
-      "howList": ["We review the data manually.", "We confirm the garage exists via Google Maps.", "We add it to the directory within 3-7 days."],
+      "howList": [
+        "We review the data manually.",
+        "We confirm the garage exists via Google Maps.",
+        "We add it to the directory within 3-7 days."
+      ],
       "choose": "— Choose —",
       "workshopName": "Garage name",
       "workshopNameEg": "e.g. Mizan Asad Garage",
@@ -964,8 +1427,27 @@
       "errConn": "Connection failed, try again.",
       "thankYou": "Thank you",
       "thankYouBody": "We received your report. We'll review it and add the garage within 3-7 days.",
-      "gov": { "capital": "Capital", "hawalli": "Hawalli", "farwaniya": "Farwaniya", "ahmadi": "Ahmadi", "jahra": "Jahra", "mubarak": "Mubarak Al-Kabeer" },
-      "spec": { "general": "General maintenance", "mechanics": "Mechanics", "electrical": "Auto electrical", "tires": "Tires & puncture", "bodywork": "Body & paint", "gearbox": "Gearbox", "oils": "Oils", "ac": "A/C", "batteries": "Batteries", "alignment": "Alignment", "other": "Other" }
+      "gov": {
+        "capital": "Capital",
+        "hawalli": "Hawalli",
+        "farwaniya": "Farwaniya",
+        "ahmadi": "Ahmadi",
+        "jahra": "Jahra",
+        "mubarak": "Mubarak Al-Kabeer"
+      },
+      "spec": {
+        "general": "General maintenance",
+        "mechanics": "Mechanics",
+        "electrical": "Auto electrical",
+        "tires": "Tires & puncture",
+        "bodywork": "Body & paint",
+        "gearbox": "Gearbox",
+        "oils": "Oils",
+        "ac": "A/C",
+        "batteries": "Batteries",
+        "alignment": "Alignment",
+        "other": "Other"
+      }
     }
   },
   "about": {
@@ -982,12 +1464,30 @@
     "tagline": "Your guide to garages, mechanics and car services in Kuwait",
     "heroBody": "<b>Degself</b> is the first smart, comprehensive directory of car garages and mechanics in Kuwait. Kuwait has thousands of garages, but when your car breaks down you need to know who's trustworthy, who specializes in your problem, and who's open now. Google Maps shows thousands of results with no classification — and we solve that.",
     "stats": [
-      { "value": "1,757", "label": "active verified garages" },
-      { "value": "6", "label": "governorates (all of Kuwait)" },
-      { "value": "+1,760", "label": "precisely mapped neighborhoods" },
-      { "value": "+10", "label": "garage specialties" },
-      { "value": "6 months", "label": "development time" },
-      { "value": "0 KWD", "label": "cost to the user" }
+      {
+        "value": "1,757",
+        "label": "active verified garages"
+      },
+      {
+        "value": "6",
+        "label": "governorates (all of Kuwait)"
+      },
+      {
+        "value": "+1,760",
+        "label": "precisely mapped neighborhoods"
+      },
+      {
+        "value": "+10",
+        "label": "garage specialties"
+      },
+      {
+        "value": "6 months",
+        "label": "development time"
+      },
+      {
+        "value": "0 KWD",
+        "label": "cost to the user"
+      }
     ],
     "whyHeading": "Why did we found Degself?",
     "whyP1": "In 2025, someone's car broke down in the middle of summer, at 50°C, at eleven at night. He called six garages before finding one open, and even when he did, he found it didn't specialize in his kind of problem. He lost money and a whole day — so the idea was born: there has to be a better way.",
@@ -1001,27 +1501,61 @@
     "methodHeading": "Our methodology for verifying data",
     "methodIntro": "Our motto: data accuracy first. Every garage on Degself goes through four verification stages:",
     "methodology": [
-      { "title": "Existence check", "body": "Confirmation via the Google Places API, and verifying open status and address." },
-      { "title": "Specialty check", "body": "Manual review of names and keywords, applying car-industry rules, and excluding any garage unrelated to cars." },
-      { "title": "Geographic check", "body": "Linking each garage to the correct neighborhood from Google Places, and verifying the governorate and coordinates." },
-      { "title": "The golden policy", "body": "When in doubt, remove it. If there's doubt about the accuracy of information, the garage is removed from the active listings." }
+      {
+        "title": "Existence check",
+        "body": "Confirmation via the Google Places API, and verifying open status and address."
+      },
+      {
+        "title": "Specialty check",
+        "body": "Manual review of names and keywords, applying car-industry rules, and excluding any garage unrelated to cars."
+      },
+      {
+        "title": "Geographic check",
+        "body": "Linking each garage to the correct neighborhood from Google Places, and verifying the governorate and coordinates."
+      },
+      {
+        "title": "The golden policy",
+        "body": "When in doubt, remove it. If there's doubt about the accuracy of information, the garage is removed from the active listings."
+      }
     ],
     "methodOutro": "We started by collecting 1,798 garages, then cleaned the listings and added discovered, verified garages, reaching today <b>1,757 active verified garages</b>.",
     "diffHeading": "What sets Degself apart?",
     "differentiators": [
-      { "title": "Accurate data, no ads", "body": "No paid ranking, and no featured listings for money. All garages appear based on logic alone: specialty, location, open status, and real reviews." },
-      { "title": "The garage translator", "body": "Kuwait's first AI assistant that translates your everyday language into terms any mechanic understands, and matches you with the right specialty for your problem." },
-      { "title": "Interactive map", "body": "All garages on one map. See what's nearest to you, tap for details, and get directions in seconds." },
-      { "title": "Smart search", "body": "Search by specialty (tires, body, mechanics, gearbox, electrical, A/C, batteries), by area and governorate, or by \"open now\" status." },
-      { "title": "Emergency service", "body": "All emergency garages that operate extended hours — tow truck, battery, and emergency tires — in one place." },
-      { "title": "Built for Kuwait", "body": "Arabic-first, not a translation; a properly tuned RTL interface, a mobile-first experience, and Kuwaiti terms every driver understands." }
+      {
+        "title": "Accurate data, no ads",
+        "body": "No paid ranking, and no featured listings for money. All garages appear based on logic alone: specialty, location, open status, and real reviews."
+      },
+      {
+        "title": "The garage translator",
+        "body": "Kuwait's first AI assistant that translates your everyday language into terms any mechanic understands, and matches you with the right specialty for your problem."
+      },
+      {
+        "title": "Interactive map",
+        "body": "All garages on one map. See what's nearest to you, tap for details, and get directions in seconds."
+      },
+      {
+        "title": "Smart search",
+        "body": "Search by specialty (tires, body, mechanics, gearbox, electrical, A/C, batteries), by area and governorate, or by \"open now\" status."
+      },
+      {
+        "title": "Emergency service",
+        "body": "All emergency garages that operate extended hours — tow truck, battery, and emergency tires — in one place."
+      },
+      {
+        "title": "Built for Kuwait",
+        "body": "Arabic-first, not a translation; a properly tuned RTL interface, a mobile-first experience, and Kuwaiti terms every driver understands."
+      }
     ],
     "teamHeading": "Our team",
     "founderName": "Ahmed Abdel-Halim",
     "founderRole": "Founder of Degself",
     "founderBio": "Over 10 years of experience in development, product management and AI, with expertise in building digital products and search engine optimization.",
     "contributorsTitle": "Technical contributors",
-    "contributors": ["Data engineering experts to clean the listings", "Car-industry consultants to audit the classifications", "Kuwaiti drivers who took part in the first trial"],
+    "contributors": [
+      "Data engineering experts to clean the listings",
+      "Car-industry consultants to audit the classifications",
+      "Kuwaiti drivers who took part in the first trial"
+    ],
     "transparencyHeading": "Our transparency",
     "transparency": [
       "No personal tracking without your consent, and no selling your data — we use general analytics only to understand site usage.",
@@ -1030,17 +1564,46 @@
     ],
     "roadmapHeading": "Our roadmap",
     "roadmap": [
-      { "period": "Q3 2026", "items": ["A real user ratings system with phone verification", "Direct appointment booking with garages", "A dashboard for garage owners"] },
-      { "period": "Q4 2026", "items": ["iOS and Android apps", "WhatsApp integration for direct contact", "The verified-garages program (badges for trusted ones)"] },
-      { "period": "2027", "items": ["Regional expansion: Saudi Arabia, UAE, Bahrain", "An AI fault-diagnosis tool"] }
+      {
+        "period": "Q3 2026",
+        "items": [
+          "A real user ratings system with phone verification",
+          "Direct appointment booking with garages",
+          "A dashboard for garage owners"
+        ]
+      },
+      {
+        "period": "Q4 2026",
+        "items": [
+          "iOS and Android apps",
+          "WhatsApp integration for direct contact",
+          "The verified-garages program (badges for trusted ones)"
+        ]
+      },
+      {
+        "period": "2027",
+        "items": [
+          "Regional expansion: Saudi Arabia, UAE, Bahrain",
+          "An AI fault-diagnosis tool"
+        ]
+      }
     ],
     "contactHeading": "Contact us",
     "whatsappLabel": "WhatsApp",
     "callLabel": "Call",
     "contacts": [
-      { "label": "For users", "email": "hello@degself.com" },
-      { "label": "For garage owners", "email": "owner@degself.com" },
-      { "label": "For press & partnerships", "email": "press@degself.com" }
+      {
+        "label": "For users",
+        "email": "hello@degself.com"
+      },
+      {
+        "label": "For garage owners",
+        "email": "owner@degself.com"
+      },
+      {
+        "label": "For press & partnerships",
+        "email": "press@degself.com"
+      }
     ],
     "madeIn": "Made with pride in Kuwait — for the Kuwaiti driver.",
     "ctaSearch": "Start searching",
@@ -1148,7 +1711,15 @@
     "today": "(today)",
     "closed": "Closed",
     "open24": "Open 24 hours",
-    "days": { "Saturday": "Saturday", "Sunday": "Sunday", "Monday": "Monday", "Tuesday": "Tuesday", "Wednesday": "Wednesday", "Thursday": "Thursday", "Friday": "Friday" },
+    "days": {
+      "Saturday": "Saturday",
+      "Sunday": "Sunday",
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday"
+    },
     "insights": {
       "trustHigh": "Highly trusted",
       "trustMedium": "Medium trust",
@@ -1176,5 +1747,61 @@
       "submitting": "Sending…",
       "moderated": "Reviews are moderated manually before publishing to keep them accurate."
     }
+  },
+  "cookie": {
+    "aria": "Cookie notice",
+    "body": "We use cookies to improve your experience and analyze site usage.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
+  "emergencyFab": {
+    "title": "Emergency services",
+    "subtitle": "Car broken down? Pick a service",
+    "tow": "Emergency tow",
+    "towHint": "Immediate pickup",
+    "mobile": "Mobile mechanic",
+    "mobileHint": "Comes to you",
+    "tire": "Mobile tire service",
+    "tireHint": "Tire repair on the spot",
+    "calc": "Estimate cost",
+    "calcHint": "Before you go to the garage",
+    "whatsapp": "Direct contact",
+    "whatsappHint": "Via WhatsApp",
+    "open": "Quick emergency services",
+    "close": "Close emergency menu"
+  },
+  "save": {
+    "save": "Save",
+    "saved": "Saved",
+    "remove": "Remove from saved"
+  },
+  "pwa": {
+    "bannerTitle": "Install Degself on your phone",
+    "bannerSubtitle": "Faster access, works offline",
+    "install": "Install",
+    "menuInstall": "Install app",
+    "howTitle": "How to install",
+    "close": "Close",
+    "ios1Before": "Tap the Share button",
+    "ios1After": "in the Safari bar.",
+    "ios1AfterMenu": "in the Safari bar at the bottom.",
+    "ios2": "Choose “Add to Home Screen”",
+    "ios3": "Tap “Add”.",
+    "ios3Long": "Tap “Add” — the Degself icon will appear on your screen.",
+    "android1": "Open the browser menu (⋮).",
+    "android1Long": "Open the browser menu (⋮) at the top of the page.",
+    "android2": "Choose “Install app”.",
+    "android2Long": "Choose “Install app” or “Add to Home Screen”.",
+    "android3": "Confirm — the Degself icon will appear on your screen."
+  },
+  "homeMeta": {
+    "title": "Degself — your guide to car garages & mechanics in Kuwait",
+    "description": "Degself is your guide to 1,800+ garages and mechanics in Kuwait. Search by specialty and area — maintenance, bodywork, tires, electrical — diagnose your car and pick the right garage for free.",
+    "ogDescription": "Degself is your guide to 1,800+ garages and mechanics in Kuwait. Search by specialty and area, diagnose your car, and pick the right garage for free.",
+    "twDescription": "Degself is your guide to 1,800+ garages and mechanics in Kuwait. Search by specialty and area and pick the right garage for free.",
+    "ogAlt": "Degself — Kuwait garage directory",
+    "siteName": "Degself"
   }
 }

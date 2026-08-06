@@ -6,10 +6,18 @@ import { createServerClient } from "@/lib/supabase/server";
 import { UserLogoutButton } from "@/components/UserLogoutButton";
 import { Link } from "@/i18n/navigation";
 
-export const metadata: Metadata = {
-  title: "حسابي",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return {
+    title: t("accountMetaTitle"),
+    robots: { index: false, follow: false },
+  };
+}
 
 export const dynamic = "force-dynamic";
 
