@@ -15,12 +15,14 @@
     "homeAria": "Degself — Home",
     "login": "Sign in",
     "logout": "Sign out",
-    "account": "Account"
+    "account": "My account"
   },
   "auth": {
-    "title": "Sign in",
-    "subtitle": "Use Google to save garages and interact with Degself.",
-    "google": "Continue with Google",
+    "title": "Sign in or create an account",
+    "subtitle": "Sign in if you already have an account, or create a new one in seconds with Google.",
+    "google": "Sign in or create account with Google",
+    "googleHint": "First time? Google creates a new account for you automatically.",
+    "guestContinue": "Continue as guest without an account",
     "error": "Sign-in failed. Please try again.",
     "termsHint": "By continuing you agree to our",
     "privacy": "Privacy Policy",
@@ -30,7 +32,7 @@
     "redirecting": "Redirecting…",
     "errorStart": "Couldn't start sign-in.",
     "errorConn": "Connection failed. Try again.",
-    "metaTitle": "Sign in",
+    "metaTitle": "Sign in or create an account",
     "accountMetaTitle": "My account"
   },
   "lang": {

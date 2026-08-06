@@ -41,7 +41,25 @@ export default async function LoginPage({ searchParams }: Props) {
         </p>
       )}
 
-      <GoogleSignInButton next={next} label={t("google")} />
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <GoogleSignInButton next={next} label={t("google")} />
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          {t("googleHint")}
+        </p>
+      </div>
+
+      <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+        <span className="h-px flex-1 bg-border" />
+        <span>{t("or")}</span>
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
+      <Link
+        href="/"
+        className="rounded-xl border border-border px-4 py-3.5 text-center text-sm font-bold transition hover:border-[#FFD60A]"
+      >
+        {t("guestContinue")}
+      </Link>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
         {t("termsHint")}{" "}
