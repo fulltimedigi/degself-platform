@@ -42,8 +42,14 @@ interface WaStatus {
 export async function POST(req: NextRequest) {
   const raw = await req.text();
 
-  // Verify Meta's signature when the app secret is configured (recommended).
+  // Fail closed when the webhook is configured but the app secret is missing —
+  // otherwise forged "failed" statuses can spam admin WhatsApp fallbacks.
   const appSecret = process.env.WHATSAPP_APP_SECRET;
+  const webhookConfigured = Boolean(process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN);
+  if (webhookConfigured && !appSecret) {
+    console.error("whatsapp webhook: WHATSAPP_APP_SECRET missing");
+    return new NextResponse("signature required", { status: 401 });
+  }
   if (appSecret) {
     const sig = req.headers.get("x-hub-signature-256") ?? "";
     const expected = "sha256=" + createHmac("sha256", appSecret).update(raw).digest("hex");

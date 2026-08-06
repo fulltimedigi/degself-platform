@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { UserLogoutButton } from "@/components/UserLogoutButton";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
@@ -21,7 +21,12 @@ export async function generateMetadata({
 
 export const dynamic = "force-dynamic";
 
-export default async function AccountPage() {
+export default async function AccountPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getTranslations("auth");
   const supabase = await createServerClient();
   const {
@@ -29,25 +34,33 @@ export default async function AccountPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?next=/account");
+    // Keep OAuth return path in the same locale (ar is unprefixed).
+    const next = locale === "ar" ? "/account" : `/${locale}/account`;
+    redirect({
+      href: { pathname: "/login", query: { next } },
+      locale: locale as Locale,
+    });
   }
+
+  // next-intl redirect returns `never`, but TS control-flow can miss it.
+  const sessionUser = user!;
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("display_name,avatar_url,created_at")
-    .eq("id", user.id)
+    .eq("id", sessionUser.id)
     .maybeSingle();
 
   const name =
     profile?.display_name ||
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.email ||
+    (sessionUser.user_metadata?.full_name as string | undefined) ||
+    (sessionUser.user_metadata?.name as string | undefined) ||
+    sessionUser.email ||
     t("accountFallback");
   const avatar =
-    profile?.avatar_url ||
-    user.user_metadata?.avatar_url ||
-    user.user_metadata?.picture ||
+    (profile?.avatar_url as string | null | undefined) ||
+    (sessionUser.user_metadata?.avatar_url as string | undefined) ||
+    (sessionUser.user_metadata?.picture as string | undefined) ||
     null;
 
   return (
@@ -71,8 +84,10 @@ export default async function AccountPage() {
         )}
         <div className="min-w-0">
           <p className="truncate text-lg font-extrabold">{name}</p>
-          {user.email && (
-            <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+          {sessionUser.email && (
+            <p className="truncate text-sm text-muted-foreground">
+              {sessionUser.email}
+            </p>
           )}
         </div>
       </section>

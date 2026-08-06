@@ -11,7 +11,8 @@
 export const ADMIN_SESSION_COOKIE = "admin_session";
 
 const PURPOSE = "degself.admin.session.v1";
-const EPOCH_CACHE_MS = 10_000;
+// Short TTL so a password change invalidates other browsers quickly.
+const EPOCH_CACHE_MS = 2_000;
 
 /** Secret used to mint/verify the opaque session. Null ⇒ fail closed. */
 export function getAdminSessionSecret(): string | null {

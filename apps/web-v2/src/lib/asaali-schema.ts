@@ -104,6 +104,8 @@ export interface AsaaliResponse {
 export interface AsaaliRequest {
   text: string;                    // النص اللي قاله الزبون (مفرّغ من Whisper أو Web Speech)
   vehicle?: VehicleContext;        // اختياري
+  /** User declined make/model — API must not return needs_vehicle_info again. */
+  vehicle_skipped?: boolean;
   locale?: string;                 // لغة الواجهة (ar|en|hi|ur) — تحدّد لغة الرد الظاهر
   conversation_history?: Array<{
     role: "user" | "assistant";

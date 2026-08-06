@@ -29,13 +29,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!(await consumeRateLimit(clientIp(req), "translate", TRANSLATE_LIMIT_PER_HOUR))) {
-    return NextResponse.json(
-      { error: "طلبات كثيرة، حاول بعد ساعة." },
-      { status: 429 }
-    );
-  }
-
   let text = "";
   try {
     const body = await req.json();
@@ -54,6 +47,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: `النص طويل جداً (الحد ${MAX_INPUT_CHARS} حرف).` },
       { status: 400 }
+    );
+  }
+
+  // Rate-limit only after validation — empty/invalid POSTs must not burn quota.
+  if (!(await consumeRateLimit(clientIp(req), "translate", TRANSLATE_LIMIT_PER_HOUR))) {
+    return NextResponse.json(
+      { error: "طلبات كثيرة، حاول بعد ساعة." },
+      { status: 429 }
     );
   }
 

@@ -108,7 +108,30 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     };
   }
 
-  async function runDiagnosis(text: string) {
+  async function runDiagnosis(
+    text: string,
+    opts?: {
+      vehicle?: VehicleContext;
+      vehicleSkipped?: boolean;
+      /** Re-run after vehicle chip — history already has this user turn. */
+      omitLastUserFromHistory?: boolean;
+    }
+  ) {
+    const vehicleForRequest = opts?.vehicle ?? vehicle;
+    const vehicleSkipped = Boolean(opts?.vehicleSkipped);
+    let historyForRequest = history;
+    if (opts?.omitLastUserFromHistory) {
+      let dropIdx = -1;
+      for (let i = history.length - 1; i >= 0; i--) {
+        if (history[i].role === "user" && history[i].content === text) {
+          dropIdx = i;
+          break;
+        }
+      }
+      if (dropIdx >= 0) {
+        historyForRequest = history.filter((_, i) => i !== dropIdx);
+      }
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/asaali", {
@@ -116,27 +139,39 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text,
-          vehicle,
-          conversation_history: history,
+          vehicle: vehicleForRequest,
+          vehicle_skipped: vehicleSkipped || undefined,
+          conversation_history: historyForRequest,
           locale,
         }),
       });
       const data = (await res.json()) as AsaaliResponse;
       setLastDiagnosis(data);
-      setHistory((h) => [
-        ...h,
-        { role: "user", content: text },
-        {
-          role: "assistant",
-          content:
-            data.problem_summary ??
-            data.follow_up_question ??
-            data.fallback_message ??
-            "",
-        },
-      ]);
+      setHistory((h) => {
+        // Avoid duplicating the user turn when re-diagnosing after vehicle info.
+        const already =
+          opts?.omitLastUserFromHistory &&
+          h.some((m) => m.role === "user" && m.content === text);
+        return [
+          ...h,
+          ...(already ? [] : [{ role: "user" as const, content: text }]),
+          {
+            role: "assistant" as const,
+            content:
+              data.problem_summary ??
+              data.follow_up_question ??
+              data.fallback_message ??
+              "",
+          },
+        ];
+      });
 
       if (data.status === "needs_vehicle_info") {
+        if (vehicleSkipped) {
+          // Model ignored skip — do not loop on vehicle chips.
+          pushAssistant({ text: data.follow_up_question || t("askProblem") });
+          return;
+        }
         setAwaitingVehicle(true);
         pushAssistant({
           text: data.follow_up_question || t("askVehicle"),
@@ -253,14 +288,17 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     }
     if (text.startsWith("__veh:")) {
       const make = text.slice("__veh:".length).replace(/__$/, "");
-      setVehicle((v) => ({ ...v, make }));
+      const nextVehicle = { ...vehicle, make };
+      setVehicle(nextVehicle);
       setAwaitingVehicle(false);
       if (!opts?.silentUser) pushUser(make);
       pushAssistant({ text: t("vehicleNoted", { make }) });
-      // Re-run last user fault if we have history
       const lastUser = [...history].reverse().find((h) => h.role === "user");
       if (lastUser) {
-        await runDiagnosis(lastUser.content);
+        await runDiagnosis(lastUser.content, {
+          vehicle: nextVehicle,
+          omitLastUserFromHistory: true,
+        });
       } else {
         pushAssistant({ text: t("askProblem") });
       }
@@ -269,7 +307,16 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     if (text === "__veh_skip__") {
       setAwaitingVehicle(false);
       if (!opts?.silentUser) pushUser(t("skipVehicle"));
-      pushAssistant({ text: t("askProblem") });
+      const lastUser = [...history].reverse().find((h) => h.role === "user");
+      if (lastUser) {
+        await runDiagnosis(lastUser.content, {
+          vehicle,
+          vehicleSkipped: true,
+          omitLastUserFromHistory: true,
+        });
+      } else {
+        pushAssistant({ text: t("askProblem") });
+      }
       return;
     }
 
@@ -277,13 +324,20 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     setInput("");
 
     if (awaitingVehicle && !text.startsWith("__")) {
-      // Free-text make
-      setVehicle((v) => ({ ...v, make: text.slice(0, 40) }));
+      const make = text.slice(0, 40);
+      const nextVehicle = { ...vehicle, make };
+      setVehicle(nextVehicle);
       setAwaitingVehicle(false);
-      pushAssistant({ text: t("vehicleNoted", { make: text.slice(0, 40) }) });
+      pushAssistant({ text: t("vehicleNoted", { make }) });
       const lastUser = [...history].reverse().find((h) => h.role === "user");
-      if (lastUser) await runDiagnosis(lastUser.content);
-      else pushAssistant({ text: t("askProblem") });
+      if (lastUser) {
+        await runDiagnosis(lastUser.content, {
+          vehicle: nextVehicle,
+          omitLastUserFromHistory: true,
+        });
+      } else {
+        pushAssistant({ text: t("askProblem") });
+      }
       return;
     }
 

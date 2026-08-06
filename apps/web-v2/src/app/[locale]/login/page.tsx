@@ -17,16 +17,19 @@ export async function generateMetadata({
 }
 
 type Props = {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ next?: string; error?: string }>;
 };
 
-export default async function LoginPage({ searchParams }: Props) {
+export default async function LoginPage({ params, searchParams }: Props) {
+  const { locale } = await params;
   const t = await getTranslations("auth");
   const sp = await searchParams;
+  const defaultNext = locale === "ar" ? "/account" : `/${locale}/account`;
   const next =
     typeof sp.next === "string" && sp.next.startsWith("/") && !sp.next.startsWith("//")
       ? sp.next
-      : "/account";
+      : defaultNext;
 
   return (
     <main className="mx-auto flex min-h-[70vh] w-full max-w-md flex-col justify-center px-6 py-12">

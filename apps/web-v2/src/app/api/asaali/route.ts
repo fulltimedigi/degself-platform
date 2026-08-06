@@ -14,7 +14,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { categoryToSpecialty, FAULT_CATEGORIES, CATEGORY_VALUES } from "@/lib/garageTranslator";
 import {
-  preflightCheck,
+  isWithinBudget,
+  checkRateLimit,
   logUsage,
   getCachedAnswer,
   setCachedAnswer,
@@ -317,18 +318,7 @@ async function attachConciergeWorkshops(
 // ============================================================
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return jsonResponse(
-      {
-        status: "budget_exceeded",
-        fallback_message: FALLBACKS.ar.notConfigured,
-      },
-      503
-    );
-  }
-
-  // ── parse request ──────────────────────────────────────────
+  // ── parse request first (locale needed for all error messages) ─
   let body: AsaaliRequest;
   try {
     body = (await req.json()) as AsaaliRequest;
@@ -341,6 +331,17 @@ export async function POST(req: NextRequest) {
 
   const locale = normalizeLocale(body.locale);
   const L = FALLBACKS[locale];
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return jsonResponse(
+      {
+        status: "budget_exceeded",
+        fallback_message: L.notConfigured,
+      },
+      503
+    );
+  }
 
   const text = (body.text ?? "").trim();
   if (!text) {
@@ -358,50 +359,58 @@ export async function POST(req: NextRequest) {
 
   const ip = clientIp(req);
   const ipHash = hashIp(ip);
-  const vehicleLine = formatVehicleForPrompt(body.vehicle);
+  const vehicleSkipped = Boolean(body.vehicle_skipped);
+  let vehicleLine = formatVehicleForPrompt(body.vehicle);
+  if (vehicleSkipped && !vehicleLine) {
+    vehicleLine =
+      "المستخدم رفض إعطاء بيانات السيارة — ممنوع استخدام needs_vehicle_info؛ أكمل التشخيص بأفضل تقدير مع status=ok.";
+  }
 
   // cache key يشمل الـ vehicle واللغة عشان نفس الجملة بسيارتين/لغتين مختلفتين
   // تعطي ردوداً مختلفة (الرد الظاهر يتبع اللغة)
-  const cacheText = `${locale}|${vehicleLine}|${text}`;
+  const cacheText = `${locale}|${vehicleSkipped ? "skip" : vehicleLine}|${text}`;
 
-  // ── preflight: budget + rate limit ─────────────────────
-  const pre = await preflightCheck({ text, ip });
+  const history = (body.conversation_history ?? [])
+    .slice(-MAX_HISTORY_TURNS)
+    .map((m) => ({ role: m.role, content: m.content }));
 
-  if (!pre.allow && pre.reason === "budget_exceeded") {
+  // Budget first (cheap). Cache before rate-limit so hits don't burn the quota.
+  // Skip cache when history is present — short follow-ups must not reuse
+  // another thread's answer for the same short text.
+  const budget = await isWithinBudget();
+  if (!budget.ok) {
     return jsonResponse({
       status: "budget_exceeded",
       fallback_message: L.budget,
     });
   }
 
-  if (!pre.allow && pre.reason === "rate_limited") {
+  if (history.length === 0) {
+    const cached = await getCachedAnswer<AsaaliResponse>(cacheText);
+    if (cached) {
+      await logUsage({
+        ip_hash: ipHash,
+        model: MODEL,
+        cost_usd: 0,
+        endpoint: "chat",
+        cache_hit: true,
+      });
+      const refreshed = await attachConciergeWorkshops(cached.response);
+      return jsonResponse({ ...refreshed, source: "cache" });
+    }
+  }
+
+  // Rate limit only when we need a paid LLM call.
+  const rl = await checkRateLimit(ipHash);
+  if (!rl.ok) {
     return jsonResponse({
       status: "rate_limited",
       fallback_message: L.rateLimited,
-      retry_after_seconds: pre.retryAfterSeconds ?? 3600,
+      retry_after_seconds: rl.retryAfterSeconds ?? 3600,
     });
-  }
-
-  // ── cache lookup ──────────────────────────────────────
-  const cached = await getCachedAnswer<AsaaliResponse>(cacheText);
-  if (cached) {
-    await logUsage({
-      ip_hash: ipHash,
-      model: MODEL,
-      cost_usd: 0,
-      endpoint: "chat",
-      cache_hit: true,
-    });
-    // Refresh partner matching on cache hits so new partners take effect.
-    const refreshed = await attachConciergeWorkshops(cached.response);
-    return jsonResponse({ ...refreshed, source: "cache" });
   }
 
   // ── build messages with history ───────────────────────────
-  const history = (body.conversation_history ?? [])
-    .slice(-MAX_HISTORY_TURNS)
-    .map((m) => ({ role: m.role, content: m.content }));
-
   const messages: Array<{ role: "user" | "assistant"; content: string }> = [
     ...history,
     { role: "user", content: text },
@@ -481,12 +490,22 @@ export async function POST(req: NextRequest) {
   // ── build base response, then attach partner-preferring workshops ─
   const categoryRaw = parsed.category;
   const category =
-    typeof categoryRaw === "string" && categoryRaw !== "none"
+    typeof categoryRaw === "string" &&
+    categoryRaw !== "none" &&
+    (CATEGORY_VALUES as readonly string[]).includes(categoryRaw)
       ? categoryRaw
-      : null;
+      : typeof categoryRaw === "string" && categoryRaw !== "none"
+        ? "صيانة عامة"
+        : null;
+
+  let status = (parsed.status as AsaaliResponse["status"]) ?? "ok";
+  // User already declined vehicle details — never loop on needs_vehicle_info.
+  if (vehicleSkipped && status === "needs_vehicle_info") {
+    status = category ? "ok" : "needs_more_info";
+  }
 
   const base: AsaaliResponse = {
-    status: (parsed.status as AsaaliResponse["status"]) ?? "ok",
+    status,
     problem_summary: parsed.problem_summary as string | undefined,
     official_terms: parsed.official_terms as AsaaliResponse["official_terms"],
     explanation: parsed.explanation as string | undefined,
