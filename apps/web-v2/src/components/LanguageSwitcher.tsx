@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -15,11 +14,18 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const t = useTranslations("lang");
   const locale = useLocale() as Locale;
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const qs = searchParams.toString();
-  const href = qs ? `${pathname}?${qs}` : pathname;
+  const [queryString, setQueryString] = useState("");
+  const href = `${pathname}${queryString}`;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Reading window.location in an effect keeps static prerendering valid while
+  // still preserving the current query string after hydration. Using
+  // useSearchParams here forces every page containing the global header behind a
+  // Suspense boundary and caused production builds to fail during prerender.
+  useEffect(() => {
+    setQueryString(window.location.search);
+  }, [pathname]);
 
   // Close on outside click / Escape.
   useEffect(() => {
