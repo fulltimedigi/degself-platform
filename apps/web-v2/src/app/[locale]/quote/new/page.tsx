@@ -12,7 +12,13 @@ export const metadata: Metadata = {
 export default async function NewQuotePage({
   searchParams,
 }: {
-  searchParams: Promise<{ service?: string }>;
+  searchParams: Promise<{
+    service?: string;
+    problem?: string;
+    make?: string;
+    model?: string;
+    year?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const t = await getTranslations("quote");
@@ -24,7 +30,13 @@ export default async function NewQuotePage({
         <p className="text-sm text-muted-foreground sm:text-base">{t("pageSubtitle")}</p>
       </header>
 
-      <NewQuoteForm initialService={sp.service ?? ""} />
+      <NewQuoteForm
+        initialService={sp.service ?? ""}
+        initialProblem={sp.problem ?? ""}
+        initialCarMake={sp.make ?? ""}
+        initialCarModel={sp.model ?? ""}
+        initialCarYear={sp.year ?? ""}
+      />
     </main>
   );
 }

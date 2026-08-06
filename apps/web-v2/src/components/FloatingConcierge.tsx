@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * Floating "اسأل دق سلف" concierge — diagnosis chat + quote request.
- * Sits bottom-left so it doesn't collide with the emergency FAB (bottom-right).
+ * Floating interactive Degself assistant (bottom-left).
+ * Opens a conversational panel — not a clone of /isal-degself.
  */
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { track } from "@/lib/track";
-import { AsaaliChat } from "@/components/asaali/AsaaliChat";
+import { ConciergeChat } from "@/components/concierge/ConciergeChat";
 
 function logicalPath(pathname: string): string {
   const m = pathname.match(/^\/(en|hi|ur)(\/.*)?$/);
@@ -17,21 +17,20 @@ function logicalPath(pathname: string): string {
 }
 
 export function FloatingConcierge() {
-  const t = useTranslations("asaali");
+  const t = useTranslations("concierge");
   const pathname = usePathname() || "";
   const logical = logicalPath(pathname);
   const [open, setOpen] = useState(false);
   const [ready, setReady] = useState(false);
 
-  // Hide on admin, full Asaali page (already has the chat), and auth screens.
+  // Hide on admin / auth. Keep available on /isal-degself so the assistant
+  // can still open the quote form as a service (different product surface).
   const hidden =
     logical.startsWith("/admin") ||
-    logical.startsWith("/isal-degself") ||
     logical.startsWith("/login") ||
     logical.startsWith("/account");
 
   useEffect(() => {
-    // Defer mount slightly so LCP / hero aren't blocked by the FAB.
     const id = window.setTimeout(() => setReady(true), 400);
     return () => window.clearTimeout(id);
   }, []);
@@ -42,23 +41,21 @@ export function FloatingConcierge() {
     <div className="fixed bottom-4 left-4 z-30 sm:bottom-6 sm:left-6">
       {open && (
         <div
-          className="mb-3 flex max-h-[min(72vh,640px)] w-[min(calc(100vw-2rem),380px)] flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950 shadow-2xl"
+          className="mb-3 flex h-[min(78vh,620px)] w-[min(calc(100vw-2rem),400px)] flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950 shadow-2xl"
           role="dialog"
-          aria-label={t("widgetTitle")}
+          aria-label={t("title")}
         >
-          <div className="flex items-center justify-between gap-2 border-b border-neutral-800 bg-neutral-900 px-4 py-3">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-800 bg-neutral-900 px-4 py-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-extrabold text-[#FFD60A]">
-                {t("widgetTitle")}
+                {t("title")}
               </p>
-              <p className="truncate text-[11px] text-neutral-400">
-                {t("widgetSubtitle")}
-              </p>
+              <p className="truncate text-[11px] text-neutral-400">{t("subtitle")}</p>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label={t("widgetClose")}
+              aria-label={t("close")}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-neutral-700 text-neutral-300 hover:bg-neutral-800"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
@@ -67,8 +64,8 @@ export function FloatingConcierge() {
               </svg>
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-3">
-            <AsaaliChat variant="widget" />
+          <div className="min-h-0 flex-1">
+            <ConciergeChat onClose={() => setOpen(false)} />
           </div>
         </div>
       )}
@@ -77,9 +74,9 @@ export function FloatingConcierge() {
         type="button"
         onClick={() => {
           setOpen((v) => !v);
-          if (!open) track("floating_concierge", { action: "open" });
+          if (!open) track("concierge", { action: "open" });
         }}
-        aria-label={open ? t("widgetClose") : t("widgetOpen")}
+        aria-label={open ? t("close") : t("open")}
         aria-expanded={open}
         className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#FFD60A] text-[#0A0A0A] shadow-2xl shadow-yellow-500/30 transition hover:scale-105 hover:bg-yellow-300"
       >

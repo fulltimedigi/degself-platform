@@ -20,7 +20,6 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/track";
 import { VehicleSelector } from "./VehicleSelector";
-import { AsaaliQuoteForm } from "./AsaaliQuoteForm";
 import type {
   VehicleContext as VehicleContextT,
   AsaaliResponse,
@@ -57,15 +56,9 @@ interface HistoryItem {
   content: string;
 }
 
-export function AsaaliChat({
-  variant = "page",
-}: {
-  /** page = full /isal-degself; widget = floating concierge panel */
-  variant?: "page" | "widget";
-}) {
+export function AsaaliChat() {
   const t = useTranslations("asaali");
   const locale = useLocale();
-  const isWidget = variant === "widget";
   const [vehicle, setVehicle] = useState<VehicleContextT>({});
   const [vehicleOpen, setVehicleOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -74,7 +67,6 @@ export function AsaaliChat({
   const [response, setResponse] = useState<AsaaliResponse | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
-  const [showQuoteForm, setShowQuoteForm] = useState(false);
 
   // تسجيل الصوت (Web Speech API)
   const [listening, setListening] = useState(false);
@@ -174,7 +166,6 @@ export function AsaaliChat({
       }
 
       setResponse(data);
-      setShowQuoteForm(false);
       setHistory((h) => [
         ...h,
         { role: "user", content: text },
@@ -190,8 +181,6 @@ export function AsaaliChat({
         status: data.status,
         has_vehicle: Boolean(vehicle.make),
         source: data.source ?? "llm",
-        from_partners: Boolean(data.from_partners),
-        variant,
       });
     } catch {
       setError(t("errConn"));
@@ -215,7 +204,6 @@ export function AsaaliChat({
     setHistory([]);
     setInput("");
     setError(null);
-    setShowQuoteForm(false);
   }
 
   const showWarning = response?.warning && response.warning.severity !== "safe";
@@ -223,12 +211,9 @@ export function AsaaliChat({
     response?.warning?.severity === "urgent"
       ? "border-red-500 bg-red-500/10 text-red-200"
       : "border-amber-500 bg-amber-500/10 text-amber-200";
-  const canRequestQuote =
-    response?.status === "ok" &&
-    Boolean(response.problem_summary || response.explanation);
 
   return (
-    <div className={isWidget ? "space-y-3" : "space-y-5"}>
+    <div className="space-y-5">
       {/* اختيار السيارة */}
       <VehicleSelector
         value={vehicle}
@@ -249,7 +234,7 @@ export function AsaaliChat({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={t("placeholder")}
-            rows={isWidget ? 3 : 4}
+            rows={4}
             maxLength={MAX_INPUT}
             className="w-full rounded-xl bg-neutral-900 border border-neutral-800 px-4 py-3 pl-14 text-base text-neutral-100 placeholder-neutral-500 outline-none focus:border-yellow-400"
             disabled={loading}
@@ -365,13 +350,7 @@ export function AsaaliChat({
           {/* الكراجات المقترحة */}
           {response.recommended_workshops && response.recommended_workshops.length > 0 && (
             <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <div className="text-xs text-neutral-400">
-                  {response.from_partners
-                    ? t("workshopsPartnersLabel")
-                    : t("workshopsLabel")}
-                </div>
-              </div>
+              <div className="mb-2 text-xs text-neutral-400">{t("workshopsLabel")}</div>
               <div className="space-y-2">
                 {response.recommended_workshops.map((w) => (
                   <div
@@ -396,39 +375,15 @@ export function AsaaliChat({
                   </div>
                 ))}
               </div>
-              {!isWidget && (
-                <div className="mt-3 text-center">
-                  <Link
-                    href="/"
-                    className="text-xs text-yellow-300 hover:underline"
-                  >
-                    {t("viewAllWorkshops")}
-                  </Link>
-                </div>
-              )}
+              <div className="mt-3 text-center">
+                <Link
+                  href="/"
+                  className="text-xs text-yellow-300 hover:underline"
+                >
+                  {t("viewAllWorkshops")}
+                </Link>
+              </div>
             </div>
-          )}
-
-          {/* طلب عرض سعر من التشخيص */}
-          {canRequestQuote && (
-            showQuoteForm ? (
-              <AsaaliQuoteForm response={response} vehicle={vehicle} />
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setShowQuoteForm(true);
-                  track("asaali_quote_cta", {
-                    from_partners: Boolean(response.from_partners),
-                    variant,
-                  });
-                }}
-                className="w-full rounded-xl border border-yellow-400/50 bg-yellow-400 px-4 py-3 text-sm font-extrabold text-black hover:bg-yellow-300"
-                style={{ background: "#FFD60A" }}
-              >
-                {t("quoteCta")}
-              </button>
-            )
           )}
 
           {/* المصطلح الرسمي — معلومة جانبية مطوية */}
