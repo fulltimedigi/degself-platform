@@ -30,3 +30,16 @@ test("internal SECURITY DEFINER trigger helpers are revoked from public roles", 
   assert.match(migration, /revoke all on function/);
   assert.match(migration, /public, anon, authenticated/);
 });
+
+test("Next 16 request boundary uses proxy and framework-managed asset caching", async () => {
+  const proxy = await source("../../proxy.ts");
+  const config = await source("../../../next.config.ts");
+  assert.match(proxy, /export async function proxy/);
+  assert.doesNotMatch(config, /source:\s*[\"']\/_next\/static/);
+});
+
+test("login divider never renders a raw translation key", async () => {
+  const login = await source("../../app/[locale]/login/page.tsx");
+  assert.match(login, /OR_LABEL/);
+  assert.doesNotMatch(login, /t\([\"']or[\"']\)/);
+});

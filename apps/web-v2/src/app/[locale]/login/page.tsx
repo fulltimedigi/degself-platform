@@ -21,6 +21,13 @@ type Props = {
   searchParams: Promise<{ next?: string; error?: string }>;
 };
 
+const OR_LABEL: Record<string, string> = {
+  ar: "أو",
+  en: "or",
+  hi: "या",
+  ur: "یا",
+};
+
 export default async function LoginPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const t = await getTranslations("auth");
@@ -53,7 +60,7 @@ export default async function LoginPage({ params, searchParams }: Props) {
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        <span>{t("or")}</span>
+        <span>{OR_LABEL[locale] ?? OR_LABEL.en}</span>
         <span className="h-px flex-1 bg-border" />
       </div>
 

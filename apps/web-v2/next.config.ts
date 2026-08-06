@@ -107,16 +107,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // كل الصفحات
+        // كل الصفحات. Next.js/Vercel manage hashed /_next/static caching; setting
+        // it manually triggers build warnings and can override framework behavior.
         source: "/(.*)",
         headers: securityHeaders,
-      },
-      {
-        // الـ assets الثابتة: cache طويل + immutable
-        source: "/_next/static/(.*)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
       },
       {
         // /.well-known/security.txt
@@ -130,7 +124,7 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    // beforeFiles: these run BEFORE the next-intl middleware so the pretty
+    // beforeFiles: these run BEFORE the next-intl proxy so the pretty
     // Arabic URLs resolve to the ASCII routes first; next-intl then maps the
     // unprefixed path to the default (ar) locale.
     return {

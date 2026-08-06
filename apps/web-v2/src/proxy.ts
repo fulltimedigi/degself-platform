@@ -21,7 +21,7 @@ function stripLocale(pathname: string): string {
   return m ? m[2] ?? "/" : pathname;
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   // Refresh user session first (may mutate request cookies + produce Set-Cookie).
   const sessionRes = await updateSession(req);
 
