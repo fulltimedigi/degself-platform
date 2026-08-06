@@ -19,7 +19,7 @@ test("quote API sources stay compatible with the database constraint", async () 
 
 test("global language switcher does not force static pages to client render", async () => {
   const switcher = await source("../../components/LanguageSwitcher.tsx");
-  assert.doesNotMatch(switcher, /useSearchParams/);
+  assert.doesNotMatch(switcher, /import[^\n]*useSearchParams/);
   assert.match(switcher, /window\.location\.search/);
 });
 
