@@ -43,3 +43,22 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      - name: Critical route smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/degself-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true; cat /tmp/degself-next.log' EXIT
+
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:3000/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          for path in / /about /login /quote/new /isal-degself /admin/login '/search?q=%D9%82%D9%8A%D8%B1'; do
+            echo "smoke: $path"
+            curl --silent --show-error --fail --max-time 20 "http://127.0.0.1:3000${path}" > /dev/null
+          done
