@@ -113,13 +113,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
   }
 
-  // ---- rate limit: atomic bump via bump_rate_limit RPC ----
-  const ip = clientIp(req);
-  if (!(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR))) {
-    return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
-  }
-
-  // ---- anti-spam: reject the same phone submitted within the last 30 minutes ----
+  // ---- anti-spam: same phone within 30 minutes (before IP quota) ----
   try {
     const since = new Date(Date.now() - 30 * 60_000).toISOString();
     const { data: dup } = await admin
@@ -136,6 +130,12 @@ export async function POST(req: NextRequest) {
     }
   } catch (e) {
     console.error("duplicate-phone check failed (allowing):", e);
+  }
+
+  // ---- rate limit: atomic bump via bump_rate_limit RPC ----
+  const ip = clientIp(req);
+  if (!(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR))) {
+    return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
   }
 
   const matched_workshops = parseMatchedWorkshops(b.matched_workshops);

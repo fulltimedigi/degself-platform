@@ -64,13 +64,27 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   // Reuse an existing token so the link stays stable if sent twice.
   const token = (quote.customer_token as string | null) ?? randomBytes(16).toString("hex");
 
-  const { error: uErr } = await admin
+  // Never reopen terminal quotes (accepted / declined / expired).
+  const { data: updated, error: uErr } = await admin
     .from("quotes")
-    .update({ customer_token: token, status: "offers_sent", updated_at: new Date().toISOString() })
-    .eq("id", id);
+    .update({
+      customer_token: token,
+      status: "offers_sent",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .in("status", ["new", "forwarded", "awaiting_offers", "offers_sent"])
+    .select("id")
+    .maybeSingle();
   if (uErr) {
     console.error("send-offers update error:", uErr);
     return NextResponse.json({ error: "تعذّر تحديث الطلب." }, { status: 500 });
+  }
+  if (!updated) {
+    return NextResponse.json(
+      { error: "لا يمكن إرسال العروض — حالة الطلب منتهية." },
+      { status: 409 }
+    );
   }
 
   const name = quote.customer_name as string;

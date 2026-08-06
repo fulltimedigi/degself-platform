@@ -41,8 +41,18 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   return response;
 }
 
-/** Copy Set-Cookie headers from `from` onto `to`. */
+/** Copy Set-Cookie headers from `from` onto `to` (preserve attributes). */
 export function copyCookies(from: NextResponse, to: NextResponse): NextResponse {
+  // Prefer raw Set-Cookie so httpOnly/secure/sameSite/maxAge survive.
+  const getSetCookie = from.headers.getSetCookie?.bind(from.headers);
+  const raw = typeof getSetCookie === "function" ? getSetCookie() : [];
+  if (raw.length > 0) {
+    for (const cookie of raw) {
+      to.headers.append("Set-Cookie", cookie);
+    }
+    return to;
+  }
+  // Fallback: name/value only (older runtimes without getSetCookie).
   from.cookies.getAll().forEach((c) => {
     to.cookies.set(c.name, c.value);
   });

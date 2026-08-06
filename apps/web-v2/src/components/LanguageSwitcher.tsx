@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -14,6 +15,9 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const t = useTranslations("lang");
   const locale = useLocale() as Locale;
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const qs = searchParams.toString();
+  const href = qs ? `${pathname}?${qs}` : pathname;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -60,7 +64,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             return (
               <li key={l} role="option" aria-selected={active}>
                 <Link
-                  href={pathname}
+                  href={href}
                   locale={l}
                   onClick={() => setOpen(false)}
                   dir={l === "ar" || l === "ur" ? "rtl" : "ltr"}
