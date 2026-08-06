@@ -619,7 +619,7 @@
           },
           {
             "q": "تکنیکی اسٹیک کیا ہے؟",
-            "a": "Frontend: Next.js 16 (App Router) React اور TypeScript کے ساتھ۔ Backend: Next.js API Routes Supabase کے ساتھ۔ Database: Supabase کے ذریعے PostgreSQL۔ Hosting: Vercel۔ Maps: Leaflet OpenStreetMap کے ساتھ۔ AI: گیراج ٹرانسلیٹر کے لیے Anthropic کا Claude AI (claude-haiku-4-5)۔"
+            "a": "Frontend: Next.js 16 (App Router) React اور TypeScript کے ساتھ۔ Backend: Next.js API Routes Supabase کے ساتھ۔ Database: Supabase کے ذریعے PostgreSQL۔ Hosting: Vercel۔ Maps: Leaflet OpenStreetMap کے ساتھ۔ AI: Anthropic کے Claude ماڈلز۔"
           }
         ]
       }

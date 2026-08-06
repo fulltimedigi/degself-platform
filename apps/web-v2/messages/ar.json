@@ -619,7 +619,7 @@
           },
           {
             "q": "ما الـ Stack التقني؟",
-            "a": "الواجهة: Next.js 16 (App Router) مع React وTypeScript. الخادم: Next.js API Routes مع Supabase. قاعدة البيانات: PostgreSQL عبر Supabase. الاستضافة: Vercel. الخرائط: Leaflet مع OpenStreetMap. الذكاء الاصطناعي: Claude AI (claude-haiku-4-5) من Anthropic لمترجم الكراج."
+            "a": "الواجهة: Next.js 16 (App Router) مع React وTypeScript. الخادم: Next.js API Routes مع Supabase. قاعدة البيانات: PostgreSQL عبر Supabase. الاستضافة: Vercel. الخرائط: Leaflet مع OpenStreetMap. الذكاء الاصطناعي: نماذج Claude من Anthropic."
           }
         ]
       }

@@ -619,7 +619,7 @@
           },
           {
             "q": "तकनीकी स्टैक क्या है?",
-            "a": "Frontend: Next.js 16 (App Router) React और TypeScript के साथ। Backend: Next.js API Routes Supabase के साथ। Database: Supabase के ज़रिए PostgreSQL। Hosting: Vercel. Maps: Leaflet OpenStreetMap के साथ। AI: गैरेज ट्रांसलेटर के लिए Anthropic का Claude AI (claude-haiku-4-5)।"
+            "a": "Frontend: Next.js 16 (App Router) React और TypeScript के साथ। Backend: Next.js API Routes Supabase के साथ। Database: Supabase के ज़रिए PostgreSQL। Hosting: Vercel. Maps: Leaflet OpenStreetMap के साथ। AI: Anthropic के Claude मॉडल।"
           }
         ]
       }
