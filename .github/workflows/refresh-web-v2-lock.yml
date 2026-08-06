@@ -1,0 +1,40 @@
+name: Refresh web-v2 secure lock
+
+on:
+  push:
+    branches: [agent/p1-release-hardening]
+    paths:
+      - ".github/workflows/refresh-web-v2-lock.yml"
+      - "apps/web-v2/package.json"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    if: github.event.head_commit.message != 'chore: refresh secure dependency lock'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web-v2
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: agent/p1-release-hardening
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/web-v2/package-lock.json
+      - name: Refresh Next.js and lockfile
+        run: npm install next@16.3.0 --package-lock-only --ignore-scripts
+      - name: Commit generated lockfile
+        working-directory: .
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web-v2/package.json apps/web-v2/package-lock.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: refresh secure dependency lock"
+          git push origin HEAD:agent/p1-release-hardening
