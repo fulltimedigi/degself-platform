@@ -1,21 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// best-effort in-memory rate limit (per serverless instance)
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 3;
-const hits = new Map<string, number[]>();
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_PER_WINDOW;
-}
+const REPORT_LIMIT_PER_HOUR = 5;
 
 function str(v: unknown, max: number): string | null {
   if (typeof v !== "string") return null;
@@ -26,11 +17,6 @@ function str(v: unknown, max: number): string | null {
 
 /** POST /api/report-workshop — submit a missing-workshop report. */
 export async function POST(req: NextRequest) {
-  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
-  if (rateLimited(ip)) {
-    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد قليل." }, { status: 429 });
-  }
-
   let b: Record<string, unknown>;
   try {
     b = await req.json();
@@ -38,9 +24,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 
-  // honeypot — bots fill hidden fields
+  // honeypot — bots fill hidden fields (before RL so bots don't burn quota).
   if (typeof b.website === "string" && b.website.trim() !== "") {
     return NextResponse.json({ ok: true });
+  }
+
+  if (
+    !(await consumeRateLimit(clientIp(req), "report_workshop", REPORT_LIMIT_PER_HOUR, {
+      failClosed: true,
+    }))
+  ) {
+    return NextResponse.json({ error: "محاولات كثيرة، حاول بعد قليل." }, { status: 429 });
   }
 
   const name = str(b.name, 200);

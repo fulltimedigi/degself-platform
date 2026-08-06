@@ -77,7 +77,7 @@ export interface UsageRow {
   output_tokens?: number;
   audio_seconds?: number;
   cost_usd: number;
-  endpoint?: 'chat' | 'transcribe';
+  endpoint?: 'chat' | 'transcribe' | 'translate';
   cache_hit?: boolean;
   meta?: Record<string, unknown>;
 }
@@ -150,15 +150,11 @@ export function computeWhisperCost(audioSeconds: number): number {
 // ============================================================
 export async function isWithinBudget(): Promise<BudgetCheck> {
   const supabase = getSupabaseAdmin();
-  const monthStart = new Date();
-  monthStart.setUTCDate(1);
-  monthStart.setUTCHours(0, 0, 0, 0);
+  const budget = ASAALI_CONFIG.MONTHLY_BUDGET_USD;
 
-  const { data, error } = await supabase
-    .from('asaali_usage')
-    .select('cost_usd')
-    .gte('created_at', monthStart.toISOString())
-    .eq('cache_hit', false);
+  // Prefer the SQL aggregate (migration 007) — avoids pulling every usage row
+  // into the function under traffic.
+  const { data, error } = await supabase.rpc('asaali_current_month_cost');
 
   if (error) {
     console.error('[asaali-cost-guard] budget check failed:', error);
@@ -166,18 +162,17 @@ export async function isWithinBudget(): Promise<BudgetCheck> {
     return {
       ok: false,
       spent_usd: 0,
-      budget_usd: ASAALI_CONFIG.MONTHLY_BUDGET_USD,
+      budget_usd: budget,
       percent_used: 100,
       warn: true,
     };
   }
 
-  const spent = (data ?? []).reduce((sum, r) => sum + Number(r.cost_usd ?? 0), 0);
-  const budget = ASAALI_CONFIG.MONTHLY_BUDGET_USD;
-  const percent = (spent / budget) * 100;
+  const spent = Number(data ?? 0);
+  const percent = budget > 0 ? (spent / budget) * 100 : 100;
 
   return {
-    ok: spent < budget,
+    ok: Number.isFinite(spent) && spent < budget,
     spent_usd: Number(spent.toFixed(4)),
     budget_usd: budget,
     percent_used: Number(percent.toFixed(2)),
@@ -191,7 +186,10 @@ export async function isWithinBudget(): Promise<BudgetCheck> {
 export async function checkRateLimit(ipHash: string): Promise<RateLimitCheck> {
   const max = ASAALI_CONFIG.RATE_LIMIT_PER_HOUR;
   // Store the hash in rate_limits.ip (text) — never the raw IP.
-  const allowed = await consumeRateLimit(ipHash, 'asaali', max);
+  // Fail closed: limiter outage must not open paid Sonnet calls.
+  const allowed = await consumeRateLimit(ipHash, 'asaali', max, {
+    failClosed: true,
+  });
   if (!allowed) {
     const now = new Date();
     const bucketStart = new Date(now);

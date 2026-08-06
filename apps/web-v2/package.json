@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "test": "tsx --test src/lib/__tests__/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "load-smoke": "node scripts/load-smoke.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.114.0",

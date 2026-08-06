@@ -1,6 +1,5 @@
 // Server-only IP rate limiting on public.rate_limits via atomic RPC
-// bump_rate_limit (migration 020). Fail-OPEN on infra errors — a limiter
-// hiccup must never lock out real users. NEVER import from a client component.
+// bump_rate_limit (migration 020). NEVER import from a client component.
 import type { NextRequest } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
@@ -37,27 +36,45 @@ async function bump(
   return { allowed, new_count };
 }
 
+export type ConsumeRateLimitOpts = {
+  /**
+   * Paid / spam-sensitive paths should fail closed when the limiter is down —
+   * otherwise a Supabase blip during a traffic spike opens Anthropic/CallMeBot.
+   * Default false preserves fail-open for harmless endpoints.
+   */
+  failClosed?: boolean;
+};
+
 /**
  * Atomically increment and return whether the IP is still within `limit`
- * for this bucket this hour. Fail-open (allowed=true) on infra errors.
+ * for this bucket this hour.
  */
 export async function consumeRateLimit(
   ip: string,
   bucket: string,
-  limit: number
+  limit: number,
+  opts: ConsumeRateLimitOpts = {}
 ): Promise<boolean> {
   try {
     const row = await bump(ip, bucket, limit);
-    if (!row) return true;
+    if (!row) return !opts.failClosed;
     return row.allowed;
   } catch (e) {
-    console.error(`rate-limit consume failed (${bucket}), allowing:`, e);
-    return true;
+    console.error(
+      `rate-limit consume failed (${bucket}), ${opts.failClosed ? "denying" : "allowing"}:`,
+      e
+    );
+    return opts.failClosed ? false : true;
   }
 }
 
 /** Read-only: is this IP already at/over `limit` for this bucket this hour? */
-export async function isOverLimit(ip: string, bucket: string, limit: number): Promise<boolean> {
+export async function isOverLimit(
+  ip: string,
+  bucket: string,
+  limit: number,
+  opts: ConsumeRateLimitOpts = {}
+): Promise<boolean> {
   try {
     const admin = getSupabaseAdmin();
     const { data } = await admin
@@ -69,8 +86,11 @@ export async function isOverLimit(ip: string, bucket: string, limit: number): Pr
       .maybeSingle();
     return ((data?.count as number | undefined) ?? 0) >= limit;
   } catch (e) {
-    console.error(`rate-limit read failed (${bucket}), allowing:`, e);
-    return false; // fail-open
+    console.error(
+      `rate-limit read failed (${bucket}), ${opts.failClosed ? "treating as over" : "allowing"}:`,
+      e
+    );
+    return opts.failClosed ? true : false;
   }
 }
 

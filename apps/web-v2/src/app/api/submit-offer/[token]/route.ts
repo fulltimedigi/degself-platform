@@ -20,16 +20,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
 
-  const ip = clientIp(req);
-  if (!(await consumeRateLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR))) {
-    return NextResponse.json({ error: "عروض كثيرة — حاول بعد ساعة." }, { status: 429 });
-  }
-
   let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
+  }
+
+  const ip = clientIp(req);
+  if (
+    !(await consumeRateLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR, {
+      failClosed: true,
+    }))
+  ) {
+    return NextResponse.json({ error: "عروض كثيرة — حاول بعد ساعة." }, { status: 429 });
   }
 
   const result = validateOffer(body);
