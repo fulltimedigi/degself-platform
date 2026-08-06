@@ -68,3 +68,16 @@ test("RLS policies and backend tables remain least-privilege", async () => {
   assert.match(migration, /community_mentions_matched_by_idx/);
   assert.match(migration, /workshops_claimed_by_idx/);
 });
+
+test("all translated catalog claims pass through one normalization boundary", async () => {
+  const requestConfig = await source("../../i18n/request.ts");
+  const catalogStats = await source("../catalog-stats.ts");
+
+  assert.match(requestConfig, /normalizeCatalogCountClaims\(raw\)/);
+  assert.match(requestConfig, /normalizedMessageCache/);
+  assert.match(catalogStats, /PUBLIC_WORKSHOP_COUNT_LABEL = "1,850\+"/);
+  assert.match(catalogStats, /"1,640\+"/);
+  assert.match(catalogStats, /"1,757"/);
+  assert.match(catalogStats, /"1,800"/);
+  assert.match(catalogStats, /Historical collection\/audit numbers such as 1,798/);
+});
