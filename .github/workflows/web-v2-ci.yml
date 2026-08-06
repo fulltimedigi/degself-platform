@@ -12,7 +12,7 @@ on:
       - ".github/workflows/web-v2-ci.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: web-v2-ci-${{ github.ref }}
@@ -32,31 +32,12 @@ jobs:
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd
     steps:
       - uses: actions/checkout@v5
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v5
         with:
           # Keep CI identical to the Vercel production project runtime.
           node-version: "24"
           cache: npm
           cache-dependency-path: apps/web-v2/package-lock.json
-      - name: Refresh secure dependency lock
-        if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
-        run: |
-          npm install next@16.3.0 --save-exact --package-lock-only --ignore-scripts
-          npm audit fix --omit=dev --package-lock-only --ignore-scripts
-      - name: Commit generated dependency lock
-        if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
-        working-directory: .
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apps/web-v2/package.json apps/web-v2/package-lock.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: refresh secure dependency lock"
-            git push origin HEAD:agent/p1-release-hardening
-          fi
       - name: Install
         run: npm ci
       - name: Production dependency audit
@@ -75,12 +56,15 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true; cat /tmp/degself-next.log' EXIT
 
+          ready=false
           for attempt in {1..30}; do
             if curl --silent --fail http://127.0.0.1:3000/ > /dev/null; then
+              ready=true
               break
             fi
             sleep 1
           done
+          test "$ready" = true
 
           for path in / /about /login /quote/new /isal-degself /admin/login '/search?q=%D9%82%D9%8A%D8%B1'; do
             echo "smoke: $path"
