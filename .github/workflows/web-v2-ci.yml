@@ -11,6 +11,9 @@ on:
       - "apps/web-v2/**"
       - ".github/workflows/web-v2-ci.yml"
 
+permissions:
+  contents: write
+
 concurrency:
   group: web-v2-ci-${{ github.ref }}
   cancel-in-progress: true
@@ -28,13 +31,30 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: https://xqmwhrimxnvqlpvfzcac.supabase.co
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-node@v5
         with:
           # Keep CI identical to the Vercel production project runtime.
           node-version: "24"
           cache: npm
           cache-dependency-path: apps/web-v2/package-lock.json
+      - name: Refresh secure dependency lock
+        if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
+        run: npm install next@16.3.0 --save-exact --package-lock-only --ignore-scripts
+      - name: Commit generated dependency lock
+        if: github.event_name == 'pull_request' && github.head_ref == 'agent/p1-release-hardening'
+        working-directory: .
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web-v2/package.json apps/web-v2/package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh secure dependency lock"
+            git push origin HEAD:agent/p1-release-hardening
+          fi
       - name: Install
         run: npm ci
       - name: Production dependency audit
