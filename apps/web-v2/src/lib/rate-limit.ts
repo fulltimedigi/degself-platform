@@ -3,8 +3,22 @@
 import type { NextRequest } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
+/**
+ * Client IP for rate limiting. Prefer platform-set headers that clients cannot
+ * spoof; never trust the leftmost X-Forwarded-For hop (attackers prepend fakes).
+ */
 export function clientIp(req: NextRequest): string {
-  return (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
+  const vercel = req.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim();
+  if (vercel) return vercel;
+  const realIp = req.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  // Rightmost hop is typically appended by the trusted edge / reverse proxy.
+  const xff = (req.headers.get("x-forwarded-for") ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (xff.length) return xff[xff.length - 1]!;
+  return "unknown";
 }
 
 // Fixed clock-hour bucket so hits in the same hour collide on the PK.

@@ -42,22 +42,19 @@ interface WaStatus {
 export async function POST(req: NextRequest) {
   const raw = await req.text();
 
-  // Fail closed when the webhook is configured but the app secret is missing —
-  // otherwise forged "failed" statuses can spam admin WhatsApp fallbacks.
-  const appSecret = process.env.WHATSAPP_APP_SECRET;
-  const webhookConfigured = Boolean(process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN);
-  if (webhookConfigured && !appSecret) {
+  // Always require HMAC — unsigned POSTs can forge "failed" and spam CallMeBot.
+  const appSecret = process.env.WHATSAPP_APP_SECRET?.trim();
+  if (!appSecret) {
     console.error("whatsapp webhook: WHATSAPP_APP_SECRET missing");
     return new NextResponse("signature required", { status: 401 });
   }
-  if (appSecret) {
-    const sig = req.headers.get("x-hub-signature-256") ?? "";
-    const expected = "sha256=" + createHmac("sha256", appSecret).update(raw).digest("hex");
-    const a = Buffer.from(sig);
-    const b = Buffer.from(expected);
-    if (a.length !== b.length || !timingSafeEqual(a, b)) {
-      return new NextResponse("invalid signature", { status: 401 });
-    }
+  const sig = req.headers.get("x-hub-signature-256") ?? "";
+  const expected =
+    "sha256=" + createHmac("sha256", appSecret).update(raw).digest("hex");
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) {
+    return new NextResponse("invalid signature", { status: 401 });
   }
 
   let payload: unknown;

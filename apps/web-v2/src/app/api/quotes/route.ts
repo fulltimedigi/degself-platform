@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
+import { sanitizePhotoUrls } from "@/lib/safe-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -84,13 +85,7 @@ export async function POST(req: NextRequest) {
   const sourceRaw = str(b.source, 20) ?? "quote_bar";
   const source = (SOURCES as readonly string[]).includes(sourceRaw) ? sourceRaw : "quote_bar";
 
-  let photos: string[] = [];
-  if (Array.isArray(b.photos)) {
-    photos = b.photos
-      .filter((p): p is string => typeof p === "string" && p.trim() !== "")
-      .slice(0, 3)
-      .map((p) => p.trim().slice(0, 600));
-  }
+  const photos = sanitizePhotoUrls(b.photos, 3);
 
   const car_make = str(b.car_make, 60);
   if (!car_make) {

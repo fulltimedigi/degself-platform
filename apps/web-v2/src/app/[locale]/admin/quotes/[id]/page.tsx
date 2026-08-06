@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchQuote, fetchOffers, statusMeta, urgencyClass, type Quote, type QuoteOffer } from "@/lib/quotes";
 import { formatArabicDate, relativeArabic, kuwaitWhatsAppDigits } from "@/lib/utils";
 import { QuoteAdminControls } from "@/components/QuoteAdminControls";
+import { isSafeHttpUrl } from "@/lib/safe-url";
 
 export const metadata: Metadata = {
   title: "تفاصيل الطلب",
@@ -165,10 +166,10 @@ export default async function QuoteDetailPage({
           <Row label="آخر تحديث">{fullDate(q.updated_at)}</Row>
         )}
         {q.expires_at && <Row label="ينتهي في">{fullDate(q.expires_at)}</Row>}
-        {q.photos && q.photos.length > 0 && (
+        {q.photos && q.photos.filter(isSafeHttpUrl).length > 0 && (
           <Row label="الصور">
             <div className="flex flex-wrap gap-2">
-              {q.photos.map((p, i) => (
+              {q.photos.filter(isSafeHttpUrl).map((p, i) => (
                 <a
                   key={i}
                   href={p}
