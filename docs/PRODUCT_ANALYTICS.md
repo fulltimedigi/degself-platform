@@ -15,10 +15,16 @@ and PostHog is used for product funnels and marketplace-health measurement.
 | Snapchat Pixel | Existing mapped advertising conversions | Search text is provider-specific for the existing `SEARCH` event only |
 | PostHog EU Cloud | Product funnels and marketplace-health analytics | **Never** |
 
-PostHog is sent events through its public Capture API (`/i/v0/e/`) rather than a
-browser SDK. This is deliberate: there is no autocapture, automatic pageview,
-session recording, survey, feature-flag, exception, or form/input collection
-surface to disable or accidentally re-enable.
+PostHog receives events through its public Capture API, but the browser sends
+only to the narrow same-origin path `/api/ds-b1`. A Next.js rewrite forwards
+that exact path to the EU Capture endpoint (`https://eu.i.posthog.com/i/v0/e/`).
+The first-party bridge improves delivery reliability without adding an SDK and
+does not proxy session replay, flags, assets, or any other PostHog traffic.
+
+There is no autocapture, automatic pageview, session recording, survey,
+feature-flag, exception, or form/input collection surface to disable or
+accidentally re-enable. Because browser capture stays same-origin, the CSP does
+not need to allow a PostHog origin in `connect-src`.
 
 Every PostHog event includes `$process_person_profile: false`, so these remain
 anonymous events without PostHog person profiles. The browser receives only the
@@ -30,8 +36,9 @@ Required public environment variables:
 - `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`
 - `NEXT_PUBLIC_POSTHOG_HOST` (`https://eu.i.posthog.com` for this project)
 
-If either variable is missing or invalid, PostHog analytics is a no-op and the
-product continues normally.
+The host value is also validated client-side as a region/configuration guard even
+though event transport uses the same-origin bridge. If either variable is missing
+or invalid, PostHog analytics is a no-op and the product continues normally.
 
 ## Privacy rules
 
@@ -156,5 +163,6 @@ Any analytics change must keep these guarantees:
 - Success events fire only after the corresponding API success.
 - Raw search text never goes through generic Vercel/PostHog event properties.
 - PostHog remains anonymous (`$process_person_profile: false`).
+- Browser PostHog transport stays on the narrow first-party capture bridge.
 - No PostHog personal API key is exposed to the browser.
 - No analytics PR may silently introduce database or migration changes.
