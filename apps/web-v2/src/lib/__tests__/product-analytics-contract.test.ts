@@ -21,6 +21,7 @@ test("PostHog stays first-party, anonymous, and SDK-free", () => {
   assert.match(clientCode, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
   assert.match(clientCode, /credentials:\s*["']same-origin["']/);
   assert.doesNotMatch(clientCode, /api_key\s*:/);
+  assert.doesNotMatch(clientCode, /NEXT_PUBLIC_POSTHOG_|process\.env/);
   assert.match(bridgeCode, /\$process_person_profile:\s*false/);
   assert.doesNotMatch(clientCode, /from\s+["']posthog-js["']/);
   assert.doesNotMatch(clientCode, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
