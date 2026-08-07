@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { resolveGarageOutreachToken } from "@/lib/garage-outreach";
 import { validateOffer } from "@/lib/offer-validation";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
@@ -50,11 +51,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
   }
 
-  // Resolve the quote from the garage token (no PII selected).
+  let resolution;
+  try {
+    resolution = await resolveGarageOutreachToken(token);
+  } catch (e) {
+    console.error("submit-offer resolve outreach error:", e);
+    return NextResponse.json({ error: "تعذّر جلب الطلب." }, { status: 500 });
+  }
+  if (!resolution) return NextResponse.json({ error: "الرابط غير صحيح." }, { status: 404 });
+
+  // Resolve only the fields needed for validation/notification. No customer PII.
   const { data: quote, error: qErr } = await admin
     .from("quotes")
     .select("id,service,status")
-    .eq("garage_token", token)
+    .eq("id", resolution.quoteId)
     .maybeSingle();
   if (qErr) {
     console.error("submit-offer fetch quote error:", qErr);
@@ -78,7 +88,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return NextResponse.json({ error: "وصل هذا الطلب للحد الأقصى من العروض." }, { status: 429 });
   }
 
-  const { error: insErr } = await admin.from("quote_offers").insert({
+  const insertPayload: Record<string, unknown> = {
     quote_id: quote.id,
     workshop_name: offer.workshop_name,
     workshop_phone: offer.workshop_phone,
@@ -93,11 +103,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     warranty_note: offer.warranty_note,
     estimated_duration: offer.estimated_duration,
     notes: offer.notes,
-  });
+  };
+
+  // Only include the new column for measured tokens. That preserves legacy offer
+  // submission even if code deploys during the short pre-migration rollout window.
+  if (resolution.outreachId) insertPayload.outreach_id = resolution.outreachId;
+
+  const { error: insErr } = await admin.from("quote_offers").insert(insertPayload);
   if (insErr) {
     console.error("submit-offer insert error:", insErr);
     return NextResponse.json({ error: "تعذّر حفظ العرض." }, { status: 500 });
   }
+
+  // For measured tokens, migration 030's DB trigger records responded_at in the
+  // SAME transaction as this insert. Analytics remains secondary/best-effort.
 
   // Let the founder know a garage responded (must be awaited on serverless).
   try {
