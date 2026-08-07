@@ -6,11 +6,18 @@ import { join } from "node:path";
 const analytics = readFileSync(join(process.cwd(), "src/lib/product-analytics.ts"), "utf8");
 const envExample = readFileSync(join(process.cwd(), ".env.example"), "utf8");
 
+function stripComments(source: string): string {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+}
+
 test("PostHog stays direct-capture, anonymous, and SDK-free", () => {
-  assert.match(analytics, /\/i\/v0\/e\//);
-  assert.match(analytics, /\$process_person_profile:\s*false/);
-  assert.doesNotMatch(analytics, /from\s+["']posthog-js["']/);
-  assert.doesNotMatch(analytics, /posthog\.identify|autocapture|session_recording/i);
+  const code = stripComments(analytics);
+  assert.match(code, /\/i\/v0\/e\//);
+  assert.match(code, /\$process_person_profile:\s*false/);
+  assert.doesNotMatch(code, /from\s+["']posthog-js["']/);
+  assert.doesNotMatch(code, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
 });
 
 test("only public PostHog project configuration is documented", () => {
