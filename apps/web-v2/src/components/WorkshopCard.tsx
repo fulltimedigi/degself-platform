@@ -55,7 +55,7 @@ export function WorkshopCard({
   const effectiveSpecialty = reviewed_specialty || specialty;
 
   return (
-    <div className={`group relative overflow-hidden rounded-2xl border bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${is_partner ? "border-[#FFD60A]/60 shadow-[#FFD60A]/10 hover:border-[#FFD60A]" : "border-border hover:border-primary/60 hover:shadow-primary/10"}`}>
+    <div className={`group relative overflow-hidden rounded-2xl border bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${is_partner ? "order-first border-[#FFD60A]/60 shadow-[#FFD60A]/10 hover:border-[#FFD60A]" : "border-border hover:border-primary/60 hover:shadow-primary/10"}`}>
       <Link href={`/workshop/${place_id}`} className="block">
         <div className="flex items-stretch gap-3 p-3">
           <SpecialtyCover specialty={effectiveSpecialty} size={80} />
