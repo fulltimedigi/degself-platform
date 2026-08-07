@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { track } from "@/lib/track";
 
 // Service categories. `value` is the Arabic-canonical string that is SUBMITTED
@@ -24,7 +24,6 @@ const SERVICES: { key: string; value: string }[] = [
   { key: "other", value: "خدمة أخرى (اكتبها في وصف المشكلة)" },
 ];
 
-// Governorates — submitted value stays Arabic-canonical; label translated.
 const AREAS: { key: string; value: string }[] = [
   { key: "capital", value: "العاصمة" },
   { key: "hawalli", value: "حولي" },
@@ -34,10 +33,8 @@ const AREAS: { key: string; value: string }[] = [
   { key: "mubarak", value: "مبارك الكبير" },
 ];
 
-// Kuwait has many classics/older models — cover 1980→2026, newest first.
 const YEARS = Array.from({ length: 2026 - 1980 + 1 }, (_, i) => String(2026 - i));
 
-// Urgency — server validates the Arabic value, so that stays canonical.
 const URGENCIES: { key: string; value: string }[] = [
   { key: "normal", value: "عادي" },
   { key: "urgent", value: "مستعجل" },
@@ -83,6 +80,8 @@ export function NewQuoteForm({
   onDone?: (quoteId: string) => void;
 }) {
   const t = useTranslations("quote");
+  const locale = useLocale();
+  const startedRef = useRef(false);
   const serviceIsKnown = SERVICES.some((s) => s.value === initialService);
   const [service, setService] = useState(serviceIsKnown ? initialService : "");
   const [customerName, setCustomerName] = useState("");
@@ -93,10 +92,30 @@ export function NewQuoteForm({
   const [problem, setProblem] = useState(initialProblem);
   const [area, setArea] = useState("");
   const [urgency, setUrgency] = useState("عادي");
-  const [website, setWebsite] = useState(""); // honeypot
+  const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
   const [quoteId, setQuoteId] = useState("");
+
+  useEffect(() => {
+    track("quote_form_view", {
+      source,
+      locale,
+      service: serviceIsKnown ? initialService : undefined,
+      with_image: false,
+    });
+  }, [initialService, locale, serviceIsKnown, source]);
+
+  function markStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    track("quote_start", {
+      source,
+      locale,
+      service: service || undefined,
+      with_image: false,
+    });
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -136,7 +155,12 @@ export function NewQuoteForm({
         setError(data.error ?? t("errSend"));
         return;
       }
-      track("quote_submit", { service, source });
+      track("quote_submit", {
+        service,
+        source,
+        locale,
+        with_image: false,
+      });
       const id = typeof data.id === "string" ? data.id : "";
       setQuoteId(id);
       setStatus("done");
@@ -181,10 +205,10 @@ export function NewQuoteForm({
   return (
     <form
       onSubmit={submit}
+      onChangeCapture={markStarted}
       className={`flex flex-col ${compact ? "gap-3" : "gap-4"}`}
       noValidate
     >
-      {/* honeypot — hidden from users, bots fill it */}
       <input
         type="text"
         name="website"
@@ -287,7 +311,10 @@ export function NewQuoteForm({
             <button
               type="button"
               key={u.key}
-              onClick={() => setUrgency(u.value)}
+              onClick={() => {
+                markStarted();
+                setUrgency(u.value);
+              }}
               className={`rounded-lg border py-2 text-sm font-bold transition ${
                 urgency === u.value
                   ? "border-[#FFD60A] bg-[#FFD60A] text-[#0A0A0A]"
