@@ -16,35 +16,40 @@ and PostHog is used for product funnels and marketplace-health measurement.
 | PostHog EU Cloud | Product funnels and marketplace-health analytics | **Never** |
 
 PostHog receives events through its public Capture API, but the browser sends
-only to the narrow same-origin path `/api/ds-b1`. A Next.js rewrite forwards
-that exact path to the EU Capture endpoint (`https://eu.i.posthog.com/i/v0/e/`).
+only an allow-listed payload to the same-origin route `/api/ds-b1`. That server
+route validates the event and properties a second time, injects the public
+PostHog project token, and sends a new request to the fixed EU Capture endpoint
+(`https://eu.i.posthog.com/i/v0/e/`). It does **not** forward inbound browser
+headers, cookies, IP data, or request objects to PostHog.
+
 The first-party bridge improves delivery reliability without adding an SDK and
 does not proxy session replay, flags, assets, or any other PostHog traffic.
-
 There is no autocapture, automatic pageview, session recording, survey,
 feature-flag, exception, or form/input collection surface to disable or
 accidentally re-enable. Because browser capture stays same-origin, the CSP does
 not need to allow a PostHog origin in `connect-src`.
 
-Every PostHog event includes `$process_person_profile: false`, so these remain
-anonymous events without PostHog person profiles. The browser receives only the
-public PostHog project token; a PostHog personal API key must never be exposed in
-a `NEXT_PUBLIC_*` variable.
+Every outbound PostHog event includes `$process_person_profile: false`, so these
+remain anonymous events without PostHog person profiles. The public project
+token is read by the server bridge from the configured environment; it is never
+included in the browser-to-bridge event payload. A PostHog personal API key must
+never be exposed in a `NEXT_PUBLIC_*` variable.
 
 Required public environment variables:
 
 - `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`
 - `NEXT_PUBLIC_POSTHOG_HOST` (`https://eu.i.posthog.com` for this project)
 
-The host value is also validated client-side as a region/configuration guard even
-though event transport uses the same-origin bridge. If either variable is missing
-or invalid, PostHog analytics is a no-op and the product continues normally.
+The host value is validated against the fixed EU origin. If either variable is
+missing or invalid, PostHog analytics is a no-op/unavailable and the product
+continues normally.
 
 ## Privacy rules
 
 PostHog has a central allow-list in `src/lib/product-analytics.ts`. An event that
 is not registered there is not sent to PostHog. For a registered event, any
-property not explicitly allowed for that event is dropped.
+property not explicitly allowed for that event is dropped. The server bridge
+runs the same sanitizer again before forwarding the event.
 
 Never send to PostHog:
 
@@ -163,6 +168,7 @@ Any analytics change must keep these guarantees:
 - Success events fire only after the corresponding API success.
 - Raw search text never goes through generic Vercel/PostHog event properties.
 - PostHog remains anonymous (`$process_person_profile: false`).
-- Browser PostHog transport stays on the narrow first-party capture bridge.
+- Browser PostHog transport stays on the narrow same-origin server bridge.
+- The bridge never forwards inbound browser cookies or headers to PostHog.
 - No PostHog personal API key is exposed to the browser.
 - No analytics PR may silently introduce database or migration changes.
