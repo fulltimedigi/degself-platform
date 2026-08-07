@@ -27,9 +27,9 @@ test("PostHog stays first-party, anonymous, and SDK-free", () => {
   assert.doesNotMatch(clientCode, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
 });
 
-test("only public PostHog project configuration is documented", () => {
+test("only the public PostHog project token is documented", () => {
   assert.match(envExample, /NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=/);
-  assert.match(envExample, /NEXT_PUBLIC_POSTHOG_HOST=https:\/\/eu\.i\.posthog\.com/);
+  assert.doesNotMatch(envExample, /NEXT_PUBLIC_POSTHOG_HOST=/);
   assert.doesNotMatch(envExample, /POSTHOG_PERSONAL_API_KEY|POSTHOG_API_SECRET/);
 });
 
@@ -42,8 +42,9 @@ test("server bridge re-sanitizes and forwards only to the fixed EU capture endpo
   assert.doesNotMatch(nextConfig, /destination:\s*["']https:\/\/.*posthog\.com/i);
   assert.match(
     bridgeCode,
-    /POSTHOG_EU_ORIGIN\s*=\s*["']https:\/\/eu\.i\.posthog\.com["']/
+    /POSTHOG_CAPTURE_URL\s*=\s*["']https:\/\/eu\.i\.posthog\.com\/i\/v0\/e\/["']/
   );
+  assert.doesNotMatch(bridgeCode, /NEXT_PUBLIC_POSTHOG_HOST/);
   assert.match(bridgeCode, /sanitizeProductProperties\(body\.event,\s*input\)/);
   assert.match(bridgeCode, /api_key:\s*token/);
   assert.match(bridgeCode, /\$process_person_profile:\s*false/);
