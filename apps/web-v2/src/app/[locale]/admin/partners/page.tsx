@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdminPartnersClient } from "@/components/AdminPartnersClient";
+import { PartnerLinkImporter } from "@/components/PartnerLinkImporter";
 
 export const metadata: Metadata = {
   title: "شبكة الشركاء",
@@ -14,15 +15,15 @@ export default function AdminPartnersPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold">شبكة الشركاء</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          دفتر فاضي تكبره أول بأول بعد النزول والمتابعة. الشات وطلبات عروض
-          الأسعار يوجّهون لهؤلاء أولاً — والهدف تقريباً ٥٠ كراج، مش شرط تملأه
-          اليوم.
-        </p>
-        <p className="mt-2 text-xs text-amber-400/90">
-          قبل أول إضافة: شغّل migration ٠٢٣ على Supabase (
-          <code className="font-mono">023_partner_garages.sql</code>).
+          القائمة الصغيرة للكراجات اللي اتفقت معاها فعليًا. الشات وطلبات عروض الأسعار
+          يفضّلون هؤلاء أولاً، والهدف تقريبًا ٥٠ كراج.
         </p>
       </div>
+
+      <div className="mb-8">
+        <PartnerLinkImporter />
+      </div>
+
       <AdminPartnersClient />
     </main>
   );
