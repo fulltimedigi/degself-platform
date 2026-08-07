@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { DEFAULT_VALIDITY_DAYS } from "@/lib/quote-status";
 import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
 import { StructuredOfferFields } from "@/components/StructuredOfferFields";
+import { track } from "@/lib/track";
 
 const EMPTY = {
   workshop_name: "",
@@ -24,12 +25,21 @@ const EMPTY = {
 
 export function GarageOfferForm({ token }: { token: string }) {
   const t = useTranslations();
+  const locale = useLocale();
   const [form, setForm] = useState({ ...EMPTY });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [attempted, setAttempted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    track("garage_offer_link_view", {
+      locale,
+      status: "open",
+      surface: "garage_offer_form",
+    });
+  }, [locale]);
 
   const errs: OfferErrors = useMemo(() => validateOffer(form).errors ?? {}, [form]);
   const hasErrors = Object.keys(errs).length > 0;
@@ -60,6 +70,11 @@ export function GarageOfferForm({ token }: { token: string }) {
         setMsg({ kind: "err", text: d.error ?? t("submit.sendError") });
         return;
       }
+      track("garage_offer_submit", {
+        locale,
+        success: true,
+        surface: "garage_offer_form",
+      });
       setDone(true);
     } catch {
       setMsg({ kind: "err", text: t("offers.connError") });

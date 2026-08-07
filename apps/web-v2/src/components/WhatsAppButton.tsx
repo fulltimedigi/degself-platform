@@ -1,12 +1,12 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { track } from "@/lib/track";
 
 // message sent to a Kuwaiti garage → stays Arabic regardless of UI language
 const WA_TEXT = "السلام عليكم، لقيتكم على دق سلف وحاب أستفسر عن الخدمة";
 
-/** WhatsApp CTA (mobile numbers only) that logs a "whatsapp" event. */
+/** WhatsApp CTA that logs only the public workshop id, never phone/message text. */
 export function WhatsAppButton({
   waDigits,
   placeId,
@@ -15,12 +15,21 @@ export function WhatsAppButton({
   placeId: string;
 }) {
   const t = useTranslations("workshop");
+  const locale = useLocale();
+
   return (
     <a
       href={`https://wa.me/${waDigits}?text=${encodeURIComponent(WA_TEXT)}`}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => track("whatsapp", { place_id: placeId })}
+      onClick={() =>
+        track("whatsapp", {
+          place_id: placeId,
+          source: "workshop_page",
+          locale,
+          channel: "whatsapp",
+        })
+      }
       className="mt-1 inline-flex w-fit items-center gap-2 rounded-xl bg-green-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-green-700"
     >
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden>

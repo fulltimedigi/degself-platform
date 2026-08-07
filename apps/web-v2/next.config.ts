@@ -19,8 +19,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 // ─────────────────────────────────────────────────────────────────────────────
 //
 // CSP: نسمح فقط بالمصادر اللي بنستخدمها فعلاً (GA, Clarity, Snap Pixel, Google
-// Maps, Vercel Analytics, Supabase). 'unsafe-inline' لازم للـ Next.js inline
-// scripts و JSON-LD. لو احتجنا nonces نعمل تحديث لاحق.
+// Maps, Vercel Analytics, Supabase). PostHog capture goes through a same-origin
+// API route, so the browser never needs a PostHog origin in connect-src.
+// 'unsafe-inline' لازم للـ Next.js inline scripts و JSON-LD.
 const csp = [
   "default-src 'self'",
   // Dropped 'unsafe-eval' — Next 16 + our scripts don't need it; shrink XSS blast radius.
