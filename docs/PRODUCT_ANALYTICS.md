@@ -35,14 +35,15 @@ token is read by the server bridge from the configured environment; it is never
 included in the browser-to-bridge event payload. A PostHog personal API key must
 never be exposed in a `NEXT_PUBLIC_*` variable.
 
-Required public environment variables:
+Required environment variable:
 
 - `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`
-- `NEXT_PUBLIC_POSTHOG_HOST` (`https://eu.i.posthog.com` for this project)
 
-The host value is validated against the fixed EU origin. If either variable is
-missing or invalid, PostHog analytics is a no-op/unavailable and the product
-continues normally.
+The PostHog capture host is intentionally fixed in the server bridge to the EU
+endpoint instead of being configurable. This removes a redundant runtime
+configuration surface and prevents accidental cross-region delivery. If the
+project token is missing, PostHog analytics is unavailable while product actions
+continue normally.
 
 ## Privacy rules
 
