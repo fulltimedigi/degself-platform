@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const analytics = readFileSync(join(process.cwd(), "src/lib/product-analytics.ts"), "utf8");
+const bridge = readFileSync(join(process.cwd(), "src/app/api/ds-b1/route.ts"), "utf8");
 const envExample = readFileSync(join(process.cwd(), ".env.example"), "utf8");
 const nextConfig = readFileSync(join(process.cwd(), "next.config.ts"), "utf8");
 
@@ -14,11 +15,15 @@ function stripComments(source: string): string {
 }
 
 test("PostHog stays first-party, anonymous, and SDK-free", () => {
-  const code = stripComments(analytics);
-  assert.match(code, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
-  assert.match(code, /\$process_person_profile:\s*false/);
-  assert.doesNotMatch(code, /from\s+["']posthog-js["']/);
-  assert.doesNotMatch(code, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
+  const clientCode = stripComments(analytics);
+  const bridgeCode = stripComments(bridge);
+
+  assert.match(clientCode, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
+  assert.match(clientCode, /credentials:\s*["']same-origin["']/);
+  assert.doesNotMatch(clientCode, /api_key\s*:/);
+  assert.match(bridgeCode, /\$process_person_profile:\s*false/);
+  assert.doesNotMatch(clientCode, /from\s+["']posthog-js["']/);
+  assert.doesNotMatch(clientCode, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
 });
 
 test("only public PostHog project configuration is documented", () => {
@@ -27,19 +32,28 @@ test("only public PostHog project configuration is documented", () => {
   assert.doesNotMatch(envExample, /POSTHOG_PERSONAL_API_KEY|POSTHOG_API_SECRET/);
 });
 
-test("first-party bridge is narrow and CSP does not expose a PostHog browser origin", () => {
+test("server bridge re-sanitizes and forwards only to the fixed EU capture endpoint", () => {
+  const bridgeCode = stripComments(bridge);
   const connectSrc = nextConfig.match(/"connect-src ([^"]+)"/)?.[1] ?? "";
+
   assert.match(connectSrc, /'self'/);
   assert.doesNotMatch(connectSrc, /posthog\.com/i);
-  assert.match(nextConfig, /source:\s*["']\/api\/ds-b1["']/);
+  assert.doesNotMatch(nextConfig, /destination:\s*["']https:\/\/.*posthog\.com/i);
   assert.match(
-    nextConfig,
-    /destination:\s*["']https:\/\/eu\.i\.posthog\.com\/i\/v0\/e\/["']/
+    bridgeCode,
+    /POSTHOG_EU_ORIGIN\s*=\s*["']https:\/\/eu\.i\.posthog\.com["']/
   );
-  assert.doesNotMatch(nextConfig, /source:\s*["']\/api\/(analytics|tracking|telemetry|posthog)/i);
+  assert.match(bridgeCode, /sanitizeProductProperties\(body\.event,\s*input\)/);
+  assert.match(bridgeCode, /api_key:\s*token/);
+  assert.match(bridgeCode, /\$process_person_profile:\s*false/);
+  assert.match(bridgeCode, /MAX_BODY_CHARS\s*=\s*4096/);
+  assert.match(bridgeCode, /DISTINCT_ID_PATTERN/);
+  assert.doesNotMatch(bridgeCode, /headers:\s*request\.headers|headers:\s*req\.headers/i);
+  assert.doesNotMatch(bridgeCode, /cookie\s*:/i);
 });
 
 test("analytics implementation contains no database or migration capability", () => {
+  const code = `${analytics}\n${bridge}`;
   for (const forbidden of [
     "getSupabaseAdmin",
     "SUPABASE_SECRET_KEY",
@@ -48,6 +62,6 @@ test("analytics implementation contains no database or migration capability", ()
     "ALTER EXTENSION",
     "CREATE TABLE",
   ]) {
-    assert.equal(analytics.includes(forbidden), false, `unexpected capability: ${forbidden}`);
+    assert.equal(code.includes(forbidden), false, `unexpected capability: ${forbidden}`);
   }
 });
