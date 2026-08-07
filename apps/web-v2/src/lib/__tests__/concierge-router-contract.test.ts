@@ -17,7 +17,8 @@ test("router is paid-on-ambiguity and protected by shared cost guards", () => {
   assert.match(route, /"concierge_router"/);
   assert.match(route, /failClosed:\s*true/);
   assert.match(route, /CONCIERGE_ROUTER_MODEL/);
-  assert.match(route, /tool_choice:\s*\{\s*type:\s*"any"\s*\}/);
+  assert.match(route, /tool_choice:\s*\{[^}]*type:\s*"any"[^}]*\}/s);
+  assert.match(route, /disable_parallel_tool_use:\s*true/);
 });
 
 test("router endpoint classifies only and cannot perform concierge side effects", () => {
