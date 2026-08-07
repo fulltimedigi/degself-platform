@@ -17,7 +17,7 @@ test("router is paid-on-ambiguity and protected by shared cost guards", () => {
   assert.match(route, /"concierge_router"/);
   assert.match(route, /failClosed:\s*true/);
   assert.match(route, /CONCIERGE_ROUTER_MODEL/);
-  assert.match(route, /tool_choice:\s*\{[^}]*type:\s*"any"[^}]*\}/s);
+  assert.match(route, /tool_choice:\s*\{[\s\S]*?type:\s*"any"[\s\S]*?\}/);
   assert.match(route, /disable_parallel_tool_use:\s*true/);
 });
 
@@ -40,8 +40,8 @@ test("router endpoint classifies only and cannot perform concierge side effects"
 
 test("usage logging does not persist raw concierge text or tool arguments", () => {
   assert.match(route, /meta:\s*\{\s*feature:\s*"concierge_router"\s*\}/);
-  assert.doesNotMatch(route, /meta:\s*\{[^}]*text\s*:/s);
-  assert.doesNotMatch(route, /meta:\s*\{[^}]*locale\s*:/s);
+  assert.doesNotMatch(route, /meta:\s*\{[^}]*text\s*:/);
+  assert.doesNotMatch(route, /meta:\s*\{[^}]*locale\s*:/);
   assert.doesNotMatch(route, /meta:\s*\{[^}]*tool/i);
 });
 
