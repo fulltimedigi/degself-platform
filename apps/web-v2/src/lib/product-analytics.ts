@@ -50,10 +50,11 @@ export type ProductEvent = keyof typeof PRODUCT_EVENT_PROPERTIES;
 
 const MAX_STRING_LENGTH = 120;
 const ANALYTICS_ID_KEY = "degself_product_analytics_id";
+const SAFE_DERIVED_QUERY_KEYS = new Set(["has_query", "query_length"]);
 
 // Defense in depth: these names must never reach PostHog even if someone
-// accidentally adds them to an allow-list later. `has_query` and
-// `query_length` are safe derived values and therefore do not match `query`.
+// accidentally adds them to an allow-list later. The two explicitly derived
+// query properties above are exceptions because they contain no query text.
 const FORBIDDEN_PROPERTY_NAME =
   /(^|_)(phone|mobile|email|customer|workshop_name|problem|description|notes?|message|image|image_url|token|secret|query|search_term|searchstring|address|location_text)($|_)/i;
 
@@ -88,7 +89,9 @@ export function sanitizeProductProperties(
 
   for (const [key, raw] of Object.entries(input ?? {})) {
     if (!allowed.has(key)) continue;
-    if (FORBIDDEN_PROPERTY_NAME.test(key)) continue;
+    if (!SAFE_DERIVED_QUERY_KEYS.has(key) && FORBIDDEN_PROPERTY_NAME.test(key)) {
+      continue;
+    }
     const value = safeScalar(raw);
     if (value !== undefined) out[key] = value;
   }
