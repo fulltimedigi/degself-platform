@@ -91,7 +91,10 @@ test("capture API is anonymous and generic analytics never receives raw search t
   assert.match(analytics, /\$process_person_profile:\s*false/);
   assert.match(analytics, /\/i\/v0\/e\//);
   assert.doesNotMatch(analytics, /posthog\.identify|session_recording|autocapture/i);
-  assert.doesNotMatch(searchTracker, /track\(\s*"search"\s*,\s*\{[^}]*\bquery\s*:/s);
+  assert.doesNotMatch(
+    searchTracker,
+    /track\(\s*"search"\s*,\s*\{[\s\S]*?\bquery\s*:/
+  );
   assert.match(searchTracker, /snapSearchString:\s*q/);
   assert.doesNotMatch(track, /props\?\.query/);
 });
