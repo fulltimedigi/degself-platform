@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchQuote, fetchOffers, statusMeta, urgencyClass, type Quote, type QuoteOffer } from "@/lib/quotes";
 import { formatArabicDate, relativeArabic, kuwaitWhatsAppDigits } from "@/lib/utils";
 import { QuoteAdminControls } from "@/components/QuoteAdminControls";
+import { MeasuredGarageLinks } from "@/components/MeasuredGarageLinks";
 import { isSafeHttpUrl } from "@/lib/safe-url";
 
 export const metadata: Metadata = {
@@ -185,6 +186,7 @@ export default async function QuoteDetailPage({
         )}
         <Row label="الكراجات المُوجّه إليها">
           <MatchedWorkshops value={q.matched_workshops} />
+          <MeasuredGarageLinks quoteId={q.id} value={q.matched_workshops} />
         </Row>
         {q.admin_notes && (
           <Row label="ملاحظات إدارية">
