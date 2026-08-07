@@ -3,10 +3,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-// "كراج" / "ماركة" percent-encoded — Next matches the rewrite source against the
-// raw (encoded) request path, so the source must be encoded too.
-const KARAJ = "%D9%83%D8%B1%D8%A7%D8%AC";
-const MARKA = "%D9%85%D8%A7%D8%B1%D9%83%D8%A9";
+// Public Arabic vanity URLs (/كراج/… , /ماركة/…). Next matches a rewrite `source`
+// against the DECODED pathname (path-to-regexp), so the source must use the decoded
+// Arabic text — a percent-encoded source never matches a real request and 404s
+// (a browser hitting /%D9%83.../ is decoded to /كراج/... before rewrite matching).
+// decodeURIComponent keeps the RTL literal out of the source strings below.
+const KARAJ = decodeURIComponent("%D9%83%D8%B1%D8%A7%D8%AC"); // كراج
+const MARKA = decodeURIComponent("%D9%85%D8%A7%D8%B1%D9%83%D8%A9"); // ماركة
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Security Headers — متوافقة مع معايير 2026 (securityheaders.com Grade A)
