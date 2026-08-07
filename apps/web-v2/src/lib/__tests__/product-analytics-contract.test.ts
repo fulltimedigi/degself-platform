@@ -13,9 +13,9 @@ function stripComments(source: string): string {
     .replace(/^\s*\/\/.*$/gm, "");
 }
 
-test("PostHog stays direct-capture, anonymous, and SDK-free", () => {
+test("PostHog stays first-party, anonymous, and SDK-free", () => {
   const code = stripComments(analytics);
-  assert.match(code, /\/i\/v0\/e\//);
+  assert.match(code, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
   assert.match(code, /\$process_person_profile:\s*false/);
   assert.doesNotMatch(code, /from\s+["']posthog-js["']/);
   assert.doesNotMatch(code, /posthog\.identify|autocapture\s*:|session_recording\s*:/i);
@@ -27,11 +27,16 @@ test("only public PostHog project configuration is documented", () => {
   assert.doesNotMatch(envExample, /POSTHOG_PERSONAL_API_KEY|POSTHOG_API_SECRET/);
 });
 
-test("CSP allows only the required PostHog EU capture origin", () => {
+test("first-party bridge is narrow and CSP does not expose a PostHog browser origin", () => {
   const connectSrc = nextConfig.match(/"connect-src ([^"]+)"/)?.[1] ?? "";
-  assert.match(connectSrc, /https:\/\/eu\.i\.posthog\.com/);
-  assert.doesNotMatch(connectSrc, /https:\/\/\*\.posthog\.com/);
-  assert.doesNotMatch(connectSrc, /https:\/\/us\.i\.posthog\.com/);
+  assert.match(connectSrc, /'self'/);
+  assert.doesNotMatch(connectSrc, /posthog\.com/i);
+  assert.match(nextConfig, /source:\s*["']\/api\/ds-b1["']/);
+  assert.match(
+    nextConfig,
+    /destination:\s*["']https:\/\/eu\.i\.posthog\.com\/i\/v0\/e\/["']/
+  );
+  assert.doesNotMatch(nextConfig, /source:\s*["']\/api\/(analytics|tracking|telemetry|posthog)/i);
 });
 
 test("analytics implementation contains no database or migration capability", () => {
