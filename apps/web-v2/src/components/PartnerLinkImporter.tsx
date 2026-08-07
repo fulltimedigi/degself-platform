@@ -11,7 +11,7 @@ type ImportResult = {
 export function PartnerLinkImporter({
   onAdded,
 }: {
-  onAdded: (placeId: string) => void | Promise<void>;
+  onAdded?: (placeId: string) => void | Promise<void>;
 }) {
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
@@ -37,13 +37,17 @@ export function PartnerLinkImporter({
       }
 
       const placeId = data.workshop?.place_id;
-      if (placeId) await onAdded(placeId);
+      if (placeId && onAdded) await onAdded(placeId);
       const name = data.workshop?.name || "الكراج";
       setMessage({
         kind: "ok",
         text: data.existing ? `${name} موجود بالفعل في شبكة الشركاء ✓` : `تمت إضافة ${name} للشبكة ✓`,
       });
       setUrl("");
+
+      // When rendered standalone above the existing roster, refresh once so its
+      // client-side network fetch immediately reflects the newly promoted row.
+      if (placeId && !onAdded) window.location.reload();
     } catch {
       setMessage({ kind: "err", text: "تعذّر الاتصال." });
     } finally {
