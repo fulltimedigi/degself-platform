@@ -121,50 +121,45 @@ function browserDistinctId(): string | null {
   }
 }
 
-function posthogConfig(): { token: string } | null {
+function posthogEnabled(): boolean {
   const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim();
   const rawHost = process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim();
-  if (!token || !rawHost) return null;
+  if (!token || !rawHost) return false;
 
   try {
     const url = new URL(rawHost);
-    if (url.protocol !== "https:" || url.origin !== POSTHOG_EU_ORIGIN) return null;
-    return { token };
+    return url.protocol === "https:" && url.origin === POSTHOG_EU_ORIGIN;
   } catch {
-    return null;
+    return false;
   }
 }
 
 /**
- * Fire-and-forget anonymous PostHog capture. The browser posts to a narrow,
- * first-party rewrite so tracking blockers cannot break product-funnel delivery;
- * Vercel forwards only this endpoint to PostHog EU. No SDK means no automatic
- * pageviews, autocapture, session replay, surveys, flags, or input collection.
- * The public project token is expected here; personal API keys must never be
- * supplied through NEXT_PUBLIC_* variables.
+ * Fire-and-forget anonymous PostHog capture. The browser posts only an
+ * allow-listed event payload to a same-origin server bridge. The bridge performs
+ * the allow-list again and injects the public project token server-side, without
+ * forwarding browser cookies or request headers to PostHog.
+ *
+ * No SDK means no automatic pageviews, autocapture, session replay, surveys,
+ * flags, exception capture, or form/input collection.
  */
 export function captureProductEvent(event: string, input?: AnalyticsInput): void {
   const properties = sanitizeProductProperties(event, input);
   if (properties === null) return;
 
-  const config = posthogConfig();
   const distinctId = browserDistinctId();
-  if (!config || !distinctId || typeof fetch !== "function") return;
+  if (!posthogEnabled() || !distinctId || typeof fetch !== "function") return;
 
   void fetch(POSTHOG_CAPTURE_PATH, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "omit",
+    credentials: "same-origin",
     keepalive: true,
     referrerPolicy: "no-referrer",
     body: JSON.stringify({
-      api_key: config.token,
       event,
       distinct_id: distinctId,
-      properties: {
-        $process_person_profile: false,
-        ...properties,
-      },
+      properties,
     }),
   }).catch(() => {
     // Analytics must never break a product action or navigation.
