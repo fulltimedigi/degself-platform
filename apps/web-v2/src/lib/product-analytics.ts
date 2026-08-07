@@ -51,7 +51,6 @@ export type ProductEvent = keyof typeof PRODUCT_EVENT_PROPERTIES;
 const MAX_STRING_LENGTH = 120;
 const ANALYTICS_ID_KEY = "degself_product_analytics_id";
 const POSTHOG_CAPTURE_PATH = "/api/ds-b1";
-const POSTHOG_EU_ORIGIN = "https://eu.i.posthog.com";
 const SAFE_DERIVED_QUERY_KEYS = new Set(["has_query", "query_length"]);
 
 // Defense in depth: these names must never reach PostHog even if someone
@@ -121,24 +120,11 @@ function browserDistinctId(): string | null {
   }
 }
 
-function posthogEnabled(): boolean {
-  const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim();
-  const rawHost = process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim();
-  if (!token || !rawHost) return false;
-
-  try {
-    const url = new URL(rawHost);
-    return url.protocol === "https:" && url.origin === POSTHOG_EU_ORIGIN;
-  } catch {
-    return false;
-  }
-}
-
 /**
- * Fire-and-forget anonymous PostHog capture. The browser posts only an
- * allow-listed event payload to a same-origin server bridge. The bridge performs
- * the allow-list again and injects the public project token server-side, without
- * forwarding browser cookies or request headers to PostHog.
+ * Fire-and-forget anonymous product capture. The browser posts only an
+ * allow-listed event payload to a same-origin server bridge. The browser does
+ * not need or inspect PostHog configuration: the server bridge alone decides
+ * whether analytics is configured and performs the second sanitization pass.
  *
  * No SDK means no automatic pageviews, autocapture, session replay, surveys,
  * flags, exception capture, or form/input collection.
@@ -148,7 +134,7 @@ export function captureProductEvent(event: string, input?: AnalyticsInput): void
   if (properties === null) return;
 
   const distinctId = browserDistinctId();
-  if (!posthogEnabled() || !distinctId || typeof fetch !== "function") return;
+  if (!distinctId || typeof fetch !== "function") return;
 
   void fetch(POSTHOG_CAPTURE_PATH, {
     method: "POST",
