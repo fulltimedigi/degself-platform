@@ -72,9 +72,8 @@ export async function POST(req: NextRequest) {
   }
 
   const client = new Anthropic({ apiKey });
-  let message: Anthropic.Message;
   try {
-    message = await client.messages.create({
+    const message = await client.messages.create({
       model: CONCIERGE_ROUTER_MODEL,
       max_tokens: 128,
       system: [
@@ -90,46 +89,44 @@ export async function POST(req: NextRequest) {
           content: `UI locale: ${locale}\n<user_message>${text}</user_message>`,
         },
       ],
-      // Strict client tools turn the model response into a typed routing decision.
-      // This endpoint does NOT execute side effects; the browser executes only the
-      // existing, allow-listed Concierge actions after receiving the decision.
-      tools: CONCIERGE_ROUTER_TOOLS as unknown as Anthropic.Tool[],
+      // JSON cloning intentionally drops readonly tuple types from the central
+      // contract while preserving the exact runtime schemas expected by the SDK.
+      // This endpoint never executes tools; it only validates the selected route.
+      tools: JSON.parse(JSON.stringify(CONCIERGE_ROUTER_TOOLS)),
       tool_choice: { type: "any" },
     });
+
+    const inputTokens = message.usage?.input_tokens ?? 0;
+    const outputTokens = message.usage?.output_tokens ?? 0;
+    await logUsage({
+      ip_hash: ipHash,
+      model: CONCIERGE_ROUTER_MODEL,
+      input_tokens: inputTokens,
+      output_tokens: outputTokens,
+      cost_usd: computeChatCost(inputTokens, outputTokens, CONCIERGE_ROUTER_MODEL),
+      endpoint: "chat",
+      cache_hit: false,
+      // Deliberately no user text, locale, vehicle data, or tool arguments in logs.
+      meta: { feature: "concierge_router" },
+    });
+
+    if (message.stop_reason === "refusal") {
+      return noStoreJson({ error: "router_refused" }, 422);
+    }
+
+    const toolUse = message.content.find((block) => block.type === "tool_use");
+    if (!toolUse || toolUse.type !== "tool_use") {
+      return noStoreJson({ error: "missing_tool_call" }, 502);
+    }
+
+    const decision = conciergeDecisionFromToolUse(toolUse.name, toolUse.input);
+    if (!decision) {
+      return noStoreJson({ error: "invalid_tool_call" }, 502);
+    }
+
+    return noStoreJson(decision);
   } catch (err) {
     console.error("concierge router: model call failed", err);
     return noStoreJson({ error: "router_failed" }, 502);
   }
-
-  const inputTokens = message.usage?.input_tokens ?? 0;
-  const outputTokens = message.usage?.output_tokens ?? 0;
-  await logUsage({
-    ip_hash: ipHash,
-    model: CONCIERGE_ROUTER_MODEL,
-    input_tokens: inputTokens,
-    output_tokens: outputTokens,
-    cost_usd: computeChatCost(inputTokens, outputTokens, CONCIERGE_ROUTER_MODEL),
-    endpoint: "chat",
-    cache_hit: false,
-    // Deliberately no user text, locale, vehicle data, or tool arguments in logs.
-    meta: { feature: "concierge_router" },
-  });
-
-  if (message.stop_reason === "refusal") {
-    return noStoreJson({ error: "router_refused" }, 422);
-  }
-
-  const toolUse = message.content.find(
-    (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
-  );
-  if (!toolUse) {
-    return noStoreJson({ error: "missing_tool_call" }, 502);
-  }
-
-  const decision = conciergeDecisionFromToolUse(toolUse.name, toolUse.input);
-  if (!decision) {
-    return noStoreJson({ error: "invalid_tool_call" }, 502);
-  }
-
-  return noStoreJson(decision);
 }
