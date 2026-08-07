@@ -7,15 +7,16 @@ import { track } from "@/lib/track";
 /**
  * Logs a directory-search event without sending the raw query to Vercel or
  * PostHog. Snapchat keeps its existing provider-specific search string.
+ * Result/filter counts are optional so callers can enrich the event gradually.
  */
 export function SearchTracker({
   query,
-  resultCount,
-  filterCount,
+  resultCount = 0,
+  filterCount = 0,
 }: {
   query: string;
-  resultCount: number;
-  filterCount: number;
+  resultCount?: number;
+  filterCount?: number;
 }) {
   const locale = useLocale();
 
