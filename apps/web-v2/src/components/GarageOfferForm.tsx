@@ -34,12 +34,20 @@ export function GarageOfferForm({ token }: { token: string }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
+    // Database truth for measured per-workshop outreach. This same-origin beacon
+    // is idempotent and no-ops for legacy shared garage links. Keeping it client-
+    // side avoids counting WhatsApp/link-preview crawlers that never render JS.
+    void fetch(`/api/garage-outreach/${encodeURIComponent(token)}/open`, {
+      method: "POST",
+      keepalive: true,
+    }).catch(() => undefined);
+
     track("garage_offer_link_view", {
       locale,
       status: "open",
       surface: "garage_offer_form",
     });
-  }, [locale]);
+  }, [locale, token]);
 
   const errs: OfferErrors = useMemo(() => validateOffer(form).errors ?? {}, [form]);
   const hasErrors = Object.keys(errs).length > 0;
