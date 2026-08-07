@@ -89,16 +89,20 @@ test("capture is a safe no-op outside the browser or without env", () => {
   assert.doesNotThrow(() => captureProductEvent("search", { has_query: true }));
 });
 
-test("capture is anonymous through first-party path and generic analytics never receives raw search text", () => {
+test("capture uses sanitized first-party bridge and generic analytics never receives raw search text", () => {
   const analytics = readFileSync(join(process.cwd(), "src/lib/product-analytics.ts"), "utf8");
+  const bridge = readFileSync(join(process.cwd(), "src/app/api/ds-b1/route.ts"), "utf8");
   const searchTracker = readFileSync(join(process.cwd(), "src/components/SearchTracker.tsx"), "utf8");
   const track = readFileSync(join(process.cwd(), "src/lib/track.ts"), "utf8");
-  const code = stripComments(analytics);
+  const clientCode = stripComments(analytics);
+  const bridgeCode = stripComments(bridge);
 
-  assert.match(code, /\$process_person_profile:\s*false/);
-  assert.match(code, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
-  assert.match(code, /fetch\(POSTHOG_CAPTURE_PATH/);
-  assert.doesNotMatch(code, /posthog\.identify|session_recording\s*:|autocapture\s*:/i);
+  assert.match(bridgeCode, /\$process_person_profile:\s*false/);
+  assert.match(clientCode, /POSTHOG_CAPTURE_PATH\s*=\s*["']\/api\/ds-b1["']/);
+  assert.match(clientCode, /fetch\(POSTHOG_CAPTURE_PATH/);
+  assert.match(clientCode, /credentials:\s*["']same-origin["']/);
+  assert.doesNotMatch(clientCode, /api_key\s*:/);
+  assert.doesNotMatch(clientCode, /posthog\.identify|session_recording\s*:|autocapture\s*:/i);
   assert.doesNotMatch(
     searchTracker,
     /track\(\s*"search"\s*,\s*\{[\s\S]*?\bquery\s*:/
