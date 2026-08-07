@@ -5,6 +5,7 @@ import { join } from "node:path";
 
 const analytics = readFileSync(join(process.cwd(), "src/lib/product-analytics.ts"), "utf8");
 const envExample = readFileSync(join(process.cwd(), ".env.example"), "utf8");
+const nextConfig = readFileSync(join(process.cwd(), "next.config.ts"), "utf8");
 
 function stripComments(source: string): string {
   return source
@@ -24,6 +25,13 @@ test("only public PostHog project configuration is documented", () => {
   assert.match(envExample, /NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=/);
   assert.match(envExample, /NEXT_PUBLIC_POSTHOG_HOST=https:\/\/eu\.i\.posthog\.com/);
   assert.doesNotMatch(envExample, /POSTHOG_PERSONAL_API_KEY|POSTHOG_API_SECRET/);
+});
+
+test("CSP allows only the required PostHog EU capture origin", () => {
+  const connectSrc = nextConfig.match(/"connect-src ([^"]+)"/)?.[1] ?? "";
+  assert.match(connectSrc, /https:\/\/eu\.i\.posthog\.com/);
+  assert.doesNotMatch(connectSrc, /https:\/\/\*\.posthog\.com/);
+  assert.doesNotMatch(connectSrc, /https:\/\/us\.i\.posthog\.com/);
 });
 
 test("analytics implementation contains no database or migration capability", () => {
