@@ -50,6 +50,8 @@ export type ProductEvent = keyof typeof PRODUCT_EVENT_PROPERTIES;
 
 const MAX_STRING_LENGTH = 120;
 const ANALYTICS_ID_KEY = "degself_product_analytics_id";
+const POSTHOG_CAPTURE_PATH = "/api/ds-b1";
+const POSTHOG_EU_ORIGIN = "https://eu.i.posthog.com";
 const SAFE_DERIVED_QUERY_KEYS = new Set(["has_query", "query_length"]);
 
 // Defense in depth: these names must never reach PostHog even if someone
@@ -119,22 +121,24 @@ function browserDistinctId(): string | null {
   }
 }
 
-function posthogConfig(): { token: string; host: string } | null {
+function posthogConfig(): { token: string } | null {
   const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim();
   const rawHost = process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim();
   if (!token || !rawHost) return null;
 
   try {
     const url = new URL(rawHost);
-    if (url.protocol !== "https:") return null;
-    return { token, host: url.origin };
+    if (url.protocol !== "https:" || url.origin !== POSTHOG_EU_ORIGIN) return null;
+    return { token };
   } catch {
     return null;
   }
 }
 
 /**
- * Fire-and-forget anonymous PostHog capture. No SDK means no automatic
+ * Fire-and-forget anonymous PostHog capture. The browser posts to a narrow,
+ * first-party rewrite so tracking blockers cannot break product-funnel delivery;
+ * Vercel forwards only this endpoint to PostHog EU. No SDK means no automatic
  * pageviews, autocapture, session replay, surveys, flags, or input collection.
  * The public project token is expected here; personal API keys must never be
  * supplied through NEXT_PUBLIC_* variables.
@@ -147,7 +151,7 @@ export function captureProductEvent(event: string, input?: AnalyticsInput): void
   const distinctId = browserDistinctId();
   if (!config || !distinctId || typeof fetch !== "function") return;
 
-  void fetch(`${config.host}/i/v0/e/`, {
+  void fetch(POSTHOG_CAPTURE_PATH, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "omit",
