@@ -17,7 +17,11 @@ import {
 } from "@/lib/concierge-router";
 
 export const runtime = "nodejs";
-export const maxDuration = 10;
+// Headroom for a cold-start Haiku classification. A 10s ceiling occasionally
+// tripped a 504 on the first (cold) request, which for emergency routing must
+// never happen; 20s absorbs cold starts without changing behavior. (The client
+// still falls back to the diagnosis path if the router is ever unavailable.)
+export const maxDuration = 20;
 
 const SUPPORTED_LOCALES = new Set(["ar", "en", "hi", "ur"]);
 
