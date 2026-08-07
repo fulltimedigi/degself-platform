@@ -7,12 +7,12 @@ import { track } from "@/lib/track";
 /**
  * Logs a directory-search event without sending the raw query to Vercel or
  * PostHog. Snapchat keeps its existing provider-specific search string.
- * Result/filter counts are optional so callers can enrich the event gradually.
+ * Optional result/filter counts are emitted only when the caller knows them.
  */
 export function SearchTracker({
   query,
-  resultCount = 0,
-  filterCount = 0,
+  resultCount,
+  filterCount,
 }: {
   query: string;
   resultCount?: number;
@@ -22,15 +22,15 @@ export function SearchTracker({
 
   useEffect(() => {
     const q = query.trim();
-    if (!q && filterCount === 0) return;
+    if (!q && (filterCount ?? 0) === 0) return;
 
     track(
       "search",
       {
         has_query: Boolean(q),
         query_length: q.length,
-        result_count: resultCount,
-        filter_count: filterCount,
+        ...(resultCount !== undefined ? { result_count: resultCount } : {}),
+        ...(filterCount !== undefined ? { filter_count: filterCount } : {}),
         source: "directory",
         locale,
       },
