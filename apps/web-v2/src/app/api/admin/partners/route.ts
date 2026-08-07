@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { isAdminRequest } from "@/lib/admin-auth";
+import { parseWorkshopLink } from "@/lib/partner-workshop-link";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const PARTNER_COLUMNS =
+  "place_id, name, area, phone, reviewed_specialty, is_partner, partner_priority, partner_notes, google_rating, active";
 
 export async function GET(req: NextRequest) {
   if (!(await isAdminRequest(req))) {
@@ -23,9 +27,7 @@ export async function GET(req: NextRequest) {
 
   let query = admin
     .from("workshops")
-    .select(
-      "place_id, name, area, phone, reviewed_specialty, is_partner, partner_priority, partner_notes, google_rating, active"
-    )
+    .select(PARTNER_COLUMNS)
     .eq("active", true)
     .eq("is_automotive", true)
     .eq("out_of_scope", false)
@@ -54,6 +56,75 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({ workshops: data || [] });
+}
+
+// Paste a public DEGSELF workshop URL and promote that exact catalog row into the
+// existing partner network. No workshop data is copied or duplicated.
+export async function POST(req: NextRequest) {
+  if (!(await isAdminRequest(req))) {
+    return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
+  }
+
+  let body: { url?: unknown };
+  try {
+    body = (await req.json()) as { url?: unknown };
+  } catch {
+    return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
+  }
+
+  if (typeof body.url !== "string") {
+    return NextResponse.json({ error: "الصق رابط الكراج من دق سلف." }, { status: 400 });
+  }
+
+  const parsed = parseWorkshopLink(body.url);
+  if (!parsed.ok) {
+    return NextResponse.json({ error: "الرابط ليس رابط كراج صالح من دق سلف." }, { status: 400 });
+  }
+
+  let admin;
+  try {
+    admin = getSupabaseAdmin();
+  } catch {
+    return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
+  }
+
+  const { data: workshop, error: lookupError } = await admin
+    .from("workshops")
+    .select(PARTNER_COLUMNS + ", is_automotive, out_of_scope, permanently_closed")
+    .eq("place_id", parsed.placeId)
+    .maybeSingle();
+
+  if (lookupError) {
+    return NextResponse.json({ error: lookupError.message }, { status: 500 });
+  }
+  if (!workshop) {
+    return NextResponse.json({ error: "الكراج غير موجود في الدليل الأساسي." }, { status: 404 });
+  }
+  if (
+    workshop.active === false ||
+    workshop.permanently_closed === true ||
+    workshop.is_automotive === false ||
+    workshop.out_of_scope === true
+  ) {
+    return NextResponse.json({ error: "الكراج موجود لكنه غير مؤهل للشبكة حاليًا." }, { status: 409 });
+  }
+
+  if (workshop.is_partner === true) {
+    return NextResponse.json({ workshop, existing: true });
+  }
+
+  const { data, error } = await admin
+    .from("workshops")
+    .update({ is_partner: true, updated_at: new Date().toISOString() })
+    .eq("place_id", parsed.placeId)
+    .select(PARTNER_COLUMNS)
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ workshop: data, existing: false });
 }
 
 export async function PATCH(req: NextRequest) {
