@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       // contract while preserving the exact runtime schemas expected by the SDK.
       // This endpoint never executes tools; it only validates the selected route.
       tools: JSON.parse(JSON.stringify(CONCIERGE_ROUTER_TOOLS)),
-      tool_choice: { type: "any" },
+      tool_choice: { type: "any", disable_parallel_tool_use: true },
     });
 
     const inputTokens = message.usage?.input_tokens ?? 0;
