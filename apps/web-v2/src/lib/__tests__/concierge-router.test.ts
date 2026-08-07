@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   CONCIERGE_ROUTER_MODEL,
+  CONCIERGE_ROUTER_SYSTEM_PROMPT,
   CONCIERGE_ROUTER_TOOLS,
   conciergeDecisionFromToolUse,
 } from "../concierge-router";
@@ -62,4 +63,20 @@ test("tool outputs never require echoing the raw user message", () => {
   assert.equal(serialized.includes("user_message"), false);
   assert.equal(serialized.includes("phone"), false);
   assert.equal(serialized.includes("email"), false);
+});
+
+// Regression guard for a routing miss found during live Haiku evaluation:
+// "send my problem to garages and get prices/offers" was mis-routed to
+// search_garages instead of create_quote. The classification is model-driven,
+// so the durable guard is that the prompt + tool descriptions explicitly
+// disambiguate "wanting prices/offers from garages" as create_quote.
+test("prompt disambiguates 'prices/offers from garages' as create_quote, not search_garages", () => {
+  assert.match(CONCIERGE_ROUTER_SYSTEM_PROMPT, /prices\/offers\/quotes FROM garages is always create_quote/i);
+  assert.match(CONCIERGE_ROUTER_SYSTEM_PROMPT, /NOT search_garages/i);
+
+  const createQuote = CONCIERGE_ROUTER_TOOLS.find((t) => t.name === "create_quote");
+  const searchGarages = CONCIERGE_ROUTER_TOOLS.find((t) => t.name === "search_garages");
+  assert.ok(createQuote && searchGarages);
+  assert.match(createQuote.description, /prices,?\s*offers,?\s*or\s*bids/i);
+  assert.match(searchGarages.description, /that is create_quote/i);
 });
