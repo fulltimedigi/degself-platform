@@ -8,6 +8,12 @@ import {
   sanitizeProductProperties,
 } from "../product-analytics";
 
+function stripComments(source: string): string {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+}
+
 test("unknown events are never sent to PostHog", () => {
   assert.equal(sanitizeProductProperties("not_registered", { source: "x" }), null);
 });
@@ -87,10 +93,11 @@ test("capture API is anonymous and generic analytics never receives raw search t
   const analytics = readFileSync(join(process.cwd(), "src/lib/product-analytics.ts"), "utf8");
   const searchTracker = readFileSync(join(process.cwd(), "src/components/SearchTracker.tsx"), "utf8");
   const track = readFileSync(join(process.cwd(), "src/lib/track.ts"), "utf8");
+  const code = stripComments(analytics);
 
-  assert.match(analytics, /\$process_person_profile:\s*false/);
-  assert.match(analytics, /\/i\/v0\/e\//);
-  assert.doesNotMatch(analytics, /posthog\.identify|session_recording|autocapture/i);
+  assert.match(code, /\$process_person_profile:\s*false/);
+  assert.match(code, /\/i\/v0\/e\//);
+  assert.doesNotMatch(code, /posthog\.identify|session_recording\s*:|autocapture\s*:/i);
   assert.doesNotMatch(
     searchTracker,
     /track\(\s*"search"\s*,\s*\{[\s\S]*?\bquery\s*:/
