@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { resolveGarageOutreachToken } from "@/lib/garage-outreach";
 import type { Quote, QuoteOffer } from "@/lib/quote-status";
 
 // Server-only data access for quotes + offers. Uses the service-role key
@@ -75,15 +76,19 @@ export async function fetchQuoteByToken(token: string): Promise<Quote | null> {
 }
 
 /**
- * A single quote by its public garage_token, PII-safe (no customer name/phone).
- * Powers the /submit-offer/[token] page. Returns null if not found.
+ * A single PII-safe quote from either a measured per-workshop outreach token or
+ * the legacy shared quotes.garage_token. Old links remain valid throughout the
+ * rollout and after migration 030.
  */
 export async function fetchQuoteByGarageToken(token: string): Promise<GarageQuoteView | null> {
+  const resolution = await resolveGarageOutreachToken(token);
+  if (!resolution) return null;
+
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
     .from("quotes")
     .select(GARAGE_QUOTE_COLUMNS)
-    .eq("garage_token", token)
+    .eq("id", resolution.quoteId)
     .maybeSingle();
   if (error) throw new Error(error.message);
   return (data as unknown as GarageQuoteView) ?? null;
