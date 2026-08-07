@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+// Plain next/link for the Arabic vanity URLs (/كراج/…): they resolve via a
+// beforeFiles rewrite that matches ONLY the unprefixed path, so these links must
+// NOT carry a locale prefix. The i18n Link (above) is kept for real internal
+// routes (/, /search) that SHOULD be locale-aware.
+import NextLink from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { MapPin, ChevronLeft } from "lucide-react";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
@@ -134,13 +139,13 @@ export default async function ManatiqPage({
           <p className="leading-relaxed text-muted-foreground">{t("featuredText")}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {SPECIALTIES.map((sp) => (
-              <Link
+              <NextLink
                 key={sp.slug}
                 href={`/${KARAJ}/${encodeURIComponent(sp.slug)}/${encodeURIComponent("الشويخ")}`}
                 className="rounded-full border border-border bg-card px-3 py-1 text-sm hover:border-primary hover:text-primary"
               >
                 {t(`spec.${sp.key}`)}
-              </Link>
+              </NextLink>
             ))}
           </div>
         </div>
@@ -164,13 +169,13 @@ export default async function ManatiqPage({
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {CARD_CHIPS.map((chip) => (
-                  <Link
+                  <NextLink
                     key={chip.slug}
                     href={`/${KARAJ}/${encodeURIComponent(chip.slug)}/${encodeURIComponent(area.ar)}`}
                     className="rounded-lg bg-primary/10 px-3 py-1 text-xs font-semibold text-primary hover:bg-primary hover:text-primary-foreground"
                   >
                     {t(`chip.${chip.key}`)}
-                  </Link>
+                  </NextLink>
                 ))}
               </div>
             </article>
