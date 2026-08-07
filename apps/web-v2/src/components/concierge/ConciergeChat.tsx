@@ -10,6 +10,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/track";
 import { detectConciergeIntent } from "@/lib/concierge-intent";
+import type {
+  ConciergeEmergencyType,
+  ConciergeRouteDecision,
+} from "@/lib/concierge-router";
 import { NewQuoteForm, type QuoteFormPrefill } from "@/components/NewQuoteForm";
 import type { AsaaliResponse, VehicleContext } from "@/lib/asaali-schema";
 
@@ -30,6 +34,7 @@ type Msg = {
 };
 
 type Panel = "chat" | "quote";
+type RouterSource = "deterministic" | "llm" | "fallback" | "diagnosis_followup";
 
 function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -53,6 +58,41 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
   const [quotePrefill, setQuotePrefill] = useState<QuoteFormPrefill>({});
   const [awaitingVehicle, setAwaitingVehicle] = useState(false);
 
+  function guidedChips(): Chip[] {
+    return [
+      { id: "c1", label: t("chipDiagnose"), payload: "__diagnose__" },
+      { id: "c2", label: t("chipQuote"), payload: "__quote__" },
+      { id: "c3", label: t("chipEmergency"), payload: "__emergency__" },
+      { id: "c4", label: t("chipFind"), payload: "__find__" },
+    ];
+  }
+
+  function emergencyActions(kind?: ConciergeEmergencyType): Action[] {
+    const tow: Action = {
+      id: "e1",
+      kind: "link",
+      label: t("linkTow"),
+      href: "/emergency?type=tow",
+    };
+    const mobile: Action = {
+      id: "e2",
+      kind: "link",
+      label: t("linkMobile"),
+      href: "/karaj-mutanaqil",
+    };
+    const tire: Action = {
+      id: "e3",
+      kind: "link",
+      label: t("linkTire"),
+      href: "/bansher-mutanaqil",
+    };
+
+    if (kind === "tire") return [tire, mobile];
+    if (kind === "battery" || kind === "mobile_service") return [mobile, tow];
+    if (kind === "tow" || kind === "unsafe_to_drive") return [tow, mobile];
+    return [tow, mobile, tire];
+  }
+
   // Welcome once on mount
   useEffect(() => {
     setMessages([
@@ -60,12 +100,7 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
         id: uid(),
         role: "assistant",
         text: t("welcome"),
-        chips: [
-          { id: "c1", label: t("chipDiagnose"), payload: "__diagnose__" },
-          { id: "c2", label: t("chipQuote"), payload: "__quote__" },
-          { id: "c3", label: t("chipEmergency"), payload: "__emergency__" },
-          { id: "c4", label: t("chipFind"), payload: "__find__" },
-        ],
+        chips: guidedChips(),
       },
     ]);
     track("concierge", { action: "welcome" });
@@ -106,6 +141,46 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
       })),
       source: "concierge",
     };
+  }
+
+  async function routeAmbiguousIntent(
+    text: string
+  ): Promise<ConciergeRouteDecision | null> {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/concierge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, locale }),
+      });
+      if (!res.ok) {
+        track("concierge", { action: "router_fallback", status: res.status });
+        return null;
+      }
+
+      const data = (await res.json()) as Partial<ConciergeRouteDecision>;
+      const allowedIntents = new Set([
+        "quote",
+        "diagnose",
+        "emergency",
+        "find_garage",
+        "unknown",
+      ]);
+      if (
+        data.source !== "llm" ||
+        typeof data.intent !== "string" ||
+        !allowedIntents.has(data.intent)
+      ) {
+        track("concierge", { action: "router_fallback", status: "invalid_response" });
+        return null;
+      }
+      return data as ConciergeRouteDecision;
+    } catch {
+      track("concierge", { action: "router_fallback", status: "network_error" });
+      return null;
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function runDiagnosis(
@@ -239,7 +314,7 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     const text = raw.trim();
     if (!text || loading) return;
 
-    // Special payloads from chips
+    // Special payloads from chips remain deterministic and free.
     if (text === "__quote__") {
       if (!opts?.silentUser) pushUser(t("chipQuote"));
       pushAssistant({ text: t("openingQuote") });
@@ -255,11 +330,7 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
       if (!opts?.silentUser) pushUser(t("chipEmergency"));
       pushAssistant({
         text: t("emergencyHelp"),
-        actions: [
-          { id: "e1", kind: "link", label: t("linkTow"), href: "/emergency?type=tow" },
-          { id: "e2", kind: "link", label: t("linkMobile"), href: "/karaj-mutanaqil" },
-          { id: "e3", kind: "link", label: t("linkTire"), href: "/bansher-mutanaqil" },
-        ],
+        actions: emergencyActions(),
       });
       return;
     }
@@ -341,17 +412,51 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
       return;
     }
 
-    const intent = detectConciergeIntent(text);
-    track("concierge", { action: "message", intent });
+    // Once diagnosis has explicitly asked a follow-up, keep that answer in the
+    // diagnosis conversation. Re-routing short replies such as "yes" would lose
+    // context and spend an unnecessary Haiku classifier call.
+    if (lastDiagnosis?.status === "needs_more_info") {
+      track("concierge", {
+        action: "message",
+        intent: "diagnose",
+        router: "diagnosis_followup" satisfies RouterSource,
+      });
+      await runDiagnosis(text);
+      return;
+    }
+
+    let intent = detectConciergeIntent(text);
+    let routerSource: RouterSource = "deterministic";
+    let emergencyType: ConciergeEmergencyType | undefined;
+
+    // High-confidence regex/chip paths stay $0. Only ambiguous first-turn text
+    // reaches the strict Haiku tool router.
+    if (intent === "unknown") {
+      const routed = await routeAmbiguousIntent(text);
+      if (routed) {
+        intent = routed.intent;
+        emergencyType = routed.emergency_type;
+        routerSource = "llm";
+      } else {
+        // Preserve the pre-router behavior if the classifier is unavailable:
+        // ambiguous automotive text falls through to the existing diagnosis API,
+        // whose own guards can clarify/refuse safely.
+        intent = "diagnose";
+        routerSource = "fallback";
+      }
+    }
+
+    track("concierge", {
+      action: "message",
+      intent,
+      router: routerSource,
+      ...(emergencyType ? { emergency_type: emergencyType } : {}),
+    });
 
     if (intent === "greeting") {
       pushAssistant({
         text: t("welcomeShort"),
-        chips: [
-          { id: "c1", label: t("chipDiagnose"), payload: "__diagnose__" },
-          { id: "c2", label: t("chipQuote"), payload: "__quote__" },
-          { id: "c3", label: t("chipEmergency"), payload: "__emergency__" },
-        ],
+        chips: guidedChips().slice(0, 3),
       });
       return;
     }
@@ -372,10 +477,7 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
     if (intent === "emergency") {
       pushAssistant({
         text: t("emergencyHelp"),
-        actions: [
-          { id: "e1", kind: "link", label: t("linkTow"), href: "/emergency?type=tow" },
-          { id: "e2", kind: "link", label: t("linkMobile"), href: "/karaj-mutanaqil" },
-        ],
+        actions: emergencyActions(emergencyType),
       });
       return;
     }
@@ -388,8 +490,16 @@ export function ConciergeChat({ onClose }: { onClose?: () => void }) {
       });
       return;
     }
+    if (intent === "unknown") {
+      // The LLM deliberately selected show_help for off-topic/unclear text.
+      // Do not spend a Sonnet diagnosis call on it.
+      pushAssistant({
+        text: t("welcomeShort"),
+        chips: guidedChips(),
+      });
+      return;
+    }
 
-    // diagnose / unknown long text
     await runDiagnosis(text);
   }
 
