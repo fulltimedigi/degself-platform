@@ -19,8 +19,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 // ─────────────────────────────────────────────────────────────────────────────
 //
 // CSP: نسمح فقط بالمصادر اللي بنستخدمها فعلاً (GA, Clarity, Snap Pixel, Google
-// Maps, Vercel Analytics, PostHog EU capture, Supabase). 'unsafe-inline' لازم للـ
-// Next.js inline scripts و JSON-LD. لو احتجنا nonces نعمل تحديث لاحق.
+// Maps, Vercel Analytics, Supabase). PostHog capture goes through a narrow
+// same-origin rewrite below, so the browser never needs a PostHog origin in
+// connect-src. 'unsafe-inline' لازم للـ Next.js inline scripts و JSON-LD.
 const csp = [
   "default-src 'self'",
   // Dropped 'unsafe-eval' — Next 16 + our scripts don't need it; shrink XSS blast radius.
@@ -29,7 +30,7 @@ const csp = [
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https: https://www.google-analytics.com https://*.clarity.ms https://*.googleusercontent.com",
   "media-src 'self' blob: https:",
-  "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://*.analytics.google.com https://*.clarity.ms https://sc-static.net https://tr.snapchat.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://eu.i.posthog.com https://api.anthropic.com",
+  "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://*.analytics.google.com https://*.clarity.ms https://sc-static.net https://tr.snapchat.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://api.anthropic.com",
   "frame-src 'self' https://www.google.com https://*.google.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
@@ -121,6 +122,19 @@ const nextConfig: NextConfig = {
           { key: "Content-Type", value: "text/plain; charset=utf-8" },
           { key: "Cache-Control", value: "public, max-age=86400" },
         ],
+      },
+    ];
+  },
+
+  async rewrites() {
+    return [
+      {
+        // Narrow first-party bridge for the single PostHog Capture API endpoint.
+        // /api/* is excluded from src/proxy.ts, so locale/auth middleware cannot
+        // rewrite this request. The opaque path is intentionally not a common
+        // analytics/tracking keyword, per PostHog's reverse-proxy guidance.
+        source: "/api/ds-b1",
+        destination: "https://eu.i.posthog.com/i/v0/e/",
       },
     ];
   },
