@@ -3,8 +3,7 @@ import {
   type AnalyticsInput,
 } from "@/lib/product-analytics";
 
-const POSTHOG_EU_ORIGIN = "https://eu.i.posthog.com";
-const POSTHOG_CAPTURE_URL = `${POSTHOG_EU_ORIGIN}/i/v0/e/`;
+const POSTHOG_CAPTURE_URL = "https://eu.i.posthog.com/i/v0/e/";
 const MAX_BODY_CHARS = 4096;
 const DISTINCT_ID_PATTERN = /^[a-zA-Z0-9_-]{16,80}$/;
 
@@ -16,16 +15,7 @@ type CaptureEnvelope = {
 
 function configuredProjectToken(): string | null {
   const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim();
-  const rawHost = process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim();
-  if (!token || !rawHost) return null;
-
-  try {
-    const url = new URL(rawHost);
-    if (url.protocol !== "https:" || url.origin !== POSTHOG_EU_ORIGIN) return null;
-    return token;
-  } catch {
-    return null;
-  }
+  return token || null;
 }
 
 function plainObject(value: unknown): value is Record<string, unknown> {
