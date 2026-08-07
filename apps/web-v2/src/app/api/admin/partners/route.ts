@@ -41,7 +41,6 @@ export async function GET(req: NextRequest) {
   }
 
   if (q) {
-    // Escape commas/periods that break PostgREST or() filters.
     const safe = q.replace(/[%_,.]/g, " ").trim();
     if (safe) {
       query = query.or(
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest) {
 }
 
 // Paste a public DEGSELF workshop URL and promote that exact catalog row into the
-// existing partner network. No workshop data is copied or duplicated.
+// existing network. No workshop data is copied or duplicated.
 export async function POST(req: NextRequest) {
   if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
@@ -90,7 +89,9 @@ export async function POST(req: NextRequest) {
 
   const { data: workshop, error: lookupError } = await admin
     .from("workshops")
-    .select(PARTNER_COLUMNS + ", is_automotive, out_of_scope, permanently_closed")
+    .select(
+      "place_id, name, area, phone, reviewed_specialty, is_partner, partner_priority, partner_notes, google_rating, active, is_automotive, out_of_scope, permanently_closed"
+    )
     .eq("place_id", parsed.placeId)
     .maybeSingle();
 
@@ -117,7 +118,9 @@ export async function POST(req: NextRequest) {
     .from("workshops")
     .update({ is_partner: true, updated_at: new Date().toISOString() })
     .eq("place_id", parsed.placeId)
-    .select(PARTNER_COLUMNS)
+    .select(
+      "place_id, name, area, phone, reviewed_specialty, is_partner, partner_priority, partner_notes, google_rating, active"
+    )
     .single();
 
   if (error) {
