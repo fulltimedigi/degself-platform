@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { PARTS_TYPES, type PartsType } from "@/lib/quote-status";
+import { track } from "@/lib/track";
 
 export interface PublicOffer {
   id: string;
@@ -20,22 +21,18 @@ export interface PublicOffer {
   notes: string | null;
 }
 
-// Rough day-count from free-text duration so "fastest" can sort. Unknown text
-// sorts last. Handles digits (Arabic + Latin) and common Arabic words.
 function durationDays(d: string | null): number {
   if (!d) return Number.POSITIVE_INFINITY;
   const latin = d.replace(/[٠-٩]/g, (c) => String("٠١٢٣٤٥٦٧٨٩".indexOf(c)));
   const num = parseInt((latin.match(/\d+/) ?? [])[0] ?? "", 10);
   if (d.includes("شهر")) return Number.isFinite(num) ? num * 30 : 30;
   if (d.includes("أسبوع") || d.includes("اسبوع")) return Number.isFinite(num) ? num * 7 : 7;
-  if (Number.isFinite(num)) return num; // assume days
+  if (Number.isFinite(num)) return num;
   return Number.POSITIVE_INFINITY;
 }
 
-// Completeness rank: fixed price most certain, then range, then conditional.
 const PRICING_RANK: Record<string, number> = { fixed: 0, range: 1, conditional: 2 };
 
-// Badge colour per pricing type (visual only — the label text is translated).
 const PRICING_BADGE_CLASS: Record<string, string> = {
   fixed: "bg-green-600 text-white",
   range: "bg-amber-500 text-[#0A0A0A]",
@@ -53,12 +50,20 @@ function priceLabel(o: PublicOffer, currency: string): string {
 
 export function OffersChooser({ token, offers }: { token: string; offers: PublicOffer[] }) {
   const t = useTranslations("offers");
+  const locale = useLocale();
   const currency = t("currency");
-  // Default sort is completeness (trust), NOT cheapest — see spec §5.
   const [sort, setSort] = useState<SortKey>("completeness");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [done, setDone] = useState<PublicOffer | null>(null);
+
+  useEffect(() => {
+    track("offers_view", {
+      offer_count: offers.length,
+      status: "open",
+      locale,
+    });
+  }, [locale, offers.length]);
 
   const sorted = useMemo(() => {
     const copy = [...offers];
@@ -93,6 +98,11 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
         setError(d.error ?? t("acceptError"));
         return;
       }
+      track("offer_accept", {
+        offer_count: offers.length,
+        status: "accepted",
+        locale,
+      });
       setDone(offer);
     } catch {
       setError(t("connError"));
@@ -161,7 +171,6 @@ export function OffersChooser({ token, offers }: { token: string; offers: Public
   );
 }
 
-// A meta row: muted label + value, hidden when the value is absent.
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   if (value == null || value === "") return null;
   return (
@@ -225,7 +234,6 @@ function OfferCard({
       <Row label={t("rowValidity")} value={t("validityDays", { days: o.validity_days })} />
       {o.notes && <p className="mt-1 text-sm text-muted-foreground">{o.notes}</p>}
 
-      {/* Protection clause — mandatory on every conditional offer (spec §4). */}
       {o.pricing_type === "conditional" && (
         <p className="mt-3 rounded-lg border border-blue-500/40 bg-blue-500/10 p-3 text-xs leading-relaxed text-blue-300">
           🛡️ {t("protectionClause")}
