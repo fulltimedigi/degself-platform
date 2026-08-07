@@ -3,13 +3,12 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-// Public Arabic vanity URLs (/كراج/… , /ماركة/…). Next matches a rewrite `source`
-// against the DECODED pathname (path-to-regexp), so the source must use the decoded
-// Arabic text — a percent-encoded source never matches a real request and 404s
-// (a browser hitting /%D9%83.../ is decoded to /كراج/... before rewrite matching).
-// decodeURIComponent keeps the RTL literal out of the source strings below.
-const KARAJ = decodeURIComponent("%D9%83%D8%B1%D8%A7%D8%AC"); // كراج
-const MARKA = decodeURIComponent("%D9%85%D8%A7%D8%B1%D9%83%D8%A9"); // ماركة
+// NOTE: the public Arabic vanity URLs (/كراج/… → /garage/…, /ماركة/… → /make/…)
+// are rewritten in src/proxy.ts, NOT here. A next.config `rewrites` source with
+// non-ASCII text does not work on Vercel (its edge matches the source against the
+// ENCODED request path, so the source never matches and 404s), and CI's
+// `next start` matches the decoded path so it can't catch the divergence. The
+// proxy runs the same on both and matches reliably. See src/proxy.ts.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Security Headers — متوافقة مع معايير 2026 (securityheaders.com Grade A)
@@ -124,26 +123,6 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-
-  async rewrites() {
-    // beforeFiles: these run BEFORE the next-intl proxy so the pretty
-    // Arabic URLs resolve to the ASCII routes first; next-intl then maps the
-    // unprefixed path to the default (ar) locale.
-    return {
-      beforeFiles: [
-        // Public Arabic URL → internal ASCII route (Turbopack doesn't register
-        // non-ASCII route folders, so the folder is /garage but the URL stays /كراج).
-        { source: `/${KARAJ}/:specialty/:area`, destination: "/garage/:specialty/:area" },
-        // Specialty index (one level): /كراج/ميكانيكا → /garage/ميكانيكا
-        { source: `/${KARAJ}/:specialty`, destination: "/garage/:specialty" },
-        // Car-make pages: /ماركة/تويوتا → /make/تويوتا  and  /ماركة → /make
-        { source: `/${MARKA}/:brand`, destination: "/make/:brand" },
-        { source: `/${MARKA}`, destination: "/make" },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
   },
 
   async redirects() {
