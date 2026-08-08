@@ -57,6 +57,9 @@ begin
 end;
 $$;
 
+-- Trigger-only helper: never expose this SECURITY DEFINER function as a public RPC.
+revoke execute on function public.preserve_workshop_profile_overrides() from public, anon, authenticated;
+
 drop trigger if exists preserve_workshop_profile_overrides_trigger on public.workshops;
 create trigger preserve_workshop_profile_overrides_trigger
 before update on public.workshops
