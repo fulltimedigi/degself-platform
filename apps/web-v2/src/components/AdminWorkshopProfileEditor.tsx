@@ -21,7 +21,6 @@ type Override = {
   address: string | null;
   area: string | null;
   reviewed_specialty: string | null;
-  description: string | null;
   hero_image_url: string | null;
   gallery_image_urls: string[] | null;
 };
@@ -34,7 +33,6 @@ type FormState = {
   address: string;
   area: string;
   reviewed_specialty: string;
-  description: string;
 };
 
 function initialForm(base: Base, override: Override | null): FormState {
@@ -46,7 +44,6 @@ function initialForm(base: Base, override: Override | null): FormState {
     address: override?.address ?? base.address ?? "",
     area: override?.area ?? base.area ?? "",
     reviewed_specialty: override?.reviewed_specialty ?? base.reviewed_specialty ?? "",
-    description: override?.description ?? "",
   };
 }
 
@@ -105,6 +102,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "تعذّر الحفظ.");
       setOverride(data.override);
+      if (data.workshop) setBase(data.workshop);
       setMessage("تم حفظ تعديلات صفحة الكراج ✓");
     } catch (e) {
       setError(e instanceof Error ? e.message : "تعذّر الحفظ.");
@@ -132,7 +130,6 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
           address: null,
           area: null,
           reviewed_specialty: null,
-          description: null,
           hero_image_url: null,
           gallery_image_urls: [],
         }),
@@ -190,10 +187,10 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
     <div className="space-y-8">
       <section className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <div className="mb-5">
-          <p className="text-xs text-muted-foreground">المصدر الأصلي محفوظ في الدليل</p>
+          <p className="text-xs text-muted-foreground">القيم الأصلية تظل محفوظة في مصدر الدليل</p>
           <h2 className="mt-1 text-xl font-extrabold">تعديل البيانات العامة</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            القيم هنا تتغلب على بيانات الدليل في العرض العام، من غير ما نمسح المصدر الأصلي.
+            أي تعديل تحفظه هنا يظهر مباشرة في المنصة، ويُحمى من أن يمسحه تحديث كتالوج لاحق.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -209,17 +206,6 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
             </label>
           ))}
         </div>
-        <label className="mt-4 block">
-          <span className="mb-1 block text-sm font-bold">وصف من دق سلف</span>
-          <textarea
-            value={form.description}
-            onChange={(e) => setField("description", e.target.value)}
-            maxLength={1200}
-            rows={5}
-            placeholder="وصف مختصر للخدمات أو ما يميز الكراج…"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:border-[#FFD60A] focus:outline-none"
-          />
-        </label>
         <button
           type="button"
           disabled={saving}
@@ -233,7 +219,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
       <section className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <h2 className="text-xl font-extrabold">صور الكراج الحقيقية</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          JPG / PNG / WEBP، بحد 5MB للصورة، وحتى 8 صور. أول صورة تصبح الصورة الرئيسية تلقائيًا.
+          JPG / PNG / WEBP، بحد 5MB للصورة، وحتى 8 صور. أول صورة تصبح الصورة الرئيسية تلقائيًا وتظهر في Hero صفحة الكراج.
         </p>
         <label className="mt-4 inline-flex cursor-pointer rounded-lg border border-[#FFD60A]/50 bg-[#FFD60A]/10 px-4 py-2 text-sm font-extrabold text-[#FFD60A]">
           {uploading ? "جارٍ الرفع…" : "رفع صورة"}
