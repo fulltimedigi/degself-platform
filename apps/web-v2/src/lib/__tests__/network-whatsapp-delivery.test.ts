@@ -28,10 +28,11 @@ test("reserved delivery token is not outreach until provider success", async () 
 
   assert.match(migration, /delivery_token/);
   assert.match(migration, /not valid until provider delivery succeeds/i);
-  assert.match(resolver, /eq\("status", "sent"\)/);
+  assert.match(delivery, /eq\("delivery_token", token\)[\s\S]*eq\("status", "sent"\)/);
+  assert.match(resolver, /materializeSentDeliveryOutreachByToken\(token\)/);
 
   const sendIndex = delivery.indexOf("sendWhatsAppTemplate(");
-  const sentIndex = delivery.indexOf('status: "sent"');
+  const sentIndex = delivery.indexOf('status: "sent"', sendIndex);
   const outreachIndex = delivery.indexOf("materializeSentDeliveryOutreach({", sentIndex);
   assert.ok(sendIndex >= 0 && sentIndex > sendIndex && outreachIndex > sentIndex);
 });
@@ -42,7 +43,7 @@ test("provider success can be reconciled without duplicate send", async () => {
   assert.match(delivery, /eq\("status", "queued"\)/);
   assert.match(delivery, /Do NOT retry automatically/);
   assert.match(delivery, /reconcileSentDeliveries/);
-  assert.match(delivery, /materializeSentDeliveryOutreachByToken/);
+  assert.match(delivery, /last_outreach_at !== input\.sentAt/);
 });
 
 test("garage WhatsApp template contains no customer identity or problem description", async () => {
