@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+type CustomItem = { label: string; value: string };
+type CustomSection = { title: string; items: CustomItem[] };
+
 type Base = {
   place_id: string;
   name: string;
@@ -23,6 +26,7 @@ type Override = {
   reviewed_specialty: string | null;
   hero_image_url: string | null;
   gallery_image_urls: string[] | null;
+  custom_sections: CustomSection[] | null;
 };
 
 type FormState = {
@@ -51,6 +55,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
   const [base, setBase] = useState<Base | null>(null);
   const [override, setOverride] = useState<Override | null>(null);
   const [form, setForm] = useState<FormState | null>(null);
+  const [sections, setSections] = useState<CustomSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -72,6 +77,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
       setBase(data.workshop);
       setOverride(data.override ?? null);
       setForm(initialForm(data.workshop, data.override ?? null));
+      setSections(Array.isArray(data.override?.custom_sections) ? data.override.custom_sections : []);
     } catch (e) {
       setError(e instanceof Error ? e.message : "تعذّر التحميل.");
     } finally {
@@ -88,8 +94,71 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
     setForm((prev) => (prev ? { ...prev, [field]: value } : prev));
   }
 
+  function addSection() {
+    if (sections.length >= 8) return;
+    setSections((prev) => [...prev, { title: "", items: [{ label: "", value: "" }] }]);
+  }
+
+  function updateSectionTitle(sectionIndex: number, title: string) {
+    setSections((prev) =>
+      prev.map((section, i) => (i === sectionIndex ? { ...section, title } : section))
+    );
+  }
+
+  function removeSection(sectionIndex: number) {
+    setSections((prev) => prev.filter((_, i) => i !== sectionIndex));
+  }
+
+  function addItem(sectionIndex: number) {
+    setSections((prev) =>
+      prev.map((section, i) =>
+        i === sectionIndex && section.items.length < 20
+          ? { ...section, items: [...section.items, { label: "", value: "" }] }
+          : section
+      )
+    );
+  }
+
+  function updateItem(sectionIndex: number, itemIndex: number, field: keyof CustomItem, value: string) {
+    setSections((prev) =>
+      prev.map((section, i) =>
+        i === sectionIndex
+          ? {
+              ...section,
+              items: section.items.map((item, j) =>
+                j === itemIndex ? { ...item, [field]: value } : item
+              ),
+            }
+          : section
+      )
+    );
+  }
+
+  function removeItem(sectionIndex: number, itemIndex: number) {
+    setSections((prev) =>
+      prev.map((section, i) =>
+        i === sectionIndex
+          ? { ...section, items: section.items.filter((_, j) => j !== itemIndex) }
+          : section
+      )
+    );
+  }
+
   async function save() {
     if (!form) return;
+    for (const section of sections) {
+      if (!section.title.trim()) {
+        setError("اكتب اسم الخانة الإضافية قبل الحفظ.");
+        return;
+      }
+      for (const item of section.items) {
+        if (!item.label.trim() || !item.value.trim()) {
+          setError("كل عنصر في الخانات الإضافية يحتاج اسمًا وقيمة.");
+          return;
+        }
+      }
+    }
+
     setSaving(true);
     setError("");
     setMessage("");
@@ -97,11 +166,12 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
       const res = await fetch(`${apiBase}/profile`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, custom_sections: sections }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "تعذّر الحفظ.");
       setOverride(data.override);
+      setSections(Array.isArray(data.override?.custom_sections) ? data.override.custom_sections : []);
       if (data.workshop) setBase(data.workshop);
       setMessage("تم حفظ تعديلات صفحة الكراج ✓");
     } catch (e) {
@@ -132,6 +202,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
           reviewed_specialty: null,
           hero_image_url: null,
           gallery_image_urls: [],
+          custom_sections: sections,
         }),
         hero_image_url: data.hero_image_url,
         gallery_image_urls: data.gallery_image_urls,
@@ -190,7 +261,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
           <p className="text-xs text-muted-foreground">القيم الأصلية تظل محفوظة في مصدر الدليل</p>
           <h2 className="mt-1 text-xl font-extrabold">تعديل البيانات العامة</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            أي تعديل تحفظه هنا يظهر مباشرة في المنصة، ويُحمى من أن يمسحه تحديث كتالوج لاحق.
+            أي تعديل تحفظه هنا يظهر في المنصة، ويُحمى من أن يمسحه تحديث كتالوج لاحق.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -206,14 +277,96 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
             </label>
           ))}
         </div>
-        <button
-          type="button"
-          disabled={saving}
-          onClick={() => void save()}
-          className="mt-5 rounded-lg bg-[#FFD60A] px-5 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:opacity-50"
-        >
-          {saving ? "جارٍ الحفظ…" : "حفظ التعديلات"}
-        </button>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-4 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-extrabold">خانات إضافية</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              أضف أي خانة خاصة بهذا الكراج، مثل أشهر الخدمات والأسعار أو الضمان أو طرق الدفع.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={addSection}
+            disabled={sections.length >= 8}
+            className="rounded-lg border border-[#FFD60A]/50 bg-[#FFD60A]/10 px-4 py-2 text-sm font-extrabold text-[#FFD60A] disabled:opacity-40"
+          >
+            + إضافة خانة
+          </button>
+        </div>
+
+        {sections.length === 0 ? (
+          <p className="mt-5 rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+            لا توجد خانات إضافية بعد. اضغط «+ إضافة خانة» لإنشاء أول خانة.
+          </p>
+        ) : (
+          <div className="mt-5 space-y-4">
+            {sections.map((section, sectionIndex) => (
+              <div key={sectionIndex} className="rounded-xl border border-border bg-background p-4">
+                <div className="flex items-end gap-2">
+                  <label className="flex-1">
+                    <span className="mb-1 block text-sm font-bold">اسم الخانة</span>
+                    <input
+                      value={section.title}
+                      onChange={(e) => updateSectionTitle(sectionIndex, e.target.value)}
+                      placeholder="مثال: أشهر الخدمات"
+                      maxLength={80}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm focus:border-[#FFD60A] focus:outline-none"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => removeSection(sectionIndex)}
+                    className="rounded-lg px-3 py-2.5 text-sm font-bold text-red-400"
+                  >
+                    حذف الخانة
+                  </button>
+                </div>
+
+                <div className="mt-4 space-y-2">
+                  {section.items.map((item, itemIndex) => (
+                    <div key={itemIndex} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                      <input
+                        value={item.label}
+                        onChange={(e) => updateItem(sectionIndex, itemIndex, "label", e.target.value)}
+                        placeholder="الخدمة — مثال: تغيير زيت"
+                        maxLength={120}
+                        className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm focus:border-[#FFD60A] focus:outline-none"
+                      />
+                      <input
+                        value={item.value}
+                        onChange={(e) => updateItem(sectionIndex, itemIndex, "value", e.target.value)}
+                        placeholder="القيمة — مثال: 8 د.ك"
+                        maxLength={120}
+                        className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm focus:border-[#FFD60A] focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeItem(sectionIndex, itemIndex)}
+                        className="rounded-lg px-3 py-2 text-sm font-bold text-red-400"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => addItem(sectionIndex)}
+                  disabled={section.items.length >= 20}
+                  className="mt-3 text-sm font-extrabold text-[#FFD60A] disabled:opacity-40"
+                >
+                  + إضافة عنصر داخل الخانة
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p className="mt-3 text-xs text-muted-foreground">الحد الأقصى: 8 خانات، و20 عنصرًا داخل كل خانة.</p>
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-4 sm:p-6">
@@ -259,6 +412,15 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
           </div>
         )}
       </section>
+
+      <button
+        type="button"
+        disabled={saving}
+        onClick={() => void save()}
+        className="rounded-lg bg-[#FFD60A] px-5 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:opacity-50"
+      >
+        {saving ? "جارٍ الحفظ…" : "حفظ كل التعديلات"}
+      </button>
 
       {(error || message) && (
         <div className={`rounded-lg border p-3 text-sm ${error ? "border-red-500/40 bg-red-500/10 text-red-400" : "border-green-500/40 bg-green-500/10 text-green-400"}`}>
