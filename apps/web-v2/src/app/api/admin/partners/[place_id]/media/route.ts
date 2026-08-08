@@ -53,6 +53,23 @@ async function mirrorMedia(
   if (error) throw error;
 }
 
+async function restoreOverride(
+  admin: ReturnType<typeof getSupabaseAdmin>,
+  placeId: string,
+  hero: string | null,
+  gallery: string[]
+) {
+  await admin.from("workshop_profile_overrides").upsert(
+    {
+      place_id: placeId,
+      hero_image_url: hero,
+      gallery_image_urls: gallery,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "place_id" }
+  );
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ place_id: string }> }
@@ -84,14 +101,18 @@ export async function POST(
     return NextResponse.json({ error: "المسموح JPG أو PNG أو WEBP فقط." }, { status: 400 });
   }
 
-  const { data: current } = await admin
+  const { data: current, error: currentError } = await admin
     .from("workshop_profile_overrides")
     .select("hero_image_url,gallery_image_urls")
     .eq("place_id", place_id)
     .maybeSingle();
+  if (currentError) {
+    return NextResponse.json({ error: currentError.message }, { status: 500 });
+  }
   const gallery = Array.isArray(current?.gallery_image_urls)
     ? (current.gallery_image_urls as string[])
     : [];
+  const previousHero = current?.hero_image_url ?? null;
   if (gallery.length >= MAX_GALLERY) {
     return NextResponse.json({ error: `الحد الأقصى ${MAX_GALLERY} صور للكراج.` }, { status: 409 });
   }
@@ -107,10 +128,11 @@ export async function POST(
   if (uploadError) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
   }
+
   const { data: publicData } = admin.storage.from(BUCKET).getPublicUrl(path);
   const url = publicData.publicUrl;
   const nextGallery = [...gallery, url];
-  const hero = current?.hero_image_url || url;
+  const hero = previousHero || url;
 
   const { error: dbError } = await admin.from("workshop_profile_overrides").upsert(
     {
@@ -125,15 +147,18 @@ export async function POST(
     await admin.storage.from(BUCKET).remove([path]);
     return NextResponse.json({ error: dbError.message }, { status: 500 });
   }
+
   try {
     await mirrorMedia(admin, place_id, hero, nextGallery);
   } catch (e) {
+    await restoreOverride(admin, place_id, previousHero, gallery);
     await admin.storage.from(BUCKET).remove([path]);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "تعذّر تحديث صورة الكراج." },
       { status: 500 }
     );
   }
+
   return NextResponse.json({ url, hero_image_url: hero, gallery_image_urls: nextGallery });
 }
 
@@ -149,6 +174,7 @@ export async function DELETE(
   if (!(await requirePartner(admin, place_id))) {
     return NextResponse.json({ error: "الكراج غير موجود في الشبكة." }, { status: 404 });
   }
+
   let body: { url?: unknown };
   try {
     body = await req.json();
@@ -174,14 +200,10 @@ export async function DELETE(
     return NextResponse.json({ error: "الصورة غير مرتبطة بهذا الكراج." }, { status: 404 });
   }
 
-  const marker = `/storage/v1/object/public/${BUCKET}/`;
-  const idx = body.url.indexOf(marker);
-  if (idx >= 0) {
-    const path = decodeURIComponent(body.url.slice(idx + marker.length));
-    if (path.startsWith(`${place_id}/`)) await admin.storage.from(BUCKET).remove([path]);
-  }
+  const previousHero = current.hero_image_url as string | null;
   const nextGallery = gallery.filter((u) => u !== body.url);
-  const nextHero = current.hero_image_url === body.url ? nextGallery[0] ?? null : current.hero_image_url;
+  const nextHero = previousHero === body.url ? nextGallery[0] ?? null : previousHero;
+
   const { error: updateError } = await admin
     .from("workshop_profile_overrides")
     .update({
@@ -191,13 +213,28 @@ export async function DELETE(
     })
     .eq("place_id", place_id);
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
+
   try {
     await mirrorMedia(admin, place_id, nextHero, nextGallery);
   } catch (e) {
+    await restoreOverride(admin, place_id, previousHero, gallery);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "تعذّر تحديث صورة الكراج." },
       { status: 500 }
     );
   }
+
+  // Only remove the physical object after DB state is safely committed. A storage
+  // deletion failure leaves an unreferenced object, not a broken public profile.
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const idx = body.url.indexOf(marker);
+  if (idx >= 0) {
+    const path = decodeURIComponent(body.url.slice(idx + marker.length));
+    if (path.startsWith(`${place_id}/`)) {
+      const { error: removeError } = await admin.storage.from(BUCKET).remove([path]);
+      if (removeError) console.error("workshop-media cleanup failed:", removeError);
+    }
+  }
+
   return NextResponse.json({ hero_image_url: nextHero, gallery_image_urls: nextGallery });
 }
