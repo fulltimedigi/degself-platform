@@ -92,9 +92,11 @@ async function handleCookie(req: NextRequest) {
 
   if (!result.ok) return respond({ ok: false, code: result.code }, result.status);
 
-  // Deterministically clear the browser session. signOut({scope:"local"}) makes
-  // no network call; it emits cookie removals through the client's setAll →
-  // cookieSink, which `respond()` writes onto the response.
+  // Deterministically clear the browser session. signOut({scope:"local"}) emits
+  // the session-cookie removals through the client's setAll → cookieSink, which
+  // `respond()` writes onto the response. (supabase-js may also issue a
+  // local-scope /logout call, but our guaranteed cookie clearing does NOT depend
+  // on that call succeeding — the removals are applied to the response either way.)
   await supabase.auth.signOut({ scope: "local" });
   return respond({ ok: true }, 200);
 }

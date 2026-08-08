@@ -50,6 +50,13 @@ export async function signInWithApple(): Promise<void> {
 
   let credential: AppleAuthentication.AppleAuthenticationCredential;
   try {
+    // FULL_NAME + EMAIL are requested to keep the door open, but note: Apple
+    // returns fullName/email ONLY on the user's FIRST authorization for this app
+    // (null on every later sign-in), and the identity we authenticate with lives
+    // entirely inside `identityToken`. M1 needs only the token (email/identity),
+    // so fullName is intentionally not consumed here. Any future profile-name
+    // capture must persist fullName on that first sign-in — it cannot be re-read
+    // from Apple afterwards.
     credential = await AppleAuthentication.signInAsync({
       requestedScopes: [
         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,

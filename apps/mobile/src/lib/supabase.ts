@@ -1,6 +1,10 @@
 import "react-native-url-polyfill/auto"; // supabase-js needs WHATWG URL on RN
 import { AppState, type AppStateStatus } from "react-native";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import {
+  createClient,
+  processLock,
+  type SupabaseClient,
+} from "@supabase/supabase-js";
 import {
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,
@@ -25,6 +29,10 @@ export function getSupabase(): SupabaseClient {
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: false,
+      // Serialize concurrent auth/session operations (refresh vs read vs
+      // sign-in) so overlapping tasks don't race on the stored session — the
+      // Supabase-recommended React Native lock. Not a custom mutex.
+      lock: processLock,
     },
   });
   return client;

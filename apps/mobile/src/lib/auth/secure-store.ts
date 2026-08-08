@@ -10,10 +10,21 @@ import aesjs from "aes-js";
 //   • a random AES-256 key is generated and stored in SecureStore (small, hardware-backed)
 //   • the session value is AES-CTR encrypted and the CIPHERTEXT is stored in AsyncStorage
 // The plaintext session therefore never touches AsyncStorage or the filesystem
-// in the clear, and the key never leaves the secure enclave storage.
+// in the clear. The AES key is stored AT REST in the iOS Keychain / Android
+// Keystore via expo-secure-store; to encrypt/decrypt it is necessarily loaded
+// into JS memory for the duration of the operation. No hardware Secure Enclave
+// guarantee is claimed — SecureStore is OS keychain-backed at rest, not an
+// in-enclave compute boundary.
 //
 // This class is the `storage` adapter passed to createClient({ auth: { storage }}).
 // AUTH SECRETS ONLY — ordinary UI/cache/guest state uses plain AsyncStorage.
+//
+// FAILURE MODE (inherent to the official Supabase LargeSecureStore pattern):
+// setItem writes the new key to SecureStore, then the ciphertext to AsyncStorage.
+// A crash BETWEEN those two writes can leave the prior ciphertext undecryptable
+// (its key overwritten) → getItem returns null → a local sign-out on next launch.
+// This is an accepted, non-destructive session-loss trade-off (the user simply
+// re-authenticates); M1 does NOT add a custom transactional storage layer for it.
 
 export class LargeSecureStore {
   private async encrypt(key: string, value: string): Promise<string> {
