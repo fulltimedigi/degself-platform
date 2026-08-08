@@ -1,77 +1,82 @@
 # WABA — WhatsApp auto-send setup (flag-gated)
 
-Phase 2 ships the code for automatically WhatsApp-ing customers their offers via
-the **Meta WhatsApp Cloud API (direct, no BSP)** — but it is **OFF by default**.
-While `WHATSAPP_ENABLED != true`, nothing changes: the manual wa.me forward flow
-runs exactly as before and **no Meta API call is ever made**.
+DEGSELF uses the **Meta WhatsApp Cloud API (direct, no BSP)** and keeps all sends
+behind `WHATSAPP_ENABLED`. While the flag is off, no Meta API call is made.
 
-## 1) Vercel environment variables (empty — fill when Meta assets are ready)
+## 1) Vercel environment variables
 
-Add these in Vercel → Project → Settings → Environment Variables (Production, and
-Preview if you want to test there). Leave them blank/unset to keep WABA off.
-
-```
-# Master switch. Keep OFF until everything below is ready and tested.
-WHATSAPP_ENABLED=
-
-# Meta Cloud API credentials
-WHATSAPP_TOKEN=                 # permanent System-User access token
-WHATSAPP_PHONE_NUMBER_ID=       # numeric Phone Number ID of the NEW WABA sending number
-WHATSAPP_APP_SECRET=            # Meta App secret — used to verify webhook signatures
-
-# Approved template (defaults shown; only set to override)
-WHATSAPP_TEMPLATE_OFFERS=offers_ready_ar
-WHATSAPP_TEMPLATE_LANG=ar
-
-# Webhook verification (pick any random string; enter the SAME value in Meta)
+```bash
+WHATSAPP_ENABLED=false
+WHATSAPP_TOKEN=
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_APP_SECRET=
 WHATSAPP_WEBHOOK_VERIFY_TOKEN=
+
+# Customer notification when offers are ready
+WHATSAPP_TEMPLATE_OFFERS=offers_ready_ar
+
+# REQUIRED for automatic quote delivery to network garages.
+# There is intentionally no runtime default: the exact approved template must be named.
+WHATSAPP_TEMPLATE_GARAGE_RFQ=garage_quote_request_ar
+WHATSAPP_TEMPLATE_LANG=ar
 ```
 
-> The existing manual flow uses `CALLMEBOT_PHONE` / `CALLMEBOT_APIKEY` (Ahmed's
-> number `96565799195`) and is **untouched**. WABA uses a **separate new number**.
+The existing CallMeBot founder alert remains separate and is not a garage-delivery provider.
 
-## 2) Meta-side checklist (do in parallel; longest lead time)
+## 2) Meta-side checklist
 
-1. Meta Business Account + **Business Verification**.
-2. New dedicated phone number for WABA (must NOT be active on the WhatsApp app).
-3. Meta for Developers app → add **WhatsApp** product → grab `Phone Number ID`
-   and mint a **permanent System-User token**; copy the **App secret**.
-4. Submit the message template below and wait for approval (**Utility** category).
-5. Configure the webhook (step 3 here).
+1. Meta Business Account + Business Verification.
+2. Dedicated WABA phone number.
+3. Meta for Developers app with WhatsApp product, Phone Number ID, permanent System-User token and App secret.
+4. Submit/approve the required Utility templates.
+5. Configure the webhook at `https://degself.com/api/webhooks/whatsapp` and subscribe to `messages`.
 
-## 3) Webhook (Meta → us)
+## 3) Customer offers template
 
-- **Callback URL:** `https://degself.com/api/webhooks/whatsapp`
-- **Verify token:** the value you put in `WHATSAPP_WEBHOOK_VERIFY_TOKEN`
-- **Subscribe to:** the `messages` field (delivery statuses).
+- **Name:** `offers_ready_ar`
+- **Language:** `ar`
+- **Category:** Utility
+- Body parameters: customer name, offer count.
+- Dynamic URL button: `https://degself.com/offers/{{1}}` where the dynamic value is the customer token.
 
-On a `failed` delivery the webhook auto-notifies Ahmed with the one-tap manual
-forward link, so a customer whose number isn't on WhatsApp still gets their offers.
+## 4) Garage RFQ template
 
-## 4) Message template to submit
+Recommended approved template:
 
-- **Name:** `offers_ready_ar`  ·  **Language:** `ar`  ·  **Category:** Utility
+- **Name:** `garage_quote_request_ar`
+- **Language:** `ar`
+- **Category:** Utility
 - **Body:**
-  ```
-  مرحباً {{1}} 👋
-  وصلتك {{2}} عروض أسعار جاهزة لطلبك في دق سلف. اطّلع عليها واختر الأنسب لك.
-  ```
-- **Button:** type **URL (dynamic)**, text `اعرض العروض`,
-  URL `https://degself.com/offers/{{1}}` (the dynamic part receives the token).
 
-Runtime params sent by the code: body `{{1}}`=customer name, `{{2}}`=offers count;
-button `{{1}}`=customer_token.
+```text
+طلب عرض سعر جديد من دق سلف.
+الخدمة: {{1}}
+السيارة: {{2}}
+المنطقة: {{3}}
+افتح تفاصيل الطلب وأرسل عرضك من الرابط أدناه.
+```
 
-## 5) Flip the switch (when ready)
+- **Button:** URL (dynamic), text `عرض الطلب`
+- URL: `https://degself.com/submit-offer/{{1}}`
 
-1. Fill all env vars above, set `WHATSAPP_ENABLED=true`, redeploy.
-2. Add a real quote → add offers → **إرسال العروض للعميل**.
-3. The customer gets the template automatically; Ahmed gets a "sent" confirmation.
-4. To roll back instantly: set `WHATSAPP_ENABLED=false` (or clear it) and redeploy —
-   the manual forward flow resumes with zero code changes.
+Runtime body values are service, car label and area. The WhatsApp template deliberately
+contains **no customer name, customer phone, or free-text problem description**. The button
+receives only a capability token; the server resolves it to the PII-safe garage quote view.
+
+## 5) Delivery truth and rollout
+
+Automatic routing and automatic delivery are separate states:
+
+1. Router selects network garages and creates `quote_delivery_queue` rows.
+2. A reserved token is created but is not valid outreach yet.
+3. Meta Cloud API must return a message id before the queue becomes `sent`.
+4. Only then is `quote_workshop_outreach` created/updated using the provider-confirmed send time.
+5. If the outreach write is temporarily missed after a successful send, reconciliation repairs it without resending or double-counting.
+
+To activate garage auto-send, the garage template must be approved and
+`WHATSAPP_TEMPLATE_GARAGE_RFQ` must be configured before setting `WHATSAPP_ENABLED=true`.
+Turning `WHATSAPP_ENABLED=false` stops all automatic Meta sends immediately.
 
 ## Cost note
 
-Direct Cloud API = pay Meta per message only (Utility rate for Kuwait, a few
-cents each). No BSP markup, no monthly fee. Verify current rates on Meta's pricing
-page before enabling.
+Direct Cloud API means Meta message charges only, with no BSP markup. Verify current Meta pricing before activation.
