@@ -32,10 +32,10 @@ src/
 ```
 Native `ios/` and `android/` are **not committed** — Continuous Native Generation (`expo prebuild`) regenerates them (gitignored).
 
-## Auth (native; resolves into the SAME Supabase Auth as web)
-- **Google** — `@react-native-google-signin/google-signin` native picker → `signInWithIdToken`. The **web** OAuth client id (public) is the token audience and must also be set on the Supabase Google provider; the reversed **iOS** client id goes in the google-signin config plugin's `iosUrlScheme` at build time. **No client secret and no `google-services.json` ship in the app.**
-- **Apple (iOS, REQUIRED)** — `expo-apple-authentication` → `signInWithIdToken({ provider:'apple', nonce })`. Entitlement `com.apple.developer.applesignin` (via `ios.usesAppleSignIn`). Native-only Supabase Apple provider needs just the bundle id.
-- **Session** — Supabase-official `LargeSecureStore` (AES-256 key in Keychain/Keystore via SecureStore; ciphertext in AsyncStorage) as the storage adapter; auto-refresh tied to `AppState`. Auth secrets never sit in plain storage; guest favorites use plain AsyncStorage.
+## Auth (resolves into the SAME Supabase Auth as web)
+- **Google** — Supabase **`signInWithOAuth`** + system auth session (`expo-web-browser` + `expo-auth-session`), the current Supabase-supported mobile path. (The *free* `@react-native-google-signin` can't pass a custom nonce and is unsupported for this flow; the native-nonce path is the paid Universal Sign In — not adopted.) The Google client id/secret live ONLY on the Supabase Google provider (server-side) — **no Google client id or secret ships in the app.** Redirect returns via `degself://` (register `degself://**` in Supabase Auth → URL Configuration). The code establishes the session from the redirect (PKCE `exchangeCodeForSession` or implicit `setSession`).
+- **Apple (iOS, REQUIRED)** — `expo-apple-authentication` native → `signInWithIdToken({ provider:'apple', nonce })`. Entitlement `com.apple.developer.applesignin` (via `ios.usesAppleSignIn`). Native-only Supabase Apple provider needs just the bundle id. `fullName`/`email` are returned only on the first authorization; M1 uses only the identity token.
+- **Session** — Supabase-official `LargeSecureStore` (AES-256 key in Keychain/Keystore via SecureStore **at rest**, loaded into memory to encrypt/decrypt; ciphertext in AsyncStorage) as the storage adapter; auto-refresh tied to `AppState`. `lock: processLock` is intentionally omitted (deprecated no-op in auth-js 2.112.2). Accepted rare failure mode: a crash mid-`setItem` can force a local re-login (documented in ADR-0005). Auth secrets never sit in plain storage; guest favorites use plain AsyncStorage.
 
 Requires a **custom dev build** — this native stack does not run in Expo Go.
 
@@ -71,7 +71,7 @@ Installs use **strict** npm peer enforcement (no global `legacy-peer-deps`); `np
 Real device binaries + provider login build via **EAS** with owner credentials. No store submission / production OTA is configured.
 
 ## Non-scope (M1)
-No search / workshop discovery UI (M2), no `packages/domain` extraction, no Ask DEGSELF, no quotes/offers, no WABA, no admin, no push/device tokens, no Universal/App Links (`assetlinks.json` / `apple-app-site-association` — M6; only the auth callback scheme is configured), no analytics identity, no review UI. Deferred deps: `expo-auth-session`/`expo-web-browser` (native SDKs chosen instead), NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, PostHog RN.
+No search / workshop discovery UI (M2), no `packages/domain` extraction, no Ask DEGSELF, no quotes/offers, no WABA, no admin, no push/device tokens, no Universal/App Links (`assetlinks.json` / `apple-app-site-association` — M6; only the auth callback scheme is configured), no analytics identity, no review UI. Deferred deps: NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, PostHog RN. (Google auth uses `expo-auth-session`/`expo-web-browser`; the paid Universal Sign In is NOT adopted.)
 
 ## Next
 **M2 — Search + Workshop Detail + deterministic domain extraction** (OD-04). Remaining M-gated open decisions: OD-01 (M4), OD-04 (M2), OD-05 (M3), OD-06/07/08 (later).

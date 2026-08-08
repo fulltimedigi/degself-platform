@@ -8,10 +8,11 @@ import Constants from "expo-constants";
 // config here is:
 //   • Supabase URL + PUBLISHABLE key  (public by design; RLS is the boundary)
 //   • the web API base URL            (public)
-//   • the Google WEB OAuth client id  (public; it is the token audience, not a secret)
-// NEVER put a secret here or in `extra`/EXPO_PUBLIC_*: no service-role key, DB
-// URL, Supabase JWT secret, Anthropic/WABA/Meta secrets, Google client SECRET,
-// admin credentials, or Vercel tokens. Those live only on the server.
+// Google login uses Supabase `signInWithOAuth`, so the Google client id/secret
+// live ONLY on the Supabase Google provider (server-side) — the app ships NO
+// Google client id at all. NEVER put a secret here or in `extra`/EXPO_PUBLIC_*:
+// no service-role key, DB URL, Supabase JWT secret, Anthropic/WABA/Meta secrets,
+// Google client SECRET, admin credentials, or Vercel tokens.
 //
 // Public values are supplied via `EXPO_PUBLIC_*` env vars (inlined into the
 // bundle at build time) so nothing environment-specific is committed to the
@@ -43,15 +44,6 @@ export const SUPABASE_PUBLISHABLE_KEY =
 export const API_BASE_URL = (
   process.env.EXPO_PUBLIC_API_BASE_URL ?? ""
 ).replace(/\/+$/, "");
-
-/**
- * Google OAuth **WEB** client id — public. Used as the `webClientId` audience
- * for `signInWithIdToken` and must match the client id configured on the
- * Supabase Google provider. The iOS client id (reversed) is a build-time config
- * plugin value in app.json; no Google client SECRET ever ships in the app.
- */
-export const GOOGLE_WEB_CLIENT_ID =
-  process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? "";
 
 /** True when the minimum public Supabase config is present. */
 export function hasSupabaseConfig(): boolean {

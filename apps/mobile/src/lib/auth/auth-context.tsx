@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, startAuthAutoRefresh } from "@/lib/supabase";
-import { signInWithGoogle as googleSignIn, signOutGoogle } from "./google";
+import { signInWithGoogle as googleSignIn } from "./google";
 import { signInWithApple as appleSignIn } from "./apple";
 
 // The smallest cohesive auth/session abstraction the app needs. Supabase Auth
@@ -94,16 +94,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithApple = useCallback(() => appleSignIn(), []);
 
   const signOut = useCallback(async () => {
-    // Clear the native Google session too so the next sign-in shows the picker.
-    await Promise.allSettled([signOutGoogle()]);
+    // OAuth (system browser) leaves no native provider session to clear; Supabase
+    // sign-out revokes the session and the auth listener flips the app to guest.
     await getSupabase().auth.signOut();
   }, []);
 
   const clearLocalSession = useCallback(async () => {
-    await Promise.allSettled([
-      signOutGoogle(),
-      getSupabase().auth.signOut({ scope: "local" }),
-    ]);
+    // Local-only clear after account deletion — the server identity is already
+    // gone (sessions cascaded), so no network sign-out is attempted.
+    await getSupabase().auth.signOut({ scope: "local" });
   }, []);
 
   const reauthenticate = useCallback(async () => {

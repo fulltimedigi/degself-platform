@@ -1,10 +1,6 @@
 import "react-native-url-polyfill/auto"; // supabase-js needs WHATWG URL on RN
 import { AppState, type AppStateStatus } from "react-native";
-import {
-  createClient,
-  processLock,
-  type SupabaseClient,
-} from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import {
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,
@@ -29,10 +25,13 @@ export function getSupabase(): SupabaseClient {
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: false,
-      // Serialize concurrent auth/session operations (refresh vs read vs
-      // sign-in) so overlapping tasks don't race on the stored session — the
-      // Supabase-recommended React Native lock. Not a custom mutex.
-      lock: processLock,
+      // NOTE on `lock`: we intentionally do NOT pass `lock: processLock`. Audited
+      // against the installed @supabase/auth-js 2.112.2, where `processLock` is
+      // now @deprecated — "The auth client coordinates refreshes itself and the
+      // server resolves concurrent refresh races, so passing { lock: processLock }
+      // to it has no effect. You can safely drop the import." The current
+      // Supabase RN quickstart no longer sets it. Adding it would be a misleading
+      // no-op. Concurrency safety is handled by the client + server, not a lock here.
     },
   });
   return client;
