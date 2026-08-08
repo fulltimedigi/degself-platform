@@ -3,13 +3,15 @@ import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { sanitizePhotoUrls } from "@/lib/safe-url";
+import { enqueueNetworkQuoteTargets } from "@/lib/network-quote-routing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// POST /api/quotes — RFQ (Phase 0). Car owner submits a request for quotes; the
-// founder routes it to matched garages manually over WhatsApp. Server-only writes
-// via the service-role key. Customer phone is PII and never surfaced to garages.
+// POST /api/quotes — RFQ. The customer request is persisted first, then a
+// deterministic network router selects eligible partner garages and writes
+// intended deliveries to quote_delivery_queue. Selection is not outreach:
+// quote_workshop_outreach is created only after a delivery provider succeeds.
 
 const URGENCY = ["عادي", "مستعجل", "طارئ"] as const;
 const SOURCES = ["quote_bar", "translator", "asaali", "concierge"] as const;
@@ -35,8 +37,7 @@ function parseMatchedWorkshops(raw: unknown): MatchedWorkshop[] {
           : "";
     const name = typeof o.name === "string" ? o.name.trim().slice(0, 120) : "";
     if (!place_id || !name) continue;
-    const phone =
-      typeof o.phone === "string" ? o.phone.trim().slice(0, 30) : undefined;
+    const phone = typeof o.phone === "string" ? o.phone.trim().slice(0, 30) : undefined;
     out.push(phone ? { place_id, name, phone } : { place_id, name });
   }
   return out;
@@ -57,12 +58,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 
-  // honeypot — bots fill hidden fields. Pretend success, drop silently.
   if (typeof b.website === "string" && b.website.trim() !== "") {
     return NextResponse.json({ id: null, status: "received", message: "وصلنا طلبك." });
   }
 
-  // ---- validation (manual, str() style — matches the rest of the repo) ----
   const customer_name = str(b.customer_name, 60);
   if (!customer_name || customer_name.length < 2) {
     return NextResponse.json({ error: "اكتب اسمك (حرفين على الأقل)." }, { status: 400 });
@@ -84,21 +83,14 @@ export async function POST(req: NextRequest) {
   const urgency = (URGENCY as readonly string[]).includes(urgencyRaw) ? urgencyRaw : "عادي";
   const sourceRaw = str(b.source, 20) ?? "quote_bar";
   const source = (SOURCES as readonly string[]).includes(sourceRaw) ? sourceRaw : "quote_bar";
-
   const photos = sanitizePhotoUrls(b.photos, 3);
 
   const car_make = str(b.car_make, 60);
-  if (!car_make) {
-    return NextResponse.json({ error: "اكتب نوع السيارة." }, { status: 400 });
-  }
+  if (!car_make) return NextResponse.json({ error: "اكتب نوع السيارة." }, { status: 400 });
   const car_model = str(b.car_model, 60);
-  if (!car_model) {
-    return NextResponse.json({ error: "اكتب موديل السيارة." }, { status: 400 });
-  }
+  if (!car_model) return NextResponse.json({ error: "اكتب موديل السيارة." }, { status: 400 });
   const car_year = str(b.car_year, 20);
-  if (!car_year) {
-    return NextResponse.json({ error: "اختر سنة الصنع." }, { status: 400 });
-  }
+  if (!car_year) return NextResponse.json({ error: "اختر سنة الصنع." }, { status: 400 });
   const area = str(b.area, 120);
 
   let admin;
@@ -108,7 +100,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
   }
 
-  // ---- anti-spam: same phone within 30 minutes (before IP quota) ----
   try {
     const since = new Date(Date.now() - 30 * 60_000).toISOString();
     const { data: dup } = await admin
@@ -127,19 +118,13 @@ export async function POST(req: NextRequest) {
     console.error("duplicate-phone check failed (allowing):", e);
   }
 
-  // ---- rate limit: atomic bump via bump_rate_limit RPC ----
   const ip = clientIp(req);
-  if (
-    !(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR, {
-      failClosed: true,
-    }))
-  ) {
+  if (!(await consumeRateLimit(ip, "quotes", RATE_LIMIT_PER_HOUR, { failClosed: true }))) {
     return NextResponse.json({ error: "طلبات كثيرة، حاول بعد ساعة." }, { status: 429 });
   }
 
-  const matched_workshops = parseMatchedWorkshops(b.matched_workshops);
+  let matchedWorkshops = parseMatchedWorkshops(b.matched_workshops);
 
-  // ---- insert ----
   const { data: inserted, error } = await admin
     .from("quotes")
     .insert({
@@ -154,7 +139,7 @@ export async function POST(req: NextRequest) {
       urgency,
       photos,
       source,
-      matched_workshops,
+      matched_workshops: matchedWorkshops,
     })
     .select("id")
     .single();
@@ -164,7 +149,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "تعذر حفظ طلبك، حاول لاحقاً." }, { status: 500 });
   }
 
-  // ---- notify admin over WhatsApp (fire-and-forget) ----
+  // Auto-routing is deliberately best-effort after the durable quote insert.
+  // A routing/queue failure must never lose the customer's request.
+  try {
+    const targets = await enqueueNetworkQuoteTargets({
+      quoteId: inserted.id,
+      service,
+      area,
+      limit: 5,
+    });
+    if (targets.length > 0) {
+      matchedWorkshops = targets.map(({ place_id, name, phone }) => ({
+        place_id,
+        name,
+        ...(phone ? { phone } : {}),
+      }));
+    }
+  } catch (e) {
+    console.error("network quote routing failed (quote retained):", e);
+  }
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
   const lines = [
     "🔔 طلب عرض سعر جديد — دق سلف",
@@ -173,23 +177,18 @@ export async function POST(req: NextRequest) {
     `⚙️ الخدمة: ${service}`,
     `📝 ${problem_description}`,
   ];
-  if (car_make || car_model || car_year) {
-    lines.push(`🚗 ${[car_make, car_model, car_year].filter(Boolean).join(" ")}`);
-  }
+  lines.push(`🚗 ${[car_make, car_model, car_year].filter(Boolean).join(" ")}`);
   if (area) lines.push(`📍 ${area}`);
   lines.push(`⏱️ الإلحاح: ${urgency}`);
   lines.push(`📎 المصدر: ${source}`);
-  if (matched_workshops.length > 0) {
-    lines.push(
-      `🤝 مرشّحون: ${matched_workshops.map((w) => w.name).join(" · ")}`
-    );
+  if (matchedWorkshops.length > 0) {
+    lines.push(`🤝 شبكة مستهدفة: ${matchedWorkshops.map((w) => w.name).join(" · ")}`);
+  } else {
+    lines.push("⚠️ لم يجد الـRouter كراج شبكة مؤهلاً بعد");
   }
   lines.push("");
   lines.push(`🔗 ${siteUrl}/admin/quotes/${inserted.id}`);
-  // Notify admin over WhatsApp. MUST be awaited — a non-awaited (fire-and-forget)
-  // call is frozen by the serverless runtime after the response and never
-  // completes, so the message would never send. A notify failure must not fail
-  // the request (the quote is already saved), so swallow errors here.
+
   try {
     await sendAdminWhatsApp(lines.join("\n"));
   } catch (e) {
