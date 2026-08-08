@@ -25,7 +25,12 @@
       "expo-apple-authentication"
     ],
     "extra": {
-      "appEnv": "development"
-    }
+      "appEnv": "development",
+      "router": {},
+      "eas": {
+        "projectId": "9d8287ca-1482-4569-98bf-a447e982ccb9"
+      }
+    },
+    "owner": "fulltimedigi-apps"
   }
 }
