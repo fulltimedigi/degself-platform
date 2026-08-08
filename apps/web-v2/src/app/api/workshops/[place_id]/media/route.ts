@@ -20,12 +20,12 @@ export async function GET(
     workshop.active !== true ||
     workshop.permanently_closed === true
   ) {
-    return NextResponse.json({ hero_image_url: null, gallery_image_urls: [] });
+    return NextResponse.json({ hero_image_url: null, gallery_image_urls: [], custom_sections: [] });
   }
 
   const { data: override } = await supabasePublic
     .from("workshop_profile_overrides")
-    .select("hero_image_url,gallery_image_urls")
+    .select("hero_image_url,gallery_image_urls,custom_sections")
     .eq("place_id", place_id)
     .maybeSingle();
 
@@ -37,5 +37,6 @@ export async function GET(
   return NextResponse.json({
     hero_image_url: override?.hero_image_url ?? workshop.main_image ?? null,
     gallery_image_urls: gallery,
+    custom_sections: Array.isArray(override?.custom_sections) ? override.custom_sections : [],
   });
 }
