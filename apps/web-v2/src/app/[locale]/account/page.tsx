@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { UserLogoutButton } from "@/components/UserLogoutButton";
+import { DeleteAccountSection } from "@/components/DeleteAccountSection";
 import { Link, redirect } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
@@ -101,6 +102,10 @@ export default async function AccountPage({
         </Link>
         <UserLogoutButton />
       </div>
+
+      <DeleteAccountSection
+        nextAfterReauth={locale === "ar" ? "/account" : `/${locale}/account`}
+      />
     </main>
   );
 }

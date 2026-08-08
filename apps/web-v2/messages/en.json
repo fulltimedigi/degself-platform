@@ -34,7 +34,34 @@
     "errorStart": "Couldn't start sign-in.",
     "errorConn": "Connection failed. Try again.",
     "metaTitle": "Sign in or create an account",
-    "accountMetaTitle": "My account"
+    "accountMetaTitle": "My account",
+    "delete": {
+      "dangerZone": "Delete account",
+      "description": "Deleting your account is permanent and cannot be undone.",
+      "startButton": "Delete account",
+      "consequencesTitle": "When you delete your account:",
+      "consequences": {
+        "identity": "Your account and profile are permanently deleted.",
+        "favorites": "Your saved garages linked to the account are deleted.",
+        "irreversible": "The account cannot be recovered after deletion."
+      },
+      "confirmLabel": "Type {token} to confirm",
+      "confirmButton": "Confirm account deletion",
+      "deleting": "Deleting…",
+      "cancel": "Cancel",
+      "success": "Your account has been deleted.",
+      "reauthHint": "For security, sign in again with Google before deleting your account.",
+      "reauthButton": "Sign in again",
+      "errors": {
+        "AUTH_TOO_OLD": "Your secure session has expired. Sign in again, then retry.",
+        "ACCOUNT_HAS_PRIVILEGED_ROLE": "This account can't be deleted because it holds an admin role. Contact support to remove it first.",
+        "ACCOUNT_HAS_CLAIMED_WORKSHOP": "This account can't be deleted because it owns a workshop claim. The workshop claim must be transferred or resolved first.",
+        "RATE_LIMITED": "Too many attempts. Try again shortly.",
+        "INVALID_CONFIRMATION": "The confirmation text is incorrect.",
+        "NOT_AUTHENTICATED": "You need to sign in first.",
+        "generic": "Couldn't delete the account. Please try again."
+      }
+    }
   },
   "lang": {
     "label": "Language",
