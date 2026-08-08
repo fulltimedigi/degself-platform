@@ -2,10 +2,6 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { resolveGarageOutreachToken } from "@/lib/garage-outreach";
 import type { Quote, QuoteOffer } from "@/lib/quote-status";
 
-// Server-only data access for quotes + offers. Uses the service-role key
-// (bypasses RLS); never import this module from a client component. Types and
-// presentation helpers live in ./quote-status (client-safe) and are re-exported
-// below so existing `@/lib/quotes` imports keep working.
 export * from "@/lib/quote-status";
 export type { Quote, QuoteOffer };
 
@@ -14,12 +10,9 @@ const QUOTE_COLUMNS =
   "car_make,car_model,car_year,problem_description,area,urgency,photos,status," +
   "customer_token,garage_token,matched_workshops,admin_notes,source";
 
-// PII-SAFE projection for the garage submission page — deliberately EXCLUDES
-// customer_name and customer_phone. Garages never see who the customer is.
 const GARAGE_QUOTE_COLUMNS =
   "id,service,car_make,car_model,car_year,problem_description,area,urgency,photos,status,created_at";
 
-// What a garage is allowed to see about a request (no customer PII).
 export interface GarageQuoteView {
   id: string;
   service: string;
@@ -34,12 +27,30 @@ export interface GarageQuoteView {
   created_at: string;
 }
 
+export interface QuoteDeliveryTarget {
+  id: string;
+  workshop_id: string;
+  status: "queued" | "sending" | "sent" | "failed" | "blocked_no_channel" | "cancelled";
+  channel: "whatsapp" | "manual";
+  target_rank: number;
+  selection_score: number;
+  selection_reason: string;
+  attempts: number;
+  sent_at: string | null;
+  last_error: string | null;
+  outreach_id: string | null;
+  workshop: {
+    name: string;
+    phone: string | null;
+    phone_intl: string | null;
+  } | null;
+}
+
 const OFFER_COLUMNS =
   "id,quote_id,workshop_name,workshop_phone,pricing_type,price_kwd,price_max_kwd," +
   "assumed_diagnosis,inspection_fee_kwd,parts_type,validity_days,warranty_days,warranty_note," +
   "estimated_duration,notes,status,created_at,accepted_at";
 
-/** All quotes, newest first. Throws on Supabase/config error. */
 export async function fetchQuotes(limit = 500): Promise<Quote[]> {
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
@@ -51,7 +62,6 @@ export async function fetchQuotes(limit = 500): Promise<Quote[]> {
   return (data ?? []) as unknown as Quote[];
 }
 
-/** A single quote by id, or null if not found. */
 export async function fetchQuote(id: string): Promise<Quote | null> {
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
@@ -63,7 +73,6 @@ export async function fetchQuote(id: string): Promise<Quote | null> {
   return (data as unknown as Quote) ?? null;
 }
 
-/** A single quote by its public customer_token, or null. Powers /offers/[token]. */
 export async function fetchQuoteByToken(token: string): Promise<Quote | null> {
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
@@ -75,11 +84,6 @@ export async function fetchQuoteByToken(token: string): Promise<Quote | null> {
   return (data as unknown as Quote) ?? null;
 }
 
-/**
- * A single PII-safe quote from either a measured per-workshop outreach token or
- * the legacy shared quotes.garage_token. Old links remain valid throughout the
- * rollout and after migration 030.
- */
 export async function fetchQuoteByGarageToken(token: string): Promise<GarageQuoteView | null> {
   const resolution = await resolveGarageOutreachToken(token);
   if (!resolution) return null;
@@ -94,7 +98,6 @@ export async function fetchQuoteByGarageToken(token: string): Promise<GarageQuot
   return (data as unknown as GarageQuoteView) ?? null;
 }
 
-/** All offers for a quote, newest first. */
 export async function fetchOffers(quoteId: string): Promise<QuoteOffer[]> {
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
@@ -104,4 +107,18 @@ export async function fetchOffers(quoteId: string): Promise<QuoteOffer[]> {
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as QuoteOffer[];
+}
+
+/** Admin-only operational view of the automatic network routing queue. */
+export async function fetchQuoteDeliveryQueue(quoteId: string): Promise<QuoteDeliveryTarget[]> {
+  const admin = getSupabaseAdmin();
+  const { data, error } = await admin
+    .from("quote_delivery_queue")
+    .select(
+      "id,workshop_id,status,channel,target_rank,selection_score,selection_reason,attempts,sent_at,last_error,outreach_id,workshop:workshops(name,phone,phone_intl)"
+    )
+    .eq("quote_id", quoteId)
+    .order("target_rank", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as QuoteDeliveryTarget[];
 }
