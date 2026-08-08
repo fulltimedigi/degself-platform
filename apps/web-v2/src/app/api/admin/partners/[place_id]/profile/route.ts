@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 const BASE_COLUMNS =
   "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,is_partner,active,permanently_closed";
 const OVERRIDE_COLUMNS =
-  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,hero_image_url,gallery_image_urls,updated_at";
+  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,hero_image_url,gallery_image_urls,custom_sections,updated_at";
 
 function clean(v: unknown, max: number): string | null | undefined {
   if (v === undefined) return undefined;
@@ -27,6 +27,38 @@ function cleanWebsite(v: unknown): string | null | undefined {
   } catch {
     return undefined;
   }
+}
+
+type CustomSection = {
+  title: string;
+  items: Array<{ label: string; value: string }>;
+};
+
+function cleanCustomSections(v: unknown): CustomSection[] | undefined {
+  if (v === undefined) return undefined;
+  if (!Array.isArray(v) || v.length > 8) return undefined;
+
+  const sections: CustomSection[] = [];
+  for (const rawSection of v) {
+    if (!rawSection || typeof rawSection !== "object") return undefined;
+    const section = rawSection as Record<string, unknown>;
+    const title = clean(section.title, 80);
+    if (!title) return undefined;
+    if (!Array.isArray(section.items) || section.items.length > 20) return undefined;
+
+    const items: CustomSection["items"] = [];
+    for (const rawItem of section.items) {
+      if (!rawItem || typeof rawItem !== "object") return undefined;
+      const item = rawItem as Record<string, unknown>;
+      const label = clean(item.label, 120);
+      const value = clean(item.value, 120);
+      if (!label || value === undefined || value === null) return undefined;
+      if (value === "") continue;
+      items.push({ label, value });
+    }
+    sections.push({ title, items });
+  }
+  return sections;
 }
 
 async function getPartner(admin: ReturnType<typeof getSupabaseAdmin>, placeId: string) {
@@ -100,6 +132,13 @@ export async function PATCH(
       return NextResponse.json({ error: "رابط الموقع الإلكتروني غير صالح." }, { status: 400 });
     }
     values.website = website;
+  }
+  if (Object.prototype.hasOwnProperty.call(body, "custom_sections")) {
+    const customSections = cleanCustomSections(body.custom_sections);
+    if (customSections === undefined) {
+      return NextResponse.json({ error: "الخانات الإضافية غير صالحة أو تجاوزت الحدود المسموحة." }, { status: 400 });
+    }
+    values.custom_sections = customSections;
   }
 
   if (Object.keys(values).length <= 2) {
