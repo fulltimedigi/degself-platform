@@ -12,7 +12,6 @@ create table if not exists public.workshop_profile_overrides (
   address text,
   area text,
   reviewed_specialty text,
-  description text,
   hero_image_url text,
   gallery_image_urls text[] not null default '{}',
   created_at timestamptz not null default now(),
