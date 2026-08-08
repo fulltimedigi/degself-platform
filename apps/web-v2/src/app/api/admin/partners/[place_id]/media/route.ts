@@ -36,6 +36,23 @@ async function requirePartner(admin: ReturnType<typeof getSupabaseAdmin>, placeI
   return data?.is_partner === true;
 }
 
+async function mirrorMedia(
+  admin: ReturnType<typeof getSupabaseAdmin>,
+  placeId: string,
+  hero: string | null,
+  gallery: string[]
+) {
+  const { error } = await admin
+    .from("workshops")
+    .update({
+      main_image: hero,
+      images_count: gallery.length,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("place_id", placeId);
+  if (error) throw error;
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ place_id: string }> }
@@ -108,6 +125,15 @@ export async function POST(
     await admin.storage.from(BUCKET).remove([path]);
     return NextResponse.json({ error: dbError.message }, { status: 500 });
   }
+  try {
+    await mirrorMedia(admin, place_id, hero, nextGallery);
+  } catch (e) {
+    await admin.storage.from(BUCKET).remove([path]);
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "تعذّر تحديث صورة الكراج." },
+      { status: 500 }
+    );
+  }
   return NextResponse.json({ url, hero_image_url: hero, gallery_image_urls: nextGallery });
 }
 
@@ -165,5 +191,13 @@ export async function DELETE(
     })
     .eq("place_id", place_id);
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
+  try {
+    await mirrorMedia(admin, place_id, nextHero, nextGallery);
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "تعذّر تحديث صورة الكراج." },
+      { status: 500 }
+    );
+  }
   return NextResponse.json({ hero_image_url: nextHero, gallery_image_urls: nextGallery });
 }
