@@ -24,14 +24,20 @@ src/
   theme/tokens.ts        # minimal DEGSELF brand tokens
   config/env.ts          # env model (PUBLIC values only)
 ```
-Native `ios/` and `android/` are **not committed** — Continuous Native Generation (`expo prebuild`) regenerates them (gitignored). `.npmrc` pins `legacy-peer-deps` for a deterministic `npm ci` (SDK 57 optional react-dom peer; see the file).
+Native `ios/` and `android/` are **not committed** — Continuous Native Generation (`expo prebuild`) regenerates them (gitignored).
+
+**Dependency resolution:** installs use **strict** npm peer enforcement (no global `legacy-peer-deps`), so real conflicts in future PRs surface. Two SDK-consistent transitive pins live in `package.json > overrides`, each documented:
+- `react-dom: 19.2.3` — `expo-router` pulls Expo-Web-only UI deps (`vaul`, `@radix-ui/*`) that peer-require `react-dom`; the default `react-dom@19.2.8` wants `react ^19.2.8` while the SDK pins `react@19.2.3`. DEGSELF ships **no Expo Web**, so this pins that web-only package to the SDK's React version.
+- `react-native-worklets: 0.10.1` — `expo-modules-core@57` requires worklets `^0.10.0` (< 0.11) but `@expo/ui`/`react-native-reanimated` resolve `0.11.3`; `0.10.1` is Expo's expected version (`expo install --check`) and satisfies every consumer.
+
+Neither disables peer enforcement elsewhere; a future M1/M2 conflict still fails `npm ci`.
 
 ## Commands
 ```
 npm run start        # Expo dev server (use a development build, not Expo Go, long-term)
 npm run typecheck    # tsc --noEmit
 npm test             # pure locale/direction tests (tsx --test)
-npm run doctor       # expo-doctor
+npm run doctor       # expo-doctor (pinned 1.20.1 — same version in CI)
 npx expo config      # resolved app config
 ```
 

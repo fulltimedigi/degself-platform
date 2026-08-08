@@ -42,5 +42,10 @@ jobs:
         run: npm test
       - name: Expo config validation
         run: npx --yes expo config --type public > /dev/null
-      - name: Expo doctor
-        run: npx --yes expo-doctor@latest
+      - name: Expo doctor (pinned — deterministic across time)
+        run: npx --yes expo-doctor@1.20.1
+      # Security floor: fail on NEW critical advisories. Current HIGHs are
+      # confined to the metro/RN/Expo build toolchain (root: image-size DoS) and
+      # are documented in the PR; not suppressed, not fake-green (0 critical).
+      - name: Audit floor (critical)
+        run: npm audit --audit-level=critical
