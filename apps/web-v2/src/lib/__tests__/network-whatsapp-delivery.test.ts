@@ -27,7 +27,7 @@ test("reserved delivery token is not outreach until provider success", async () 
   const resolver = await source("../garage-outreach.ts");
 
   assert.match(migration, /delivery_token/);
-  assert.match(migration, /not valid until provider delivery succeeds/i);
+  assert.match(migration, /Reserved capability token for the garage offer URL/);
   assert.match(delivery, /eq\("delivery_token", token\)[\s\S]*eq\("status", "sent"\)/);
   assert.match(resolver, /materializeSentDeliveryOutreachByToken\(token\)/);
 
