@@ -86,6 +86,10 @@ Every strategic third-party dependency passes the **Open-Source Adoption Gate** 
 | **M7** | Store readiness (privacy manifests, App Privacy + Data safety, policy/deletion pages, targetSdk 36 / Xcode 26) | — |
 | **M8** | Beta hardening (Maestro E2E, a11y/RTL sweep) | — |
 
+## 10. EAS Update (OTA) policy note
+
+EAS Update may only be used for changes that remain within the already-approved native binary's capabilities and store-policy boundaries. Native modules, permissions, entitlements, SDK-version changes, or other native-runtime changes require a new store binary. Production OTA is **not** enabled in M0; no production update channel is created; no automatic post-merge publication is configured. If current Expo tooling introduces update configuration by default, it is inspected, documented, and left with **no** automatic Production publishing behavior. The OTA operating policy otherwise remains **OPEN** (OD in `OPEN_DECISIONS.md`).
+
 ## 9. Open (must be resolved before their gated PR)
 
 See `OPEN_DECISIONS.md`: OD-01 quote ownership (→ M4/M5), OD-02 mobile delete auth transport (→ M1/store), OD-03 Sign in with Apple (→ M1/iOS), OD-04 search/domain boundary (→ M2), OD-05 Ask DEGSELF quota (→ M3), OD-06 UGC moderation, OD-07 push provider/device tokens (→ M6), OD-08 deep-link security (→ M6), OD-09 mobile analytics identity. App **identifiers** and **EAS Update/credentials** are owner-gated (see OPEN_DECISIONS + ADR-0004).
