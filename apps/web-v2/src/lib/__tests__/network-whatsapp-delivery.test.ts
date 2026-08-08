@@ -46,6 +46,20 @@ test("provider success can be reconciled without duplicate send", async () => {
   assert.match(delivery, /last_outreach_at !== input\.sentAt/);
 });
 
+test("Meta receipts are attributed to the garage queue before customer messages", async () => {
+  const webhook = await source("../../app/api/webhooks/whatsapp/route.ts");
+  const migration = await source("../../../supabase/migrations/034_network_delivery_tokens.sql");
+  assert.match(webhook, /from\("quote_delivery_queue"\)/);
+  assert.match(webhook, /eq\("provider_message_id", s\.id\)/);
+  assert.match(webhook, /delivered_at/);
+  assert.match(webhook, /read_at/);
+  assert.match(webhook, /failed_at/);
+  assert.match(migration, /quote_delivery_queue_provider_message_idx/);
+  const garageLookup = webhook.indexOf('from("quote_delivery_queue")');
+  const customerLookup = webhook.indexOf('from("quotes")', garageLookup);
+  assert.ok(garageLookup >= 0 && customerLookup > garageLookup);
+});
+
 test("garage WhatsApp template contains no customer identity or problem description", async () => {
   const delivery = await source("../quote-delivery.ts");
   const wa = await source("../whatsapp.ts");
