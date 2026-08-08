@@ -1,4 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { materializeSentDeliveryOutreachByToken } from "@/lib/quote-delivery";
 
 const UNDEFINED_TABLE = "42P01";
 
@@ -9,10 +10,10 @@ export interface GarageOutreachResolution {
 }
 
 /**
- * Resolve a new per-workshop outreach token first, then fall back to the legacy
- * shared quotes.garage_token. The undefined-table fallback deliberately keeps
- * old garage links working during the rollout window before migration 030 is
- * applied to Production.
+ * Resolve canonical measured outreach first. If a Meta-delivered queue token was
+ * sent successfully but its outreach materialization lagged, repair it lazily on
+ * first open. Reserved/queued tokens never resolve. Legacy shared garage_token
+ * remains the final backwards-compatible fallback.
  */
 export async function resolveGarageOutreachToken(
   token: string
@@ -37,6 +38,15 @@ export async function resolveGarageOutreachToken(
     };
   }
 
+  try {
+    const repaired = await materializeSentDeliveryOutreachByToken(token);
+    if (repaired) return repaired;
+  } catch (e) {
+    // During a staggered deploy before migration 034 exists, keep legacy links
+    // working rather than failing the whole garage page.
+    console.error("sent delivery token reconciliation failed:", e);
+  }
+
   const { data: legacy, error: legacyError } = await admin
     .from("quotes")
     .select("id")
@@ -53,11 +63,6 @@ export async function resolveGarageOutreachToken(
   };
 }
 
-/**
- * Record the first real browser open for a measured outreach. This is idempotent
- * and intentionally no-ops for legacy shared tokens and during pre-migration
- * rollout. Link-preview crawlers do not execute the client beacon that calls it.
- */
 export async function markGarageOutreachOpened(token: string): Promise<void> {
   const admin = getSupabaseAdmin();
   const now = new Date().toISOString();
