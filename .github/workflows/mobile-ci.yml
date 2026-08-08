@@ -1,0 +1,46 @@
+name: mobile CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/mobile-ci.yml"
+  pull_request:
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/mobile-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Isolated from `web-v2 CI` (which is path-filtered to apps/web-v2/**). No
+  # Apple/Google signing credentials are used; native binary builds run via EAS
+  # with owner credentials, not in PR CI.
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Expo config validation
+        run: npx --yes expo config --type public > /dev/null
+      - name: Expo doctor
+        run: npx --yes expo-doctor@latest

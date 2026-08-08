@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "دق سلف",
+    "slug": "degself",
+    "scheme": "degself",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "backgroundColor": "#0A0A0A",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.degself.app"
+    },
+    "android": {
+      "package": "com.degself.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#0A0A0A"
+      }
+    },
+    "plugins": ["expo-router"],
+    "extra": {
+      "appEnv": "development"
+    }
+  }
+}
