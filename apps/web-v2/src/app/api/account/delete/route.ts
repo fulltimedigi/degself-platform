@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import {
+  createRouteHandlerClient,
+  type CookieMutation,
+} from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import {
@@ -15,10 +18,6 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const RATE_LIMIT_PER_HOUR = 5;
-
-function fail(code: AccountDeleteCode, status: number) {
-  return NextResponse.json({ ok: false, code }, { status });
-}
 
 /** Origins allowed to POST this destructive, cookie-authenticated action. */
 function allowedOrigins(req: NextRequest): string[] {
@@ -47,10 +46,34 @@ function allowedOrigins(req: NextRequest): string[] {
  * POST /api/account/delete — self-service deletion starting from the Supabase
  * Auth identity. Guarded in order: auth → same-origin → typed confirmation →
  * recent-auth → fail-closed rate limit → privileged-role → claimed-workshop.
+ *
+ * Session invalidation is deterministic: every cookie mutation the Supabase
+ * client makes — including the removals from signOut — is collected in
+ * `cookieSink` and applied to the returned response, so the browser session is
+ * guaranteed cleared. (Deleting the auth user also CASCADE-removes the server's
+ * auth.sessions + auth.refresh_tokens, so the token cannot be refreshed and
+ * getUser() rejects it — but we do not rely on that alone.)
  */
 export async function POST(req: NextRequest) {
+  const cookieSink: CookieMutation[] = [];
+  const supabase = createRouteHandlerClient(
+    () => req.cookies.getAll(),
+    cookieSink
+  );
+
+  // Build every response through here so collected cookie mutations (session
+  // refresh, and the signOut removals on success) always reach the client.
+  const respond = (body: unknown, status: number) => {
+    const res = NextResponse.json(body, { status });
+    for (const { name, value, options } of cookieSink) {
+      res.cookies.set(name, value, options);
+    }
+    return res;
+  };
+  const fail = (code: AccountDeleteCode, status: number) =>
+    respond({ ok: false, code }, status);
+
   // 1) Authenticated user, resolved server-side (never from the request body).
-  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -124,7 +147,8 @@ export async function POST(req: NextRequest) {
   if (blocker) return fail(blocker, 409);
 
   // 7) Delete the Auth identity itself. profiles + user_favorites cascade;
-  //    eligible community_mentions survive with matched_by = NULL (migration 035).
+  //    eligible community_mentions survive with matched_by = NULL (migration 035);
+  //    auth.sessions + auth.refresh_tokens cascade (server-side session death).
   try {
     const { error: delErr } = await admin.auth.admin.deleteUser(user.id);
     if (delErr) throw delErr;
@@ -133,13 +157,11 @@ export async function POST(req: NextRequest) {
     return fail("SERVER_ERROR", 500);
   }
 
-  // 8) Invalidate the local SSR session/cookies (no hard-coded cookie names).
-  try {
-    await supabase.auth.signOut({ scope: "local" });
-  } catch {
-    // The user is already gone; cookie clearing via the SSR adapter is what
-    // matters and does not depend on a server round-trip.
-  }
+  // 8) Deterministically clear the browser session. signOut({scope:"local"})
+  //    makes no network call; it emits cookie removals through the client's
+  //    setAll → cookieSink, which `respond()` writes onto the response. No
+  //    hard-coded cookie names, no swallowed failure.
+  await supabase.auth.signOut({ scope: "local" });
 
-  return NextResponse.json({ ok: true });
+  return respond({ ok: true }, 200);
 }

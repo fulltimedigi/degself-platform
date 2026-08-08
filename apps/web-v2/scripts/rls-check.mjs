@@ -18,6 +18,11 @@
  *   6. Claimed-workshop blocker: the route's pre-delete decision returns
  *      ACCOUNT_HAS_CLAIMED_WORKSHOP and does NOT delete the auth identity.
  *   7. Privileged-role blocker: same, returning ACCOUNT_HAS_PRIVILEGED_ROLE.
+ *   8. End-to-end account deletion: a signed-in cookie jar authenticates
+ *      (getUser resolves the user), the real deletion sequence runs
+ *      (admin.deleteUser + the route's signOut scope:"local" on that jar), then
+ *      the SAME jar resolves NO user — and the server's auth.sessions /
+ *      auth.refresh_tokens for that user are gone (cascade).
  *
  * ── Required environment variables ──────────────────────────────────────────
  *   SUPABASE_URL                 e.g. https://<ref>.supabase.co
@@ -27,12 +32,22 @@
  *                                  auth user create/delete, and introspection.
  *   SUPABASE_DB_URL              direct Postgres connection string (service role)
  *                                — used for SQL + RLS impersonation of temp users.
+ *   SUPABASE_ANON_KEY            publishable/anon key (NEXT_PUBLIC_SUPABASE_-
+ *                                PUBLISHABLE_KEY / _ANON_KEY accepted) — used for
+ *                                the end-to-end signed-in cookie-jar path (8).
+ *                                The e2e path also needs the project's email/-
+ *                                password provider enabled; if it is not, that
+ *                                one path is reported SKIP and the rest still run.
  *
- * ── Run ─────────────────────────────────────────────────────────────────────
+ * ── Run (from a clean checkout) ─────────────────────────────────────────────
  *   cd apps/web-v2
- *   npm i pg          # dev-only; intentionally NOT added to package.json
+ *   npm install --no-save pg   # installs pg into node_modules WITHOUT writing to
+ *                              # package.json or package-lock.json, so CI's
+ *                              # `npm ci` lockfile stays byte-identical. pg is a
+ *                              # harness-only dependency, deliberately not a
+ *                              # project dependency.
  *   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... SUPABASE_DB_URL=... \
- *     node scripts/rls-check.mjs
+ *     SUPABASE_ANON_KEY=... node scripts/rls-check.mjs
  *
  * ── Output hygiene ──────────────────────────────────────────────────────────
  *   Prints only PASS/FAIL, anonymous aliases (A/B/…), the FK graph, and row
@@ -41,6 +56,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 import { randomUUID } from "node:crypto";
 
 const SUPABASE_URL =
@@ -48,6 +64,10 @@ const SUPABASE_URL =
 const SERVICE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
 const DB_URL = process.env.SUPABASE_DB_URL;
+const ANON_KEY =
+  process.env.SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function requireEnv() {
   const missing = [];
@@ -95,7 +115,9 @@ async function main() {
 
   const { default: pg } = await import("pg").catch(() => ({ default: null }));
   if (!pg) {
-    console.error("The 'pg' package is required. Run: npm i pg (dev-only).");
+    console.error(
+      "The 'pg' package is required. Run: npm install --no-save pg"
+    );
     process.exit(2);
   }
 
@@ -361,6 +383,81 @@ async function main() {
     check("G decision = ACCOUNT_HAS_PRIVILEGED_ROLE", gDecision === "ACCOUNT_HAS_PRIVILEGED_ROLE", String(gDecision));
     const { data: gStill } = await admin.auth.admin.getUserById(G);
     check("G auth identity still exists (blocked before delete)", !!gStill?.user);
+
+    // ── 8. End-to-end deletion + deterministic session invalidation ─────────
+    // A real signed-in cookie jar authenticates; the actual deletion sequence
+    // runs (admin.deleteUser + the route's signOut scope:"local" on that jar);
+    // then the SAME jar must resolve no user, and the server session is gone.
+    console.log("\n# end-to-end account deletion (signed-in cookie jar)\n");
+    if (!ANON_KEY) {
+      console.log("SKIP  e2e — SUPABASE_ANON_KEY not provided");
+    } else {
+      const email = `rlscheck+h-${randomUUID()}@example.invalid`;
+      const password = randomUUID() + "Aa1!";
+      const { data: made, error: mkErr } = await admin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+      if (mkErr) throw new Error(`createUser(H) failed: ${mkErr.message}`);
+      const H = made.user.id;
+      users.push(H);
+
+      // In-memory cookie jar: setAll with maxAge 0 removes the cookie.
+      const store = new Map();
+      const jar = {
+        getAll: () => [...store.entries()].map(([name, value]) => ({ name, value })),
+        setAll: (list) => {
+          for (const { name, value, options } of list) {
+            if (options && options.maxAge === 0) store.delete(name);
+            else store.set(name, value);
+          }
+        },
+        names: () => [...store.keys()],
+      };
+      const ssr = createServerClient(SUPABASE_URL, ANON_KEY, {
+        cookies: { getAll: jar.getAll, setAll: jar.setAll },
+      });
+
+      const signIn = await ssr.auth.signInWithPassword({ email, password });
+      if (signIn.error) {
+        console.log(
+          `SKIP  e2e sign-in failed (${signIn.error.message}) — email/password provider likely disabled; DB-level cascade still proven via FK graph + section 4`
+        );
+      } else {
+        const before = await ssr.auth.getUser();
+        check("e2e: jar authenticates before delete", before.data.user?.id === H, before.error?.message);
+
+        const sessBefore = await db.query(
+          "select count(*)::int as n from auth.sessions where user_id=$1",
+          [H]
+        );
+
+        // The real deletion sequence, identical to the route.
+        const delH = await admin.auth.admin.deleteUser(H);
+        check("e2e: deleteUser(H) succeeded", !delH.error, delH.error?.message);
+        users.splice(users.indexOf(H), 1);
+        await ssr.auth.signOut({ scope: "local" }); // clears the jar's auth cookies
+
+        // A brand-new client on the SAME jar must see no user.
+        const ssr2 = createServerClient(SUPABASE_URL, ANON_KEY, {
+          cookies: { getAll: jar.getAll, setAll: jar.setAll },
+        });
+        const after = await ssr2.auth.getUser();
+        check("e2e: same cookie jar resolves NO user after deletion", !after.data.user, after.error?.message ?? "user still present");
+        check("e2e: jar retains no Supabase auth cookie", jar.names().every((n) => !n.startsWith("sb-")), jar.names().join(",") || "(empty)");
+
+        const sessAfter = await db.query(
+          "select count(*)::int as n from auth.sessions where user_id=$1",
+          [H]
+        );
+        check(
+          "e2e: server auth.sessions removed on delete (cascade)",
+          sessBefore.rows[0].n >= 1 && sessAfter.rows[0].n === 0,
+          `before=${sessBefore.rows[0].n} after=${sessAfter.rows[0].n}`
+        );
+      }
+    }
   } finally {
     // ── cleanup (best-effort, order matters) ───────────────────────────────
     for (const id of mentionIds) {
