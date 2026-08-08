@@ -14,13 +14,12 @@ function clean(v: unknown, max: number): string | null | undefined {
   if (v === undefined) return undefined;
   if (v === null) return null;
   if (typeof v !== "string") return undefined;
-  const s = v.trim();
-  return s ? s.slice(0, max) : null;
+  return v.trim().slice(0, max);
 }
 
 function cleanWebsite(v: unknown): string | null | undefined {
   const s = clean(v, 500);
-  if (s == null) return s;
+  if (s == null || s === "") return s;
   try {
     const url = new URL(s);
     if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
@@ -87,11 +86,13 @@ export async function PATCH(
     ["address", 500],
     ["area", 120],
     ["reviewed_specialty", 120],
-    ["description", 1200],
   ];
   for (const [field, max] of fields) {
     const value = clean(body[field], max);
     if (value !== undefined) values[field] = value;
+  }
+  if (typeof values.name === "string" && values.name.length < 2) {
+    return NextResponse.json({ error: "اسم الكراج يجب ألا يكون فارغًا." }, { status: 400 });
   }
   if (Object.prototype.hasOwnProperty.call(body, "website")) {
     const website = cleanWebsite(body.website);
@@ -105,11 +106,28 @@ export async function PATCH(
     return NextResponse.json({ error: "لا توجد تعديلات للحفظ." }, { status: 400 });
   }
 
-  const { data, error } = await admin
+  const { data: savedOverride, error } = await admin
     .from("workshop_profile_overrides")
     .upsert(values, { onConflict: "place_id" })
     .select(OVERRIDE_COLUMNS)
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ override: data });
+
+  // Mirror effective fields onto the live catalog row so every existing surface
+  // (search, card, detail, routing) sees the curated values immediately. Migration
+  // 031's BEFORE UPDATE trigger protects these fields from later bulk refreshes.
+  const liveFields = ["name", "phone", "phone_intl", "website", "address", "area", "reviewed_specialty"];
+  const workshopUpdates: Record<string, unknown> = { updated_at: new Date().toISOString() };
+  for (const field of liveFields) {
+    if (Object.prototype.hasOwnProperty.call(values, field)) workshopUpdates[field] = values[field];
+  }
+  const { data: updatedWorkshop, error: liveError } = await admin
+    .from("workshops")
+    .update(workshopUpdates)
+    .eq("place_id", place_id)
+    .select(BASE_COLUMNS)
+    .single();
+  if (liveError) return NextResponse.json({ error: liveError.message }, { status: 500 });
+
+  return NextResponse.json({ override: savedOverride, workshop: updatedWorkshop });
 }
