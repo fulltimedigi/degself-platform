@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { FavoritesSync } from "@/components/FavoritesSync";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { FloatingConcierge } from "@/components/FloatingConcierge";
@@ -258,6 +259,7 @@ export default async function RootLayout({
         <Analytics />
         <SpeedInsights />
         <ServiceWorkerRegister />
+        <FavoritesSync />
         <PWAInstallBanner />
         <FloatingWhatsApp />
         <FloatingConcierge />

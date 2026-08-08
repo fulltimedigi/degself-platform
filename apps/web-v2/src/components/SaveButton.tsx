@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { track } from "@/lib/track";
-import { isFavorite, toggleFavorite, FAVORITES_EVENT } from "@/lib/favorites";
+import {
+  isFavorite,
+  toggleFavorite,
+  FAVORITES_EVENT,
+  initFavoritesSync,
+} from "@/lib/favorites";
 
 type CustomSection = {
   title: string;
@@ -25,6 +30,7 @@ export function SaveButton({
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
 
   useEffect(() => {
+    initFavoritesSync();
     setMounted(true);
     setSaved(isFavorite(placeId));
     const sync = () => setSaved(isFavorite(placeId));

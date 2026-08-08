@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
 import { WorkshopCard } from "@/components/WorkshopCard";
-import { getFavorites, FAVORITES_EVENT } from "@/lib/favorites";
+import { getFavorites, FAVORITES_EVENT, initFavoritesSync } from "@/lib/favorites";
 import type { Workshop } from "@/lib/types";
 
 export function SavedList() {
@@ -16,6 +16,7 @@ export function SavedList() {
 
   // track favorites (and live updates when the user un-saves from a card here)
   useEffect(() => {
+    initFavoritesSync();
     const load = () => setIds(getFavorites());
     load();
     window.addEventListener(FAVORITES_EVENT, load);
