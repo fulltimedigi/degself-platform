@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 const BASE_COLUMNS =
   "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,is_partner,active,permanently_closed";
 const OVERRIDE_COLUMNS =
-  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,description,hero_image_url,gallery_image_urls,updated_at";
+  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,hero_image_url,gallery_image_urls,updated_at";
 
 function clean(v: unknown, max: number): string | null | undefined {
   if (v === undefined) return undefined;
@@ -113,9 +113,6 @@ export async function PATCH(
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Mirror effective fields onto the live catalog row so every existing surface
-  // (search, card, detail, routing) sees the curated values immediately. Migration
-  // 031's BEFORE UPDATE trigger protects these fields from later bulk refreshes.
   const liveFields = ["name", "phone", "phone_intl", "website", "address", "area", "reviewed_specialty"];
   const workshopUpdates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   for (const field of liveFields) {
