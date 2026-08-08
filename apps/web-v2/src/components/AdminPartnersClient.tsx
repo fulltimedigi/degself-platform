@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "@/i18n/navigation";
 import { PartnerLinkImporter } from "@/components/PartnerLinkImporter";
 
 type Row = {
@@ -172,14 +173,22 @@ export function AdminPartnersClient() {
                         {r.phone ? <><span>{" · "}</span><span dir="ltr">{r.phone}</span></> : null}
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => void patch(r.place_id, { is_partner: false })}
-                      className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-muted-foreground hover:border-red-500 hover:text-red-400 disabled:opacity-50"
-                    >
-                      إزالة من الشبكة
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        href={`/admin/partners/${r.place_id}`}
+                        className="rounded-lg border border-[#FFD60A]/50 bg-[#FFD60A]/10 px-3 py-1.5 text-sm font-extrabold text-[#FFD60A] hover:bg-[#FFD60A]/15"
+                      >
+                        تعديل الصفحة والصور
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => void patch(r.place_id, { is_partner: false })}
+                        className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-muted-foreground hover:border-red-500 hover:text-red-400 disabled:opacity-50"
+                      >
+                        إزالة من الشبكة
+                      </button>
+                    </div>
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-end gap-3">
