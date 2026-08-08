@@ -1,17 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { sanitizePhotoUrls } from "@/lib/safe-url";
 import { enqueueNetworkQuoteTargets } from "@/lib/network-quote-routing";
+import { dispatchQuoteDeliveryQueue } from "@/lib/quote-delivery";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-// POST /api/quotes — RFQ. The customer request is persisted first, then a
-// deterministic network router selects eligible partner garages and writes
-// intended deliveries to quote_delivery_queue. Selection is not outreach:
-// quote_workshop_outreach is created only after a delivery provider succeeds.
 
 const URGENCY = ["عادي", "مستعجل", "طارئ"] as const;
 const SOURCES = ["quote_bar", "translator", "asaali", "concierge"] as const;
@@ -149,8 +145,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "تعذر حفظ طلبك، حاول لاحقاً." }, { status: 500 });
   }
 
-  // Auto-routing is deliberately best-effort after the durable quote insert.
-  // A routing/queue failure must never lose the customer's request.
+  let routed = false;
   try {
     const targets = await enqueueNetworkQuoteTargets({
       quoteId: inserted.id,
@@ -159,6 +154,7 @@ export async function POST(req: NextRequest) {
       limit: 5,
     });
     if (targets.length > 0) {
+      routed = true;
       matchedWorkshops = targets.map(({ place_id, name, phone }) => ({
         place_id,
         name,
@@ -169,6 +165,19 @@ export async function POST(req: NextRequest) {
     console.error("network quote routing failed (quote retained):", e);
   }
 
+  // Next.js keeps this server work alive after the HTTP response. The dispatcher
+  // itself is hard-gated by WHATSAPP_ENABLED + an explicitly configured/approved
+  // garage RFQ template, so rollout is zero-send by default.
+  if (routed) {
+    after(async () => {
+      try {
+        await dispatchQuoteDeliveryQueue(inserted.id);
+      } catch (e) {
+        console.error("post-response network delivery failed:", e);
+      }
+    });
+  }
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
   const lines = [
     "🔔 طلب عرض سعر جديد — دق سلف",
@@ -176,8 +185,8 @@ export async function POST(req: NextRequest) {
     `👤 ${customer_name} | ${customer_phone}`,
     `⚙️ الخدمة: ${service}`,
     `📝 ${problem_description}`,
+    `🚗 ${[car_make, car_model, car_year].filter(Boolean).join(" ")}`,
   ];
-  lines.push(`🚗 ${[car_make, car_model, car_year].filter(Boolean).join(" ")}`);
   if (area) lines.push(`📍 ${area}`);
   lines.push(`⏱️ الإلحاح: ${urgency}`);
   lines.push(`📎 المصدر: ${source}`);

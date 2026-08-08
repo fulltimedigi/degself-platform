@@ -2,19 +2,12 @@ import { kuwaitWhatsAppDigits } from "@/lib/utils";
 
 // WhatsApp Business (Meta Cloud API) sender — SERVER ONLY. Everything here is
 // gated behind WHATSAPP_ENABLED. While the flag is off (or config is missing),
-// NO network call is ever made — the callers fall back to the manual wa.me
-// forward flow. Direct Cloud API (no BSP) so we pay per-message only.
-//
-// Required env when enabling (see .env.waba.example):
-//   WHATSAPP_ENABLED=true
-//   WHATSAPP_TOKEN=<permanent system-user token>
-//   WHATSAPP_PHONE_NUMBER_ID=<numeric id of the sending number>
-//   WHATSAPP_TEMPLATE_OFFERS=offers_ready_ar   (optional; default below)
-//   WHATSAPP_TEMPLATE_LANG=ar                   (optional; default below)
+// NO network call is ever made.
 
 const GRAPH_VERSION = "v21.0";
 const DEFAULT_TEMPLATE = "offers_ready_ar";
 const DEFAULT_LANG = "ar";
+const WA_TIMEOUT_MS = 10_000;
 
 export function isWhatsAppEnabled(): boolean {
   return process.env.WHATSAPP_ENABLED === "true";
@@ -24,25 +17,23 @@ export function offersTemplateName(): string {
   return process.env.WHATSAPP_TEMPLATE_OFFERS || DEFAULT_TEMPLATE;
 }
 
+/** Garage RFQ has no implicit default: an explicitly approved Meta template is required. */
+export function garageQuoteTemplateName(): string | null {
+  const value = process.env.WHATSAPP_TEMPLATE_GARAGE_RFQ?.trim();
+  return value || null;
+}
+
 export type WaSendResult =
   | { ok: true; messageId: string }
-  // skipped === true → we deliberately did NOT hit the API (flag off / unconfigured / bad input)
   | { ok: false; skipped: true; reason: string }
-  // skipped === false → the API was called and failed
   | { ok: false; skipped: false; error: string; status?: number };
 
-/**
- * Send an approved WhatsApp template. Returns skipped:true (no API call) when the
- * flag is off, config is missing, or the recipient is empty — callers treat that
- * exactly like the pre-WABA world and fall back to manual forwarding.
- */
 export async function sendWhatsAppTemplate(
   to: string,
   templateName: string,
   components: unknown[],
   language: string = process.env.WHATSAPP_TEMPLATE_LANG || DEFAULT_LANG
 ): Promise<WaSendResult> {
-  // Hard gate — must be first. No side effects while disabled.
   if (!isWhatsAppEnabled()) return { ok: false, skipped: true, reason: "disabled" };
 
   const token = process.env.WHATSAPP_TOKEN;
@@ -70,6 +61,7 @@ export async function sendWhatsAppTemplate(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(WA_TIMEOUT_MS),
     });
     const body = (await res.json().catch(() => ({}))) as {
       messages?: { id: string }[];
@@ -88,15 +80,43 @@ export async function sendWhatsAppTemplate(
   }
 }
 
-// ── Message builders (shared by send-offers + webhook fallback) ──────────────
+/** Template body: service, car, area. Dynamic URL button receives only the token. */
+export function garageQuoteTemplateComponents(
+  service: string,
+  car: string,
+  area: string,
+  token: string
+): unknown[] {
+  return [
+    {
+      type: "body",
+      parameters: [
+        { type: "text", text: service.slice(0, 120) },
+        { type: "text", text: car.slice(0, 120) || "غير محدد" },
+        { type: "text", text: area.slice(0, 120) || "غير محددة" },
+      ],
+    },
+    {
+      type: "button",
+      sub_type: "url",
+      index: "0",
+      parameters: [{ type: "text", text: token }],
+    },
+  ];
+}
 
-/** The exact link the customer opens. */
+export function garageOfferUrl(token: string): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
+  return `${siteUrl}/submit-offer/${token}`;
+}
+
+// ── Customer-offer message builders ────────────────────────────────────────
+
 export function offersUrl(token: string): string {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
   return `${siteUrl}/offers/${token}`;
 }
 
-/** Template component params for `offers_ready_ar`: body {name,count} + URL button {token}. */
 export function offersTemplateComponents(name: string, count: number, token: string): unknown[] {
   return [
     {
@@ -115,7 +135,6 @@ export function offersTemplateComponents(name: string, count: number, token: str
   ];
 }
 
-/** The plain message meant for the customer (used inside the wa.me forward link). */
 export function customerOffersText(name: string, count: number, url: string): string {
   return (
     `عزيزي ${name}، عندك ${count} عرض سعر جاهز لطلبك.\n` +
@@ -123,11 +142,6 @@ export function customerOffersText(name: string, count: number, url: string): st
   );
 }
 
-/**
- * The admin (Ahmed) forward message — one-tap wa.me deep-link pre-filled with the
- * customer message. This is the DEFAULT/fallback path; kept identical to the
- * pre-WABA behavior so the manual flow is unchanged while the flag is off.
- */
 export function adminForwardText(
   name: string,
   service: string,

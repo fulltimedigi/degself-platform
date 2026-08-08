@@ -7,27 +7,18 @@ import { adminForwardText, offersUrl } from "@/lib/whatsapp";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Meta WhatsApp webhook. PUBLIC (Meta calls it; not under /admin so middleware
-// doesn't gate it). Two jobs:
-//  GET  — one-time verification handshake (hub.challenge).
-//  POST — delivery-status callbacks (sent/delivered/read/failed). On 'failed' we
-//         fall back to the manual forward: ping Ahmed with the one-tap wa.me link
-//         so a customer whose number isn't on WhatsApp still gets their offers.
-// This route makes NO outbound Meta API calls, so it's inert while WABA is off.
+function tokenEquals(a: string, b: string): boolean {
+  if (!a || a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
-// GET /api/webhooks/whatsapp?hub.mode=subscribe&hub.verify_token=...&hub.challenge=...
 export async function GET(req: NextRequest) {
   const p = req.nextUrl.searchParams;
   const mode = p.get("hub.mode");
-  const token = p.get("hub.verify_token");
+  const token = p.get("hub.verify_token") ?? "";
   const challenge = p.get("hub.challenge") ?? "";
   const expected = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ?? "";
-  const got = token ?? "";
-  const tokenOk =
-    !!expected &&
-    got.length === expected.length &&
-    timingSafeEqual(Buffer.from(got), Buffer.from(expected));
-  if (mode === "subscribe" && tokenOk) {
+  if (mode === "subscribe" && tokenEquals(token, expected)) {
     return new NextResponse(challenge, { status: 200 });
   }
   return new NextResponse("Forbidden", { status: 403 });
@@ -36,32 +27,26 @@ export async function GET(req: NextRequest) {
 interface WaStatus {
   id?: string;
   status?: string;
+  timestamp?: string;
   errors?: { title?: string; message?: string }[];
 }
 
 export async function POST(req: NextRequest) {
   const raw = await req.text();
-
-  // Always require HMAC — unsigned POSTs can forge "failed" and spam CallMeBot.
   const appSecret = process.env.WHATSAPP_APP_SECRET?.trim();
   if (!appSecret) {
     console.error("whatsapp webhook: WHATSAPP_APP_SECRET missing");
     return new NextResponse("signature required", { status: 401 });
   }
   const sig = req.headers.get("x-hub-signature-256") ?? "";
-  const expected =
-    "sha256=" + createHmac("sha256", appSecret).update(raw).digest("hex");
-  const a = Buffer.from(sig);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length || !timingSafeEqual(a, b)) {
-    return new NextResponse("invalid signature", { status: 401 });
-  }
+  const expected = "sha256=" + createHmac("sha256", appSecret).update(raw).digest("hex");
+  if (!tokenEquals(sig, expected)) return new NextResponse("invalid signature", { status: 401 });
 
   let payload: unknown;
   try {
     payload = JSON.parse(raw);
   } catch {
-    return NextResponse.json({ ok: true }); // ack malformed bodies so Meta stops retrying
+    return NextResponse.json({ ok: true });
   }
 
   try {
@@ -79,8 +64,71 @@ export async function POST(req: NextRequest) {
     console.error("whatsapp webhook processing error:", e);
   }
 
-  // Always 200 — Meta retries aggressively on non-2xx.
   return NextResponse.json({ ok: true });
+}
+
+function receiptTime(status: WaStatus): string {
+  const seconds = Number(status.timestamp);
+  return Number.isFinite(seconds) && seconds > 0
+    ? new Date(seconds * 1000).toISOString()
+    : new Date().toISOString();
+}
+
+function statusError(status: WaStatus): string | null {
+  const error = status.errors?.[0];
+  const text = error?.message || error?.title;
+  return text ? text.slice(0, 500) : null;
+}
+
+async function processGarageDeliveryStatus(
+  admin: ReturnType<typeof getSupabaseAdmin>,
+  s: WaStatus
+): Promise<boolean> {
+  if (!s.id || !s.status) return false;
+  const { data: delivery, error } = await admin
+    .from("quote_delivery_queue")
+    .select("id,quote_id,status,delivered_at,read_at,failed_at")
+    .eq("provider_message_id", s.id)
+    .maybeSingle();
+
+  // During staggered rollout before migration 034 exists, simply let the old
+  // customer-message handler try this provider id instead.
+  if (error || !delivery) return false;
+
+  const at = receiptTime(s);
+  const updates: Record<string, unknown> = {
+    provider_status: s.status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (s.status === "delivered" && !delivery.delivered_at) updates.delivered_at = at;
+  if (s.status === "read" && !delivery.read_at) updates.read_at = at;
+  if (s.status === "failed") {
+    updates.status = "failed";
+    if (!delivery.failed_at) updates.failed_at = at;
+    updates.last_error = statusError(s) ?? "Meta delivery failed";
+  }
+
+  const { error: updateError } = await admin
+    .from("quote_delivery_queue")
+    .update(updates)
+    .eq("id", delivery.id);
+  if (updateError) {
+    console.error("garage delivery receipt update failed:", updateError);
+    return true;
+  }
+
+  if (s.status === "failed" && delivery.status !== "failed") {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
+    try {
+      await sendAdminWhatsApp(
+        `⚠️ فشل توصيل طلب عرض سعر إلى كراج في الشبكة.\n🔗 ${siteUrl}/admin/quotes/${delivery.quote_id}`
+      );
+    } catch (e) {
+      console.error("garage delivery failure alert failed:", e);
+    }
+  }
+  return true;
 }
 
 async function processStatuses(statuses: WaStatus[]) {
@@ -96,7 +144,9 @@ async function processStatuses(statuses: WaStatus[]) {
     const status = s.status;
     if (!wamid || !status) continue;
 
-    // Look up the quote this message belongs to (and whether we already handled a failure).
+    if (await processGarageDeliveryStatus(admin, s)) continue;
+
+    // Existing customer-offer delivery status flow.
     const { data: quote } = await admin
       .from("quotes")
       .select("id,customer_name,customer_phone,service,customer_token,wa_status")
@@ -107,7 +157,6 @@ async function processStatuses(statuses: WaStatus[]) {
     const alreadyFailed = quote.wa_status === "failed";
     await admin.from("quotes").update({ wa_status: status }).eq("id", quote.id);
 
-    // On failure, hand off to the manual path once (dedup on repeat callbacks).
     if (status === "failed" && !alreadyFailed) {
       const { count } = await admin
         .from("quote_offers")
