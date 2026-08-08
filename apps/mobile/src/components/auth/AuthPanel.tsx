@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import * as AppleAuthentication from "expo-apple-authentication";
 import { Button, Surface, ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
@@ -63,12 +64,23 @@ export function AuthPanel() {
           disabled={busy !== null}
         />
         {appleAvailable ? (
-          <Button
-            label={t.auth.continueWithApple}
-            variant="secondary"
-            onPress={() => run("apple", signInWithApple, AppleSignInCancelled)}
-            loading={busy === "apple"}
-            disabled={busy !== null}
+          // Apple REQUIRES the official Sign in with Apple button (App Review 4.8
+          // / Human Interface Guidelines) — not a custom imitation. The system
+          // component renders Apple's compliant appearance + localized label; we
+          // only guard against concurrent taps via `busy`.
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={
+              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+            }
+            buttonStyle={
+              AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+            }
+            cornerRadius={tokens.radius.md}
+            style={{ height: 48, width: "100%" }}
+            onPress={() => {
+              if (busy !== null) return;
+              void run("apple", signInWithApple, AppleSignInCancelled);
+            }}
           />
         ) : null}
       </View>
