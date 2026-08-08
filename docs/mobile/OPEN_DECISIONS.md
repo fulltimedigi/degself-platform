@@ -12,15 +12,13 @@ Legend: `[REPO]` repo evidence · `[EXT]` external primary source.
 **Evidence needed before decision:** privacy/abuse review of phone-based claiming; RLS design for owner reads; migration cost. **Do not invent `user_id` silently.**
 **Decision deadline:** before PR-M4 kickoff.
 
-## OD-02 — Mobile account-deletion auth transport  ·  Status: OPEN  ·  Blocks: M1 completion / store submission
-**Why:** `/api/account/delete` authenticates via **SSR cookies** and enforces a **browser Origin** allow-list `[REPO]`; native clients send a Bearer JWT and have no browser Origin → would be rejected. Store rules require in-app deletion.
-**Decision (shape, per Correction 6):** add a **Bearer-JWT auth adapter** to the **same** canonical operation (shared recent-auth, typed confirmation, rate limit, admin/claimed blockers, `auth.admin.deleteUser`, error codes). No second implementation. Open sub-choices: CSRF/replay protection for the Bearer path; recent-auth signal on native.
-**Decision deadline:** during PR-M1.
+## OD-02 — Mobile account-deletion auth transport  ·  Status: **RESOLVED** (PR-M1, ADR-0006)
+**Why:** `/api/account/delete` authenticated via **SSR cookies** and enforced a **browser Origin** allow-list `[REPO]`; native clients send a Bearer JWT and have no browser Origin → would be rejected. Store rules require in-app deletion.
+**Resolution:** the destructive sequence was extracted into ONE canonical server operation `performAccountDeletion()` (`apps/web-v2/src/lib/account-deletion-core.ts`). The single route now distinguishes two transports: the **web cookie** path (unchanged — keeps its same-origin/CSRF Origin allow-list + deterministic session-cookie clearing) and a **mobile Bearer** path (`Authorization: Bearer <supabase access token>`, server-verified via `getUserFromBearer`, no Origin check because a Bearer token is not auto-attached cross-site). Sub-choices settled: **CSRF** — N/A to Bearer (token not ambiently sent; possession is the auth); **recent-auth** — same `last_sign_in_at` gate, server-verified from the token (token refresh does not advance it → a fresh provider sign-in is still required); **rate limit** — composite key `${userId}:${ip}` (per-user identity + network), `failClosed=true`, resolves shared-NAT collisions. See ADR-0006.
 
-## OD-03 — Sign in with Apple  ·  Status: OPEN  ·  Blocks: M1 completion / iOS submission
-**Why:** Apple 4.8 requires an equivalent private login alongside Google Sign-In `[EXT]`; top rejection risk.
-**Options:** `expo-apple-authentication` + Supabase Apple provider (iOS), Google elsewhere.
-**Evidence needed:** Supabase Apple provider config; Apple Developer capability. **Deadline:** during PR-M1.
+## OD-03 — Sign in with Apple  ·  Status: **RESOLVED — REQUIRED** (PR-M1, ADR-0007)
+**Why:** App Store Review Guideline 4.8 requires an equivalent privacy-preserving login when an app uses a third-party/social login for the primary account `[EXT]`.
+**Resolution (primary sources, accessed 2026-08-08):** DEGSELF offers Google Sign-In and none of the five 4.8 exemptions apply → **Sign in with Apple is REQUIRED on iOS**. Implemented natively via `expo-apple-authentication@~57.0.1` (config plugin + `ios.usesAppleSignIn` → `com.apple.developer.applesignin` entitlement, verified via prebuild) → `supabase.auth.signInWithIdToken({ provider: 'apple', token, nonce })`; native-only Supabase Apple provider needs just the bundle id registered (no Services ID/secret). Sources: developer.apple.com/app-store/review/guidelines (§4.8); docs.expo.dev/versions/latest/sdk/apple-authentication; supabase.com/docs/guides/auth/social-login/auth-apple. See ADR-0007.
 
 ## OD-04 — Search / domain extraction boundary  ·  Status: OPEN  ·  Blocks: M2
 **Why:** ranking/enrichment/synonyms live in `workshops.ts` + bundled JSON + `unstable_cache` `[REPO]`; must not be reimplemented divergently.
