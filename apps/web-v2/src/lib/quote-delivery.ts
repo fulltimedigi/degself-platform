@@ -35,6 +35,7 @@ type OutreachRow = {
   id: string;
   token: string;
   outreach_count: number;
+  last_outreach_at: string;
 };
 
 function carLabel(q: QuoteRow): string {
@@ -45,7 +46,7 @@ async function existingOutreach(quoteId: string, workshopId: string): Promise<Ou
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
     .from("quote_workshop_outreach")
-    .select("id,token,outreach_count")
+    .select("id,token,outreach_count,last_outreach_at")
     .eq("quote_id", quoteId)
     .eq("workshop_id", workshopId)
     .maybeSingle();
@@ -55,8 +56,9 @@ async function existingOutreach(quoteId: string, workshopId: string): Promise<Ou
 
 /**
  * Turn a provider-confirmed delivery into the canonical measured outreach row.
- * Safe to retry: existing quote/workshop outreach is reused and the queue keeps
- * the canonical outreach_id. `sentAt` is the provider-acceptance timestamp.
+ * Idempotency key is effectively (quote, workshop, sentAt): if reconciliation
+ * sees the same provider-confirmed timestamp again, it only repairs queue linkage
+ * and never increments outreach_count twice.
  */
 export async function materializeSentDeliveryOutreach(input: {
   queueId: string;
@@ -68,7 +70,7 @@ export async function materializeSentDeliveryOutreach(input: {
   const admin = getSupabaseAdmin();
   let outreach = await existingOutreach(input.quoteId, input.workshopId);
 
-  if (outreach) {
+  if (outreach && outreach.last_outreach_at !== input.sentAt) {
     const { data, error } = await admin
       .from("quote_workshop_outreach")
       .update({
@@ -77,11 +79,11 @@ export async function materializeSentDeliveryOutreach(input: {
         updated_at: new Date().toISOString(),
       })
       .eq("id", outreach.id)
-      .select("id,token,outreach_count")
+      .select("id,token,outreach_count,last_outreach_at")
       .single();
     if (error) throw new Error(error.message);
     outreach = data as OutreachRow;
-  } else {
+  } else if (!outreach) {
     const { data, error } = await admin
       .from("quote_workshop_outreach")
       .insert({
@@ -95,18 +97,32 @@ export async function materializeSentDeliveryOutreach(input: {
         created_at: input.sentAt,
         updated_at: input.sentAt,
       })
-      .select("id,token,outreach_count")
+      .select("id,token,outreach_count,last_outreach_at")
       .single();
 
     if (error) {
-      // A concurrent materializer may have won the unique quote/workshop race.
       outreach = await existingOutreach(input.quoteId, input.workshopId);
       if (!outreach) throw new Error(error.message);
+      if (outreach.last_outreach_at !== input.sentAt) {
+        const { data: updated, error: updateError } = await admin
+          .from("quote_workshop_outreach")
+          .update({
+            last_outreach_at: input.sentAt,
+            outreach_count: Number(outreach.outreach_count ?? 1) + 1,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", outreach.id)
+          .select("id,token,outreach_count,last_outreach_at")
+          .single();
+        if (updateError) throw new Error(updateError.message);
+        outreach = updated as OutreachRow;
+      }
     } else {
       outreach = data as OutreachRow;
     }
   }
 
+  if (!outreach) throw new Error("outreach materialization produced no row");
   const { error: queueError } = await admin
     .from("quote_delivery_queue")
     .update({ outreach_id: outreach.id, updated_at: new Date().toISOString() })
@@ -116,7 +132,6 @@ export async function materializeSentDeliveryOutreach(input: {
   return outreach.id;
 }
 
-/** Fallback/reconciliation path for a clicked token whose send succeeded. */
 export async function materializeSentDeliveryOutreachByToken(token: string): Promise<{
   outreachId: string;
   quoteId: string;
@@ -211,8 +226,6 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
     return "failed";
   }
 
-  // If a manual measured link already exists, reuse its token. Otherwise use the
-  // reserved queue token; it is not resolvable until this provider send succeeds.
   const prior = await existingOutreach(row.quote_id, row.workshop_id);
   const token = prior?.token ?? row.delivery_token;
   const q = quote as QuoteRow;
@@ -224,8 +237,6 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
 
   if (!result.ok) {
     if (result.skipped) {
-      // Configuration changed after the pre-check; return to queued without
-      // claiming a real provider attempt.
       await admin
         .from("quote_delivery_queue")
         .update({
@@ -262,7 +273,7 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
     .eq("status", "sending");
   if (sentError) {
     // Do NOT retry automatically: Meta accepted the message, so a retry could
-    // duplicate it. The row stays sending and requires reconciliation.
+    // duplicate it. The row stays sending and requires manual reconciliation.
     console.error("provider accepted delivery but queue finalization failed:", sentError);
     return "failed";
   }
@@ -276,8 +287,6 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
       sentAt,
     });
   } catch (e) {
-    // The message is already sent. Keep status=sent; a later reconciliation or
-    // first link open can materialize the missing measured outreach safely.
     console.error("sent delivery outreach materialization failed:", e);
   }
   return "sent";
@@ -312,7 +321,6 @@ export async function reconcileSentDeliveries(limit = 20): Promise<number> {
   return repaired;
 }
 
-/** Dispatch all still-queued targets for one newly created quote, concurrently. */
 export async function dispatchQuoteDeliveryQueue(quoteId: string): Promise<void> {
   if (!isWhatsAppEnabled() || !garageQuoteTemplateName()) return;
   await reconcileSentDeliveries(10);
