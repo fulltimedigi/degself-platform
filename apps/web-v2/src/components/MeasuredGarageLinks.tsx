@@ -106,7 +106,7 @@ export function MeasuredGarageLinks({ quoteId, value }: { quoteId: string; value
       <div className="mb-3">
         <h3 className="text-sm font-extrabold">توجيه الشبكة والإرسال</h3>
         <p className="mt-1 text-xs text-muted-foreground">
-          النظام يختار الكراجات تلقائيًا ويضعها في طابور الإرسال. الاختيار وحده لا يُحسب كتواصل ناجح؛ يبدأ القياس الحقيقي عند الإرسال أو عند استخدام الرابط اليدوي أدناه.
+          النظام يختار الكراجات تلقائيًا ويضعها في طابور الإرسال. الاختيار وحده لا يُحسب كتواصل ناجح؛ يبدأ القياس الحقيقي عند الإرسال. ويمكن استخدام إنشاء ونسخ الرابط يدويًا كمسار احتياطي.
         </p>
       </div>
 
@@ -139,7 +139,7 @@ export function MeasuredGarageLinks({ quoteId, value }: { quoteId: string; value
                   onClick={() => createLink(workshop)}
                   className="rounded-lg border border-[#FFD60A] px-3 py-1.5 text-xs font-extrabold text-[#FFD60A] disabled:opacity-50"
                 >
-                  {busyId === workshop.place_id ? "جارٍ الإنشاء..." : "رابط يدوي احتياطي"}
+                  {busyId === workshop.place_id ? "جارٍ الإنشاء..." : "إنشاء ونسخ الرابط"}
                 </button>
               </div>
             </li>
