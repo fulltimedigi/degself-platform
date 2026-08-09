@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdminPartnersClient } from "@/components/AdminPartnersClient";
+import { RfqOperationsStatus } from "@/components/RfqOperationsStatus";
 
 export const metadata: Metadata = {
   title: "الشبكة",
@@ -17,6 +18,7 @@ export default function AdminPartnersPage() {
           قائمة كراجات دق سلف الموثقة. أضف الكراج من رابط صفحته في المنصة، والشبكة تظل مفتوحة بدون حد أقصى وتكون مصدر الأولوية والتوجيه الآلي لطلبات عروض الأسعار.
         </p>
       </div>
+      <RfqOperationsStatus />
       <AdminPartnersClient />
     </main>
   );

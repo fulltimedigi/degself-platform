@@ -165,9 +165,10 @@ export async function POST(req: NextRequest) {
     console.error("network quote routing failed (quote retained):", e);
   }
 
-  // Next.js keeps this server work alive after the HTTP response. The dispatcher
-  // itself is hard-gated by WHATSAPP_ENABLED + an explicitly configured/approved
-  // garage RFQ template, so rollout is zero-send by default.
+  // Garage RFQ delivery is a completely separate provider path. It may use only
+  // quote_delivery_queue -> Meta WABA -> /submit-offer/<opaque-token>.
+  // The provider sender is hard-gated by WHATSAPP_ENABLED + approved garage template.
+  // CallMeBot below is ADMIN-ONLY and must never be used to deliver an RFQ.
   if (routed) {
     after(async () => {
       try {
@@ -180,7 +181,8 @@ export async function POST(req: NextRequest) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
   const lines = [
-    "🔔 طلب عرض سعر جديد — دق سلف",
+    "🔐 إشعار إداري فقط — دق سلف",
+    "⚠️ هذا ليس طلب عرض سعر للكراج ولا يجب إعادة توجيهه للكراجات.",
     "",
     `👤 ${customer_name} | ${customer_phone}`,
     `⚙️ الخدمة: ${service}`,
@@ -196,12 +198,13 @@ export async function POST(req: NextRequest) {
     lines.push("⚠️ لم يجد الـRouter كراج شبكة مؤهلاً بعد");
   }
   lines.push("");
-  lines.push(`🔗 ${siteUrl}/admin/quotes/${inserted.id}`);
+  lines.push("🔐 رابط لوحة الإدارة:");
+  lines.push(`${siteUrl}/admin/quotes/${inserted.id}`);
 
   try {
     await sendAdminWhatsApp(lines.join("\n"));
   } catch (e) {
-    console.error("CallMeBot notify failed:", e);
+    console.error("CallMeBot admin notify failed:", e);
   }
 
   return NextResponse.json({
