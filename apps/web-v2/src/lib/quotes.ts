@@ -25,6 +25,8 @@ export interface GarageQuoteView {
   photos: string[] | null;
   status: string;
   created_at: string;
+  workshop_name: string | null;
+  workshop_phone: string | null;
 }
 
 export interface QuoteDeliveryTarget {
@@ -95,7 +97,27 @@ export async function fetchQuoteByGarageToken(token: string): Promise<GarageQuot
     .eq("id", resolution.quoteId)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  return (data as unknown as GarageQuoteView) ?? null;
+  if (!data) return null;
+
+  let workshopName: string | null = null;
+  let workshopPhone: string | null = null;
+  if (resolution.workshopId) {
+    const { data: workshop, error: workshopError } = await admin
+      .from("workshops")
+      .select("name,phone,phone_intl")
+      .eq("place_id", resolution.workshopId)
+      .maybeSingle();
+    if (workshopError) throw new Error(workshopError.message);
+    if (!workshop) return null;
+    workshopName = workshop.name ?? null;
+    workshopPhone = workshop.phone_intl || workshop.phone || null;
+  }
+
+  return {
+    ...(data as unknown as Omit<GarageQuoteView, "workshop_name" | "workshop_phone">),
+    workshop_name: workshopName,
+    workshop_phone: workshopPhone,
+  };
 }
 
 export async function fetchOffers(quoteId: string): Promise<QuoteOffer[]> {
