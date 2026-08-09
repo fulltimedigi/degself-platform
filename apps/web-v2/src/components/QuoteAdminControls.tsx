@@ -20,6 +20,16 @@ const OFFER_STATUS_LABEL: Record<string, string> = {
   rejected: "مرفوض",
 };
 
+const DURATION_LABEL_AR: Record<string, string> = {
+  same_day: "نفس اليوم",
+  "1_day": "يوم",
+  "2_days": "يومان",
+  "3_days": "3 أيام",
+  "4_7_days": "4–7 أيام",
+  over_week: "أكثر من أسبوع",
+  unknown_until_inspection: "غير معروف حتى الفحص",
+};
+
 const EMPTY_FORM = {
   workshop_name: "",
   workshop_phone: "",
@@ -227,13 +237,13 @@ export function QuoteAdminControls({
         {showForm && (
           <form
             onSubmit={addOffer}
-            className="mb-4 flex flex-col gap-3 rounded-lg border border-border bg-background p-3"
+            className="mb-4 flex flex-col gap-5 rounded-lg border border-border bg-background p-4"
           >
             <StructuredOfferFields form={form} onChange={set} onBlur={markTouched} showError={showErr} />
             <button
               type="submit"
               disabled={busy || hasErrors}
-              className="rounded-lg bg-[#FFD60A] px-4 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-[#FFD60A] px-4 py-3 text-sm font-extrabold text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {busy ? "جارٍ الحفظ..." : hasErrors ? "أكمل الحقول المطلوبة" : "حفظ العرض"}
             </button>
@@ -279,6 +289,9 @@ function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: ()
     o.parts_type && PARTS_TYPE_LABEL[o.parts_type as PartsType]
       ? PARTS_TYPE_LABEL[o.parts_type as PartsType]
       : null;
+  const duration = o.estimated_duration
+    ? DURATION_LABEL_AR[o.estimated_duration] ?? o.estimated_duration
+    : null;
 
   return (
     <div className="flex items-start justify-between gap-3">
@@ -302,16 +315,14 @@ function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: ()
         </p>
         <p className="text-sm">
           <span className="font-extrabold text-[#FFD60A]">{priceText}</span>
-          {o.estimated_duration && (
-            <span className="text-muted-foreground"> · {o.estimated_duration}</span>
-          )}
+          {duration && <span className="text-muted-foreground"> · {duration}</span>}
         </p>
         <div className="mt-1 flex flex-col gap-0.5 text-xs text-muted-foreground">
           {o.pricing_type === "conditional" && o.assumed_diagnosis && (
             <span>التشخيص المرجّح: {o.assumed_diagnosis}</span>
           )}
           {o.pricing_type === "conditional" && o.inspection_fee_kwd != null && (
-            <span>رسم الكشف: {o.inspection_fee_kwd > 0 ? `${o.inspection_fee_kwd} د.ك` : "مجاني"}</span>
+            <span>رسم الفحص: {o.inspection_fee_kwd > 0 ? `${o.inspection_fee_kwd} د.ك` : "مجاني"}</span>
           )}
           {parts && <span>قطع الغيار: {parts}</span>}
           {o.warranty_days != null && (
