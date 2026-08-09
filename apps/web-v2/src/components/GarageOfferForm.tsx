@@ -1,32 +1,41 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { DEFAULT_VALIDITY_DAYS } from "@/lib/quote-status";
 import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
 import { StructuredOfferFields } from "@/components/StructuredOfferFields";
-import { track } from "@/lib/track";
 
-const EMPTY = {
-  workshop_name: "",
-  workshop_phone: "",
-  pricing_type: "fixed",
-  price_kwd: "",
-  price_max_kwd: "",
-  assumed_diagnosis: "",
-  inspection_fee_kwd: "",
-  parts_type: "",
-  validity_days: String(DEFAULT_VALIDITY_DAYS),
-  warranty_days: "",
-  warranty_note: "",
-  estimated_duration: "",
-  notes: "",
-};
+function initialForm(workshopName?: string, workshopPhone?: string) {
+  return {
+    workshop_name: workshopName ?? "",
+    workshop_phone: workshopPhone ?? "",
+    pricing_type: "fixed",
+    price_kwd: "",
+    price_max_kwd: "",
+    assumed_diagnosis: "",
+    inspection_fee_kwd: "",
+    parts_type: "",
+    validity_days: String(DEFAULT_VALIDITY_DAYS),
+    warranty_days: "",
+    warranty_note: "",
+    estimated_duration: "",
+    notes: "",
+  };
+}
 
-export function GarageOfferForm({ token }: { token: string }) {
+export function GarageOfferForm({
+  token,
+  workshopName,
+  workshopPhone,
+}: {
+  token: string;
+  workshopName?: string;
+  workshopPhone?: string;
+}) {
   const t = useTranslations();
-  const locale = useLocale();
-  const [form, setForm] = useState({ ...EMPTY });
+  const boundIdentity = Boolean(workshopName);
+  const [form, setForm] = useState(() => initialForm(workshopName, workshopPhone));
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [attempted, setAttempted] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -34,25 +43,29 @@ export function GarageOfferForm({ token }: { token: string }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    // Database truth for measured per-workshop outreach. This same-origin beacon
-    // is idempotent and no-ops for legacy shared garage links. Keeping it client-
-    // side avoids counting WhatsApp/link-preview crawlers that never render JS.
+    // Same-origin, idempotent measurement only. No third-party analytics run on
+    // this token-bearing page, which avoids capability leakage via referrers.
     void fetch(`/api/garage-outreach/${encodeURIComponent(token)}/open`, {
       method: "POST",
       keepalive: true,
     }).catch(() => undefined);
-
-    track("garage_offer_link_view", {
-      locale,
-      status: "open",
-      surface: "garage_offer_form",
-    });
-  }, [locale, token]);
+  }, [token]);
 
   const errs: OfferErrors = useMemo(() => validateOffer(form).errors ?? {}, [form]);
   const hasErrors = Object.keys(errs).length > 0;
 
-  const set = (patch: Partial<typeof form>) => setForm((f) => ({ ...f, ...patch }));
+  const set = (patch: Partial<typeof form>) => {
+    setForm((f) => ({
+      ...f,
+      ...patch,
+      ...(boundIdentity
+        ? {
+            workshop_name: workshopName ?? f.workshop_name,
+            workshop_phone: workshopPhone ?? f.workshop_phone,
+          }
+        : {}),
+    }));
+  };
   const mark = (name: string) => setTouched((prev) => ({ ...prev, [name]: true }));
   const showErr = (name: keyof OfferErrors) =>
     touched[name as string] || attempted ? errs[name] : undefined;
@@ -68,7 +81,7 @@ export function GarageOfferForm({ token }: { token: string }) {
     setBusy(true);
     setMsg(null);
     try {
-      const r = await fetch(`/api/submit-offer/${token}`, {
+      const r = await fetch(`/api/submit-offer/${encodeURIComponent(token)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -78,11 +91,6 @@ export function GarageOfferForm({ token }: { token: string }) {
         setMsg({ kind: "err", text: d.error ?? t("submit.sendError") });
         return;
       }
-      track("garage_offer_submit", {
-        locale,
-        success: true,
-        surface: "garage_offer_form",
-      });
       setDone(true);
     } catch {
       setMsg({ kind: "err", text: t("offers.connError") });
@@ -103,6 +111,13 @@ export function GarageOfferForm({ token }: { token: string }) {
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+      {boundIdentity && workshopName && (
+        <div className="rounded-lg border border-[#FFD60A]/40 bg-[#FFD60A]/5 p-3 text-sm">
+          <span className="text-muted-foreground">الكراج المرتبط بالرابط:</span>{" "}
+          <strong>{workshopName}</strong>
+        </div>
+      )}
+
       <StructuredOfferFields form={form} onChange={set} onBlur={mark} showError={showErr} />
 
       {msg && (
