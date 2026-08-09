@@ -138,6 +138,7 @@ export async function selectNetworkQuoteTargets(input: {
     .from("workshops")
     .select("place_id,name,phone,phone_intl,area,reviewed_specialty,partner_priority")
     .eq("is_partner", true)
+    .eq("rfq_dispatch_enabled", true)
     .eq("active", true)
     .eq("permanently_closed", false)
     .eq("is_automotive", true)
