@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const BASE_COLUMNS =
-  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,is_partner,active,permanently_closed";
+  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,is_partner,active,permanently_closed,rfq_dispatch_enabled,rfq_opt_in_at,rfq_opt_in_source,rfq_phone_verified_at";
 const OVERRIDE_COLUMNS =
   "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,hero_image_url,gallery_image_urls,custom_sections,updated_at";
 
@@ -157,6 +157,22 @@ export async function PATCH(
   for (const field of liveFields) {
     if (Object.prototype.hasOwnProperty.call(values, field)) workshopUpdates[field] = values[field];
   }
+
+  const phoneChanged =
+    (Object.prototype.hasOwnProperty.call(values, "phone") && values.phone !== workshop.phone) ||
+    (Object.prototype.hasOwnProperty.call(values, "phone_intl") && values.phone_intl !== workshop.phone_intl);
+  if (phoneChanged) {
+    // A previously verified destination cannot remain trusted after the number changes.
+    workshopUpdates.rfq_phone_verified_at = null;
+    workshopUpdates.rfq_dispatch_enabled = false;
+  }
+  if (
+    Object.prototype.hasOwnProperty.call(values, "reviewed_specialty") &&
+    !values.reviewed_specialty
+  ) {
+    workshopUpdates.rfq_dispatch_enabled = false;
+  }
+
   const { data: updatedWorkshop, error: liveError } = await admin
     .from("workshops")
     .update(workshopUpdates)
