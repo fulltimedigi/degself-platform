@@ -8,15 +8,13 @@ import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Stop one link from being used to flood a request with offers.
 const MAX_OFFERS_PER_QUOTE = 30;
-// Per-IP hourly cap so a forwarded link can't spam inserts + admin notifications.
 const MAX_OFFERS_PER_IP_HOUR = 10;
 
 // POST /api/submit-offer/[token] — PUBLIC (garage-facing, token-gated, no login).
-// A workshop submits its own structured offer for a quote. Validation is
-// AUTHORITATIVE here (same rules as the admin path + DB CHECK constraints).
-// Customer PII is never read or returned.
+// For measured per-workshop links, workshop identity is authoritative from the
+// capability token and canonical workshops table. Client-supplied workshop name/
+// phone are ignored, preventing one garage from impersonating another.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
@@ -29,20 +27,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
   }
 
   const ip = clientIp(req);
-  if (
-    !(await consumeRateLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR, {
-      failClosed: true,
-    }))
-  ) {
+  if (!(await consumeRateLimit(ip, "garage_offer", MAX_OFFERS_PER_IP_HOUR, { failClosed: true }))) {
     return NextResponse.json({ error: "عروض كثيرة — حاول بعد ساعة." }, { status: 429 });
   }
-
-  const result = validateOffer(body);
-  if (result.errors) {
-    const firstError = Object.values(result.errors)[0] ?? "بيانات العرض غير صحيحة.";
-    return NextResponse.json({ error: firstError, fields: result.errors }, { status: 400 });
-  }
-  const offer = result.value;
 
   let admin;
   try {
@@ -58,9 +45,35 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     console.error("submit-offer resolve outreach error:", e);
     return NextResponse.json({ error: "تعذّر جلب الطلب." }, { status: 500 });
   }
-  if (!resolution) return NextResponse.json({ error: "الرابط غير صحيح." }, { status: 404 });
+  if (!resolution) return NextResponse.json({ error: "الرابط غير صحيح أو انتهت صلاحيته." }, { status: 404 });
 
-  // Resolve only the fields needed for validation/notification. No customer PII.
+  // Measured links are workshop-scoped. Resolve identity server-side before
+  // validation so caller-controlled name/phone never become attribution truth.
+  if (resolution.workshopId) {
+    const { data: workshop, error: workshopError } = await admin
+      .from("workshops")
+      .select("place_id,name,phone,phone_intl")
+      .eq("place_id", resolution.workshopId)
+      .maybeSingle();
+    if (workshopError) {
+      console.error("submit-offer workshop fetch error:", workshopError);
+      return NextResponse.json({ error: "تعذّر التحقق من هوية الكراج." }, { status: 500 });
+    }
+    if (!workshop) return NextResponse.json({ error: "الكراج المرتبط بالرابط غير موجود." }, { status: 404 });
+    body = {
+      ...body,
+      workshop_name: workshop.name,
+      workshop_phone: workshop.phone_intl || workshop.phone || "",
+    };
+  }
+
+  const result = validateOffer(body);
+  if (result.errors) {
+    const firstError = Object.values(result.errors)[0] ?? "بيانات العرض غير صحيحة.";
+    return NextResponse.json({ error: firstError, fields: result.errors }, { status: 400 });
+  }
+  const offer = result.value;
+
   const { data: quote, error: qErr } = await admin
     .from("quotes")
     .select("id,service,status")
@@ -79,7 +92,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return NextResponse.json({ error: "انتهت صلاحية هذا الطلب." }, { status: 410 });
   }
 
-  // Cap total offers so a leaked link can't flood the request.
   const { count } = await admin
     .from("quote_offers")
     .select("id", { count: "exact", head: true })
@@ -105,8 +117,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     notes: offer.notes,
   };
 
-  // Only include the new column for measured tokens. That preserves legacy offer
-  // submission even if code deploys during the short pre-migration rollout window.
   if (resolution.outreachId) insertPayload.outreach_id = resolution.outreachId;
 
   const { error: insErr } = await admin.from("quote_offers").insert(insertPayload);
@@ -115,10 +125,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return NextResponse.json({ error: "تعذّر حفظ العرض." }, { status: 500 });
   }
 
-  // For measured tokens, migration 030's DB trigger records responded_at in the
-  // SAME transaction as this insert. Analytics remains secondary/best-effort.
-
-  // Let the founder know a garage responded (must be awaited on serverless).
   try {
     await sendAdminWhatsApp(
       `🧰 عرض جديد من كراج على طلب: ${quote.service}\n` +
