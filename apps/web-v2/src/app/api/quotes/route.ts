@@ -167,6 +167,7 @@ export async function POST(req: NextRequest) {
 
   // Garage RFQ delivery is a completely separate provider path. It may use only
   // quote_delivery_queue -> Meta WABA -> /submit-offer/<opaque-token>.
+  // The provider sender is hard-gated by WHATSAPP_ENABLED + approved garage template.
   // CallMeBot below is ADMIN-ONLY and must never be used to deliver an RFQ.
   if (routed) {
     after(async () => {
