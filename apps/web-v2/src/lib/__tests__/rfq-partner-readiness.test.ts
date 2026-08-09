@@ -30,6 +30,13 @@ test("provider send re-checks readiness after queue claim", async () => {
   assert.ok(readinessCheck >= 0 && providerSend >= 0 && readinessCheck < providerSend);
 });
 
+test("changing a partner phone invalidates phone verification and RFQ dispatch", async () => {
+  const profile = await source("../../app/api/admin/partners/[place_id]/profile/route.ts");
+  assert.match(profile, /const phoneChanged/);
+  assert.match(profile, /workshopUpdates\.rfq_phone_verified_at = null/);
+  assert.match(profile, /workshopUpdates\.rfq_dispatch_enabled = false/);
+});
+
 test("admin readiness UI exposes consent, phone verification, and explicit activation", async () => {
   const ui = await source("../../components/AdminPartnersClient.tsx");
   assert.match(ui, /موافقة استقبال RFQ مسجلة/);
