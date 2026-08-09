@@ -9,11 +9,16 @@ export interface GarageOutreachResolution {
   workshopId: string | null;
 }
 
+function isExpired(value: unknown): boolean {
+  if (typeof value !== "string" || !value) return true;
+  const ts = Date.parse(value);
+  return !Number.isFinite(ts) || ts <= Date.now();
+}
+
 /**
- * Resolve canonical measured outreach first. If a Meta-delivered queue token was
- * sent successfully but its outreach materialization lagged, repair it lazily on
- * first open. Reserved/queued tokens never resolve. Legacy shared garage_token
- * remains the final backwards-compatible fallback.
+ * Resolve only a per-workshop capability. Provider-confirmed WABA delivery may
+ * be reconciled lazily on first open, but quote-level shared garage tokens are
+ * deliberately not accepted.
  */
 export async function resolveGarageOutreachToken(
   token: string
@@ -22,7 +27,7 @@ export async function resolveGarageOutreachToken(
 
   const { data: outreach, error: outreachError } = await admin
     .from("quote_workshop_outreach")
-    .select("id,quote_id,workshop_id")
+    .select("id,quote_id,workshop_id,expires_at")
     .eq("token", token)
     .maybeSingle();
 
@@ -31,6 +36,7 @@ export async function resolveGarageOutreachToken(
   }
 
   if (outreach) {
+    if (isExpired(outreach.expires_at)) return null;
     return {
       outreachId: String(outreach.id),
       quoteId: String(outreach.quote_id),
@@ -42,25 +48,10 @@ export async function resolveGarageOutreachToken(
     const repaired = await materializeSentDeliveryOutreachByToken(token);
     if (repaired) return repaired;
   } catch (e) {
-    // During a staggered deploy before migration 034 exists, keep legacy links
-    // working rather than failing the whole garage page.
     console.error("sent delivery token reconciliation failed:", e);
   }
 
-  const { data: legacy, error: legacyError } = await admin
-    .from("quotes")
-    .select("id")
-    .eq("garage_token", token)
-    .maybeSingle();
-
-  if (legacyError) throw new Error(legacyError.message);
-  if (!legacy) return null;
-
-  return {
-    outreachId: null,
-    quoteId: String(legacy.id),
-    workshopId: null,
-  };
+  return null;
 }
 
 export async function markGarageOutreachOpened(token: string): Promise<void> {
@@ -71,6 +62,7 @@ export async function markGarageOutreachOpened(token: string): Promise<void> {
     .from("quote_workshop_outreach")
     .update({ first_opened_at: now, updated_at: now })
     .eq("token", token)
+    .gt("expires_at", now)
     .is("first_opened_at", null);
 
   if (error && error.code !== UNDEFINED_TABLE) throw new Error(error.message);

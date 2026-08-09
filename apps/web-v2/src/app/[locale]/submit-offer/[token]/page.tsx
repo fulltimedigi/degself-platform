@@ -6,10 +6,12 @@ import { GarageOfferForm } from "@/components/GarageOfferForm";
 
 export const metadata: Metadata = {
   title: "قدّم عرضك — دق سلف",
-  robots: { index: false, follow: false }, // token-gated private page
+  robots: { index: false, follow: false, nocache: true },
+  referrer: "no-referrer",
 };
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function Shell({ children }: { children: React.ReactNode }) {
   return <main className="mx-auto w-full max-w-lg px-6 py-16 text-center">{children}</main>;
@@ -65,7 +67,6 @@ export default async function SubmitOfferPage({
   }
 
   const car = [quote.car_make, quote.car_model, quote.car_year].filter(Boolean).join(" ");
-  // Only render https image URLs — never javascript:/data: or other schemes.
   const safePhotos = (quote.photos ?? []).filter((p) => /^https:\/\//i.test(p));
 
   return (
@@ -73,6 +74,9 @@ export default async function SubmitOfferPage({
       <header className="mb-6 text-center">
         <h1 className="mb-2 text-2xl font-extrabold sm:text-3xl">{t("submit.pageTitle")}</h1>
         <p className="text-sm text-muted-foreground">{t("submit.pageSubtitle")}</p>
+        {quote.workshop_name && (
+          <p className="mt-2 text-sm font-bold text-[#FFD60A]">هذا الرابط مخصص لـ {quote.workshop_name}</p>
+        )}
       </header>
 
       {/* PII-safe request summary — no customer name/phone. */}
@@ -107,13 +111,18 @@ export default async function SubmitOfferPage({
                 src={src}
                 alt={t("submit.photoAlt", { n: i + 1 })}
                 className="h-20 w-20 rounded-lg border border-border object-cover"
+                referrerPolicy="no-referrer"
               />
             ))}
           </div>
         )}
       </div>
 
-      <GarageOfferForm token={token} />
+      <GarageOfferForm
+        token={token}
+        workshopName={quote.workshop_name ?? undefined}
+        workshopPhone={quote.workshop_phone ?? undefined}
+      />
 
       <p className="mt-4 text-center text-xs text-muted-foreground">{t("submit.agreement")}</p>
     </main>
