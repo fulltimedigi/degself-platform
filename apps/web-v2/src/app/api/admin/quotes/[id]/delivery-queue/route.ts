@@ -18,9 +18,10 @@ export async function GET(
   const { data, error } = await admin
     .from("quote_delivery_queue")
     .select(
-      "id,workshop_id,status,channel,target_rank,selection_score,selection_reason,attempts,sent_at,last_error,outreach_id,workshop:workshops(name,phone,phone_intl)"
+      "id,workshop_id,status,channel,routing_wave,target_rank,selection_score,selection_reason,attempts,sent_at,last_error,outreach_id,workshop:workshops(name,phone,phone_intl)"
     )
     .eq("quote_id", id)
+    .order("routing_wave", { ascending: true })
     .order("target_rank", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
