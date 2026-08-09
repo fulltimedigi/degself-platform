@@ -29,6 +29,9 @@ type WorkshopRow = {
   place_id: string;
   phone: string | null;
   phone_intl: string | null;
+  rfq_dispatch_enabled: boolean;
+  rfq_opt_in_at: string | null;
+  rfq_phone_verified_at: string | null;
 };
 
 type OutreachRow = {
@@ -201,7 +204,7 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
       .maybeSingle(),
     admin
       .from("workshops")
-      .select("place_id,phone,phone_intl")
+      .select("place_id,phone,phone_intl,rfq_dispatch_enabled,rfq_opt_in_at,rfq_phone_verified_at")
       .eq("place_id", row.workshop_id)
       .maybeSingle(),
   ]);
@@ -215,9 +218,27 @@ async function processQueueRow(row: QueueRow): Promise<"sent" | "failed" | "skip
     return "failed";
   }
 
-  const recipient = kuwaitWhatsAppDigits(
-    (workshop as WorkshopRow).phone_intl || (workshop as WorkshopRow).phone
-  );
+  const workshopRow = workshop as WorkshopRow;
+  // Selection-time eligibility is not enough: an operator may revoke consent or
+  // disable RFQ after a row was queued. Re-check immediately before provider send.
+  if (
+    workshopRow.rfq_dispatch_enabled !== true ||
+    !workshopRow.rfq_opt_in_at ||
+    !workshopRow.rfq_phone_verified_at
+  ) {
+    await admin
+      .from("quote_delivery_queue")
+      .update({
+        status: "cancelled",
+        last_error: "partner RFQ readiness revoked before send",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", row.id)
+      .eq("status", "sending");
+    return "skipped";
+  }
+
+  const recipient = kuwaitWhatsAppDigits(workshopRow.phone_intl || workshopRow.phone);
   if (!recipient) {
     await admin
       .from("quote_delivery_queue")
