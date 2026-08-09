@@ -73,8 +73,11 @@ test("garage token page is PII-safe and prevents capability referrer leakage", a
   assert.match(page, /robots: \{ index: false, follow: false, nocache: true \}/);
   assert.doesNotMatch(page, /customer_name/);
   assert.doesNotMatch(page, /customer_phone/);
-  assert.doesNotMatch(form, /track\("garage_offer_submit",\s*\{[\s\S]*?\btoken\s*:/);
-  assert.doesNotMatch(form, /track\("garage_offer_submit",\s*\{[\s\S]*?workshop_/);
+
+  const trackingPayload = form.match(/track\("garage_offer_submit",\s*\{([\s\S]*?)\}\);/)?.[1] ?? "";
+  assert.ok(trackingPayload, "garage offer submit analytics event must remain present");
+  assert.doesNotMatch(trackingPayload, /\btoken\s*:/);
+  assert.doesNotMatch(trackingPayload, /workshop_/);
 });
 
 test("garage opens use a same-origin client-render beacon and remain non-blocking", async () => {
