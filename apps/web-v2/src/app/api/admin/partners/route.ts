@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { isAdminRequest } from "@/lib/admin-auth";
@@ -10,6 +11,23 @@ const PARTNER_COLUMNS =
   "place_id, name, area, phone, phone_intl, reviewed_specialty, is_partner, partner_priority, partner_notes, google_rating, active, rfq_dispatch_enabled, rfq_opt_in_at, rfq_opt_in_source, rfq_phone_verified_at";
 
 const RFQ_OPT_IN_SOURCES = new Set(["whatsapp", "written", "verbal", "other"]);
+
+function cleanText(value: unknown, max: number): string {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+function normalizePhone(value: unknown): { phone: string; phoneIntl: string | null } | null {
+  const raw = cleanText(value, 30);
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length < 8 || digits.length > 15) return null;
+
+  if (digits.length === 8) return { phone: digits, phoneIntl: `+965${digits}` };
+  if (digits.startsWith("965") && digits.length === 11) {
+    return { phone: digits.slice(3), phoneIntl: `+${digits}` };
+  }
+  if (raw.startsWith("+")) return { phone: digits, phoneIntl: `+${digits}` };
+  return { phone: digits, phoneIntl: null };
+}
 
 export async function GET(req: NextRequest) {
   if (!(await isAdminRequest(req))) {
@@ -54,19 +72,117 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ workshops: data || [] });
 }
 
-// Paste a public DEGSELF workshop URL and promote that exact catalog row into the
-// existing network. No workshop data is copied or duplicated. New partners are
-// intentionally NOT RFQ-enabled until consent + WhatsApp number are verified.
+// Add a partner either by promoting an existing DEGSELF catalog row from its
+// public URL, or by creating a minimal manually-curated workshop when it does
+// not exist in the catalog yet. Both paths keep automated RFQ OFF by default.
 export async function POST(req: NextRequest) {
   if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "غير مصرّح." }, { status: 401 });
   }
 
-  let body: { url?: unknown };
+  let body: {
+    mode?: unknown;
+    url?: unknown;
+    name?: unknown;
+    phone?: unknown;
+    reviewed_specialty?: unknown;
+    area?: unknown;
+    partner_notes?: unknown;
+  };
   try {
-    body = (await req.json()) as { url?: unknown };
+    body = await req.json();
   } catch {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
+  }
+
+  let admin;
+  try {
+    admin = getSupabaseAdmin();
+  } catch {
+    return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
+  }
+
+  if (body.mode === "manual") {
+    const name = cleanText(body.name, 120);
+    const reviewedSpecialty = cleanText(body.reviewed_specialty, 120);
+    const area = cleanText(body.area, 120) || null;
+    const partnerNotes = cleanText(body.partner_notes, 500) || null;
+    const normalizedPhone = normalizePhone(body.phone);
+
+    if (!name) return NextResponse.json({ error: "اكتب اسم الكراج." }, { status: 400 });
+    if (!normalizedPhone) {
+      return NextResponse.json({ error: "اكتب رقم واتساب صالحاً للكراج." }, { status: 400 });
+    }
+    if (!reviewedSpecialty) {
+      return NextResponse.json({ error: "حدد تخصص الكراج قبل إضافته للشبكة." }, { status: 400 });
+    }
+
+    const phoneLookup = normalizedPhone.phoneIntl || normalizedPhone.phone;
+    const { data: duplicate, error: duplicateError } = await admin
+      .from("workshops")
+      .select(`${PARTNER_COLUMNS}, is_automotive, out_of_scope, permanently_closed`)
+      .or(`phone.eq.${normalizedPhone.phone},phone_intl.eq.${phoneLookup}`)
+      .limit(1)
+      .maybeSingle();
+
+    if (duplicateError) return NextResponse.json({ error: duplicateError.message }, { status: 500 });
+    if (duplicate) {
+      if (
+        duplicate.active === false ||
+        duplicate.permanently_closed === true ||
+        duplicate.is_automotive === false ||
+        duplicate.out_of_scope === true
+      ) {
+        return NextResponse.json({ error: "يوجد كراج بهذا الرقم لكنه غير مؤهل للشبكة حالياً." }, { status: 409 });
+      }
+
+      const { data, error } = await admin
+        .from("workshops")
+        .update({
+          is_partner: true,
+          reviewed_specialty: duplicate.reviewed_specialty || reviewedSpecialty,
+          partner_notes: duplicate.partner_notes || partnerNotes,
+          rfq_dispatch_enabled: false,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("place_id", duplicate.place_id)
+        .select(PARTNER_COLUMNS)
+        .single();
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ workshop: data, existing: true, matchedByPhone: true });
+    }
+
+    const now = new Date().toISOString();
+    const placeId = `manual_${randomUUID()}`;
+    const { data, error } = await admin
+      .from("workshops")
+      .insert({
+        place_id: placeId,
+        name,
+        specialty: reviewedSpecialty,
+        reviewed_specialty: reviewedSpecialty,
+        entity_type: "workshop",
+        service_mode: "fixed",
+        category_raw: "manual_partner",
+        area,
+        phone: normalizedPhone.phone,
+        phone_intl: normalizedPhone.phoneIntl,
+        active: true,
+        permanently_closed: false,
+        is_automotive: true,
+        out_of_scope: false,
+        is_partner: true,
+        partner_priority: 0,
+        partner_notes: partnerNotes,
+        rfq_dispatch_enabled: false,
+        created_at: now,
+        updated_at: now,
+      })
+      .select(PARTNER_COLUMNS)
+      .single();
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ workshop: data, existing: false, manual: true });
   }
 
   if (typeof body.url !== "string") {
@@ -78,24 +194,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "الرابط ليس رابط كراج صالح من دق سلف." }, { status: 400 });
   }
 
-  let admin;
-  try {
-    admin = getSupabaseAdmin();
-  } catch {
-    return NextResponse.json({ error: "النظام غير مهيأ." }, { status: 500 });
-  }
-
   const { data: workshop, error: lookupError } = await admin
     .from("workshops")
-    .select(
-      `${PARTNER_COLUMNS}, is_automotive, out_of_scope, permanently_closed`
-    )
+    .select(`${PARTNER_COLUMNS}, is_automotive, out_of_scope, permanently_closed`)
     .eq("place_id", parsed.placeId)
     .maybeSingle();
 
   if (lookupError) return NextResponse.json({ error: lookupError.message }, { status: 500 });
   if (!workshop) {
-    return NextResponse.json({ error: "الكراج غير موجود في الدليل الأساسي." }, { status: 404 });
+    return NextResponse.json({ error: "الكراج غير موجود في الدليل الأساسي. استخدم الإضافة اليدوية." }, { status: 404 });
   }
   if (
     workshop.active === false ||
