@@ -16,11 +16,9 @@ function isExpired(value: unknown): boolean {
 }
 
 /**
- * Resolve canonical measured outreach first. If a Meta-delivered queue token was
- * sent successfully but its outreach materialization lagged, repair it lazily on
- * first open. Reserved/queued tokens never resolve. Legacy shared garage_token
- * remains the final backwards-compatible fallback only during the migration
- * window; no new shared tokens are created by the admin API.
+ * Resolve only a per-workshop capability. Provider-confirmed WABA delivery may
+ * be reconciled lazily on first open, but quote-level shared garage tokens are
+ * deliberately not accepted.
  */
 export async function resolveGarageOutreachToken(
   token: string
@@ -50,32 +48,16 @@ export async function resolveGarageOutreachToken(
     const repaired = await materializeSentDeliveryOutreachByToken(token);
     if (repaired) return repaired;
   } catch (e) {
-    // During a staggered deploy before the delivery migration exists, keep legacy
-    // resolution working rather than failing the whole garage page.
     console.error("sent delivery token reconciliation failed:", e);
   }
 
-  const { data: legacy, error: legacyError } = await admin
-    .from("quotes")
-    .select("id")
-    .eq("garage_token", token)
-    .maybeSingle();
-
-  if (legacyError) throw new Error(legacyError.message);
-  if (!legacy) return null;
-
-  return {
-    outreachId: null,
-    quoteId: String(legacy.id),
-    workshopId: null,
-  };
+  return null;
 }
 
 export async function markGarageOutreachOpened(token: string): Promise<void> {
   const admin = getSupabaseAdmin();
   const now = new Date().toISOString();
 
-  // Expired links are intentionally not counted as opens.
   const { error } = await admin
     .from("quote_workshop_outreach")
     .update({ first_opened_at: now, updated_at: now })
