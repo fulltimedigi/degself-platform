@@ -7,6 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const UNDEFINED_TABLE = "42P01";
+const CAPABILITY_TTL_MS = 48 * 60 * 60 * 1000;
 
 type MatchedWorkshop = {
   place_id?: unknown;
@@ -21,6 +22,14 @@ function matchedPlaceIds(value: unknown): Set<string> {
       .map((item) => (item && typeof item === "object" ? (item as MatchedWorkshop).place_id : null))
       .filter((id): id is string => typeof id === "string" && id.length > 0)
   );
+}
+
+function newCapabilityToken(): string {
+  return randomBytes(32).toString("hex");
+}
+
+function expiryFrom(now: Date): string {
+  return new Date(now.getTime() + CAPABILITY_TTL_MS).toISOString();
 }
 
 // POST /api/admin/quotes/[id]/garage-link
@@ -68,8 +77,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
   if (!quote) return NextResponse.json({ error: "الطلب غير موجود." }, { status: 404 });
 
-  // A link may only be created for a canonical workshop already listed in this
-  // quote's matched_workshops. This prevents arbitrary workshop attribution.
   if (!matchedPlaceIds(quote.matched_workshops).has(workshopId)) {
     return NextResponse.json({ error: "الكراج غير موجود ضمن الكراجات الموجّه إليها." }, { status: 400 });
   }
@@ -87,7 +94,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const { data: existing, error: existingErr } = await admin
     .from("quote_workshop_outreach")
-    .select("id,token,outreach_count")
+    .select("id,outreach_count")
     .eq("quote_id", id)
     .eq("workshop_id", workshopId)
     .maybeSingle();
@@ -104,12 +111,19 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
-  const now = new Date().toISOString();
+  const nowDate = new Date();
+  const now = nowDate.toISOString();
+  const token = newCapabilityToken();
+  const expiresAt = expiryFrom(nowDate);
 
   if (existing) {
+    // Manual resend rotates the raw capability, invalidating any previously copied
+    // URL for this quote/workshop and extending its lifetime by 48 hours.
     const { error: updateErr } = await admin
       .from("quote_workshop_outreach")
       .update({
+        token,
+        expires_at: expiresAt,
         last_outreach_at: now,
         outreach_count: Number(existing.outreach_count ?? 1) + 1,
         updated_at: now,
@@ -119,31 +133,23 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       console.error("garage-link outreach update error:", updateErr);
       return NextResponse.json({ error: "تعذّر تحديث محاولة التواصل." }, { status: 500 });
     }
-
-    return NextResponse.json({
-      success: true,
-      measured: true,
+  } else {
+    const { error: insertErr } = await admin.from("quote_workshop_outreach").insert({
+      quote_id: id,
       workshop_id: workshopId,
-      workshop_name: workshop.name,
-      url: `${siteUrl}/submit-offer/${existing.token}`,
+      token,
+      expires_at: expiresAt,
+      channel: "manual",
+      first_outreach_at: now,
+      last_outreach_at: now,
+      outreach_count: 1,
+      created_at: now,
+      updated_at: now,
     });
-  }
-
-  const token = randomBytes(16).toString("hex");
-  const { error: insertErr } = await admin.from("quote_workshop_outreach").insert({
-    quote_id: id,
-    workshop_id: workshopId,
-    token,
-    channel: "whatsapp",
-    first_outreach_at: now,
-    last_outreach_at: now,
-    outreach_count: 1,
-    created_at: now,
-    updated_at: now,
-  });
-  if (insertErr) {
-    console.error("garage-link outreach insert error:", insertErr);
-    return NextResponse.json({ error: "تعذّر إنشاء رابط قابل للقياس." }, { status: 500 });
+    if (insertErr) {
+      console.error("garage-link outreach insert error:", insertErr);
+      return NextResponse.json({ error: "تعذّر إنشاء رابط قابل للقياس." }, { status: 500 });
+    }
   }
 
   return NextResponse.json({
@@ -151,6 +157,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     measured: true,
     workshop_id: workshopId,
     workshop_name: workshop.name,
+    expires_at: expiresAt,
     url: `${siteUrl}/submit-offer/${token}`,
   });
 }
