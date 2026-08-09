@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DEFAULT_VALIDITY_DAYS } from "@/lib/quote-status";
 import { validateOffer, type OfferErrors } from "@/lib/offer-validation";
 import { StructuredOfferFields } from "@/components/StructuredOfferFields";
+import { track } from "@/lib/track";
 
 function initialForm(workshopName?: string, workshopPhone?: string) {
   return {
@@ -34,6 +35,7 @@ export function GarageOfferForm({
   workshopPhone?: string;
 }) {
   const t = useTranslations();
+  const locale = useLocale();
   const boundIdentity = Boolean(workshopName);
   const [form, setForm] = useState(() => initialForm(workshopName, workshopPhone));
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -43,8 +45,8 @@ export function GarageOfferForm({
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    // Same-origin, idempotent measurement only. No third-party analytics run on
-    // this token-bearing page, which avoids capability leakage via referrers.
+    // Same-origin, idempotent measurement only. The page-wide no-referrer policy
+    // prevents the opaque capability URL from being attached as a Referer.
     void fetch(`/api/garage-outreach/${encodeURIComponent(token)}/open`, {
       method: "POST",
       keepalive: true,
@@ -91,6 +93,12 @@ export function GarageOfferForm({
         setMsg({ kind: "err", text: d.error ?? t("submit.sendError") });
         return;
       }
+      // Sanitized conversion event only; no token, workshop identity or quote id.
+      track("garage_offer_submit", {
+        locale,
+        success: true,
+        surface: "garage_offer_form",
+      });
       setDone(true);
     } catch {
       setMsg({ kind: "err", text: t("offers.connError") });
