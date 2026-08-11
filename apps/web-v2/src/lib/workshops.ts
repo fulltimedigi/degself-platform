@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { cleanLocationOptions } from "@/lib/location-options";
 import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
@@ -594,14 +595,16 @@ async function distinctColumn(
 
 /** Distinct area names for the Search filter dropdown (cached — heavy under traffic). */
 export const getDistinctAreas = () =>
-  unstable_cache(() => distinctColumn("area"), ["workshop-distinct-area"], {
-    revalidate: 3600,
-  })();
+  unstable_cache(
+    async () => cleanLocationOptions(await distinctColumn("area")),
+    ["workshop-distinct-area-v2"],
+    { revalidate: 3600 }
+  )();
 /** Distinct neighborhoods (الحي) — 500+ values, use a datalist not a <select>. */
 export const getDistinctNeighborhoods = () =>
   unstable_cache(
-    () => distinctColumn("neighborhood"),
-    ["workshop-distinct-neighborhood"],
+    async () => cleanLocationOptions(await distinctColumn("neighborhood")),
+    ["workshop-distinct-neighborhood-v2"],
     { revalidate: 3600 }
   )();
 /** Distinct audited specialties (~20 values) for the specialty <select>. */

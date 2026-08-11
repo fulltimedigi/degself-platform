@@ -5,6 +5,7 @@ import {
   mintAdminSessionToken,
 } from "@/lib/admin-session";
 import { clientIp, isOverLimit, recordHit } from "@/lib/rate-limit";
+import { readJsonObject } from "@/lib/json-body";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,10 +44,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
+  const body = await readJsonObject(req);
+  if (!body) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 

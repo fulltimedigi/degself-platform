@@ -30,6 +30,8 @@ test("network admin is open-ended with link and manual onboarding", async () => 
   assert.match(customFields, /\+ إضافة عنصر داخل الخانة/);
   assert.match(importer, /صور الكراج/);
   assert.match(importer, /multiple/);
+  assert.match(importer, /uploadedPhotos/);
+  assert.match(importer, /current\.slice\(uploadedPhotos\)/);
   assert.match(importer, /\/profile/);
   assert.match(importer, /\/media/);
   assert.match(importer, /العنوان — اختياري/);
