@@ -56,7 +56,13 @@ test("garage template setup submits the fixed PII-safe Utility template", async 
 test("garage template setup sanitizes Meta errors", async () => {
   const result = await submitGarageRfqTemplate("test-secret-token", async () =>
     Response.json(
-      { error: { message: "OAuth token test-secret-token is invalid" } },
+      {
+        error: {
+          message: "OAuth token test-secret-token is invalid",
+          code: 190,
+          error_subcode: 463,
+        },
+      },
       { status: 401 }
     )
   );
@@ -65,6 +71,8 @@ test("garage template setup sanitizes Meta errors", async () => {
     ok: false,
     status: "invalid_credentials",
     provider_http_status: 401,
+    provider_error_code: 190,
+    provider_error_subcode: 463,
   });
   assert.doesNotMatch(JSON.stringify(result), /OAuth|test-secret-token/);
 });

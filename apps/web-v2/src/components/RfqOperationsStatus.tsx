@@ -42,10 +42,21 @@ export function RfqOperationsStatus() {
         body: JSON.stringify({ confirm: "garage_quote_request_ar" }),
       });
       const body = (await response.json().catch(() => null)) as
-        | { ok?: boolean; status?: string; template?: { review_status?: string } }
+        | {
+            ok?: boolean;
+            status?: string;
+            provider_error_code?: number;
+            provider_error_subcode?: number;
+            template?: { review_status?: string };
+          }
         | null;
       if (!response.ok || !body?.ok) {
-        throw new Error(body?.status || "template_submission_failed");
+        const codes = [body?.provider_error_code, body?.provider_error_subcode]
+          .filter((value): value is number => typeof value === "number")
+          .join("/");
+        throw new Error(
+          `${body?.status || "template_submission_failed"}${codes ? ` (${codes})` : ""}`
+        );
       }
       setTemplateSetup({
         state: "success",
