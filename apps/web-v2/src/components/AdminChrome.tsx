@@ -6,6 +6,7 @@ import { AdminLogoutButton } from "@/components/AdminLogoutButton";
 
 const NAV = [
   { href: "/admin/quotes", label: "الطلبات" },
+  { href: "/admin/analytics", label: "التحويلات" },
   { href: "/admin/partners", label: "الشبكة" },
   { href: "/admin/reviews", label: "المراجعات" },
   { href: "/admin/audit", label: "التدقيق" },
