@@ -38,6 +38,9 @@ test("garage template setup submits the fixed PII-safe Utility template", async 
     payload.components[1].buttons[0].url,
     "https://degself.com/submit-offer/{{1}}"
   );
+  assert.deepEqual(payload.components[1].buttons[0].example, [
+    "https://degself.com/submit-offer/example-token",
+  ]);
   assert.doesNotMatch(JSON.stringify(payload), /customer|phone|اسم العميل|رقم العميل/i);
 
   assert.deepEqual(result, {
