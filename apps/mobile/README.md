@@ -46,7 +46,7 @@ Authenticated favorites go **directly** to `public.user_favorites` via the user'
 The Danger Zone posts `Authorization: Bearer <access token>` to the canonical web operation `/api/account/delete`. Server verifies the token, then runs the SAME sequence as web (typed `DELETE`, 10-min recent-auth, per-user rate limit, admin/claimed blockers, `auth.admin.deleteUser`). `AUTH_TOO_OLD` drives a provider reauth (no password prompt for OAuth users). On success the local session + secure storage + guest favorites are cleared.
 
 ## Environment model
-PUBLIC values only, via `EXPO_PUBLIC_*` (see [`.env.example`](.env.example)): Supabase URL + publishable key, API base URL, Google web client id. **No secret is ever bundled.** Only the Production Supabase project exists today; dev/preview target it with controlled test users — never real customer data.
+PUBLIC values only, via `EXPO_PUBLIC_*` (see [`.env.example`](.env.example)): Supabase URL + publishable key and API base URL. **No secret or Google client id is bundled.** Google credentials remain only in the Supabase provider. Only the Production Supabase project exists today; dev/preview target it with controlled test users — never real customer data.
 
 ## Commands
 ```
@@ -64,9 +64,9 @@ Installs use **strict** npm peer enforcement (no global `legacy-peer-deps`); `np
 - CONFIG VERIFIED · TYPECHECK VERIFIED · TESTS VERIFIED · EXPO DOCTOR (20/20) · EXPO CONFIG VERIFIED · `npm ci` VERIFIED
 - PREBUILD VERIFIED (android **and** ios, config→native) · Apple **`com.apple.developer.applesignin` entitlement generation VERIFIED** · bundle id `com.degself.app` + scheme `degself` in native output
 - RLS VERIFIED live (rolled-back): own-only reads, cross-user insert/read/delete blocked, `authenticated`-only, anon denied, no UPDATE grant
-- **ANDROID BINARY: NOT VERIFIED — ENVIRONMENT/CREDENTIAL BLOCKER** (no Android SDK / EAS credentials)
+- **ANDROID REAL-DEVICE VERIFIED (2026-08-09)** — EAS preview installed and launched on a Samsung Galaxy S25 Ultra; Google OAuth, persisted Supabase session, favorites add/delete, logout/re-login, and the typed account-deletion flow all passed end to end.
 - **iOS BINARY: NOT VERIFIED — ENVIRONMENT/CREDENTIAL BLOCKER** (no macOS / Apple credentials)
-- **REAL PROVIDER LOGIN (Google/Apple): NOT VERIFIED — device/credential blocker** — never faked from config alone
+- **GOOGLE PROVIDER LOGIN: VERIFIED ON ANDROID** · **APPLE PROVIDER LOGIN: NOT VERIFIED — iOS device/credential blocker** — never inferred from config alone
 
 Real device binaries + provider login build via **EAS** with owner credentials. No store submission / production OTA is configured.
 
