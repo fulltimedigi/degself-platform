@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Linking, ScrollView, View } from "react-native";
 import {
   Button,
   ChoiceButton,
@@ -22,58 +22,76 @@ export default function AccountScreen() {
 
   return (
     <Screen>
-      <ThemedText size="xl" bold>
-        {t.tabs.account}
-      </ThemedText>
+      <ScrollView
+        contentContainerStyle={{ gap: tokens.space.md, paddingBottom: tokens.space.xl }}
+      >
+        <ThemedText size="xl" bold>
+          {t.tabs.account}
+        </ThemedText>
 
-      {status === "loading" ? (
-        <Surface>
-          <ThemedText muted>…</ThemedText>
-        </Surface>
-      ) : status === "signedIn" ? (
-        <>
+        {status === "loading" ? (
           <Surface>
-            <ThemedText muted size="sm">
-              {t.auth.signedInAs}
-            </ThemedText>
-            <ThemedText bold>{user?.email ?? user?.id ?? "—"}</ThemedText>
-            <Button
-              label={t.auth.signOut}
-              variant="secondary"
-              onPress={() => void signOut()}
-            />
+            <ThemedText muted>…</ThemedText>
           </Surface>
-          <DangerZone />
-        </>
-      ) : (
-        <AuthPanel />
-      )}
+        ) : status === "signedIn" ? (
+          <>
+            <Surface>
+              <ThemedText muted size="sm">
+                {t.auth.signedInAs}
+              </ThemedText>
+              <ThemedText bold>{user?.email ?? user?.id ?? "—"}</ThemedText>
+              <Button
+                label={t.auth.signOut}
+                variant="secondary"
+                onPress={() => void signOut()}
+              />
+            </Surface>
+            <DangerZone />
+          </>
+        ) : (
+          <AuthPanel />
+        )}
 
-      <Surface>
-        <ThemedText bold>{t.languageLabel}</ThemedText>
-        <View
-          style={{
-            flexDirection: dir === "rtl" ? "row-reverse" : "row",
-            flexWrap: "wrap",
-            gap: tokens.space.sm,
-          }}
-        >
-          {LOCALES.map((l) => (
-            <ChoiceButton
-              key={l}
-              label={LOCALE_LABEL[l]}
-              selected={l === locale}
-              onPress={() => setLocale(l)}
-            />
-          ))}
-        </View>
-        <ThemedText muted size="sm">
-          {t.directionLabel}: {dir.toUpperCase()}
-        </ThemedText>
-        <ThemedText muted size="sm">
-          {t.rtlReloadNote}
-        </ThemedText>
-      </Surface>
+        <Surface>
+          <ThemedText bold>{t.languageLabel}</ThemedText>
+          <View
+            style={{
+              flexDirection: dir === "rtl" ? "row-reverse" : "row",
+              flexWrap: "wrap",
+              gap: tokens.space.sm,
+            }}
+          >
+            {LOCALES.map((l) => (
+              <ChoiceButton
+                key={l}
+                label={LOCALE_LABEL[l]}
+                selected={l === locale}
+                onPress={() => setLocale(l)}
+              />
+            ))}
+          </View>
+          <ThemedText muted size="sm">
+            {t.directionLabel}: {dir.toUpperCase()}
+          </ThemedText>
+          <ThemedText muted size="sm">
+            {t.rtlReloadNote}
+          </ThemedText>
+        </Surface>
+
+        <Surface>
+          <ThemedText bold>{t.privacy.title}</ThemedText>
+          <ThemedText muted size="sm">
+            {t.privacy.body}
+          </ThemedText>
+          <Button
+            label={t.privacy.openPolicy}
+            variant="secondary"
+            onPress={() =>
+              void Linking.openURL("https://degself.com/privacy#data-deletion")
+            }
+          />
+        </Surface>
+      </ScrollView>
     </Screen>
   );
 }

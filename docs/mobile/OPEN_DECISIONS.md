@@ -20,10 +20,9 @@ Legend: `[REPO]` repo evidence · `[EXT]` external primary source.
 **Why:** App Store Review Guideline 4.8 requires an equivalent privacy-preserving login when an app uses a third-party/social login for the primary account `[EXT]`.
 **Resolution (primary sources, accessed 2026-08-08):** DEGSELF offers Google Sign-In and none of the five 4.8 exemptions apply → **Sign in with Apple is REQUIRED on iOS**. Implemented natively via `expo-apple-authentication@~57.0.1` (config plugin + `ios.usesAppleSignIn` → `com.apple.developer.applesignin` entitlement, verified via prebuild) → `supabase.auth.signInWithIdToken({ provider: 'apple', token, nonce })`; native-only Supabase Apple provider needs just the bundle id registered (no Services ID/secret). Sources: developer.apple.com/app-store/review/guidelines (§4.8); docs.expo.dev/versions/latest/sdk/apple-authentication; supabase.com/docs/guides/auth/social-login/auth-apple. See ADR-0007.
 
-## OD-04 — Search / domain extraction boundary  ·  Status: OPEN  ·  Blocks: M2
+## OD-04 — Search / domain extraction boundary  ·  Status: ACCEPTED (ADR-0008)  ·  Blocks: resolved
 **Why:** ranking/enrichment/synonyms live in `workshops.ts` + bundled JSON + `unstable_cache` `[REPO]`; must not be reimplemented divergently.
-**Options:** (a) extract `packages/domain` (pure) and query Supabase directly from mobile then rank client-side; (b) add `/api/search` returning ranked results (keeps enrichment server-side/private).
-**Evidence needed:** size/sensitivity of enrichment data; parity test vs web. **Deadline:** before PR-M2.
+**Decision:** a bounded read-only `/api/mobile/workshops` endpoint returns the canonical ranked result and a restricted public DTO. This keeps private enrichment server-side and prevents mobile/web ranking drift. See ADR-0008.
 
 ## OD-05 — Ask DEGSELF per-user/device quota  ·  Status: OPEN  ·  Blocks: M3 production readiness
 **Why:** current guard is IP rate-limit + monthly budget `[REPO]`; IP is weak on native (carrier NAT) → cost-abuse risk.

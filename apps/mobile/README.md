@@ -1,31 +1,35 @@
-# apps/mobile — DEGSELF native app (M1)
+# apps/mobile — DEGSELF native app (M2 + Android store preparation)
 
-Native Android + iOS app for DEGSELF / دق سلف, built with **Expo SDK 57 + Expo Router + TypeScript**. **M0** shipped the foundation (navigation, i18n/RTL, build/test config). **M1** adds the first product capabilities: **auth (Google + Apple), profile, favorites, and account deletion**. Architecture and decisions live in [`docs/mobile/`](../../docs/mobile/).
+Native Android + iOS app for DEGSELF / دق سلف, built with **Expo SDK 57 + Expo Router + TypeScript**. M0 shipped the foundation; M1 added auth, favorites, and deletion; M2 adds production workshop discovery and detail. Architecture and decisions live in [`docs/mobile/`](../../docs/mobile/).
 
-## Status: M1 — Auth + Profile + Favorites + Account Deletion
+## Status: M2 — Discovery + Auth + Favorites + Account Deletion
 Supabase-native auth (Google everywhere, Sign in with Apple on iOS), secure session persistence, profile access, favorites via RLS with a loss-safe guest→auth handoff, and in-app account deletion through the canonical server operation. See ADRs [0005](../../docs/mobile/adr/0005-mobile-auth-and-session-storage.md) (auth/session), [0006](../../docs/mobile/adr/0006-account-deletion-auth-transport.md) (deletion transport / OD-02), [0007](../../docs/mobile/adr/0007-sign-in-with-apple.md) (Sign in with Apple / OD-03).
+
+M2 adds featured workshops, debounced Arabic-aware search, saved-workshop hydration, and native detail/contact actions. The app consumes the canonical bounded server read API from [ADR-0008](../../docs/mobile/adr/0008-mobile-search-read-api.md), so ranking and audited catalog filtering cannot drift from web.
 
 ## Identifiers (owner-approved, permanent)
 - iOS `bundleIdentifier`: `com.degself.app`
 - Android `package`: `com.degself.app`
 - Expo `scheme`: `degself`
 
-## Structure (M1 additions in **bold**)
+## Structure
 ```
 app/
   _layout.tsx            # providers: I18n → Auth → Favorites → stack
   (tabs)/
     _layout.tsx          # 4 tabs (localized labels)
-    index.tsx            # Home placeholder (unchanged)
-    search.tsx           # placeholder (M2)
-    saved.tsx            # guest + authenticated favorites + handoff
+    index.tsx            # featured workshop discovery
+    search.tsx           # canonical search results
+    saved.tsx            # hydrated guest + authenticated favorites
     account.tsx          # sign-in / signed-in profile + Danger Zone + locale switcher
+  workshop/[placeId].tsx # details, save, call, WhatsApp, maps, safe website
 src/
   lib/
     supabase.ts          # RN Supabase client (LargeSecureStore, AppState auto-refresh)
     auth/                # AuthProvider, google.ts, apple.ts, secure-store.ts (LargeSecureStore)
     favorites/           # favorites-sync (pure), guest-storage, favorites-remote (RLS), context
     account/             # account-deletion (pure contract), delete-account (Bearer call)
+    workshops/           # public API client, DTOs, safe contact/map links
   components/            # primitives (+ Button), auth/AuthPanel, account/DangerZone
   config/env.ts          # PUBLIC-only runtime config (EXPO_PUBLIC_*)
   i18n/ · theme/ · types/aes-js.d.ts
@@ -68,10 +72,10 @@ Installs use **strict** npm peer enforcement (no global `legacy-peer-deps`); `np
 - **iOS SIMULATOR BINARY: VERIFIED (2026-08-11)** — EAS development build `8fad12d6-386d-4a15-8b59-15c3b8a0be1d` finished successfully from commit `c0039e4`; a signed real-device/TestFlight build still waits for the Apple Developer enrollment.
 - **GOOGLE PROVIDER LOGIN: VERIFIED ON ANDROID** · **APPLE PROVIDER LOGIN: NOT VERIFIED — iOS device/credential blocker** — never inferred from config alone
 
-Real device binaries + provider login build via **EAS** with owner credentials. No store submission / production OTA is configured.
+Real-device binaries and provider login build via **EAS** with owner credentials. A production AAB profile and draft Internal-track submit profile are configured; production OTA remains disabled. A signed AAB still requires an authenticated Expo/EAS owner session.
 
-## Non-scope (M1)
-No search / workshop discovery UI (M2), no `packages/domain` extraction, no Ask DEGSELF, no quotes/offers, no WABA, no admin, no push/device tokens, no Universal/App Links (`assetlinks.json` / `apple-app-site-association` — M6; only the auth callback scheme is configured), no analytics identity, no review UI. Deferred deps: NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, PostHog RN. (Google auth uses `expo-auth-session`/`expo-web-browser`; the paid Universal Sign In is NOT adopted.)
+## Non-scope
+No Ask DEGSELF, quotes/offers, WABA, admin, push/device tokens, Universal/App Links, analytics SDK, location permission, or review UI. Deferred deps remain NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, and PostHog RN.
 
 ## Next
-**M2 — Search + Workshop Detail + deterministic domain extraction** (OD-04). Remaining M-gated open decisions: OD-01 (M4), OD-04 (M2), OD-05 (M3), OD-06/07/08 (later).
+Generate an EAS production AAB, upload it to Play Internal testing, capture real-device screenshots, complete the prepared Data safety declaration, and run the Play pre-launch report. Remaining product-gated decisions: OD-01 (quotes), OD-05 (Ask DEGSELF quota), and OD-06/07/08 (reviews/push/deep links).

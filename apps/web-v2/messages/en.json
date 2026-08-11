@@ -1640,27 +1640,28 @@
     "ctaEmergency": "Emergency — tow truck & mobile mechanic"
   },
   "legal": {
-    "lastUpdated": "Last updated: June 2026",
+    "lastUpdated": "Last updated: August 11, 2026",
     "breadcrumbHome": "Home",
     "privacy": {
       "metaTitle": "Privacy Policy | Degself",
       "metaDescription": "Degself's privacy policy — what data we collect, how we use it, and how to request deletion of your data.",
       "breadcrumbSelf": "Privacy Policy",
       "h1": "Privacy Policy",
-      "intro": "Degself (degself.com) is a free directory of car garages, workshops and services in Kuwait. We respect your privacy and collect as little data as possible. This page explains what we collect, how we use it, and how to request its deletion.",
+      "intro": "Degself (degself.com and the DEGSELF mobile app) is a free directory of car garages, workshops, and services in Kuwait. The directory works without an account. We use only the data needed to provide and secure the service and, when you sign in, sync your choices.",
       "collectHeading": "Data we collect",
       "collectList": [
-        "<b>The site requires no account</b> — we don't ask for your name, email or number to use the site.",
-        "<b>Usage statistics:</b> we use Google Analytics to measure visit counts and common search terms in aggregate and anonymously, to improve the service.",
-        "<b>Reviews:</b> when you add a review for a garage, we store the review text, star rating and name (if you optionally write it). No login needed.",
-        "<b>Favorites:</b> the garages you save are stored on your device (localStorage) only — they don't reach our servers.",
-        "<b>Geolocation:</b> if you use \"nearest to me\", the browser asks your permission to determine your location once to order the results — and we don't store your location."
+        "<b>Optional account and sign-in:</b> you can browse without an account. If you sign in with Google or Apple, we process the account identifier, email, name or profile image supplied by that provider, and session data required to secure your account.",
+        "<b>Favorites:</b> guest choices stay on the device. After sign-in, saved workshop identifiers are stored in Supabase and linked to the account so they can sync across devices.",
+        "<b>Usage analytics:</b> the website uses tools such as Google Analytics, Vercel Analytics, and PostHog, subject to consent where applicable, to measure performance and limited product events. PostHog events are designed not to include raw search text, phone numbers, or workshop names. The current mobile release contains no advertising or analytics SDK.",
+        "<b>Reviews and requests:</b> if you submit a review or service request, we process the information you enter to fulfill it and prevent abuse. The current mobile release does not include review or quote forms.",
+        "<b>Location:</b> when you use a location-based feature, the device asks for permission and uses the location to order results or open a map. The current mobile release does not store your location, and you can decline permission.",
+        "<b>Operations and security:</b> hosting and database services may record limited technical data such as IP address, device type, request time, and errors for security and diagnostics."
       ],
       "thirdHeading": "Third-party services",
-      "thirdBody": "We rely on trusted services to run the site: Google Maps, Google Analytics, Vercel (hosting), and Supabase (database). These services are subject to their own privacy policies.",
+      "thirdBody": "We use Supabase for authentication and databases, Vercel for hosting and measurement, Google and Apple for optional sign-in, Google Maps for directions, and Google Analytics and PostHog for website measurement according to settings and consent. They process data as service providers under their policies and our agreements. We do not sell personal data.",
       "deleteHeading": "Deleting your data",
-      "deleteBody1": "Since the site requires no account, the only data associated with you may be a review you added. To request deletion of any review or data concerning you, email us at:",
-      "deleteBody2": "State in your message what you want deleted (e.g. the review text and garage name), and we'll carry out the request within a reasonable time. To delete garages saved on your device, clear the site data from your browser settings.",
+      "deleteBody1": "To permanently delete your DEGSELF app account and associated data, open the app and go to Account → Danger zone → Delete account, then confirm. If the app is no longer installed or you cannot sign in, send a deletion request from the email associated with the account to:",
+      "deleteBody2": "Use “Delete my DEGSELF account” as the subject and include the account email. After verifying ownership, we delete the authentication account, profile, saved workshops, and associated account data within a reasonable time, except limited records that must be retained for security or legal compliance. You can also request deletion of a review or request by identifying it clearly. Account deletion does not remove public workshop directory data. To remove local guest favorites, clear the app or site data on your device.",
       "contactHeading": "Contact us",
       "contactIntro": "For any privacy inquiry, email us at"
     },

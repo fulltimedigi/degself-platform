@@ -34,6 +34,32 @@ export type Dict = {
     remove: string;
     devAddSample: string;
   };
+  workshops: {
+    homeIntro: string;
+    featured: string;
+    searchAction: string;
+    searchPlaceholder: string;
+    resultCount: string;
+    loading: string;
+    loadError: string;
+    retry: string;
+    empty: string;
+    noResults: string;
+    openDetails: string;
+    save: string;
+    removeSaved: string;
+    partner: string;
+    hours: string;
+    call: string;
+    whatsapp: string;
+    directions: string;
+    website: string;
+    verifyDetails: string;
+    notFound: string;
+    back: string;
+    linkError: string;
+  };
+  privacy: { title: string; body: string; openPolicy: string };
   danger: {
     title: string;
     intro: string;
@@ -89,6 +115,36 @@ export const MESSAGES: Record<Locale, Dict> = {
       count: "%d محفوظة",
       remove: "إزالة",
       devAddSample: "إضافة عنصر تجريبي (تطوير)",
+    },
+    workshops: {
+      homeIntro: "ابحث بين ورش وكراجات السيارات في الكويت واحفظ الأنسب لك.",
+      featured: "كراجات مقترحة",
+      searchAction: "ابحث عن كراج",
+      searchPlaceholder: "ابحث بالاسم أو الخدمة أو المنطقة",
+      resultCount: "%d نتيجة",
+      loading: "جارٍ تحميل الكراجات…",
+      loadError: "تعذّر تحميل الكراجات الآن. تحقق من الاتصال وحاول مرة أخرى.",
+      retry: "إعادة المحاولة",
+      empty: "لا توجد كراجات متاحة حاليًا.",
+      noResults: "لا توجد نتائج مطابقة. جرّب اسم خدمة أو منطقة أخرى.",
+      openDetails: "عرض تفاصيل الكراج",
+      save: "حفظ الكراج",
+      removeSaved: "إزالة من المحفوظة",
+      partner: "ضمن شبكة دق سلف",
+      hours: "ساعات العمل",
+      call: "اتصال",
+      whatsapp: "واتساب",
+      directions: "الاتجاهات على الخريطة",
+      website: "الموقع الإلكتروني",
+      verifyDetails: "ننصح بالتواصل مع الكراج لتأكيد المواعيد والخدمات قبل الزيارة.",
+      notFound: "هذا الكراج غير متاح أو لم يعد مدرجًا.",
+      back: "رجوع",
+      linkError: "تعذّر فتح الرابط على هذا الجهاز.",
+    },
+    privacy: {
+      title: "الخصوصية وحذف البيانات",
+      body: "اطّلع على البيانات التي يستخدمها التطبيق وكيفية طلب حذف الحساب والبيانات.",
+      openPolicy: "فتح سياسة الخصوصية",
     },
     danger: {
       title: "منطقة الخطر",
@@ -149,6 +205,36 @@ export const MESSAGES: Record<Locale, Dict> = {
       remove: "Remove",
       devAddSample: "Add sample item (dev)",
     },
+    workshops: {
+      homeIntro: "Find car workshops across Kuwait and save the right ones for you.",
+      featured: "Recommended workshops",
+      searchAction: "Find a workshop",
+      searchPlaceholder: "Search by name, service, or area",
+      resultCount: "%d results",
+      loading: "Loading workshops…",
+      loadError: "Workshops couldn't be loaded. Check your connection and try again.",
+      retry: "Try again",
+      empty: "No workshops are available right now.",
+      noResults: "No matching results. Try another service or area.",
+      openDetails: "Open workshop details",
+      save: "Save workshop",
+      removeSaved: "Remove from saved",
+      partner: "DEGSELF network",
+      hours: "Opening hours",
+      call: "Call",
+      whatsapp: "WhatsApp",
+      directions: "Get directions",
+      website: "Website",
+      verifyDetails: "Contact the workshop to confirm hours and services before visiting.",
+      notFound: "This workshop is unavailable or no longer listed.",
+      back: "Back",
+      linkError: "This link couldn't be opened on your device.",
+    },
+    privacy: {
+      title: "Privacy and data deletion",
+      body: "Learn what data the app uses and how to request account and data deletion.",
+      openPolicy: "Open privacy policy",
+    },
     danger: {
       title: "Danger zone",
       intro: "Deleting your account is permanent and cannot be undone.",
@@ -207,6 +293,36 @@ export const MESSAGES: Record<Locale, Dict> = {
       remove: "हटाएँ",
       devAddSample: "नमूना आइटम जोड़ें (dev)",
     },
+    workshops: {
+      homeIntro: "कुवैत में कार वर्कशॉप खोजें और सही विकल्प सहेजें।",
+      featured: "सुझाई गई वर्कशॉप",
+      searchAction: "वर्कशॉप खोजें",
+      searchPlaceholder: "नाम, सेवा या क्षेत्र से खोजें",
+      resultCount: "%d परिणाम",
+      loading: "वर्कशॉप लोड हो रही हैं…",
+      loadError: "वर्कशॉप लोड नहीं हुईं। कनेक्शन जाँचकर फिर प्रयास करें।",
+      retry: "फिर प्रयास करें",
+      empty: "अभी कोई वर्कशॉप उपलब्ध नहीं है।",
+      noResults: "कोई मेल खाता परिणाम नहीं। दूसरी सेवा या क्षेत्र आज़माएँ।",
+      openDetails: "वर्कशॉप विवरण खोलें",
+      save: "वर्कशॉप सहेजें",
+      removeSaved: "सहेजे से हटाएँ",
+      partner: "DEGSELF नेटवर्क",
+      hours: "खुलने का समय",
+      call: "कॉल",
+      whatsapp: "WhatsApp",
+      directions: "दिशा-निर्देश",
+      website: "वेबसाइट",
+      verifyDetails: "जाने से पहले समय और सेवाओं की पुष्टि के लिए वर्कशॉप से संपर्क करें।",
+      notFound: "यह वर्कशॉप उपलब्ध नहीं है या अब सूचीबद्ध नहीं है।",
+      back: "वापस",
+      linkError: "यह लिंक आपके डिवाइस पर नहीं खुल सका।",
+    },
+    privacy: {
+      title: "गोपनीयता और डेटा हटाना",
+      body: "जानें कि ऐप कौन-सा डेटा उपयोग करता है और खाता व डेटा हटाने का अनुरोध कैसे करें।",
+      openPolicy: "गोपनीयता नीति खोलें",
+    },
     danger: {
       title: "खतरा क्षेत्र",
       intro: "खाता हटाना स्थायी है और वापस नहीं किया जा सकता।",
@@ -264,6 +380,36 @@ export const MESSAGES: Record<Locale, Dict> = {
       count: "%d محفوظ",
       remove: "ہٹائیں",
       devAddSample: "نمونہ آئٹم شامل کریں (dev)",
+    },
+    workshops: {
+      homeIntro: "کویت میں کار ورکشاپس تلاش کریں اور مناسب انتخاب محفوظ کریں۔",
+      featured: "تجویز کردہ ورکشاپس",
+      searchAction: "ورکشاپ تلاش کریں",
+      searchPlaceholder: "نام، سروس یا علاقے سے تلاش کریں",
+      resultCount: "%d نتائج",
+      loading: "ورکشاپس لوڈ ہو رہی ہیں…",
+      loadError: "ورکشاپس لوڈ نہیں ہو سکیں۔ کنکشن چیک کر کے دوبارہ کوشش کریں۔",
+      retry: "دوبارہ کوشش",
+      empty: "فی الحال کوئی ورکشاپ دستیاب نہیں۔",
+      noResults: "کوئی مماثل نتیجہ نہیں۔ دوسری سروس یا علاقہ آزمائیں۔",
+      openDetails: "ورکشاپ کی تفصیل کھولیں",
+      save: "ورکشاپ محفوظ کریں",
+      removeSaved: "محفوظ فہرست سے ہٹائیں",
+      partner: "DEGSELF نیٹ ورک",
+      hours: "کام کے اوقات",
+      call: "کال",
+      whatsapp: "واٹس ایپ",
+      directions: "نقشے پر راستہ",
+      website: "ویب سائٹ",
+      verifyDetails: "جانے سے پہلے اوقات اور خدمات کی تصدیق کے لیے ورکشاپ سے رابطہ کریں۔",
+      notFound: "یہ ورکشاپ دستیاب نہیں یا اب فہرست میں شامل نہیں۔",
+      back: "واپس",
+      linkError: "یہ لنک آپ کے آلے پر نہیں کھل سکا۔",
+    },
+    privacy: {
+      title: "رازداری اور ڈیٹا حذف کرنا",
+      body: "جانیں کہ ایپ کون سا ڈیٹا استعمال کرتی ہے اور اکاؤنٹ و ڈیٹا حذف کرنے کی درخواست کیسے کریں۔",
+      openPolicy: "رازداری کی پالیسی کھولیں",
     },
     danger: {
       title: "خطرے کا زون",

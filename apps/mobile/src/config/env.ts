@@ -22,8 +22,9 @@ import Constants from "expo-constants";
 
 export type AppEnv = "development" | "preview" | "production";
 
-const RAW = (Constants.expoConfig?.extra as { appEnv?: unknown } | undefined)
-  ?.appEnv;
+const RAW =
+  process.env.EXPO_PUBLIC_APP_ENV ??
+  (Constants.expoConfig?.extra as { appEnv?: unknown } | undefined)?.appEnv;
 
 export const APP_ENV: AppEnv =
   RAW === "production" || RAW === "preview" ? RAW : "development";

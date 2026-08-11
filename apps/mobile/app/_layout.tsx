@@ -22,7 +22,10 @@ export default function RootLayout() {
                 headerShown: false,
                 contentStyle: { backgroundColor: tokens.color.background },
               }}
-            />
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="workshop/[placeId]" />
+            </Stack>
           </FavoritesProvider>
         </AuthProvider>
       </I18nProvider>
