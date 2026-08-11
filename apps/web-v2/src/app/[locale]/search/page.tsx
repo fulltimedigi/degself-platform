@@ -58,7 +58,9 @@ export async function generateMetadata({
     : base;
 }
 
-const PAGE_SIZE = 24;
+// Twelve cards keep the initial HTML/RSC payload practical on mobile while the
+// existing pagination preserves access to every result.
+const PAGE_SIZE = 12;
 const GOVERNORATES = [
   "العاصمة",
   "حولي",

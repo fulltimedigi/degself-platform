@@ -24,6 +24,7 @@ import {
 } from "@/lib/asaali-cost-guard";
 import { clientIp } from "@/lib/rate-limit";
 import { formatVehicleForPrompt } from "@/lib/vehicle-data";
+import { readJsonObject } from "@/lib/json-body";
 import {
   quoteServiceForCategory,
   searchConciergeWorkshops,
@@ -315,15 +316,14 @@ async function attachConciergeWorkshops(
 
 export async function POST(req: NextRequest) {
   // ── parse request first (locale needed for all error messages) ─
-  let body: AsaaliRequest;
-  try {
-    body = (await req.json()) as AsaaliRequest;
-  } catch {
+  const rawBody = await readJsonObject(req);
+  if (!rawBody) {
     return jsonResponse(
       { status: "out_of_scope", fallback_message: FALLBACKS.ar.invalid },
       400
     );
   }
+  const body = rawBody as unknown as AsaaliRequest;
 
   const locale = normalizeLocale(body.locale);
   const L = FALLBACKS[locale];

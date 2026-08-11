@@ -42,12 +42,16 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  let body: CaptureEnvelope;
+  let parsed: unknown;
   try {
-    body = JSON.parse(raw) as CaptureEnvelope;
+    parsed = JSON.parse(raw);
   } catch {
     return Response.json({ error: "invalid_json" }, { status: 400 });
   }
+  if (!plainObject(parsed)) {
+    return Response.json({ error: "invalid_event" }, { status: 400 });
+  }
+  const body = parsed as CaptureEnvelope;
 
   if (
     typeof body.event !== "string" ||

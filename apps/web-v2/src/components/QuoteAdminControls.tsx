@@ -20,6 +20,16 @@ const OFFER_STATUS_LABEL: Record<string, string> = {
   rejected: "مرفوض",
 };
 
+const DURATION_LABEL_AR: Record<string, string> = {
+  same_day: "نفس اليوم",
+  "1_day": "يوم",
+  "2_days": "يومان",
+  "3_days": "3 أيام",
+  "4_7_days": "4–7 أيام",
+  over_week: "أكثر من أسبوع",
+  unknown_until_inspection: "غير معروف حتى الفحص",
+};
+
 const EMPTY_FORM = {
   workshop_name: "",
   workshop_phone: "",
@@ -57,14 +67,11 @@ export function QuoteAdminControls({
   const [status, setStatus] = useState(initialStatus);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
-
-  // add-offer form
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ...EMPTY_FORM });
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [attempted, setAttempted] = useState(false);
 
-  // Live validation — SAME rules the server enforces.
   const errs: OfferErrors = useMemo(() => {
     const res = validateOffer(form);
     return res.errors ?? {};
@@ -81,7 +88,7 @@ export function QuoteAdminControls({
 
   async function changeStatus(next: string) {
     const prev = status;
-    setStatus(next); // optimistic
+    setStatus(next);
     setMsg(null);
     try {
       const res = await fetch(`/api/admin/quotes/${quoteId}/status`, {
@@ -154,31 +161,6 @@ export function QuoteAdminControls({
     }
   }
 
-  async function copyGarageLink() {
-    setMsg(null);
-    try {
-      const res = await fetch(`/api/admin/quotes/${quoteId}/garage-link`, { method: "POST" });
-      const d = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setMsg({ kind: "err", text: d.error ?? "تعذّر إنشاء رابط الكراجات." });
-        return;
-      }
-      let copied = false;
-      try {
-        await navigator.clipboard.writeText(d.url);
-        copied = true;
-      } catch {
-        /* clipboard may be blocked — the URL is still shown below */
-      }
-      setMsg({
-        kind: "ok",
-        text: `رابط تقديم العروض للكراجات${copied ? " (نُسخ للحافظة)" : ""}: ${d.url}`,
-      });
-    } catch {
-      setMsg({ kind: "err", text: "تعذّر الاتصال." });
-    }
-  }
-
   async function sendOffers() {
     if (!window.confirm("سيتم إرسال رسالة واتساب للعميل بجميع العروض. متابعة؟")) return;
     setBusy(true);
@@ -215,7 +197,6 @@ export function QuoteAdminControls({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* ── Status control ─────────────────────────────────────────── */}
       <section className="rounded-xl border border-border bg-card p-4">
         <div className="mb-2 flex items-center justify-between gap-3">
           <h2 className="text-sm font-bold text-muted-foreground">حالة الطلب</h2>
@@ -238,42 +219,31 @@ export function QuoteAdminControls({
 
       {msg && <Banner kind={msg.kind}>{msg.text}</Banner>}
 
-      {/* ── Offers ─────────────────────────────────────────────────── */}
       <section className="rounded-xl border border-border bg-card p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-bold">العروض المستلمة ({offers.length})</h2>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={copyGarageLink}
-              className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-bold transition hover:border-[#FFD60A]"
-            >
-              رابط الكراجات 🔗
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowForm((v) => !v)}
-              className="rounded-lg bg-[#FFD60A] px-3 py-1.5 text-xs font-extrabold text-[#0A0A0A]"
-            >
-              {showForm ? "إلغاء" : "إضافة عرض جديد"}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowForm((v) => !v)}
+            className="rounded-lg bg-[#FFD60A] px-3 py-1.5 text-xs font-extrabold text-[#0A0A0A]"
+          >
+            {showForm ? "إلغاء" : "إضافة عرض جديد"}
+          </button>
         </div>
-        <p className="mb-3 text-xs text-muted-foreground">
-          «رابط الكراجات» = لينك تبعته للكراجات على واتساب ليقدّموا عروضهم بأنفسهم (بدون دخول).
+        <p className="mb-3 rounded-lg border border-border bg-background p-3 text-xs text-muted-foreground">
+          للأمان: لا يوجد رابط مشترك للكراجات. استخدم قسم «توجيه الشبكة والإرسال» لإنشاء رابط مستقل ومحدد لكل كراج.
         </p>
 
         {showForm && (
           <form
             onSubmit={addOffer}
-            className="mb-4 flex flex-col gap-3 rounded-lg border border-border bg-background p-3"
+            className="mb-4 flex flex-col gap-5 rounded-lg border border-border bg-background p-4"
           >
             <StructuredOfferFields form={form} onChange={set} onBlur={markTouched} showError={showErr} />
-
             <button
               type="submit"
               disabled={busy || hasErrors}
-              className="rounded-lg bg-[#FFD60A] px-4 py-2.5 text-sm font-extrabold text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-[#FFD60A] px-4 py-3 text-sm font-extrabold text-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {busy ? "جارٍ الحفظ..." : hasErrors ? "أكمل الحقول المطلوبة" : "حفظ العرض"}
             </button>
@@ -295,7 +265,6 @@ export function QuoteAdminControls({
         )}
       </section>
 
-      {/* ── Send to customer ───────────────────────────────────────── */}
       {canSend && (
         <button
           type="button"
@@ -310,7 +279,6 @@ export function QuoteAdminControls({
   );
 }
 
-// Admin-side summary of one received offer (shows all structured fields).
 function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: () => void }) {
   const meta = pricingTypeMeta(o.pricing_type);
   const priceText =
@@ -321,6 +289,9 @@ function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: ()
     o.parts_type && PARTS_TYPE_LABEL[o.parts_type as PartsType]
       ? PARTS_TYPE_LABEL[o.parts_type as PartsType]
       : null;
+  const duration = o.estimated_duration
+    ? DURATION_LABEL_AR[o.estimated_duration] ?? o.estimated_duration
+    : null;
 
   return (
     <div className="flex items-start justify-between gap-3">
@@ -344,24 +315,18 @@ function OfferAdminRow({ offer: o, onDelete }: { offer: QuoteOffer; onDelete: ()
         </p>
         <p className="text-sm">
           <span className="font-extrabold text-[#FFD60A]">{priceText}</span>
-          {o.estimated_duration && (
-            <span className="text-muted-foreground"> · {o.estimated_duration}</span>
-          )}
+          {duration && <span className="text-muted-foreground"> · {duration}</span>}
         </p>
         <div className="mt-1 flex flex-col gap-0.5 text-xs text-muted-foreground">
           {o.pricing_type === "conditional" && o.assumed_diagnosis && (
             <span>التشخيص المرجّح: {o.assumed_diagnosis}</span>
           )}
           {o.pricing_type === "conditional" && o.inspection_fee_kwd != null && (
-            <span>
-              رسم الكشف: {o.inspection_fee_kwd > 0 ? `${o.inspection_fee_kwd} د.ك` : "مجاني"}
-            </span>
+            <span>رسم الفحص: {o.inspection_fee_kwd > 0 ? `${o.inspection_fee_kwd} د.ك` : "مجاني"}</span>
           )}
           {parts && <span>قطع الغيار: {parts}</span>}
           {o.warranty_days != null && (
-            <span>
-              الضمان: {o.warranty_days} يوم{o.warranty_note ? ` — ${o.warranty_note}` : ""}
-            </span>
+            <span>الضمان: {o.warranty_days} يوم{o.warranty_note ? ` — ${o.warranty_note}` : ""}</span>
           )}
           <span>صلاحية العرض: {o.validity_days} يوم</span>
         </div>

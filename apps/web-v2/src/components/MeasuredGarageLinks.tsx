@@ -13,6 +13,7 @@ type DeliveryItem = {
   workshop_id: string;
   status: "queued" | "sending" | "sent" | "failed" | "blocked_no_channel" | "cancelled";
   channel: "whatsapp" | "manual";
+  routing_wave: 1 | 2 | 3;
   target_rank: number;
   selection_score: number;
   selection_reason: string;
@@ -29,6 +30,12 @@ const STATUS_LABELS: Record<DeliveryItem["status"], string> = {
   failed: "فشل الإرسال",
   blocked_no_channel: "لا توجد قناة إرسال",
   cancelled: "ملغي",
+};
+
+const WAVE_LABELS: Record<DeliveryItem["routing_wave"], string> = {
+  1: "موجة 1 · دقيق",
+  2: "موجة 2 · توسيع",
+  3: "موجة 3 · شبكة احتياطية",
 };
 
 function normalizedWorkshops(value: unknown): Workshop[] {
@@ -106,13 +113,14 @@ export function MeasuredGarageLinks({ quoteId, value }: { quoteId: string; value
       <div className="mb-3">
         <h3 className="text-sm font-extrabold">توجيه الشبكة والإرسال</h3>
         <p className="mt-1 text-xs text-muted-foreground">
-          النظام يختار الكراجات تلقائيًا ويضعها في طابور الإرسال. الاختيار وحده لا يُحسب كتواصل ناجح؛ يبدأ القياس الحقيقي عند الإرسال. ويمكن استخدام إنشاء ونسخ الرابط يدويًا كمسار احتياطي.
+          التوجيه الخاص يعمل على 3 موجات: تخصص دقيق، ثم توسيع ذكي، ثم شبكة احتياطية. كل كراج يستلم بشكل فردي ولا يرى باقي الشركاء. الاختيار وحده لا يُحسب كتواصل ناجح؛ يبدأ القياس الحقيقي عند الإرسال.
         </p>
       </div>
 
       <ul className="flex flex-col gap-2">
         {workshops.map((workshop) => {
           const delivery = queue.find((item) => item.workshop_id === workshop.place_id);
+          const wave = delivery?.routing_wave ?? 1;
           return (
             <li key={workshop.place_id} className="rounded-lg border border-border bg-background px-3 py-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -121,7 +129,7 @@ export function MeasuredGarageLinks({ quoteId, value }: { quoteId: string; value
                     <p className="truncate text-sm font-bold">{workshop.name}</p>
                     {delivery && (
                       <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
-                        #{delivery.target_rank} · {STATUS_LABELS[delivery.status]}
+                        {WAVE_LABELS[wave]} · #{delivery.target_rank} · {STATUS_LABELS[delivery.status]}
                       </span>
                     )}
                   </div>

@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "tsx --test src/lib/__tests__/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "load-smoke": "node scripts/load-smoke.mjs"
+    "load-smoke": "node scripts/load-smoke.mjs",
+    "data-quality:audit": "tsx scripts/data-quality-audit.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.114.0",

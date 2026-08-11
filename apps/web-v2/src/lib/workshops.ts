@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { cleanLocationOptions } from "@/lib/location-options";
 import { supabasePublic } from "@/lib/supabase/public";
 import { normalizeArabic } from "@/lib/normalize";
 import { expandToken, SEARCH_STOPWORDS } from "@/lib/searchSynonyms";
@@ -14,6 +15,14 @@ const ENRICHED_IDS = Object.keys(allEnrichments());
 // request-line limit and surfaces as `TypeError: fetch failed` (same root cause
 // fixed for getEnrichedWorkshops in PR #32). Chunk the ids into safe batches.
 const PLACE_ID_BATCH = 100;
+
+function enrichedIdBatches(): string[][] {
+  const batches: string[][] = [];
+  for (let i = 0; i < ENRICHED_IDS.length; i += PLACE_ID_BATCH) {
+    batches.push(ENRICHED_IDS.slice(i, i + PLACE_ID_BATCH));
+  }
+  return batches;
+}
 
 export interface SearchParams {
   query?: string;
@@ -204,10 +213,16 @@ export async function searchWorkshops(
   // a cap would risk dropping enriched rows with NULL rank_score (e.g. the newly
   // curated mechanics, which sort last). Final ordering is applied JS-side.
   if (enrichmentActive) {
+    // Every batch is independent. Running them concurrently keeps the exact same
+    // result set while avoiding six sequential database round trips on a cold
+    // search request.
+    const batchResults = await Promise.all(
+      enrichedIdBatches().map((batch) =>
+        buildBase(false).in("place_id", batch)
+      )
+    );
     const collected: Workshop[] = [];
-    for (let i = 0; i < ENRICHED_IDS.length; i += PLACE_ID_BATCH) {
-      const batch = ENRICHED_IDS.slice(i, i + PLACE_ID_BATCH);
-      const { data, error } = await buildBase(false).in("place_id", batch);
+    for (const { data, error } of batchResults) {
       if (error) throw new Error(`searchWorkshops(enriched) failed: ${error.message}`);
       if (data) collected.push(...(data as Workshop[]));
     }
@@ -274,10 +289,23 @@ export async function searchWorkshops(
   //   1) load only the enriched id set that matches filters (≤ ~538)
   //   2) exact total via count
   //   3) fill the rest of the window from a bounded rank_score page
+  // These reads do not depend on one another. Start the enriched batches, exact
+  // count and bounded rank page together instead of paying for eight serial
+  // network round trips. The merge/ranking logic below is intentionally unchanged.
+  const [batchResults, countResult, rankResult] = await Promise.all([
+    Promise.all(
+      enrichedIdBatches().map((batch) =>
+        buildBase(false).in("place_id", batch)
+      )
+    ),
+    buildBase(true).range(0, 0),
+    buildBase(false)
+      .order("rank_score", { ascending: false, nullsFirst: false })
+      .range(0, JS_CANDIDATE_CAP - 1),
+  ]);
+
   const collected: Workshop[] = [];
-  for (let i = 0; i < ENRICHED_IDS.length; i += PLACE_ID_BATCH) {
-    const batch = ENRICHED_IDS.slice(i, i + PLACE_ID_BATCH);
-    const { data, error } = await buildBase(false).in("place_id", batch);
+  for (const { data, error } of batchResults) {
     if (error) {
       throw new Error(`searchWorkshops(default/enriched) failed: ${error.message}`);
     }
@@ -292,7 +320,7 @@ export async function searchWorkshops(
     );
   const backedIds = new Set(backed.map((w) => w.place_id));
 
-  const { count, error: countErr } = await buildBase(true).range(0, 0);
+  const { count, error: countErr } = countResult;
   if (countErr) {
     throw new Error(`searchWorkshops(default/count) failed: ${countErr.message}`);
   }
@@ -311,9 +339,7 @@ export async function searchWorkshops(
     };
   }
 
-  const { data: rankPage, error: rankErr } = await buildBase(false)
-    .order("rank_score", { ascending: false, nullsFirst: false })
-    .range(0, JS_CANDIDATE_CAP - 1);
+  const { data: rankPage, error: rankErr } = rankResult;
   if (rankErr) {
     throw new Error(`searchWorkshops(default/rank) failed: ${rankErr.message}`);
   }
@@ -594,14 +620,16 @@ async function distinctColumn(
 
 /** Distinct area names for the Search filter dropdown (cached — heavy under traffic). */
 export const getDistinctAreas = () =>
-  unstable_cache(() => distinctColumn("area"), ["workshop-distinct-area"], {
-    revalidate: 3600,
-  })();
+  unstable_cache(
+    async () => cleanLocationOptions(await distinctColumn("area")),
+    ["workshop-distinct-area-v2"],
+    { revalidate: 3600 }
+  )();
 /** Distinct neighborhoods (الحي) — 500+ values, use a datalist not a <select>. */
 export const getDistinctNeighborhoods = () =>
   unstable_cache(
-    () => distinctColumn("neighborhood"),
-    ["workshop-distinct-neighborhood"],
+    async () => cleanLocationOptions(await distinctColumn("neighborhood")),
+    ["workshop-distinct-neighborhood-v2"],
     { revalidate: 3600 }
   )();
 /** Distinct audited specialties (~20 values) for the specialty <select>. */
