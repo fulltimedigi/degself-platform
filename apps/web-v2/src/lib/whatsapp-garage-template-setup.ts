@@ -66,12 +66,15 @@ function providerHint(error: MetaTemplateResponse["error"]): NonNullable<
     .toLowerCase();
   if (/url.*example|example.*url/.test(diagnostic)) return "url_example";
   if (/url|button/.test(diagnostic)) return "url_button";
-  if (/body.*example|example.*body/.test(diagnostic)) return "body_example";
+  if (/body.*(?:example|sample)|(?:example|sample).*body/.test(diagnostic)) return "body_example";
+  if (/example|sample/.test(diagnostic)) return "body_example";
   if (/body|component/.test(diagnostic)) return "body";
   if (/language|locale/.test(diagnostic)) return "language";
   if (/category|utility|marketing/.test(diagnostic)) return "category";
   if (/template.*name|name.*template/.test(diagnostic)) return "template_name";
-  if (/permission|access|eligible/.test(diagnostic)) return "permissions";
+  if (/permission|access|eligible|restricted|verif|business account|waba/.test(diagnostic)) {
+    return "permissions";
+  }
   return "unknown_parameter";
 }
 

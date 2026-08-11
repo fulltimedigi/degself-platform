@@ -82,6 +82,32 @@ test("garage template setup sanitizes Meta errors", async () => {
   assert.doesNotMatch(JSON.stringify(result), /test-secret-token/);
 });
 
+test("garage template setup classifies account restrictions without returning provider text", async () => {
+  const result = await submitGarageRfqTemplate("test-secret-token", async () =>
+    Response.json(
+      {
+        error: {
+          message: "Invalid parameter",
+          code: 100,
+          error_subcode: 2494160,
+          error_data: { details: "WABA template creation is restricted pending verification" },
+        },
+      },
+      { status: 400 }
+    )
+  );
+
+  assert.deepEqual(result, {
+    ok: false,
+    status: "invalid_template",
+    provider_http_status: 400,
+    provider_error_code: 100,
+    provider_error_subcode: 2494160,
+    provider_error_hint: "permissions",
+  });
+  assert.doesNotMatch(JSON.stringify(result), /restricted|verification|test-secret-token/i);
+});
+
 test("admin setup route is POST-only, session-protected, confirmed, and flag-independent", async () => {
   const route = await readFile(
     new URL("../../app/api/admin/whatsapp-garage-template-setup/route.ts", import.meta.url),
