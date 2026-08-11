@@ -24,12 +24,18 @@ export type GarageTemplateSetupResult =
         | "provider_error"
         | "provider_unavailable";
       provider_http_status?: number;
+      provider_error_code?: number;
+      provider_error_subcode?: number;
     };
 
 type MetaTemplateResponse = {
   id?: unknown;
   status?: unknown;
   category?: unknown;
+  error?: {
+    code?: unknown;
+    error_subcode?: unknown;
+  };
 };
 
 function providerStatus(httpStatus: number): Extract<GarageTemplateSetupResult, { ok: false }>["status"] {
@@ -93,15 +99,22 @@ export async function submitGarageRfqTemplate(
       signal: AbortSignal.timeout(META_TIMEOUT_MS),
     });
 
+    const body = (await response.json().catch(() => null)) as MetaTemplateResponse | null;
+
     if (!response.ok) {
       return {
         ok: false,
         status: providerStatus(response.status),
         provider_http_status: response.status,
+        ...(typeof body?.error?.code === "number"
+          ? { provider_error_code: body.error.code }
+          : {}),
+        ...(typeof body?.error?.error_subcode === "number"
+          ? { provider_error_subcode: body.error.error_subcode }
+          : {}),
       };
     }
 
-    const body = (await response.json().catch(() => null)) as MetaTemplateResponse | null;
     if (!body || typeof body.id !== "string") {
       return {
         ok: false,
