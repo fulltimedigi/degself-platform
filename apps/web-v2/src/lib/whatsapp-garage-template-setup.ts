@@ -26,7 +26,16 @@ export type GarageTemplateSetupResult =
       provider_http_status?: number;
       provider_error_code?: number;
       provider_error_subcode?: number;
-      provider_error_message?: string;
+      provider_error_hint?:
+        | "url_example"
+        | "url_button"
+        | "body_example"
+        | "body"
+        | "language"
+        | "category"
+        | "template_name"
+        | "permissions"
+        | "unknown_parameter";
     };
 
 type MetaTemplateResponse = {
@@ -35,21 +44,35 @@ type MetaTemplateResponse = {
   category?: unknown;
   error?: {
     message?: unknown;
+    error_user_title?: unknown;
+    error_user_msg?: unknown;
+    error_data?: { details?: unknown };
     code?: unknown;
     error_subcode?: unknown;
   };
 };
 
-function safeProviderMessage(value: unknown, token: string): string | undefined {
-  if (typeof value !== "string") return undefined;
-  const trimmed = value.trim().slice(0, 500);
-  if (!trimmed) return undefined;
-  const withoutToken = trimmed
-    .split(token)
-    .join("[redacted]")
-    .replace(/Bearer\s+[^\s]+/gi, "Bearer [redacted]")
-    .replace(/\bEAA[A-Za-z0-9_-]{20,}\b/g, "[redacted]");
-  return withoutToken;
+function providerHint(error: MetaTemplateResponse["error"]): NonNullable<
+  Extract<GarageTemplateSetupResult, { ok: false }>["provider_error_hint"]
+> {
+  const diagnostic = [
+    error?.message,
+    error?.error_user_title,
+    error?.error_user_msg,
+    error?.error_data?.details,
+  ]
+    .filter((value): value is string => typeof value === "string")
+    .join(" ")
+    .toLowerCase();
+  if (/url.*example|example.*url/.test(diagnostic)) return "url_example";
+  if (/url|button/.test(diagnostic)) return "url_button";
+  if (/body.*example|example.*body/.test(diagnostic)) return "body_example";
+  if (/body|component/.test(diagnostic)) return "body";
+  if (/language|locale/.test(diagnostic)) return "language";
+  if (/category|utility|marketing/.test(diagnostic)) return "category";
+  if (/template.*name|name.*template/.test(diagnostic)) return "template_name";
+  if (/permission|access|eligible/.test(diagnostic)) return "permissions";
+  return "unknown_parameter";
 }
 
 function providerStatus(httpStatus: number): Extract<GarageTemplateSetupResult, { ok: false }>["status"] {
@@ -126,9 +149,7 @@ export async function submitGarageRfqTemplate(
         ...(typeof body?.error?.error_subcode === "number"
           ? { provider_error_subcode: body.error.error_subcode }
           : {}),
-        ...(safeProviderMessage(body?.error?.message, token)
-          ? { provider_error_message: safeProviderMessage(body?.error?.message, token) }
-          : {}),
+        provider_error_hint: providerHint(body?.error),
       };
     }
 
