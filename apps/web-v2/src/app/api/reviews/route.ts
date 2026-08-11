@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
+import { readJsonObject } from "@/lib/json-body";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,10 +11,8 @@ const REVIEWS_LIMIT_PER_HOUR = 10;
 
 /** POST /api/reviews — submit an anonymous review (stored as 'pending'). */
 export async function POST(req: NextRequest) {
-  let b: Record<string, unknown>;
-  try {
-    b = await req.json();
-  } catch {
+  const b = await readJsonObject(req);
+  if (!b) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 

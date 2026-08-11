@@ -5,6 +5,7 @@ import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { sanitizePhotoUrls } from "@/lib/safe-url";
 import { enqueueNetworkQuoteTargets } from "@/lib/network-quote-routing";
 import { dispatchQuoteDeliveryQueue } from "@/lib/quote-delivery";
+import { readJsonObject } from "@/lib/json-body";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -47,10 +48,8 @@ function str(v: unknown, max: number): string | null {
 }
 
 export async function POST(req: NextRequest) {
-  let b: Record<string, unknown>;
-  try {
-    b = await req.json();
-  } catch {
+  const b = await readJsonObject(req);
+  if (!b) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 

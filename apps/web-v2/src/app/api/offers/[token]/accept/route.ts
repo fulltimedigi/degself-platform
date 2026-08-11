@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { isOfferExpired } from "@/lib/quote-status";
+import { readJsonObject } from "@/lib/json-body";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,10 +17,8 @@ export async function POST(
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
 
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
+  const body = await readJsonObject(req);
+  if (!body) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
   const offerId = typeof body.offer_id === "string" ? body.offer_id : "";

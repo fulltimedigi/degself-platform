@@ -122,6 +122,7 @@ export function PartnerLinkImporter({
     setBusy(true);
     setMessage(null);
     let created: ImportResult | null = null;
+    let uploadedPhotos = 0;
     try {
       const res = await fetch("/api/admin/partners", {
         method: "POST",
@@ -175,14 +176,21 @@ export function PartnerLinkImporter({
         if (!mediaRes.ok) {
           throw new Error(mediaData.error ?? `تعذّر رفع الصورة ${file.name}.`);
         }
+        uploadedPhotos += 1;
       }
       await finish(data);
     } catch (e) {
+      // If a later upload fails, keep only the files that still need uploading.
+      // Re-submitting matches the existing garage by phone; without this, files
+      // that already succeeded in the same attempt would be uploaded twice.
+      if (uploadedPhotos > 0) {
+        setPhotos((current) => current.slice(uploadedPhotos));
+      }
       if (created?.workshop?.place_id) {
         if (onAdded) await onAdded(created.workshop.place_id);
         setMessage({
           kind: "err",
-          text: `تمت إضافة الكراج للشبكة، لكن لم تكتمل بيانات الصفحة: ${e instanceof Error ? e.message : "تعذّر الحفظ."} افتح «تعديل الصفحة والرقم» لاستكمالها.`,
+          text: `تمت إضافة الكراج للشبكة، لكن لم تكتمل بيانات الصفحة: ${e instanceof Error ? e.message : "تعذّر الحفظ."} أعد المحاولة للملفات المتبقية أو افتح «تعديل الصفحة والرقم» لاستكمالها.`,
         });
       } else {
         setMessage({ kind: "err", text: e instanceof Error ? e.message : "تعذّر الاتصال." });

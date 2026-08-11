@@ -4,6 +4,7 @@ import { resolveGarageOutreachToken } from "@/lib/garage-outreach";
 import { validateOffer } from "@/lib/offer-validation";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
+import { readJsonObject } from "@/lib/json-body";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,10 +20,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "رابط غير صالح." }, { status: 400 });
 
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
+  let body = await readJsonObject(req);
+  if (!body) {
     return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 
