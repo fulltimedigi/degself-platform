@@ -73,8 +73,9 @@ test("garage template setup sanitizes Meta errors", async () => {
     provider_http_status: 401,
     provider_error_code: 190,
     provider_error_subcode: 463,
+    provider_error_message: "OAuth token [redacted] is invalid",
   });
-  assert.doesNotMatch(JSON.stringify(result), /OAuth|test-secret-token/);
+  assert.doesNotMatch(JSON.stringify(result), /test-secret-token/);
 });
 
 test("admin setup route is POST-only, session-protected, confirmed, and flag-independent", async () => {

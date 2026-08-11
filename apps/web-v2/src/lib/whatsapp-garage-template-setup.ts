@@ -26,6 +26,7 @@ export type GarageTemplateSetupResult =
       provider_http_status?: number;
       provider_error_code?: number;
       provider_error_subcode?: number;
+      provider_error_message?: string;
     };
 
 type MetaTemplateResponse = {
@@ -33,10 +34,23 @@ type MetaTemplateResponse = {
   status?: unknown;
   category?: unknown;
   error?: {
+    message?: unknown;
     code?: unknown;
     error_subcode?: unknown;
   };
 };
+
+function safeProviderMessage(value: unknown, token: string): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim().slice(0, 500);
+  if (!trimmed) return undefined;
+  const withoutToken = trimmed
+    .split(token)
+    .join("[redacted]")
+    .replace(/Bearer\s+[^\s]+/gi, "Bearer [redacted]")
+    .replace(/\bEAA[A-Za-z0-9_-]{20,}\b/g, "[redacted]");
+  return withoutToken;
+}
 
 function providerStatus(httpStatus: number): Extract<GarageTemplateSetupResult, { ok: false }>["status"] {
   if (httpStatus === 401 || httpStatus === 403) return "invalid_credentials";
@@ -111,6 +125,9 @@ export async function submitGarageRfqTemplate(
           : {}),
         ...(typeof body?.error?.error_subcode === "number"
           ? { provider_error_subcode: body.error.error_subcode }
+          : {}),
+        ...(safeProviderMessage(body?.error?.message, token)
+          ? { provider_error_message: safeProviderMessage(body?.error?.message, token) }
           : {}),
       };
     }
