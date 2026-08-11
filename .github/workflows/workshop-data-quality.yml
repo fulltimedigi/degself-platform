@@ -1,0 +1,47 @@
+name: Workshop data quality
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-data-quality
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/web-v2
+    env:
+      # Public, read-only browser credentials. The audit cannot bypass RLS.
+      NEXT_PUBLIC_SUPABASE_URL: https://xqmwhrimxnvqlpvfzcac.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/web-v2/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Audit live workshop catalog
+        run: npm run data-quality:audit -- --output-dir data-quality-report
+      - name: Add readable summary
+        if: always()
+        run: test -f data-quality-report/workshop-data-quality.md && cat data-quality-report/workshop-data-quality.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload full review queue
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workshop-data-quality-${{ github.run_id }}
+          path: apps/web-v2/data-quality-report/
+          if-no-files-found: error
+          retention-days: 30
