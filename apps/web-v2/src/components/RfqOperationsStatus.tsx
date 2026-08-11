@@ -26,6 +26,38 @@ function Mark({ ok }: { ok: boolean }) {
 export function RfqOperationsStatus() {
   const [data, setData] = useState<Readiness | null>(null);
   const [error, setError] = useState("");
+  const [templateSetup, setTemplateSetup] = useState<
+    | { state: "idle" }
+    | { state: "submitting" }
+    | { state: "success"; reviewStatus: string }
+    | { state: "error"; message: string }
+  >({ state: "idle" });
+
+  async function submitTemplate() {
+    setTemplateSetup({ state: "submitting" });
+    try {
+      const response = await fetch("/api/admin/whatsapp-garage-template-setup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "garage_quote_request_ar" }),
+      });
+      const body = (await response.json().catch(() => null)) as
+        | { ok?: boolean; status?: string; template?: { review_status?: string } }
+        | null;
+      if (!response.ok || !body?.ok) {
+        throw new Error(body?.status || "template_submission_failed");
+      }
+      setTemplateSetup({
+        state: "success",
+        reviewStatus: body.template?.review_status || "PENDING",
+      });
+    } catch (e) {
+      setTemplateSetup({
+        state: "error",
+        message: e instanceof Error ? e.message : "template_submission_failed",
+      });
+    }
+  }
 
   useEffect(() => {
     fetch("/api/admin/rfq-readiness", { cache: "no-store" })
@@ -80,6 +112,24 @@ export function RfqOperationsStatus() {
           ? "كل المتطلبات التقنية الأساسية موجودة ويوجد كراج جاهز؛ يظل الإرسال متوقفاً حتى التفعيل المقصود لـ WHATSAPP_ENABLED."
           : "التشغيل غير جاهز بعد. أكمل العناصر الناقصة والقائمة أولاً؛ الإرسال يظل مقفولاً."}
       </p>
+
+      <div className="mt-4 rounded-lg border border-amber-400/40 bg-amber-400/10 p-3">
+        <p className="text-xs text-amber-100">
+          إجراء مؤقت: يرسل قالب <span dir="ltr">garage_quote_request_ar</span> الثابت إلى Meta للمراجعة فقط؛ لا يفعّل واتساب ولا يرسل رسائل.
+        </p>
+        <button
+          type="button"
+          onClick={submitTemplate}
+          disabled={templateSetup.state === "submitting" || templateSetup.state === "success"}
+          className="mt-3 rounded-lg bg-[#FFD60A] px-4 py-2 text-sm font-extrabold text-black disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {templateSetup.state === "submitting" ? "جارٍ الإرسال إلى Meta…" : "إرسال القالب للمراجعة"}
+        </button>
+        <p className="mt-2 text-xs" aria-live="polite">
+          {templateSetup.state === "success" && `تم الإرسال بنجاح — الحالة: ${templateSetup.reviewStatus}`}
+          {templateSetup.state === "error" && `تعذّر الإرسال — ${templateSetup.message}`}
+        </p>
+      </div>
     </section>
   );
 }
