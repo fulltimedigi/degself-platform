@@ -116,7 +116,7 @@ export async function submitGarageRfqTemplate(
             type: "URL",
             text: "عرض الطلب",
             url: "https://degself.com/submit-offer/{{1}}",
-            example: ["example-token"],
+            example: ["https://degself.com/submit-offer/example-token"],
           },
         ],
       },
