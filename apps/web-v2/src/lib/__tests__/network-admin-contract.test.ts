@@ -9,6 +9,8 @@ async function source(relative: string): Promise<string> {
 test("network admin is open-ended with link and manual onboarding", async () => {
   const admin = await source("../../components/AdminPartnersClient.tsx");
   const importer = await source("../../components/PartnerLinkImporter.tsx");
+  const customFields = await source("../../components/WorkshopCustomSectionsEditor.tsx");
+  const profileEditor = await source("../../components/AdminWorkshopProfileEditor.tsx");
   const api = await source("../../app/api/admin/partners/route.ts");
   const page = await source("../../app/[locale]/admin/partners/page.tsx");
 
@@ -22,6 +24,16 @@ test("network admin is open-ended with link and manual onboarding", async () => 
   assert.match(importer, /اسم الكراج \*/);
   assert.match(importer, /رقم واتساب \*/);
   assert.match(importer, /التخصص الأساسي \*/);
+  assert.match(importer, /WorkshopCustomSectionsEditor/);
+  assert.match(profileEditor, /WorkshopCustomSectionsEditor/);
+  assert.match(customFields, /\+ إضافة خانة/);
+  assert.match(customFields, /\+ إضافة عنصر داخل الخانة/);
+  assert.match(importer, /صور الكراج/);
+  assert.match(importer, /multiple/);
+  assert.match(importer, /\/profile/);
+  assert.match(importer, /\/media/);
+  assert.match(importer, /العنوان — اختياري/);
+  assert.match(importer, /الموقع الإلكتروني — اختياري/);
   assert.match(api, /body\.mode === "manual"/);
   assert.match(api, /manual_\$\{randomUUID\(\)\}/);
   assert.match(api, /rfq_dispatch_enabled:\s*false/);
