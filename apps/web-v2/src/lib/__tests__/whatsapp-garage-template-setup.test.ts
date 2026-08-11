@@ -58,9 +58,10 @@ test("garage template setup sanitizes Meta errors", async () => {
     Response.json(
       {
         error: {
-          message: "OAuth token test-secret-token is invalid",
+          message: "Invalid parameter",
           code: 190,
           error_subcode: 463,
+          error_data: { details: "The URL button example is invalid: test-secret-token" },
         },
       },
       { status: 401 }
@@ -73,7 +74,7 @@ test("garage template setup sanitizes Meta errors", async () => {
     provider_http_status: 401,
     provider_error_code: 190,
     provider_error_subcode: 463,
-    provider_error_message: "OAuth token [redacted] is invalid",
+    provider_error_hint: "url_example",
   });
   assert.doesNotMatch(JSON.stringify(result), /test-secret-token/);
 });
