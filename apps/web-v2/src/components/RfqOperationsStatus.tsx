@@ -47,6 +47,7 @@ export function RfqOperationsStatus() {
             status?: string;
             provider_error_code?: number;
             provider_error_subcode?: number;
+            provider_error_message?: string;
             template?: { review_status?: string };
           }
         | null;
@@ -55,7 +56,7 @@ export function RfqOperationsStatus() {
           .filter((value): value is number => typeof value === "number")
           .join("/");
         throw new Error(
-          `${body?.status || "template_submission_failed"}${codes ? ` (${codes})` : ""}`
+          `${body?.status || "template_submission_failed"}${codes ? ` (${codes})` : ""}${body?.provider_error_message ? ` — ${body.provider_error_message}` : ""}`
         );
       }
       setTemplateSetup({
