@@ -65,7 +65,7 @@ Installs use **strict** npm peer enforcement (no global `legacy-peer-deps`); `np
 - PREBUILD VERIFIED (android **and** ios, config→native) · Apple **`com.apple.developer.applesignin` entitlement generation VERIFIED** · bundle id `com.degself.app` + scheme `degself` in native output
 - RLS VERIFIED live (rolled-back): own-only reads, cross-user insert/read/delete blocked, `authenticated`-only, anon denied, no UPDATE grant
 - **ANDROID REAL-DEVICE VERIFIED (2026-08-09)** — EAS preview installed and launched on a Samsung Galaxy S25 Ultra; Google OAuth, persisted Supabase session, favorites add/delete, logout/re-login, and the typed account-deletion flow all passed end to end.
-- **iOS BINARY: NOT VERIFIED — ENVIRONMENT/CREDENTIAL BLOCKER** (no macOS / Apple credentials)
+- **iOS SIMULATOR BINARY: VERIFIED (2026-08-11)** — EAS development build `8fad12d6-386d-4a15-8b59-15c3b8a0be1d` finished successfully from commit `c0039e4`; a signed real-device/TestFlight build still waits for the Apple Developer enrollment.
 - **GOOGLE PROVIDER LOGIN: VERIFIED ON ANDROID** · **APPLE PROVIDER LOGIN: NOT VERIFIED — iOS device/credential blocker** — never inferred from config alone
 
 Real device binaries + provider login build via **EAS** with owner credentials. No store submission / production OTA is configured.
