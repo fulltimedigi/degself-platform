@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  MOBILE_WORKSHOP_OFFSET_MAX,
   parseMobileWorkshopRequest,
   toMobileWorkshop,
 } from "../mobile-workshops";
@@ -11,6 +12,22 @@ test("mobile workshop query is bounded and trimmed", () => {
     new URL("https://degself.com/api/mobile/workshops?q=%20%D8%A8%D9%86%D8%B4%D8%B1%20&limit=999&offset=-4")
   );
   assert.deepEqual(parsed, { kind: "search", query: "بنشر", limit: 30, offset: 0 });
+});
+
+test("mobile workshop offset supports deep pagination but stays bounded", () => {
+  const within = parseMobileWorkshopRequest(
+    new URL("https://degself.com/api/mobile/workshops?offset=1850")
+  );
+  assert.equal(within.kind, "search");
+  if (within.kind === "search") assert.equal(within.offset, 1850);
+
+  const capped = parseMobileWorkshopRequest(
+    new URL("https://degself.com/api/mobile/workshops?offset=999999")
+  );
+  assert.equal(capped.kind, "search");
+  if (capped.kind === "search") {
+    assert.equal(capped.offset, MOBILE_WORKSHOP_OFFSET_MAX);
+  }
 });
 
 test("saved workshop ids are deduped without changing case", () => {
