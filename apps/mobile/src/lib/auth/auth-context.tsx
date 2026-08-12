@@ -15,9 +15,10 @@ import {
 import { signInWithGoogle as googleSignIn } from "./google";
 import { signInWithApple as appleSignIn } from "./apple";
 import { verifyThenPromoteReauthentication } from "./reauth-guard";
+import { providerOf, type AuthProviderName } from "./provider";
 
 export type AuthStatus = "loading" | "signedIn" | "signedOut";
-export type AuthProviderName = "google" | "apple";
+export type { AuthProviderName };
 
 type AuthContextValue = {
   status: AuthStatus;
@@ -38,16 +39,7 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function providerOf(user: User | null): AuthProviderName | null {
-  const p = user?.app_metadata?.provider;
-  if (p === "google" || p === "apple") return p;
-  const ids = user?.identities ?? [];
-  for (const id of ids) {
-    if (id.provider === "apple") return "apple";
-    if (id.provider === "google") return "google";
-  }
-  return null;
-}
+export { providerOf };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -124,6 +116,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const verified = await persistent.auth.getUser();
         if (verified.error) throw verified.error;
         return verified.data.user?.id;
+      },
+      // Defense-in-depth: if the post-promotion identity check ever fails, drop
+      // the just-promoted session locally so no mismatched identity survives.
+      async () => {
+        await persistent.auth.signOut({ scope: "local" });
       }
     );
   }, [session]);

@@ -37,6 +37,12 @@ test("validates the complete public workshop contract", () => {
 
 test("rejects malformed server data before it reaches native UI", () => {
   assert.equal(isWorkshop({ place_id: "x", name: "Incomplete" }), false);
-  assert.throws(() => parseWorkshopList({ workshops: [{ place_id: "x" }] }));
+  // A malformed ROW is dropped (resilient) rather than discarding the whole page…
+  assert.deepEqual(parseWorkshopList({ workshops: [{ place_id: "x" }] }), {
+    workshops: [],
+  });
+  // …but a non-array `workshops` field and a bad detail payload are still rejected.
+  assert.throws(() => parseWorkshopList({ workshops: "nope" }));
+  assert.throws(() => parseWorkshopList(null));
   assert.throws(() => parseWorkshopDetail({ workshop: null }));
 });

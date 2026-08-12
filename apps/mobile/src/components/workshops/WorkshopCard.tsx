@@ -24,6 +24,15 @@ export function WorkshopCard({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${t.workshops.openDetails}: ${workshop.name}`}
+      // Expose "save/remove" as a screen-reader custom action on the card. The
+      // card is one accessibility element (its role absorbs children), so without
+      // this the visible star toggle is unreachable to VoiceOver/TalkBack.
+      accessibilityActions={[
+        { name: "toggleSave", label: saved ? t.workshops.removeSaved : t.workshops.save },
+      ]}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === "toggleSave") onToggleSaved();
+      }}
       onPress={onOpen}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
@@ -45,9 +54,11 @@ export function WorkshopCard({
             {workshop.name}
           </ThemedText>
           <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={saved ? t.workshops.removeSaved : t.workshops.save}
-            accessibilityState={{ selected: saved }}
+            // The card exposes save/remove as an accessibility action; hide this
+            // visible affordance from the a11y tree so it is not an unreachable,
+            // duplicate button. Touch users still tap it directly.
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             hitSlop={10}
             onPress={(event) => {
               event.stopPropagation();

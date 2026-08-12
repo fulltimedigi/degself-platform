@@ -8,16 +8,20 @@ import React, {
   useState,
 } from "react";
 import { useAuth } from "@/lib/auth/auth-context";
+import { dedupePreserveCase } from "./favorites-sync";
+import { shouldRollbackGuestWrite } from "./favorites-handoff";
 import {
-  dedupePreserveCase,
-  handoffInserts,
-  remainingAfterClear,
-  unionFavorites,
-} from "./favorites-sync";
+  performGuestHandoff,
+  type HandoffIO,
+} from "./favorites-handoff-runner";
 import {
+  clearAllHandoffClaims,
   clearGuestFavorites,
+  clearHandoffClaim,
   readGuestFavorites,
+  readHandoffClaims,
   writeGuestFavorites,
+  writeHandoffClaim,
 } from "./guest-storage";
 import {
   addServerFavorite,
@@ -25,6 +29,20 @@ import {
   removeServerFavorite,
   selectServerFavorites,
 } from "./favorites-remote";
+import { fetchExistingPlaceIds } from "@/lib/workshops/api";
+
+// Real side effects for the pure handoff runner. The runner holds all the
+// crash-safe ordering; this just wires it to device storage + Supabase.
+const handoffIO: HandoffIO = {
+  readClaims: readHandoffClaims,
+  writeClaim: writeHandoffClaim,
+  clearClaim: clearHandoffClaim,
+  readGuest: readGuestFavorites,
+  writeGuest: writeGuestFavorites,
+  selectServer: selectServerFavorites,
+  fetchEligible: fetchExistingPlaceIds,
+  insertServer: insertServerFavorites,
+};
 
 type FavoritesContextValue = {
   favorites: string[];
@@ -45,6 +63,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const handledUid = useRef<string | null>(null);
   const handoffAttempts = useRef(0);
   const guestMutationVersion = useRef(0);
+  // Identity currently owning the UI. Any async result scoped to a different id
+  // must never be written into state (prevents cross-user display leakage on a
+  // fast account switch — see toggle recovery below).
+  const activeUidRef = useRef<string | null>(null);
 
   const uid = user?.id ?? null;
 
@@ -60,53 +82,19 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Durable, crash-safe guest→account transfer. All ordering lives in the pure
+    // runner; here we only reflect its result into UI state. Returns true only
+    // when the snapshot is fully accounted for; a transient failure returns false
+    // so the effect retries, while the durable claim keeps the snapshot bound to
+    // THIS user across restarts (and out of any other account's reach).
     async function handoffAndLoad(currentUid: string): Promise<boolean> {
       setLoading(true);
-      const snapshot = await readGuestFavorites();
-
-      let serverIds: string[];
-      try {
-        serverIds = await selectServerFavorites(currentUid);
-      } catch {
-        if (active) setLoading(false);
-        return false;
-      }
-
-      const inserts = handoffInserts(snapshot, serverIds);
-      if (inserts.length > 0) {
-        try {
-          await insertServerFavorites(currentUid, inserts);
-          serverIds = unionFavorites(serverIds, inserts);
-        } catch {
-          if (active) {
-            setFavorites(serverIds);
-            setLoading(false);
-          }
-          return false;
-        }
-      }
-
-      if (snapshot.length > 0) {
-        const current = await readGuestFavorites();
-        const cleared = await writeGuestFavorites(
-          remainingAfterClear(current, snapshot)
-        );
-        // Server insertion is idempotent, so a failed local clear is safe to
-        // retry without duplicating or losing favorites.
-        if (!cleared) {
-          if (active) {
-            setFavorites(serverIds);
-            setLoading(false);
-          }
-          return false;
-        }
-      }
-
+      const result = await performGuestHandoff(currentUid, handoffIO);
       if (active) {
-        setFavorites(serverIds);
+        if (result.serverIds) setFavorites(result.serverIds);
         setLoading(false);
       }
-      return true;
+      return result.done;
     }
 
     if (status === "loading") {
@@ -115,6 +103,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (status === "signedIn" && uid) {
+      activeUidRef.current = uid;
       if (handledUid.current !== uid) {
         void handoffAndLoad(uid).then((success) => {
           if (!active) return;
@@ -134,6 +123,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } else {
+      activeUidRef.current = null;
       handledUid.current = null;
       handoffAttempts.current = 0;
       void loadGuest();
@@ -165,17 +155,25 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           if (currentlySaved) await removeServerFavorite(uid, placeId);
           else await addServerFavorite(uid, placeId);
         } catch {
+          // Recover from the server, but only if THIS user still owns the UI.
+          // Without the guard, an A-scoped recovery resolving after an A→B
+          // switch would paint A's favorites into B's session.
+          if (activeUidRef.current !== uid) return;
           try {
-            setFavorites(await selectServerFavorites(uid));
+            const serverIds = await selectServerFavorites(uid);
+            if (activeUidRef.current === uid) setFavorites(serverIds);
           } catch {
-            setFavorites(previous);
+            if (activeUidRef.current === uid) setFavorites(previous);
           }
         }
       } else {
         const version = ++guestMutationVersion.current;
         const persisted = await writeGuestFavorites(next);
-        // Do not let a late failed write roll back a newer user action.
-        if (!persisted && guestMutationVersion.current === version) {
+        // Roll back the optimistic toggle if the write really failed — but not if
+        // a newer toggle has since superseded it.
+        if (
+          shouldRollbackGuestWrite(persisted, version, guestMutationVersion.current)
+        ) {
           setFavorites(previous);
         }
       }
@@ -187,6 +185,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     handledUid.current = null;
     handoffAttempts.current = 0;
     guestMutationVersion.current += 1;
+    activeUidRef.current = null;
+    await clearAllHandoffClaims();
     await clearGuestFavorites();
     setFavorites([]);
   }, []);

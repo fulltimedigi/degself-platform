@@ -1,3 +1,5 @@
+import type { Workshop } from "./types";
+
 const ENDPOINT = "/api/mobile/workshops";
 
 export function buildWorkshopListUrlFromBase(
@@ -51,4 +53,27 @@ export function chunkWorkshopIdsForGet(
 
   if (current.length > 0) chunks.push(current);
   return chunks;
+}
+
+/**
+ * Reconstruct saved workshops in global newest-first favorite order from an
+ * unordered set of fetched rows. Pure and case-preserving: dedupes by place_id,
+ * keeps only ids that were actually returned (non-public / removed ones are
+ * silently dropped), and reverses the oldest-first favorite order to newest-first.
+ */
+export function reorderSavedNewestFirst(
+  orderedIds: readonly string[],
+  found: readonly Workshop[]
+): Workshop[] {
+  const byId = new Map(found.map((w) => [w.place_id, w] as const));
+  const seen = new Set<string>();
+  const out: Workshop[] = [];
+  for (const id of [...new Set(orderedIds)].reverse()) {
+    const workshop = byId.get(id);
+    if (workshop && !seen.has(id)) {
+      seen.add(id);
+      out.push(workshop);
+    }
+  }
+  return out;
 }

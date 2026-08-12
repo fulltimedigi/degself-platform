@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabasePublic } from "@/lib/supabase/public";
 import { getWorkshop, searchWorkshops } from "@/lib/workshops";
 import type { Workshop } from "@/lib/types";
+import { clientIp, consumeRateLimit } from "@/lib/rate-limit";
 import {
   isPublicMobileWorkshop,
   parseMobileWorkshopRequest,
@@ -14,6 +15,15 @@ export const dynamic = "force-dynamic";
 const CACHE_HEADERS = {
   "Cache-Control": "public, max-age=30, s-maxage=120, stale-while-revalidate=600",
 };
+
+// Only the free-text search path runs the full multi-query ranking pipeline and
+// is cacheable only per (q, offset) — so it is the abuse-amplification surface
+// (iterate offset 0..MAX × arbitrary q to bypass the CDN and drive DB load).
+// Detail/saved id-lookups are cheap and legitimately bursty (chunked saved
+// hydration), so they are not throttled here. Fail-OPEN: this is a public read
+// endpoint where availability outranks strictness, and the limiter already
+// fails open when its backend is unavailable. Hourly bucket per IP.
+const MOBILE_SEARCH_RATE_LIMIT_PER_HOUR = 300;
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,6 +63,19 @@ export async function GET(request: NextRequest) {
         .reverse()
         .map(toMobileWorkshop);
       return NextResponse.json({ workshops }, { headers: CACHE_HEADERS });
+    }
+
+    const withinLimit = await consumeRateLimit(
+      clientIp(request),
+      "mobile_workshops_search",
+      MOBILE_SEARCH_RATE_LIMIT_PER_HOUR,
+      { failClosed: false }
+    );
+    if (!withinLimit) {
+      return NextResponse.json(
+        { error: "RATE_LIMITED" },
+        { status: 429, headers: { "Retry-After": "3600" } }
+      );
     }
 
     const result = await searchWorkshops({

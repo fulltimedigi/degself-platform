@@ -40,11 +40,14 @@ export function isWorkshop(value: unknown): value is Workshop {
 export function parseWorkshopList(value: unknown): WorkshopListResponse {
   if (!value || typeof value !== "object") throw new Error("INVALID_WORKSHOP_RESPONSE");
   const body = value as Record<string, unknown>;
-  if (!Array.isArray(body.workshops) || !body.workshops.every(isWorkshop)) {
+  if (!Array.isArray(body.workshops)) {
     throw new Error("INVALID_WORKSHOP_RESPONSE");
   }
+  // Drop any individual malformed row rather than discarding the whole page/chunk:
+  // one bad record must not blank out an entire search page or a saved chunk.
+  const workshops = body.workshops.filter(isWorkshop);
   return {
-    workshops: body.workshops,
+    workshops,
     ...(typeof body.total === "number" && Number.isFinite(body.total)
       ? { total: body.total }
       : {}),

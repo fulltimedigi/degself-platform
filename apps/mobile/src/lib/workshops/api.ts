@@ -4,6 +4,7 @@ import {
   buildWorkshopDetailUrlFromBase,
   buildWorkshopListUrlFromBase,
   chunkWorkshopIdsForGet,
+  reorderSavedNewestFirst,
 } from "./urls";
 import { parseWorkshopDetail, parseWorkshopList } from "./contracts";
 
@@ -69,10 +70,22 @@ export async function fetchWorkshops(
   return parseWorkshopList(await readJson(buildWorkshopListUrl(params), signal));
 }
 
+function isAbort(error: unknown, signal?: AbortSignal): boolean {
+  return (
+    (signal?.aborted ?? false) ||
+    (error instanceof Error && error.name === "AbortError")
+  );
+}
+
 /**
  * Hydrate an arbitrary number of saved ids without one oversized GET URL or the
  * server's per-request id bound. Chunks are fetched sequentially to avoid bursts,
  * then reconstructed in global newest-first favorite order.
+ *
+ * Failure isolation: one failed chunk (transient 5xx/timeout) no longer discards
+ * every other chunk. Successful chunks are kept; the call only rejects if EVERY
+ * chunk failed (so the UI can show a full error + retry). Cancellation still
+ * aborts the whole operation immediately.
  */
 export async function fetchSavedWorkshops(
   ids: readonly string[],
@@ -83,22 +96,56 @@ export async function fetchSavedWorkshops(
 
   const base = requireApiBaseUrl();
   const chunks = chunkWorkshopIdsForGet(base, unique);
-  const byId = new Map<string, Workshop>();
+  const found: Workshop[] = [];
+  let failures = 0;
 
   for (const chunk of chunks) {
     const url = buildWorkshopListUrlFromBase(base, { ids: chunk });
-    const parsed = parseWorkshopList(await readJson(url, signal));
-    for (const workshop of parsed.workshops) {
-      byId.set(workshop.place_id, workshop);
+    try {
+      const parsed = parseWorkshopList(await readJson(url, signal));
+      found.push(...parsed.workshops);
+    } catch (error) {
+      // Cancellation must abort everything; a transient chunk error must not.
+      if (isAbort(error, signal)) throw error;
+      failures += 1;
     }
   }
 
-  const workshops = [...unique]
-    .reverse()
-    .map((id) => byId.get(id))
-    .filter((workshop): workshop is Workshop => Boolean(workshop));
+  if (found.length === 0 && failures > 0) {
+    throw new Error("WORKSHOPS_UNAVAILABLE");
+  }
 
+  const workshops = reorderSavedNewestFirst(unique, found);
   return { workshops, total: workshops.length };
+}
+
+/**
+ * The subset of the given ids that the canonical public read path confirms
+ * exist AND are eligible (active, not permanently closed, in scope). Used before
+ * the guest→account favorites insert so a stale / hard-deleted id can never
+ * trigger a foreign-key violation that would abort the whole transfer.
+ * Order and case are preserved.
+ */
+export async function fetchExistingPlaceIds(
+  ids: readonly string[],
+  signal?: AbortSignal
+): Promise<string[]> {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (unique.length === 0) return [];
+
+  const base = requireApiBaseUrl();
+  const chunks = chunkWorkshopIdsForGet(base, unique);
+  const present = new Set<string>();
+
+  // Sequential (no burst); any failure propagates so the caller keeps the guest
+  // snapshot and retries — it must never treat "couldn't check" as "ineligible".
+  for (const chunk of chunks) {
+    const url = buildWorkshopListUrlFromBase(base, { ids: chunk });
+    const parsed = parseWorkshopList(await readJson(url, signal));
+    for (const workshop of parsed.workshops) present.add(workshop.place_id);
+  }
+
+  return unique.filter((id) => present.has(id));
 }
 
 export async function fetchWorkshop(

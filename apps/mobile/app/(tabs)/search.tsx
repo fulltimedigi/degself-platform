@@ -6,6 +6,12 @@ import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { useFavorites } from "@/lib/favorites/favorites-context";
 import { fetchWorkshops } from "@/lib/workshops/api";
+import {
+  canRequestNextPage,
+  displayCount,
+  mergePage,
+  reachedEnd,
+} from "@/lib/workshops/search-pagination";
 import type { Workshop } from "@/lib/workshops/types";
 import { tokens } from "@/theme/tokens";
 
@@ -19,9 +25,11 @@ export default function SearchScreen() {
   const [activeQuery, setActiveQuery] = useState("");
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [total, setTotal] = useState<number | null>(null);
+  const [atEnd, setAtEnd] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
+  const [pageError, setPageError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const pageRequestId = useRef(0);
   const loadingMoreRef = useRef(false);
@@ -36,15 +44,25 @@ export default function SearchScreen() {
       setLoading(true);
       setLoadingMore(false);
       setError(false);
+      setPageError(false);
       try {
         const result = await fetchWorkshops(
           { query: normalized, limit: PAGE_SIZE, offset: 0 },
           controller.signal
         );
-        if (requestId !== pageRequestId.current) return;
+        if (requestId !== pageRequestId.current) return; // stale query response
+        const serverTotal = result.total ?? null;
         setActiveQuery(normalized);
         setWorkshops(result.workshops);
-        setTotal(result.total ?? result.workshops.length);
+        setTotal(serverTotal);
+        setAtEnd(
+          reachedEnd(
+            result.workshops.length,
+            serverTotal,
+            result.workshops.length,
+            PAGE_SIZE
+          )
+        );
       } catch (caught) {
         if (
           requestId === pageRequestId.current &&
@@ -67,12 +85,14 @@ export default function SearchScreen() {
 
   async function loadMore() {
     if (
-      loading ||
-      loadingMoreRef.current ||
-      error ||
-      query.trim() !== activeQuery ||
-      total == null ||
-      workshops.length >= total
+      !canRequestNextPage({
+        initialLoading: loading,
+        loadingMore: loadingMoreRef.current,
+        hasError: error,
+        pageError,
+        queryMatchesActive: query.trim() === activeQuery,
+        atEnd,
+      })
     ) {
       return;
     }
@@ -80,23 +100,32 @@ export default function SearchScreen() {
     const requestId = pageRequestId.current;
     loadingMoreRef.current = true;
     setLoadingMore(true);
+    setPageError(false);
     try {
       const result = await fetchWorkshops({
         query: activeQuery,
         limit: PAGE_SIZE,
         offset: workshops.length,
       });
-      if (requestId !== pageRequestId.current) return;
+      if (requestId !== pageRequestId.current) return; // stale query response
+      const serverTotal = result.total ?? total;
       setWorkshops((current) => {
-        const seen = new Set(current.map((item) => item.place_id));
-        return [
-          ...current,
-          ...result.workshops.filter((item) => !seen.has(item.place_id)),
-        ];
+        const merged = mergePage(current, result.workshops);
+        // Stop if the total/short-page says so, OR if a page added nothing new
+        // (e.g. paging past the server's offset clamp returns duplicate rows) —
+        // so the clamp tail can't drive endless empty "load more" requests.
+        const noProgress = merged.length === current.length;
+        setAtEnd(
+          noProgress ||
+            reachedEnd(merged.length, serverTotal, result.workshops.length, PAGE_SIZE)
+        );
+        return merged;
       });
-      setTotal(result.total ?? total);
+      setTotal(serverTotal);
     } catch {
-      // Keep already-loaded results usable. A later scroll can retry this page.
+      // Preserve already-loaded results and surface an explicit, retryable error
+      // footer instead of silently stalling mid-list.
+      if (requestId === pageRequestId.current) setPageError(true);
     } finally {
       if (requestId === pageRequestId.current) {
         loadingMoreRef.current = false;
@@ -139,7 +168,10 @@ export default function SearchScreen() {
             />
             {!loading && !error && total != null ? (
               <ThemedText muted size="sm">
-                {t.workshops.resultCount.replace("%d", String(total))}
+                {t.workshops.resultCount.replace(
+                  "%d",
+                  String(displayCount(total, workshops.length))
+                )}
               </ThemedText>
             ) : null}
           </View>
@@ -170,6 +202,15 @@ export default function SearchScreen() {
               <ThemedText muted size="sm">
                 {t.workshops.loading}
               </ThemedText>
+            </View>
+          ) : pageError ? (
+            <View style={styles.footer}>
+              <ThemedText size="sm">{t.workshops.loadError}</ThemedText>
+              <Button
+                label={t.workshops.retry}
+                variant="secondary"
+                onPress={() => void loadMore()}
+              />
             </View>
           ) : null
         }
@@ -207,5 +248,5 @@ const styles = StyleSheet.create({
     fontSize: tokens.font.md,
   },
   separator: { height: tokens.space.md },
-  footer: { paddingVertical: tokens.space.md, alignItems: "center" },
+  footer: { paddingVertical: tokens.space.md, alignItems: "center", gap: tokens.space.sm },
 });

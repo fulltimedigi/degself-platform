@@ -3,32 +3,25 @@ import * as QueryParams from "expo-auth-session/build/QueryParams";
 import * as WebBrowser from "expo-web-browser";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
+import {
+  assertOAuthBrowserSuccess,
+  GoogleSignInCancelled,
+  resolvePkceCode,
+} from "./oauth-code";
 
 // Google Sign-In via Supabase signInWithOAuth + the system auth session.
 // The Supabase client is explicitly configured for PKCE: the deep link carries
 // only a short-lived authorization code, while the verifier stays on the device.
 WebBrowser.maybeCompleteAuthSession();
 
-export class GoogleSignInCancelled extends Error {
-  constructor() {
-    super("google-sign-in-cancelled");
-    this.name = "GoogleSignInCancelled";
-  }
-}
+export { GoogleSignInCancelled };
 
 async function createSessionFromUrl(
   supabase: SupabaseClient,
   url: string
 ): Promise<Session> {
   const { params, errorCode } = QueryParams.getQueryParams(url);
-  if (errorCode) throw new Error(errorCode);
-
-  const code = typeof params.code === "string" ? params.code : "";
-  if (!code) {
-    // PKCE is a hard invariant. Never accept access/refresh tokens from a
-    // redirect URL as an implicit-flow fallback.
-    throw new Error("google-missing-pkce-code");
-  }
+  const code = resolvePkceCode({ params, errorCode });
 
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) throw error;
@@ -53,8 +46,6 @@ export async function signInWithGoogle(
   if (!data?.url) throw new Error("google-no-oauth-url");
 
   const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
-  if (result.type !== "success") {
-    throw new GoogleSignInCancelled();
-  }
-  return createSessionFromUrl(supabase, result.url);
+  assertOAuthBrowserSuccess(result.type);
+  return createSessionFromUrl(supabase, (result as { url: string }).url);
 }
