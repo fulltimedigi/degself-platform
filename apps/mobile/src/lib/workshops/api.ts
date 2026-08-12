@@ -3,10 +3,9 @@ import type { Workshop, WorkshopListResponse } from "./types";
 import {
   buildWorkshopDetailUrlFromBase,
   buildWorkshopListUrlFromBase,
+  chunkWorkshopIdsForGet,
 } from "./urls";
 import { parseWorkshopDetail, parseWorkshopList } from "./contracts";
-
-const SAVED_REQUEST_URL_MAX = 1_800;
 
 function requireApiBaseUrl(): string {
   if (!API_BASE_URL) {
@@ -72,9 +71,8 @@ export async function fetchWorkshops(
 
 /**
  * Hydrate an arbitrary number of saved ids without one oversized GET URL or the
- * server's per-request 100-id bound. Chunks are sized by the actual encoded URL
- * length, fetched sequentially to avoid request bursts, then reconstructed in
- * global newest-first favorite order.
+ * server's per-request id bound. Chunks are fetched sequentially to avoid bursts,
+ * then reconstructed in global newest-first favorite order.
  */
 export async function fetchSavedWorkshops(
   ids: readonly string[],
@@ -83,27 +81,13 @@ export async function fetchSavedWorkshops(
   const unique = [...new Set(ids.filter(Boolean))];
   if (unique.length === 0) return { workshops: [], total: 0 };
 
-  const chunks: string[][] = [];
-  let current: string[] = [];
-  for (const id of unique) {
-    const candidate = [...current, id];
-    if (
-      current.length > 0 &&
-      buildWorkshopListUrl({ ids: candidate }).length > SAVED_REQUEST_URL_MAX
-    ) {
-      chunks.push(current);
-      current = [id];
-    } else {
-      current = candidate;
-    }
-  }
-  if (current.length > 0) chunks.push(current);
-
+  const base = requireApiBaseUrl();
+  const chunks = chunkWorkshopIdsForGet(base, unique);
   const byId = new Map<string, Workshop>();
+
   for (const chunk of chunks) {
-    const parsed = parseWorkshopList(
-      await readJson(buildWorkshopListUrl({ ids: chunk }), signal)
-    );
+    const url = buildWorkshopListUrlFromBase(base, { ids: chunk });
+    const parsed = parseWorkshopList(await readJson(url, signal));
     for (const workshop of parsed.workshops) {
       byId.set(workshop.place_id, workshop);
     }
