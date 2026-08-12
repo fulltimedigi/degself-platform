@@ -1,10 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { parseFavorites, serializeFavorites } from "./favorites-sync";
 
-// Guest favorites live in plain AsyncStorage — they are NON-SECRET place ids, so
-// they must NOT sit in SecureStore (that is reserved for auth tokens). Same
-// storage key semantics as the web guest store, but async.
-
 const KEY = "degself:favorites";
 
 export async function readGuestFavorites(): Promise<string[]> {
@@ -15,18 +11,27 @@ export async function readGuestFavorites(): Promise<string[]> {
   }
 }
 
-export async function writeGuestFavorites(ids: readonly string[]): Promise<void> {
+/**
+ * Persist guest favorites and report whether the write really succeeded. The
+ * caller can then roll back an optimistic UI update instead of claiming a save
+ * that will disappear on restart when device storage is unavailable/full.
+ */
+export async function writeGuestFavorites(
+  ids: readonly string[]
+): Promise<boolean> {
   try {
     await AsyncStorage.setItem(KEY, serializeFavorites(ids));
+    return true;
   } catch {
-    /* device storage full / unavailable — keep UI responsive */
+    return false;
   }
 }
 
-export async function clearGuestFavorites(): Promise<void> {
+export async function clearGuestFavorites(): Promise<boolean> {
   try {
     await AsyncStorage.removeItem(KEY);
+    return true;
   } catch {
-    /* ignore */
+    return false;
   }
 }
