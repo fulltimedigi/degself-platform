@@ -20,3 +20,35 @@ export function buildWorkshopDetailUrlFromBase(apiBaseUrl: string, placeId: stri
   const search = new URLSearchParams({ place_id: placeId });
   return `${apiBaseUrl.replace(/\/+$/, "")}${ENDPOINT}?${search.toString()}`;
 }
+
+/**
+ * Split saved ids so every GET remains below both the public route's hard id
+ * bound and a conservative encoded-URL length. The original case/order is kept.
+ */
+export function chunkWorkshopIdsForGet(
+  apiBaseUrl: string,
+  ids: readonly string[],
+  maxUrlLength = 1_800,
+  maxIdsPerRequest = 80
+): string[][] {
+  const chunks: string[][] = [];
+  let current: string[] = [];
+
+  for (const id of ids) {
+    const candidate = [...current, id];
+    const exceedsCount = candidate.length > maxIdsPerRequest;
+    const exceedsUrl =
+      buildWorkshopListUrlFromBase(apiBaseUrl, { ids: candidate }).length >
+      maxUrlLength;
+
+    if (current.length > 0 && (exceedsCount || exceedsUrl)) {
+      chunks.push(current);
+      current = [id];
+    } else {
+      current = candidate;
+    }
+  }
+
+  if (current.length > 0) chunks.push(current);
+  return chunks;
+}
