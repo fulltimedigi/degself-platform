@@ -5,7 +5,7 @@ Native Android + iOS app for DEGSELF / دق سلف, built with **Expo SDK 57 + E
 ## Status: M2 — Discovery + Auth + Favorites + Account Deletion
 Supabase-native auth (Google everywhere, Sign in with Apple on iOS), secure session persistence, profile access, favorites via RLS with a loss-safe guest→auth handoff, and in-app account deletion through the canonical server operation. See ADRs [0005](../../docs/mobile/adr/0005-mobile-auth-and-session-storage.md) (auth/session), [0006](../../docs/mobile/adr/0006-account-deletion-auth-transport.md) (deletion transport / OD-02), [0007](../../docs/mobile/adr/0007-sign-in-with-apple.md) (Sign in with Apple / OD-03).
 
-M2 adds featured workshops, debounced Arabic-aware search, saved-workshop hydration, and native detail/contact actions. The app consumes the canonical bounded server read API from [ADR-0008](../../docs/mobile/adr/0008-mobile-search-read-api.md), so ranking and audited catalog filtering cannot drift from web.
+M2 adds featured workshops, debounced/paginated Arabic-aware search, unbounded saved-workshop hydration through bounded GET chunks, and native detail/contact actions. The app consumes the canonical bounded server read API from [ADR-0008](../../docs/mobile/adr/0008-mobile-search-read-api.md), so ranking and audited catalog filtering cannot drift from web.
 
 ## Identifiers (owner-approved, permanent)
 - iOS `bundleIdentifier`: `com.degself.app`
@@ -19,63 +19,65 @@ app/
   (tabs)/
     _layout.tsx          # 4 tabs (localized labels)
     index.tsx            # featured workshop discovery
-    search.tsx           # canonical search results
+    search.tsx           # canonical paginated search results
     saved.tsx            # hydrated guest + authenticated favorites
     account.tsx          # sign-in / signed-in profile + Danger Zone + locale switcher
   workshop/[placeId].tsx # details, save, call, WhatsApp, maps, safe website
 src/
   lib/
-    supabase.ts          # RN Supabase client (LargeSecureStore, AppState auto-refresh)
-    auth/                # AuthProvider, google.ts, apple.ts, secure-store.ts (LargeSecureStore)
-    favorites/           # favorites-sync (pure), guest-storage, favorites-remote (RLS), context
-    account/             # account-deletion (pure contract), delete-account (Bearer call)
+    supabase.ts          # persistent PKCE client + isolated reauth client
+    auth/                # AuthProvider, google/apple auth, same-user guard, secure-store
+    favorites/           # loss-safe handoff + bounded retries + persistence rollback
+    account/             # account-deletion contract + Bearer transport
     workshops/           # public API client, DTOs, safe contact/map links
-  components/            # primitives (+ Button), auth/AuthPanel, account/DangerZone
+  components/            # primitives, auth/AuthPanel, account/DangerZone
   config/env.ts          # PUBLIC-only runtime config (EXPO_PUBLIC_*)
   i18n/ · theme/ · types/aes-js.d.ts
 ```
 Native `ios/` and `android/` are **not committed** — Continuous Native Generation (`expo prebuild`) regenerates them (gitignored).
 
-## Auth (resolves into the SAME Supabase Auth as web)
-- **Google** — Supabase **`signInWithOAuth`** + system auth session (`expo-web-browser` + `expo-auth-session`), the current Supabase-supported mobile path. (The *free* `@react-native-google-signin` can't pass a custom nonce and is unsupported for this flow; the native-nonce path is the paid Universal Sign In — not adopted.) The Google client id/secret live ONLY on the Supabase Google provider (server-side) — **no Google client id or secret ships in the app.** Redirect returns via `degself://` (register `degself://**` in Supabase Auth → URL Configuration). The code establishes the session from the redirect (PKCE `exchangeCodeForSession` or implicit `setSession`).
-- **Apple (iOS, REQUIRED)** — `expo-apple-authentication` native → `signInWithIdToken({ provider:'apple', nonce })`. Entitlement `com.apple.developer.applesignin` (via `ios.usesAppleSignIn`). Native-only Supabase Apple provider needs just the bundle id. `fullName`/`email` are returned only on the first authorization; M1 uses only the identity token.
-- **Session** — Supabase-official `LargeSecureStore` (AES-256 key in Keychain/Keystore via SecureStore **at rest**, loaded into memory to encrypt/decrypt; ciphertext in AsyncStorage) as the storage adapter; auto-refresh tied to `AppState`. `lock: processLock` is intentionally omitted (deprecated no-op in auth-js 2.112.2). Accepted rare failure mode: a crash mid-`setItem` can force a local re-login (documented in ADR-0005). Auth secrets never sit in plain storage; guest favorites use plain AsyncStorage.
+## Auth (same Supabase Auth as web)
+- **Google** — Supabase `signInWithOAuth` + system auth session (`expo-web-browser` + `expo-auth-session`). The Supabase client explicitly uses **PKCE**; the callback accepts only a short-lived `?code=` and exchanges it with the locally stored verifier. There is no implicit-flow fallback and no access/refresh token is accepted from the deep-link URL. Redirect is `degself://` (register `degself://**` in Supabase Auth URL Configuration). Google client id/secret remain only in the Supabase provider configuration; none is bundled into the app.
+- **Apple (iOS, REQUIRED)** — `expo-apple-authentication` native → `signInWithIdToken({ provider:'apple', nonce })`. The entitlement is generated by `ios.usesAppleSignIn`.
+- **Destructive reauthentication** — `AUTH_TOO_OLD` runs the provider flow against a separate in-memory Supabase client. The candidate session is promoted to the app only when its exact Supabase user id matches the user who initiated deletion, then verified again after promotion. A wrong Google/Apple account never becomes app-wide auth state.
+- **Session** — Supabase LargeSecureStore pattern: AES-256 key in Keychain/Keystore at rest; encrypted session ciphertext in AsyncStorage; refresh tied to `AppState`. Custom auth locks are intentionally omitted because the installed auth-js line treats them as a deprecated legacy path.
 
 Requires a **custom dev build** — this native stack does not run in Expo Go.
 
-## Favorites (OD-02-adjacent)
-Authenticated favorites go **directly** to `public.user_favorites` via the user's session + **RLS** (no service-role API). Guest favorites live in AsyncStorage. On every guest→auth transition the store snapshots → UNION-upserts → loss-safely clears only the transferred snapshot (pure logic in `favorites-sync.ts`, mirrored 1:1 with web and unit-tested). Note: `user_favorites.place_id` is FK-constrained to `public.workshops`, so authenticated favorites must reference real workshops.
+## Favorites
+Authenticated favorites go directly to `public.user_favorites` through the user's session + RLS. Guest favorites use AsyncStorage. Guest→auth handoff snapshots → idempotent UNION-upserts → loss-safe clear. Failed handoffs retain the guest snapshot and retry with bounded backoff. Guest storage writes report success so an optimistic star is rolled back if persistence fails instead of falsely appearing saved.
 
-## Account deletion (OD-02)
-The Danger Zone posts `Authorization: Bearer <access token>` to the canonical web operation `/api/account/delete`. Server verifies the token, then runs the SAME sequence as web (typed `DELETE`, 10-min recent-auth, per-user rate limit, admin/claimed blockers, `auth.admin.deleteUser`). `AUTH_TOO_OLD` drives a provider reauth (no password prompt for OAuth users). On success the local session + secure storage + guest favorites are cleared.
+Saved-workshop hydration is not capped at 100 in the UI: the client splits ids by both encoded URL size and a per-request id ceiling, fetches chunks sequentially, then reconstructs the global newest-first order.
+
+## Account deletion
+The Danger Zone posts `Authorization: Bearer <access token>` to `/api/account/delete`. The server verifies the token and runs the same canonical sequence as web: exact typed confirmation → 10-minute recent-auth → fail-closed per-user rate limit → admin/claimed-workshop blockers → `auth.admin.deleteUser`. The client never sends a user id. On success local session and guest state are cleared.
 
 ## Environment model
-PUBLIC values only, via `EXPO_PUBLIC_*` (see [`.env.example`](.env.example)): Supabase URL + publishable key and API base URL. **No secret or Google client id is bundled.** Google credentials remain only in the Supabase provider. Only the Production Supabase project exists today; dev/preview target it with controlled test users — never real customer data.
+PUBLIC values only, via `EXPO_PUBLIC_*` (see [`.env.example`](.env.example)): Supabase URL + publishable key and API base URL. No service-role key, provider secret, WABA secret, admin credential, or Google client id is bundled. Only the Production Supabase project exists today; dev/preview target it with controlled test users — never real customer data.
 
 ## Commands
 ```
 npm run start        # Expo dev server (use a dev build, not Expo Go)
 npm run typecheck    # tsc --noEmit
-npm test             # pure logic tests (favorites-sync, account-deletion, i18n) via tsx --test
-npm run doctor       # expo-doctor (pinned 1.20.1 — same version in CI)
+npm test             # pure logic tests via tsx --test
+npm run doctor       # expo-doctor (pinned 1.20.1)
 npx expo prebuild    # config → native projects (ios/android, gitignored)
 ```
 
 ## Dependency resolution
-Installs use **strict** npm peer enforcement (no global `legacy-peer-deps`); `npm ci` passes clean. Two SDK-consistent transitive pins remain in `package.json > overrides` (`react-dom@19.2.3`, `react-native-worklets@0.10.1`), each documented in ADR/PR. M1 added no new overrides. All M1 deps are MIT and SDK-57-pinned (see ADR-0005).
+Installs use strict npm peer enforcement. Two SDK-consistent transitive pins remain in `package.json > overrides` (`react-dom@19.2.3`, `react-native-worklets@0.10.1`). Auth/session decisions are documented in ADR-0005.
 
-## Build & verification (this environment)
-- CONFIG VERIFIED · TYPECHECK VERIFIED · TESTS VERIFIED · EXPO DOCTOR (20/20) · EXPO CONFIG VERIFIED · `npm ci` VERIFIED
-- PREBUILD VERIFIED (android **and** ios, config→native) · Apple **`com.apple.developer.applesignin` entitlement generation VERIFIED** · bundle id `com.degself.app` + scheme `degself` in native output
-- RLS VERIFIED live (rolled-back): own-only reads, cross-user insert/read/delete blocked, `authenticated`-only, anon denied, no UPDATE grant
-- **ANDROID REAL-DEVICE VERIFIED (2026-08-09)** — EAS preview installed and launched on a Samsung Galaxy S25 Ultra; Google OAuth, persisted Supabase session, favorites add/delete, logout/re-login, and the typed account-deletion flow all passed end to end.
-- **iOS SIMULATOR BINARY: VERIFIED (2026-08-11)** — EAS development build `8fad12d6-386d-4a15-8b59-15c3b8a0be1d` finished successfully from commit `c0039e4`; a signed real-device/TestFlight build still waits for the Apple Developer enrollment.
-- **GOOGLE PROVIDER LOGIN: VERIFIED ON ANDROID** · **APPLE PROVIDER LOGIN: NOT VERIFIED — iOS device/credential blocker** — never inferred from config alone
+## Build & verification
+- CONFIG VERIFIED · TYPECHECK VERIFIED · UNIT TESTS VERIFIED · EXPO DOCTOR VERIFIED · EXPO CONFIG VERIFIED · `npm ci` VERIFIED in CI after the 2026-08-12 hardening changes.
+- PREBUILD previously verified for Android and iOS; Apple `com.apple.developer.applesignin` entitlement generation verified; identifiers remain `com.degself.app` + scheme `degself`.
+- RLS previously verified live/rolled-back: own-only reads, cross-user insert/read/delete blocked, authenticated-only, anon denied, no UPDATE grant.
+- **ANDROID REAL-DEVICE BASELINE (2026-08-09):** preview build previously passed Google OAuth, persisted session, favorites add/delete, logout/re-login, and typed account deletion on a Samsung Galaxy S25 Ultra. **This baseline predates the explicit-PKCE + isolated-reauth hardening on 2026-08-12, so Google login and deletion reauth MUST be re-tested on a fresh Android build before release.**
+- **iOS simulator binary baseline (2026-08-11):** build succeeded; signed real-device/TestFlight and Apple provider login still wait for Apple Developer enrollment.
 
-Real-device binaries and provider login build via **EAS** with owner credentials. A production AAB profile and draft Internal-track submit profile are configured; production OTA remains disabled. A signed AAB still requires an authenticated Expo/EAS owner session.
+A production AAB profile and draft Internal-track submit profile are configured; production OTA remains disabled. Do not treat the branch as store-release verified until the post-hardening Android device test, signed production AAB, Play Internal upload, Data safety review, and pre-launch report are complete.
 
 ## Non-scope
 No Ask DEGSELF, quotes/offers, WABA, admin, push/device tokens, Universal/App Links, analytics SDK, location permission, or review UI. Deferred deps remain NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, and PostHog RN.
 
 ## Next
-Generate an EAS production AAB, upload it to Play Internal testing, capture real-device screenshots, complete the prepared Data safety declaration, and run the Play pre-launch report. Remaining product-gated decisions: OD-01 (quotes), OD-05 (Ask DEGSELF quota), and OD-06/07/08 (reviews/push/deep links).
+Build a fresh Android preview/production candidate, re-test PKCE Google login plus same-user deletion reauthentication on device, then generate the signed production AAB, upload to Play Internal testing, capture real screenshots, complete Data safety, and run the Play pre-launch report.
