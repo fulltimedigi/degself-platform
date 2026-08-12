@@ -2,18 +2,12 @@ import { Platform } from "react-native";
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as Crypto from "expo-crypto";
 import aesjs from "aes-js";
+import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
 
 // Native Sign in with Apple → Supabase (iOS only). REQUIRED for App Store review
-// because the app offers Google Sign-In (Guideline 4.8 — see ADR-0007). Uses the
-// supported native path (expo-apple-authentication) — NOT a WebView — and the
-// resulting Apple identity resolves into the SAME Supabase Auth user system as
-// Google, never a parallel user store.
-//
-// Nonce: Apple receives the SHA-256 hash of a random raw nonce; Supabase receives
-// the RAW nonce and re-hashes it to verify the token's `nonce` claim. This binds
-// the credential to this sign-in attempt (replay/interception defense).
-
+// because the app offers Google Sign-In. The resulting identity resolves into
+// the SAME Supabase Auth user system as Google, never a parallel user store.
 export class AppleSignInCancelled extends Error {
   constructor() {
     super("apple-sign-in-cancelled");
@@ -21,7 +15,6 @@ export class AppleSignInCancelled extends Error {
   }
 }
 
-/** iOS-only, and only where the OS actually supports Sign in with Apple. */
 export async function isAppleAuthAvailable(): Promise<boolean> {
   if (Platform.OS !== "ios") return false;
   try {
@@ -37,11 +30,13 @@ function randomNonce(byteLength = 32): string {
 }
 
 /**
- * Run the native Apple credential flow and exchange the identity token for a
- * Supabase session. Throws AppleSignInCancelled if the user backs out, or a
- * Supabase AuthError if the exchange fails.
+ * Run native Apple authentication against the provided Supabase client. Passing
+ * an isolated client is used for same-user recent-auth verification before a
+ * destructive action.
  */
-export async function signInWithApple(): Promise<void> {
+export async function signInWithApple(
+  supabase: SupabaseClient = getSupabase()
+): Promise<Session> {
   const rawNonce = randomNonce();
   const hashedNonce = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
@@ -50,13 +45,6 @@ export async function signInWithApple(): Promise<void> {
 
   let credential: AppleAuthentication.AppleAuthenticationCredential;
   try {
-    // FULL_NAME + EMAIL are requested to keep the door open, but note: Apple
-    // returns fullName/email ONLY on the user's FIRST authorization for this app
-    // (null on every later sign-in), and the identity we authenticate with lives
-    // entirely inside `identityToken`. M1 needs only the token (email/identity),
-    // so fullName is intentionally not consumed here. Any future profile-name
-    // capture must persist fullName on that first sign-in — it cannot be re-read
-    // from Apple afterwards.
     credential = await AppleAuthentication.signInAsync({
       requestedScopes: [
         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -74,10 +62,12 @@ export async function signInWithApple(): Promise<void> {
   const identityToken = credential.identityToken;
   if (!identityToken) throw new Error("apple-no-identity-token");
 
-  const { error } = await getSupabase().auth.signInWithIdToken({
+  const { data, error } = await supabase.auth.signInWithIdToken({
     provider: "apple",
     token: identityToken,
     nonce: rawNonce,
   });
   if (error) throw error;
+  if (!data.session) throw new Error("apple-no-session");
+  return data.session;
 }
