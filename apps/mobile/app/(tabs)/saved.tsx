@@ -7,14 +7,19 @@ import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
 import { useAuth } from "@/lib/auth/auth-context";
 import { useFavorites } from "@/lib/favorites/favorites-context";
-import { fetchWorkshops } from "@/lib/workshops/api";
+import { fetchSavedWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 
 export default function SavedScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const { status } = useAuth();
-  const { favorites, loading: favoritesLoading, isFavorite, toggle } = useFavorites();
+  const {
+    favorites,
+    loading: favoritesLoading,
+    isFavorite,
+    toggle,
+  } = useFavorites();
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -32,10 +37,12 @@ export default function SavedScreen() {
 
     setLoading(true);
     setError(false);
-    void fetchWorkshops({ ids: favorites }, controller.signal)
+    void fetchSavedWorkshops(favorites, controller.signal)
       .then((result) => setWorkshops(result.workshops))
       .catch((caught) => {
-        if (!(caught instanceof Error && caught.name === "AbortError")) setError(true);
+        if (!(caught instanceof Error && caught.name === "AbortError")) {
+          setError(true);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -55,7 +62,11 @@ export default function SavedScreen() {
             <ThemedText size="xl" bold>
               {signedIn ? t.saved.authTitle : t.saved.guestTitle}
             </ThemedText>
-            {!signedIn ? <ThemedText muted size="sm">{t.saved.guestBody}</ThemedText> : null}
+            {!signedIn ? (
+              <ThemedText muted size="sm">
+                {t.saved.guestBody}
+              </ThemedText>
+            ) : null}
             {favorites.length > 0 ? (
               <ThemedText muted size="sm">
                 {t.saved.count.replace("%d", String(favorites.length))}
@@ -65,11 +76,17 @@ export default function SavedScreen() {
         }
         ListEmptyComponent={
           favoritesLoading || loading ? (
-            <Surface><ThemedText muted>{t.workshops.loading}</ThemedText></Surface>
+            <Surface>
+              <ThemedText muted>{t.workshops.loading}</ThemedText>
+            </Surface>
           ) : error ? (
-            <Surface><ThemedText>{t.workshops.loadError}</ThemedText></Surface>
+            <Surface>
+              <ThemedText>{t.workshops.loadError}</ThemedText>
+            </Surface>
           ) : (
-            <Surface><ThemedText muted>{t.saved.empty}</ThemedText></Surface>
+            <Surface>
+              <ThemedText muted>{t.saved.empty}</ThemedText>
+            </Surface>
           )
         }
         ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -78,7 +95,12 @@ export default function SavedScreen() {
             workshop={item}
             saved={isFavorite(item.place_id)}
             onToggleSaved={() => void toggle(item.place_id)}
-            onOpen={() => router.push({ pathname: "/workshop/[placeId]", params: { placeId: item.place_id } })}
+            onOpen={() =>
+              router.push({
+                pathname: "/workshop/[placeId]",
+                params: { placeId: item.place_id },
+              })
+            }
           />
         )}
       />
