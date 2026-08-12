@@ -2,6 +2,7 @@ import type { Workshop } from "@/lib/types";
 
 export const MOBILE_WORKSHOP_LIMIT_MAX = 30;
 export const MOBILE_WORKSHOP_IDS_MAX = 100;
+export const MOBILE_WORKSHOP_OFFSET_MAX = 10_000;
 
 export type MobileWorkshop = Pick<
   Workshop,
@@ -57,7 +58,12 @@ export function parseMobileWorkshopRequest(url: URL): MobileWorkshopRequest {
     kind: "search",
     query,
     limit: boundedInteger(url.searchParams.get("limit"), 20, 1, MOBILE_WORKSHOP_LIMIT_MAX),
-    offset: boundedInteger(url.searchParams.get("offset"), 0, 0, 500),
+    offset: boundedInteger(
+      url.searchParams.get("offset"),
+      0,
+      0,
+      MOBILE_WORKSHOP_OFFSET_MAX
+    ),
   };
 }
 
