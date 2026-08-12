@@ -14,7 +14,7 @@ import {
 } from "@/lib/supabase";
 import { signInWithGoogle as googleSignIn } from "./google";
 import { signInWithApple as appleSignIn } from "./apple";
-import { assertSameReauthenticatedUser } from "./reauth-guard";
+import { verifyThenPromoteReauthentication } from "./reauth-guard";
 
 export type AuthStatus = "loading" | "signedIn" | "signedOut";
 export type AuthProviderName = "google" | "apple";
@@ -101,31 +101,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const provider = providerOf(original?.user ?? null);
     if (!original || !provider) throw new Error("reauth-unknown-provider");
 
-    // Do not run provider reauthentication against the persistent app client.
-    // OAuth account pickers can return another account; keeping the candidate
-    // session isolated prevents FavoritesProvider or any other subscriber from
-    // observing/writing under the wrong identity even momentarily.
+    // The candidate provider session stays completely isolated. A wrong account
+    // therefore cannot trigger app-wide auth subscribers or RLS writes.
     const isolated = createIsolatedAuthClient();
     const fresh =
       provider === "apple"
         ? await appleSignIn(isolated)
         : await googleSignIn(isolated);
 
-    assertSameReauthenticatedUser(original.user.id, fresh.user.id);
-
-    // Only after identity equality is proven do we promote the freshly minted
-    // tokens. The persistent client's auth listener then updates the whole app.
     const persistent = getSupabase();
-    const { error } = await persistent.auth.setSession({
-      access_token: fresh.access_token,
-      refresh_token: fresh.refresh_token,
-    });
-    if (error) throw error;
-
-    // Defense in depth: verify what the persistent client actually accepted.
-    const verified = await persistent.auth.getUser();
-    if (verified.error) throw verified.error;
-    assertSameReauthenticatedUser(original.user.id, verified.data.user?.id);
+    await verifyThenPromoteReauthentication(
+      original.user.id,
+      fresh.user.id,
+      async () => {
+        const { error } = await persistent.auth.setSession({
+          access_token: fresh.access_token,
+          refresh_token: fresh.refresh_token,
+        });
+        if (error) throw error;
+      },
+      async () => {
+        const verified = await persistent.auth.getUser();
+        if (verified.error) throw verified.error;
+        return verified.data.user?.id;
+      }
+    );
   }, [session]);
 
   const getAccessToken = useCallback(async () => {
