@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  buildWorkshopExistsUrlFromBase,
   buildWorkshopListUrlFromBase,
   chunkWorkshopIdsForGet,
   reorderSavedNewestFirst,
 } from "../urls";
-import { parseWorkshopList } from "../contracts";
+import { parseExistingPlaceIds, parseWorkshopList } from "../contracts";
 import type { Workshop } from "../types";
 
 const BASE = "https://degself.com";
@@ -87,6 +88,22 @@ test("parseWorkshopList drops malformed rows instead of discarding the whole pag
 test("parseWorkshopList still rejects a non-array workshops field", () => {
   assert.throws(() => parseWorkshopList({ workshops: "nope" }), /INVALID_WORKSHOP_RESPONSE/);
   assert.throws(() => parseWorkshopList(null), /INVALID_WORKSHOP_RESPONSE/);
+});
+
+test("exists-URL builder + parse: FK existence check (visibility-independent)", () => {
+  const url = buildWorkshopExistsUrlFromBase(BASE, ["ChIJ_a", "ChIJ_b"]);
+  assert.ok(url.startsWith(`${BASE}/api/mobile/workshops?`));
+  assert.ok(url.includes("mode=exists"));
+  assert.ok(url.includes("ids=ChIJ_a%2CChIJ_b"));
+
+  assert.deepEqual(
+    parseExistingPlaceIds({ place_ids: ["ChIJ_a", "ChIJ_b"] }),
+    ["ChIJ_a", "ChIJ_b"]
+  );
+  // malformed entries filtered; wrong shape rejected
+  assert.deepEqual(parseExistingPlaceIds({ place_ids: ["ok", 5, "", null] }), ["ok"]);
+  assert.throws(() => parseExistingPlaceIds({ place_ids: "nope" }), /INVALID_WORKSHOP_RESPONSE/);
+  assert.throws(() => parseExistingPlaceIds(null), /INVALID_WORKSHOP_RESPONSE/);
 });
 
 // ── helpers ──────────────────────────────────────────────────────────────────

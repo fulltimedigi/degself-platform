@@ -15,13 +15,12 @@ import {
   type HandoffIO,
 } from "./favorites-handoff-runner";
 import {
+  claimAbsorbableSnapshot,
   clearAllHandoffClaims,
   clearGuestFavorites,
   clearHandoffClaim,
   readGuestFavorites,
-  readHandoffClaims,
   writeGuestFavorites,
-  writeHandoffClaim,
 } from "./guest-storage";
 import {
   addServerFavorite,
@@ -34,8 +33,7 @@ import { fetchExistingPlaceIds } from "@/lib/workshops/api";
 // Real side effects for the pure handoff runner. The runner holds all the
 // crash-safe ordering; this just wires it to device storage + Supabase.
 const handoffIO: HandoffIO = {
-  readClaims: readHandoffClaims,
-  writeClaim: writeHandoffClaim,
+  claimSnapshot: claimAbsorbableSnapshot,
   clearClaim: clearHandoffClaim,
   readGuest: readGuestFavorites,
   writeGuest: writeGuestFavorites,
@@ -182,11 +180,15 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   );
 
   const resetAfterDeletion = useCallback(async () => {
+    const deletedUid = activeUidRef.current;
     handledUid.current = null;
     handoffAttempts.current = 0;
     guestMutationVersion.current += 1;
     activeUidRef.current = null;
-    await clearAllHandoffClaims();
+    // Clear only the deleted user's claim (not other identities' claims on this
+    // device); fall back to a full wipe only if the uid is unknown.
+    if (deletedUid) await clearHandoffClaim(deletedUid);
+    else await clearAllHandoffClaims();
     await clearGuestFavorites();
     setFavorites([]);
   }, []);

@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { performGuestHandoff, type HandoffIO } from "../favorites-handoff-runner";
-import type { HandoffClaims } from "../favorites-handoff";
+import {
+  absorbableGuestIds,
+  withClaim,
+  type HandoffClaims,
+} from "../favorites-handoff";
 
 // In-memory device + server the way the real app would see them. A "restart" or
 // "account switch" is just another performGuestHandoff() call against the SAME
@@ -20,17 +24,16 @@ function makeWorld(catalog: string[]) {
   };
 
   const io: HandoffIO = {
-    readClaims: async () =>
-      Object.fromEntries(
-        Object.entries(durable.claims).map(([k, v]) => [k, [...v]])
-      ),
-    writeClaim: async (uid, ids) => {
+    // Faithful in-memory version of the atomic locked claim: compute absorbable
+    // from the CURRENT claim map and persist it in the same step.
+    claimSnapshot: async (uid, guest) => {
       if (fail.writeClaimOnce) {
         fail.writeClaimOnce = false;
-        return false;
+        return null;
       }
-      durable.claims = { ...durable.claims, [uid]: [...ids] };
-      return true;
+      const snapshot = absorbableGuestIds(guest, durable.claims, uid);
+      durable.claims = withClaim(durable.claims, uid, snapshot);
+      return snapshot;
     },
     clearClaim: async (uid) => {
       const next = { ...durable.claims };
@@ -105,17 +108,21 @@ test("H1: all-ineligible snapshot completes without a retry storm", async () => 
   assert.deepEqual(w.durable.claims, {});
 });
 
-test("transient select failure is retryable and leaves nothing written", async () => {
+test("transient select failure is retryable; the claim is durable and resumes", async () => {
   const w = makeWorld(["a"]);
   w.durable.guest = ["a"];
   w.fail.select = 1;
   const first = await performGuestHandoff("A", w.io);
   assert.equal(first.done, false);
-  assert.deepEqual(w.durable.claims, {}); // claim only written after select succeeds
+  // Claim is written atomically BEFORE server load, so a select failure leaves a
+  // durable claim (which locks the snapshot to A) and nothing on the server.
+  assert.deepEqual(w.durable.claims, { A: ["a"] });
+  assert.equal(w.server.get("A"), undefined);
   assert.deepEqual(w.durable.guest, ["a"]);
   const second = await performGuestHandoff("A", w.io);
   assert.equal(second.done, true);
   assert.deepEqual(w.server.get("A"), ["a"]);
+  assert.deepEqual(w.durable.claims, {});
 });
 
 test("transient insert failure keeps the claim and resumes on retry", async () => {
@@ -209,6 +216,23 @@ test("foreign-claimed id stays locked while the current user's own new id transf
   assert.deepEqual(w.server.get("B"), ["bNew"]); // only B's own id
   assert.deepEqual(w.durable.guest, ["aClaimed"]); // A's claimed id preserved
   assert.deepEqual(w.durable.claims, { A: ["aClaimed"] }); // still locked
+});
+
+test("F1: two overlapping handoffs cannot both absorb the same unclaimed id", async () => {
+  const w = makeWorld(["a", "b"]);
+  w.durable.guest = ["a", "b"];
+  // Run A and B concurrently against the same device. The atomic claim step
+  // means whichever claims first takes the snapshot; the other sees that claim
+  // and absorbs nothing of it — no id lands in both accounts.
+  await Promise.all([
+    performGuestHandoff("A", w.io),
+    performGuestHandoff("B", w.io),
+  ]);
+  const a = new Set(w.server.get("A") ?? []);
+  const b = new Set(w.server.get("B") ?? []);
+  for (const id of a) assert.equal(b.has(id), false, `id ${id} leaked into both`);
+  const all = new Set([...(w.server.get("A") ?? []), ...(w.server.get("B") ?? [])]);
+  assert.deepEqual([...all].sort(), ["a", "b"]); // each guest id migrated exactly once
 });
 
 test("idempotent replay: running a completed handoff again is a no-op", async () => {

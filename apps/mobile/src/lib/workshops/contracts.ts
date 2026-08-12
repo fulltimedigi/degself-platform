@@ -54,6 +54,13 @@ export function parseWorkshopList(value: unknown): WorkshopListResponse {
   };
 }
 
+export function parseExistingPlaceIds(value: unknown): string[] {
+  if (!value || typeof value !== "object") throw new Error("INVALID_WORKSHOP_RESPONSE");
+  const ids = (value as Record<string, unknown>).place_ids;
+  if (!Array.isArray(ids)) throw new Error("INVALID_WORKSHOP_RESPONSE");
+  return ids.filter((id): id is string => typeof id === "string" && id.length > 0);
+}
+
 export function parseWorkshopDetail(value: unknown): Workshop {
   if (!value || typeof value !== "object") throw new Error("INVALID_WORKSHOP_RESPONSE");
   const workshop = (value as Record<string, unknown>).workshop;

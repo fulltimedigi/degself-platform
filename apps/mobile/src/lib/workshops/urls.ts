@@ -24,6 +24,21 @@ export function buildWorkshopDetailUrlFromBase(apiBaseUrl: string, placeId: stri
 }
 
 /**
+ * Existence-only lookup URL for the favorites handoff. Returns `{ place_ids }`
+ * for the ids that EXIST in the catalog (regardless of public visibility) — the
+ * exact FK-safety check for user_favorites.place_id, so an existing-but-hidden
+ * favorite is never mistaken for a hard-deleted one.
+ */
+export function buildWorkshopExistsUrlFromBase(
+  apiBaseUrl: string,
+  ids: readonly string[]
+): string {
+  if (!apiBaseUrl) throw new Error("Missing API base URL.");
+  const search = new URLSearchParams({ mode: "exists", ids: ids.join(",") });
+  return `${apiBaseUrl.replace(/\/+$/, "")}${ENDPOINT}?${search.toString()}`;
+}
+
+/**
  * Split saved ids so every GET remains below both the public route's hard id
  * bound and a conservative encoded-URL length. The original case/order is kept.
  */

@@ -23,20 +23,20 @@ found in the first implementation:
 
 ## Decision
 
-### H1 — validate against the canonical public read path before insert
+### H1 — existence check before insert (FK-matching, not visibility-matching)
 
 Before inserting, the candidate ids (guest ids not already on the server) are
-checked against the same public read endpoint the app already uses
-(`/api/mobile/workshops?ids=…`, ADR-0008), which returns only rows that exist and
-are eligible. Only confirmed ids are inserted; the rest are **deterministically
-dropped**. This eliminates FK violations by construction (a hard-deleted id is
-never inserted) and removes the retry storm.
-
-Accepted trade-off: a favorite for a workshop that currently exists but is
-*ineligible* (e.g. `active=false`) is not migrated and is cleared from the guest
-snapshot. The mobile client can only validate against the public read path, and
-a workshop the user cannot see has no value migrated. This is a bounded,
-intentional behavior, not silent data corruption.
+checked for **existence** against `/api/mobile/workshops?mode=exists&ids=…`,
+which returns the ids that exist in `workshops` **regardless of public
+visibility** — exactly the condition the foreign key enforces
+(`user_favorites.place_id → workshops.place_id`). Only existing ids are inserted;
+truly non-existent (hard-deleted) ids are **deterministically dropped**. This
+eliminates FK violations by construction and removes the retry storm, while
+still migrating favorites for workshops that currently exist but are temporarily
+hidden (`active=false`) — those are not silently lost. The existence endpoint
+exposes nothing new: `workshops` is already anon-readable by `place_id`. A
+transient failure of the check never drops ids — it returns "retry", so the
+snapshot is preserved.
 
 ### H2 — a durable, per-user claim map recorded before any server write
 
@@ -59,11 +59,16 @@ Any transient failure stops with the claim intact; the same user resumes
 idempotently (the composite PK makes re-inserts no-ops), while other users stay
 locked out. The claim is a **map, not a single slot**, so if A's transfer is
 interrupted and B then signs in with B's own guest favorites, B records its claim
-without erasing A's lock. Claim-map mutations are serialized through an
-in-process lock so two overlapping handoffs (a fast account switch) cannot
-interleave and drop an entry. The map stores only user ids and public
-`place_id`s — never a token or secret; `allowBackup:false` keeps it off device
-backups.
+without erasing A's lock.
+
+The claim decision and its durable write happen in **one locked, atomic
+read-modify-write** (`claimAbsorbableSnapshot`): the absorbable snapshot is
+computed from the same claim-map read that persists the claim. This closes the
+TOCTOU where two overlapping handoffs (a fast account switch across the
+server-load await) could each absorb the same still-unclaimed ids — whichever
+runs second sees the first's claim and excludes those ids, so no id is written to
+two accounts. The map stores only user ids and public `place_id`s — never a token
+or secret; `allowBackup:false` keeps it off device backups.
 
 ### Crash-safety proof sketch
 
@@ -81,7 +86,12 @@ every crash point between the Supabase write and the guest clear.
   orchestrator (`favorites-handoff-runner.ts`) are unit-tested against in-memory
   fakes that simulate crash / restart / account switch, without React Native,
   AsyncStorage, or Supabase.
-- One extra read (eligibility check) precedes a transfer that has ids to insert.
-- A workshop that is ineligible at sign-in time is not migrated (see trade-off).
+- One extra read (existence check) precedes a transfer that has ids to insert.
+- Only hard-deleted (non-existent) ids are dropped; existing-but-hidden favorites
+  still migrate and reappear if the workshop is re-listed.
+- Known residuals (accepted): a foreign claim whose owner never returns keeps its
+  guest ids locked to that owner (storage-only, no isolation break); and
+  `clientIp`'s off-Vercel `X-Forwarded-For` fallback is spoofable — the search
+  rate limiter is safe on the actual Vercel edge and fails open regardless.
 - Behavior is CI-VERIFIED (unit tests) only; the end-to-end crash/account-switch
   matrix still requires a fresh real-device pass before release.

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { parseFavorites, serializeFavorites } from "./favorites-sync";
 import {
+  absorbableGuestIds,
   parseHandoffClaims,
   serializeHandoffClaims,
   withClaim,
@@ -61,35 +62,34 @@ function withClaimLock<T>(fn: () => Promise<T>): Promise<T> {
   return run;
 }
 
-/** Read the durable handoff claim map (empty object if none / corrupt). */
-export async function readHandoffClaims(): Promise<HandoffClaims> {
-  try {
-    return parseHandoffClaims(await AsyncStorage.getItem(CLAIM_KEY));
-  } catch {
-    return {};
-  }
-}
-
 /**
- * Durably record which identity is absorbing a snapshot, preserving any OTHER
- * user's existing claim. MUST be persisted before the first server write of a
- * handoff so a crash cannot expose the snapshot to another account. Returns
- * false if the write did not land.
+ * Atomically decide AND persist this user's absorbable snapshot in one locked
+ * read-modify-write. Computing the snapshot from the SAME claim-map read that
+ * writes the claim closes the TOCTOU where two overlapping handoffs (a fast
+ * account switch across the server-load await) could each absorb the same
+ * still-unclaimed guest ids. Whichever runs second sees the first's claim and
+ * excludes those ids. Returns the snapshot this user actually claimed, or null
+ * if the claim could not be persisted.
  */
-export async function writeHandoffClaim(
+export async function claimAbsorbableSnapshot(
   uid: string,
-  ids: readonly string[]
-): Promise<boolean> {
+  guest: readonly string[]
+): Promise<string[] | null> {
   return withClaimLock(async () => {
     try {
       const claims = parseHandoffClaims(await AsyncStorage.getItem(CLAIM_KEY));
-      await AsyncStorage.setItem(
-        CLAIM_KEY,
-        serializeHandoffClaims(withClaim(claims, uid, ids))
-      );
-      return true;
+      const snapshot = absorbableGuestIds(guest, claims, uid);
+      const next = withClaim(claims, uid, snapshot); // empty snapshot removes uid
+      if (serializeHandoffClaims(claims) !== serializeHandoffClaims(next)) {
+        if (Object.keys(next).length === 0) {
+          await AsyncStorage.removeItem(CLAIM_KEY);
+        } else {
+          await AsyncStorage.setItem(CLAIM_KEY, serializeHandoffClaims(next));
+        }
+      }
+      return snapshot;
     } catch {
-      return false;
+      return null;
     }
   });
 }

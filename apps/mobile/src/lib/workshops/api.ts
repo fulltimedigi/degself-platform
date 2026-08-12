@@ -2,11 +2,12 @@ import { API_BASE_URL } from "@/config/env";
 import type { Workshop, WorkshopListResponse } from "./types";
 import {
   buildWorkshopDetailUrlFromBase,
+  buildWorkshopExistsUrlFromBase,
   buildWorkshopListUrlFromBase,
   chunkWorkshopIdsForGet,
   reorderSavedNewestFirst,
 } from "./urls";
-import { parseWorkshopDetail, parseWorkshopList } from "./contracts";
+import { parseExistingPlaceIds, parseWorkshopDetail, parseWorkshopList } from "./contracts";
 
 function requireApiBaseUrl(): string {
   if (!API_BASE_URL) {
@@ -120,10 +121,10 @@ export async function fetchSavedWorkshops(
 }
 
 /**
- * The subset of the given ids that the canonical public read path confirms
- * exist AND are eligible (active, not permanently closed, in scope). Used before
- * the guest→account favorites insert so a stale / hard-deleted id can never
- * trigger a foreign-key violation that would abort the whole transfer.
+ * The subset of the given ids that EXIST in the catalog (regardless of public
+ * visibility). This mirrors the FK target of user_favorites.place_id, so the
+ * guest→account handoff inserts only rows that cannot cause a foreign-key
+ * violation while still migrating favorites for temporarily-hidden workshops.
  * Order and case are preserved.
  */
 export async function fetchExistingPlaceIds(
@@ -138,11 +139,12 @@ export async function fetchExistingPlaceIds(
   const present = new Set<string>();
 
   // Sequential (no burst); any failure propagates so the caller keeps the guest
-  // snapshot and retries — it must never treat "couldn't check" as "ineligible".
+  // snapshot and retries — it must never treat "couldn't check" as "missing".
   for (const chunk of chunks) {
-    const url = buildWorkshopListUrlFromBase(base, { ids: chunk });
-    const parsed = parseWorkshopList(await readJson(url, signal));
-    for (const workshop of parsed.workshops) present.add(workshop.place_id);
+    const url = buildWorkshopExistsUrlFromBase(base, chunk);
+    for (const id of parseExistingPlaceIds(await readJson(url, signal))) {
+      present.add(id);
+    }
   }
 
   return unique.filter((id) => present.has(id));

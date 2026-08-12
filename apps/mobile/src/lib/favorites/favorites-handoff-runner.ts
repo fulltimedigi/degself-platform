@@ -22,23 +22,25 @@ import {
   unionFavorites,
 } from "./favorites-sync";
 import {
-  absorbableGuestIds,
   handoffCandidate,
-  ownClaimIds,
   partitionHandoffCandidate,
-  type HandoffClaims,
 } from "./favorites-handoff";
 
 export type HandoffIO = {
-  readClaims: () => Promise<HandoffClaims>;
-  /** Upsert THIS user's claim, preserving any other user's claim. */
-  writeClaim: (uid: string, ids: string[]) => Promise<boolean>;
+  /**
+   * Atomically compute AND durably persist this user's absorbable snapshot in a
+   * single locked read-modify-write (excludes any other user's claimed ids,
+   * folds this user's own prior claim back in). Returns the claimed snapshot, or
+   * null if it could not be persisted. This is what makes the claim decision
+   * race-free against overlapping handoffs.
+   */
+  claimSnapshot: (uid: string, guest: string[]) => Promise<string[] | null>;
   /** Remove only THIS user's claim. */
   clearClaim: (uid: string) => Promise<boolean>;
   readGuest: () => Promise<string[]>;
   writeGuest: (ids: string[]) => Promise<boolean>;
   selectServer: (uid: string) => Promise<string[]>;
-  /** Subset of the given ids the canonical read path confirms exist/are eligible. */
+  /** Subset of the given ids the catalog confirms EXIST (FK-safe to insert). */
   fetchEligible: (ids: string[]) => Promise<string[]>;
   insertServer: (uid: string, ids: string[]) => Promise<void>;
 };
@@ -54,9 +56,17 @@ export async function performGuestHandoff(
   uid: string,
   io: HandoffIO
 ): Promise<HandoffResult> {
-  const claims = await io.readClaims();
   const guest = await io.readGuest();
-  const snapshot = absorbableGuestIds(guest, claims, uid);
+
+  // Atomically claim the absorbable snapshot BEFORE any server write. The claim
+  // decision and its durable write happen under one lock, so a crash keeps the
+  // snapshot bound to this user AND two overlapping handoffs can't both absorb
+  // the same still-unclaimed ids. An empty snapshot also releases our own stale
+  // claim inside this call.
+  const snapshot = await io.claimSnapshot(uid, guest);
+  if (snapshot === null) {
+    return { done: false, serverIds: null }; // could not persist claim → retry
+  }
 
   let serverIds: string[];
   try {
@@ -66,16 +76,7 @@ export async function performGuestHandoff(
   }
 
   if (snapshot.length === 0) {
-    // Nothing of ours to absorb. Drop only our OWN stale claim; other users'
-    // claims stay locked for their rightful owners.
-    if (ownClaimIds(claims, uid).length > 0) await io.clearClaim(uid);
     return { done: true, serverIds };
-  }
-
-  // Durably bind the snapshot to this user BEFORE any server write (preserving
-  // any other user's existing claim).
-  if (!(await io.writeClaim(uid, snapshot))) {
-    return { done: false, serverIds };
   }
 
   const candidate = handoffCandidate(snapshot, serverIds);

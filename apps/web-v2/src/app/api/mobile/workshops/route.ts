@@ -41,6 +41,27 @@ export async function GET(request: NextRequest) {
     }
 
     if (parsed.kind === "saved") {
+      // Existence-only check for the guest→account favorites handoff. It mirrors
+      // the FK target (user_favorites.place_id → workshops.place_id): a row must
+      // only EXIST to be insertable, regardless of public visibility. Returning
+      // existence here (not the visibility-filtered catalog) prevents the handoff
+      // from silently dropping favorites for temporarily-hidden workshops. No new
+      // exposure: workshops is anon-readable by place_id already.
+      if (request.nextUrl.searchParams.get("mode") === "exists") {
+        if (parsed.ids.length === 0) {
+          return NextResponse.json({ place_ids: [] }, { headers: CACHE_HEADERS });
+        }
+        const { data, error } = await supabasePublic
+          .from("workshops")
+          .select("place_id")
+          .in("place_id", parsed.ids);
+        if (error) throw error;
+        const place_ids = ((data ?? []) as { place_id: string }[]).map(
+          (row) => row.place_id
+        );
+        return NextResponse.json({ place_ids }, { headers: CACHE_HEADERS });
+      }
+
       if (parsed.ids.length === 0) {
         return NextResponse.json({ workshops: [] }, { headers: CACHE_HEADERS });
       }
