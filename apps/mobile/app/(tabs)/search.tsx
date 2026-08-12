@@ -24,11 +24,13 @@ export default function SearchScreen() {
   const [error, setError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const pageRequestId = useRef(0);
+  const loadingMoreRef = useRef(false);
 
   useEffect(() => {
     const controller = new AbortController();
     const normalized = query.trim();
     const requestId = ++pageRequestId.current;
+    loadingMoreRef.current = false;
 
     const timer = setTimeout(async () => {
       setLoading(true);
@@ -66,7 +68,7 @@ export default function SearchScreen() {
   async function loadMore() {
     if (
       loading ||
-      loadingMore ||
+      loadingMoreRef.current ||
       error ||
       query.trim() !== activeQuery ||
       total == null ||
@@ -76,6 +78,7 @@ export default function SearchScreen() {
     }
 
     const requestId = pageRequestId.current;
+    loadingMoreRef.current = true;
     setLoadingMore(true);
     try {
       const result = await fetchWorkshops({
@@ -95,7 +98,10 @@ export default function SearchScreen() {
     } catch {
       // Keep already-loaded results usable. A later scroll can retry this page.
     } finally {
-      if (requestId === pageRequestId.current) setLoadingMore(false);
+      if (requestId === pageRequestId.current) {
+        loadingMoreRef.current = false;
+        setLoadingMore(false);
+      }
     }
   }
 
