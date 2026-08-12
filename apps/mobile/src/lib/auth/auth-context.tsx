@@ -7,15 +7,14 @@ import React, {
   useState,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { getSupabase, startAuthAutoRefresh } from "@/lib/supabase";
+import {
+  createIsolatedAuthClient,
+  getSupabase,
+  startAuthAutoRefresh,
+} from "@/lib/supabase";
 import { signInWithGoogle as googleSignIn } from "./google";
 import { signInWithApple as appleSignIn } from "./apple";
-
-// The smallest cohesive auth/session abstraction the app needs. Supabase Auth
-// remains the single authority — this provider does NOT duplicate session state
-// into a separate store (no Zustand); it mirrors Supabase's session via
-// onAuthStateChange and exposes the operations screens need. Bootstrap restores
-// the persisted (encrypted) session; auto-refresh is tied to app foreground.
+import { assertSameReauthenticatedUser } from "./reauth-guard";
 
 export type AuthStatus = "loading" | "signedIn" | "signedOut";
 export type AuthProviderName = "google" | "apple";
@@ -27,27 +26,18 @@ type AuthContextValue = {
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
-  /**
-   * Clear ONLY the local session with no network call. Used after a confirmed
-   * account deletion — the server identity is already gone (its sessions/refresh
-   * tokens cascaded), so a server-side sign-out would fail; this deterministically
-   * wipes the encrypted local session (LargeSecureStore) and the native Google
-   * session so no deleted-user token lingers on the device.
-   */
   clearLocalSession: () => Promise<void>;
   /**
-   * Force a fresh provider sign-in to satisfy the server's recent-auth gate
-   * (used to recover from AUTH_TOO_OLD before account deletion). Re-runs the
-   * SAME provider the account was created with — OAuth users have no password.
+   * Re-run the original provider in an isolated auth client. The fresh session
+   * is promoted into the app only after its Supabase user id exactly matches the
+   * user that initiated reauthentication.
    */
   reauthenticate: () => Promise<void>;
-  /** Current access token for the native Bearer transport, or null. */
   getAccessToken: () => Promise<string | null>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-/** Which OAuth provider backs this user, from Supabase-verified identity. */
 export function providerOf(user: User | null): AuthProviderName | null {
   const p = user?.app_metadata?.provider;
   if (p === "google" || p === "apple") return p;
@@ -90,26 +80,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const signInWithGoogle = useCallback(() => googleSignIn(), []);
-  const signInWithApple = useCallback(() => appleSignIn(), []);
+  const signInWithGoogle = useCallback(async () => {
+    await googleSignIn();
+  }, []);
+
+  const signInWithApple = useCallback(async () => {
+    await appleSignIn();
+  }, []);
 
   const signOut = useCallback(async () => {
-    // OAuth (system browser) leaves no native provider session to clear; Supabase
-    // sign-out revokes the session and the auth listener flips the app to guest.
     await getSupabase().auth.signOut();
   }, []);
 
   const clearLocalSession = useCallback(async () => {
-    // Local-only clear after account deletion — the server identity is already
-    // gone (sessions cascaded), so no network sign-out is attempted.
     await getSupabase().auth.signOut({ scope: "local" });
   }, []);
 
   const reauthenticate = useCallback(async () => {
-    const provider = providerOf(session?.user ?? null);
-    if (provider === "apple") return appleSignIn();
-    if (provider === "google") return googleSignIn();
-    throw new Error("reauth-unknown-provider");
+    const original = session;
+    const provider = providerOf(original?.user ?? null);
+    if (!original || !provider) throw new Error("reauth-unknown-provider");
+
+    // Do not run provider reauthentication against the persistent app client.
+    // OAuth account pickers can return another account; keeping the candidate
+    // session isolated prevents FavoritesProvider or any other subscriber from
+    // observing/writing under the wrong identity even momentarily.
+    const isolated = createIsolatedAuthClient();
+    const fresh =
+      provider === "apple"
+        ? await appleSignIn(isolated)
+        : await googleSignIn(isolated);
+
+    assertSameReauthenticatedUser(original.user.id, fresh.user.id);
+
+    // Only after identity equality is proven do we promote the freshly minted
+    // tokens. The persistent client's auth listener then updates the whole app.
+    const persistent = getSupabase();
+    const { error } = await persistent.auth.setSession({
+      access_token: fresh.access_token,
+      refresh_token: fresh.refresh_token,
+    });
+    if (error) throw error;
+
+    // Defense in depth: verify what the persistent client actually accepted.
+    const verified = await persistent.auth.getUser();
+    if (verified.error) throw verified.error;
+    assertSameReauthenticatedUser(original.user.id, verified.data.user?.id);
   }, [session]);
 
   const getAccessToken = useCallback(async () => {
