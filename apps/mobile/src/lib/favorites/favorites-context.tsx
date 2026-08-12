@@ -26,35 +26,31 @@ import {
   selectServerFavorites,
 } from "./favorites-remote";
 
-// Auth-aware favorites, mirroring the web store's two-mode contract:
-//   • guest         → AsyncStorage is the source of truth
-//   • authenticated → public.user_favorites via RLS is the source of truth
-// The mode switch, the Supabase reads/writes, and the loss-safe guest→auth
-// handoff all live here so screens just read `favorites`/`isFavorite` and call
-// `toggle`. Pure merge/clear logic is in ./favorites-sync (unit-tested).
-
 type FavoritesContextValue = {
   favorites: string[];
   loading: boolean;
   isFavorite: (placeId: string) => boolean;
   toggle: (placeId: string) => Promise<void>;
-  /** Drop the guest store + reset view (after a confirmed account deletion). */
   resetAfterDeletion: () => Promise<void>;
 };
 
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
+const HANDOFF_RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000] as const;
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { status, user } = useAuth();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  // The uid whose handoff/load has already run, so a re-render never re-hands-off.
+  const [handoffRetryKey, setHandoffRetryKey] = useState(0);
   const handledUid = useRef<string | null>(null);
+  const handoffAttempts = useRef(0);
+  const guestMutationVersion = useRef(0);
 
   const uid = user?.id ?? null;
 
   useEffect(() => {
     let active = true;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
     async function loadGuest() {
       const ids = await readGuestFavorites();
@@ -64,7 +60,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    async function handoffAndLoad(currentUid: string) {
+    async function handoffAndLoad(currentUid: string): Promise<boolean> {
       setLoading(true);
       const snapshot = await readGuestFavorites();
 
@@ -72,10 +68,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       try {
         serverIds = await selectServerFavorites(currentUid);
       } catch {
-        // Can't read server — leave guest store intact so a later transition
-        // retries the handoff; show whatever we can.
         if (active) setLoading(false);
-        return;
+        return false;
       }
 
       const inserts = handoffInserts(snapshot, serverIds);
@@ -84,26 +78,35 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           await insertServerFavorites(currentUid, inserts);
           serverIds = unionFavorites(serverIds, inserts);
         } catch {
-          // Write failed: keep localStorage intact, do not clear, stay retryable.
           if (active) {
             setFavorites(serverIds);
             setLoading(false);
           }
-          return;
+          return false;
         }
       }
 
-      // Snapshot is now safely server-side → clear ONLY the snapshot, preserving
-      // any id added to the guest store during the in-flight transfer.
       if (snapshot.length > 0) {
         const current = await readGuestFavorites();
-        await writeGuestFavorites(remainingAfterClear(current, snapshot));
+        const cleared = await writeGuestFavorites(
+          remainingAfterClear(current, snapshot)
+        );
+        // Server insertion is idempotent, so a failed local clear is safe to
+        // retry without duplicating or losing favorites.
+        if (!cleared) {
+          if (active) {
+            setFavorites(serverIds);
+            setLoading(false);
+          }
+          return false;
+        }
       }
 
       if (active) {
         setFavorites(serverIds);
         setLoading(false);
       }
+      return true;
     }
 
     if (status === "loading") {
@@ -113,19 +116,34 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
     if (status === "signedIn" && uid) {
       if (handledUid.current !== uid) {
-        handledUid.current = uid;
-        void handoffAndLoad(uid);
+        void handoffAndLoad(uid).then((success) => {
+          if (!active) return;
+          if (success) {
+            handledUid.current = uid;
+            handoffAttempts.current = 0;
+            return;
+          }
+
+          const attempt = handoffAttempts.current;
+          if (attempt < HANDOFF_RETRY_DELAYS_MS.length) {
+            handoffAttempts.current += 1;
+            retryTimer = setTimeout(() => {
+              if (active) setHandoffRetryKey((value) => value + 1);
+            }, HANDOFF_RETRY_DELAYS_MS[attempt]);
+          }
+        });
       }
     } else {
-      // signedOut
       handledUid.current = null;
+      handoffAttempts.current = 0;
       void loadGuest();
     }
 
     return () => {
       active = false;
+      if (retryTimer) clearTimeout(retryTimer);
     };
-  }, [status, uid]);
+  }, [status, uid, handoffRetryKey]);
 
   const isFavorite = useCallback(
     (placeId: string) => favorites.includes(placeId),
@@ -135,11 +153,11 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const toggle = useCallback(
     async (placeId: string) => {
       const currentlySaved = favorites.includes(placeId);
+      const previous = favorites;
       const next = currentlySaved
         ? favorites.filter((x) => x !== placeId)
         : dedupePreserveCase([...favorites, placeId]);
 
-      // Optimistic update.
       setFavorites(next);
 
       if (status === "signedIn" && uid) {
@@ -147,15 +165,19 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           if (currentlySaved) await removeServerFavorite(uid, placeId);
           else await addServerFavorite(uid, placeId);
         } catch {
-          // Revert to server truth so the UI never lies about what was saved.
           try {
             setFavorites(await selectServerFavorites(uid));
           } catch {
-            setFavorites(favorites); // fall back to the pre-toggle view
+            setFavorites(previous);
           }
         }
       } else {
-        await writeGuestFavorites(next);
+        const version = ++guestMutationVersion.current;
+        const persisted = await writeGuestFavorites(next);
+        // Do not let a late failed write roll back a newer user action.
+        if (!persisted && guestMutationVersion.current === version) {
+          setFavorites(previous);
+        }
       }
     },
     [favorites, status, uid]
@@ -163,6 +185,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const resetAfterDeletion = useCallback(async () => {
     handledUid.current = null;
+    handoffAttempts.current = 0;
+    guestMutationVersion.current += 1;
     await clearGuestFavorites();
     setFavorites([]);
   }, []);
