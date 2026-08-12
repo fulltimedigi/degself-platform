@@ -5,12 +5,7 @@ export class ReauthUserMismatchError extends Error {
   }
 }
 
-/**
- * Reauthentication is only valid when the provider flow resolves to the exact
- * Supabase user that initiated the destructive action. OAuth account pickers
- * can return a different account; never let that silently replace the identity
- * whose deletion was being confirmed.
- */
+/** Exact identity gate for provider reauthentication. */
 export function assertSameReauthenticatedUser(
   expectedUserId: string,
   actualUserId: string | null | undefined
@@ -18,4 +13,27 @@ export function assertSameReauthenticatedUser(
   if (!expectedUserId || actualUserId !== expectedUserId) {
     throw new ReauthUserMismatchError();
   }
+}
+
+/**
+ * Safety-critical ordering for destructive reauthentication:
+ * 1) reject a wrong candidate before any persistent auth mutation;
+ * 2) promote the fresh session;
+ * 3) verify the identity accepted by persistent auth again.
+ *
+ * Callbacks keep this logic unit-testable without importing React Native or a
+ * live Supabase client.
+ */
+export async function verifyThenPromoteReauthentication(
+  expectedUserId: string,
+  candidateUserId: string | null | undefined,
+  promote: () => Promise<void>,
+  verifyPromotedUserId: () => Promise<string | null | undefined>
+): Promise<void> {
+  assertSameReauthenticatedUser(expectedUserId, candidateUserId);
+  await promote();
+  assertSameReauthenticatedUser(
+    expectedUserId,
+    await verifyPromotedUserId()
+  );
 }
