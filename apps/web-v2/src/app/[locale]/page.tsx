@@ -289,11 +289,11 @@ export default async function Home() {
             <Link
               href="/isal-degself"
               aria-label={t("askAria")}
-              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl bg-primary px-5 py-5 text-base font-bold text-primary-foreground shadow-[0_16px_40px_-16px_rgba(255,214,10,0.7)] transition hover:-translate-y-0.5 hover:bg-[#ffdf3a] sm:text-lg"
+              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary/70 bg-gradient-to-br from-primary/12 to-card px-5 py-5 text-base font-bold shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)] transition hover:-translate-y-0.5 hover:border-primary sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
-                {/* أيقونة مايك دائرية كبيرة */}
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-foreground text-primary shadow-lg transition group-hover:scale-110">
+                {/* أيقونة مايك دائرية كبيرة — دائرة صفراء صغيرة (تمييز) */}
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <rect x="9" y="3" width="6" height="12" rx="3" />
                     <path d="M5 11a7 7 0 0 0 14 0" />
@@ -302,25 +302,25 @@ export default async function Home() {
                   </svg>
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">
-                  <span>{t("askTitle")}</span>
-                  <span className="text-xs font-medium text-primary-foreground/70 sm:text-sm">{t("askSubtitle")}</span>
+                  <span className="text-foreground">{t("askTitle")}</span>
+                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">{t("askSubtitle")}</span>
                 </span>
               </span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 transition group-hover:-translate-x-1" aria-hidden>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
                 <path d="M15 18l-6-6 6-6" />
               </svg>
             </Link>
 
-            {/* المسار ٢ — اطلب عرض سعر (ثانوي: سطح مرتفع مفرّغ) */}
+            {/* المسار ٢ — اطلب عرض سعر (بارز أيضًا: كرت داكن بحدّ أصفر) */}
             <Link
               href="/quote/new"
               data-testid="button-request-quote-hero"
               aria-label={t("quoteAria")}
-              className="surface surface-interactive group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl px-5 py-5 text-base font-bold sm:text-lg"
+              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary/45 bg-card px-5 py-5 text-base font-bold shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)] transition hover:-translate-y-0.5 hover:border-primary/70 sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
                 {/* أيقونة قائمة/عروض دائرية كبيرة */}
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-inset ring-primary/25 transition group-hover:scale-110">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-inset ring-primary/30 transition group-hover:scale-110">
                   <ClipboardList size={22} strokeWidth={2.2} aria-hidden />
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">
