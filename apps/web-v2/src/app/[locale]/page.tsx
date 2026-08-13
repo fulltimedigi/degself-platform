@@ -256,14 +256,7 @@ export default async function Home() {
       {/* Hero — محسّن بخلفية تدرج وإضاءات + أرقام موثوقية */}
       <section className="relative overflow-hidden">
         {/* تدرج خلفي خفيف + وهج أصفر */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,214,10,0.10), transparent 70%)",
-          }}
-          aria-hidden
-        />
+        <div className="brand-glow pointer-events-none absolute inset-0" aria-hidden />
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px"
           style={{
@@ -292,15 +285,15 @@ export default async function Home() {
           {/* CTA رئيسي مزدوج — مسارَان متساويان: اسأل دق سلف (ترشيح فوري)
               و اطلب عرض سعر (مقارنة أسعار). مكدّسان على الجوال، جنب بعض على الديسكتوب. */}
           <div className="flex w-full max-w-2xl flex-col items-stretch gap-3 md:flex-row">
-            {/* المسار ١ — اسأل دق سلف (الـ primary input للموقع) */}
+            {/* المسار ١ — اسأل دق سلف (الإجراء الأساسي: أصفر مصمت، بطل الصفحة) */}
             <Link
               href="/isal-degself"
               aria-label={t("askAria")}
-              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
+              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl bg-primary px-5 py-5 text-base font-bold text-primary-foreground shadow-[0_16px_40px_-16px_rgba(255,214,10,0.7)] transition hover:-translate-y-0.5 hover:bg-[#ffdf3a] sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
                 {/* أيقونة مايك دائرية كبيرة */}
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-foreground text-primary shadow-lg transition group-hover:scale-110">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <rect x="9" y="3" width="6" height="12" rx="3" />
                     <path d="M5 11a7 7 0 0 0 14 0" />
@@ -309,25 +302,25 @@ export default async function Home() {
                   </svg>
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">
-                  <span className="text-foreground">{t("askTitle")}</span>
-                  <span className="text-xs font-normal text-muted-foreground sm:text-sm">{t("askSubtitle")}</span>
+                  <span>{t("askTitle")}</span>
+                  <span className="text-xs font-medium text-primary-foreground/70 sm:text-sm">{t("askSubtitle")}</span>
                 </span>
               </span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-primary transition group-hover:-translate-x-1" aria-hidden>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 transition group-hover:-translate-x-1" aria-hidden>
                 <path d="M15 18l-6-6 6-6" />
               </svg>
             </Link>
 
-            {/* المسار ٢ — اطلب عرض سعر (طلب عروض من عدة كراجات) */}
+            {/* المسار ٢ — اطلب عرض سعر (ثانوي: سطح مرتفع مفرّغ) */}
             <Link
               href="/quote/new"
               data-testid="button-request-quote-hero"
               aria-label={t("quoteAria")}
-              className="group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/20 to-primary/5 px-5 py-5 text-base font-bold shadow-xl transition hover:scale-[1.02] hover:from-primary/30 hover:to-primary/10 sm:text-lg"
+              className="surface surface-interactive group inline-flex min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl px-5 py-5 text-base font-bold sm:text-lg"
             >
               <span className="flex min-w-0 items-center gap-3">
                 {/* أيقونة قائمة/عروض دائرية كبيرة */}
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition group-hover:scale-110">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-inset ring-primary/25 transition group-hover:scale-110">
                   <ClipboardList size={22} strokeWidth={2.2} aria-hidden />
                 </span>
                 <span className="flex min-w-0 flex-col items-start text-right">

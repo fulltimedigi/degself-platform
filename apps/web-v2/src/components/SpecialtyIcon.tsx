@@ -128,7 +128,10 @@ export interface SpecialtyVisual {
 }
 
 const VISUALS: SpecialtyVisual[] = [
-  { Icon: Gear, color: "#FFD60A", label: "صيانة" },        // yellow — brand
+  // Generic maintenance is the most common listing — keep it Chrome Silver (an
+  // official brand color) so result grids don't flood with yellow. Yellow is
+  // reserved for interactive accents (buttons, highlights, active states).
+  { Icon: Gear, color: "#C4CAD4", label: "صيانة" },        // chrome silver
   { Icon: Wrench, color: "#F59E0B", label: "ميكانيكا" },   // orange
   { Icon: Bolt, color: "#3B82F6", label: "كهرباء" },       // blue
   { Icon: Tire, color: "#10B981", label: "تواير" },        // green
@@ -140,7 +143,7 @@ const VISUALS: SpecialtyVisual[] = [
   { Icon: Battery, color: "#EF4444", label: "بطاريات" },   // red
 ];
 
-const FALLBACK: SpecialtyVisual = { Icon: Gear, color: "#FFD60A", label: "" };
+const FALLBACK: SpecialtyVisual = { Icon: Gear, color: "#C4CAD4", label: "" };
 
 /**
  * Pick the icon + color for a workshop given its `specialty` field

@@ -5,7 +5,7 @@ import { Truck, Wrench, Disc3 } from "lucide-react";
 export async function EmergencyBanner() {
   const t = await getTranslations("home");
   return (
-    <div className="rounded-2xl border border-red-500/20 bg-red-950/30 p-6">
+    <div className="rounded-2xl border border-red-500/25 bg-[linear-gradient(180deg,rgba(239,68,68,0.12),transparent_45%),#141414] p-6 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]">
       <div className="flex flex-col items-center gap-4 text-center">
         <div className="flex items-center gap-2">
           {/* pulsing red dot */}
@@ -20,7 +20,7 @@ export async function EmergencyBanner() {
         <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/emergency?type=tow"
-            className="flex items-center gap-2 rounded-xl bg-red-500 px-5 py-2.5 font-bold text-white transition hover:bg-red-600"
+            className="flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-bold text-white shadow-[0_10px_28px_-12px_rgba(239,68,68,0.8)] transition hover:bg-red-500"
           >
             <Truck size={18} aria-hidden />
             {t("tow")}
