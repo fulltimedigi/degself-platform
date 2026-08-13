@@ -35,3 +35,8 @@ yarn-debug.log*
 webapp/qa/
 .vercel
 data/workshops_master.json.bak_*
+
+# Agent-installed skills (tooling, not product code)
+.agents/
+.claude/
+skills-lock.json

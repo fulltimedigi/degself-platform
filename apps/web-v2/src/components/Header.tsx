@@ -65,15 +65,22 @@ export function Header() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
         {/* Logo (RTL start = right) */}
         <Link href="/" className="flex items-center" aria-label={t("homeAria")}>
-          <Image
-            src="/brand/logo-arabic-badge.png"
-            alt="دق سلف"
-            width={48}
-            height={48}
-            priority
-            unoptimized
-            className="h-12 w-12"
-          />
+          <span className="relative inline-flex h-12 w-12 overflow-hidden rounded-full">
+            <Image
+              src="/brand/logo-arabic-badge.png"
+              alt="دق سلف"
+              width={48}
+              height={48}
+              priority
+              unoptimized
+              className="logo-flourish h-12 w-12"
+            />
+            {/* Periodic gleam sweep — clipped to the circular badge. */}
+            <span
+              aria-hidden
+              className="logo-gleam-sweep pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+            />
+          </span>
         </Link>
 
         {/* Center nav (desktop) */}

@@ -70,6 +70,57 @@ body {
   );
 }
 
+/*
+ * Periodic logo flourish — a single slow spin plus a light gleam sweep once every
+ * ~6s, idle the rest of the time so it reads as a premium accent, not a busy toy.
+ */
+@keyframes logo-spin {
+  0% {
+    transform: perspective(320px) rotateY(0deg);
+  }
+  20% {
+    transform: perspective(320px) rotateY(360deg);
+  }
+  100% {
+    transform: perspective(320px) rotateY(360deg);
+  }
+}
+@keyframes logo-gleam {
+  0% {
+    transform: translateX(-160%) skewX(-18deg);
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  16% {
+    transform: translateX(260%) skewX(-18deg);
+    opacity: 1;
+  }
+  18%,
+  100% {
+    transform: translateX(260%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+.logo-flourish {
+  animation: logo-spin 6s ease-in-out infinite;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  will-change: transform;
+}
+.logo-gleam-sweep {
+  animation: logo-gleam 6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-flourish,
+  .logo-gleam-sweep {
+    animation: none;
+  }
+}
+
 /* Yellow focus ring for accessibility (ported from v1) */
 *:focus-visible {
   outline: 2px solid var(--color-ring);
