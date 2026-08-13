@@ -3,6 +3,11 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { adminForwardText, offersUrl } from "@/lib/whatsapp";
+import { parseSettlementButtonReply } from "@/lib/settlement-confirmation";
+import {
+  applyCustomerConfirmationByPhone,
+  isSettlementEnabled,
+} from "@/lib/settlements";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -51,20 +56,52 @@ export async function POST(req: NextRequest) {
 
   try {
     const statuses: WaStatus[] = [];
+    const messages: WaInboundMessage[] = [];
     const entries = (payload as { entry?: unknown[] })?.entry ?? [];
     for (const entry of entries) {
       const changes = (entry as { changes?: unknown[] })?.changes ?? [];
       for (const change of changes) {
-        const value = (change as { value?: { statuses?: WaStatus[] } })?.value;
+        const value = (change as {
+          value?: { statuses?: WaStatus[]; messages?: WaInboundMessage[] };
+        })?.value;
         if (Array.isArray(value?.statuses)) statuses.push(...value.statuses);
+        if (Array.isArray(value?.messages)) messages.push(...value.messages);
       }
     }
     if (statuses.length) await processStatuses(statuses);
+    if (messages.length && isSettlementEnabled()) {
+      await processSettlementReplies(messages);
+    }
   } catch (e) {
     console.error("whatsapp webhook processing error:", e);
   }
 
   return NextResponse.json({ ok: true });
+}
+
+interface WaInboundMessage {
+  from?: string;
+  type?: string;
+  interactive?: { type?: string; button_reply?: { id?: string } };
+  button?: { payload?: string };
+}
+
+/** Route inbound completion-confirmation button taps to the settlement layer. */
+async function processSettlementReplies(messages: WaInboundMessage[]) {
+  for (const m of messages) {
+    // Interactive reply buttons and template quick-reply buttons differ in shape.
+    const buttonId =
+      m.interactive?.type === "button_reply"
+        ? m.interactive.button_reply?.id
+        : m.button?.payload;
+    const action = parseSettlementButtonReply(buttonId);
+    if (!action) continue;
+    try {
+      await applyCustomerConfirmationByPhone(m.from, action === "confirmed");
+    } catch (e) {
+      console.error("settlement confirmation reply failed:", e);
+    }
+  }
 }
 
 function receiptTime(status: WaStatus): string {

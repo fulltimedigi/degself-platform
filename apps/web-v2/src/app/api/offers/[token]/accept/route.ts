@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { isOfferExpired } from "@/lib/quote-status";
 import { readJsonObject } from "@/lib/json-body";
+import { createSettlementForAcceptedOffer } from "@/lib/settlements";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -136,6 +137,21 @@ export async function POST(
     await sendAdminWhatsApp(lines.join("\n"));
   } catch (e) {
     console.error("accept notify failed:", e);
+  }
+
+  // Open the completion-verification window for this accepted offer. Best-effort
+  // and flag-gated (no-op unless SETTLEMENT_ENABLED); never blocks the customer.
+  // workshop_id enrichment (via the offer's outreach record) is deferred; the
+  // column is nullable and analytics-only in Phase A.
+  try {
+    await createSettlementForAcceptedOffer({
+      quoteId: quote.id,
+      offerId: offer.id,
+      workshopId: null,
+      acceptedAtIso: nowIso,
+    });
+  } catch (e) {
+    console.error("settlement creation failed:", e);
   }
 
   return NextResponse.json({ success: true });
