@@ -163,7 +163,7 @@ export default async function WorkshopPage({
       </nav>
 
       {/* Hero */}
-      <div className="mt-4 overflow-hidden rounded-2xl border border-border">
+      <div className="surface mt-4 overflow-hidden rounded-2xl">
         <div className="aspect-[16/7] w-full">
           <BrandedCover name={w.name} entityType={w.entity_type} specialty={w.specialty} />
         </div>
@@ -207,7 +207,7 @@ export default async function WorkshopPage({
       {enrichment && <EnrichmentTags enrichment={enrichment} />}
 
       {/* Details */}
-      <section className="mt-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+      <section className="mt-6 flex flex-col gap-3 surface rounded-xl p-4">
         <h2 className="font-bold">{t("contactHeading")}</h2>
         {(w.street || w.address) && (
           <p className="text-sm">
@@ -245,7 +245,7 @@ export default async function WorkshopPage({
 
       {/* Available services */}
       {w.specialty_hints && w.specialty_hints.length > 0 && (
-        <section className="mt-4 rounded-xl border border-border bg-card p-4">
+        <section className="mt-4 surface rounded-xl p-4">
           <h2 className="mb-3 font-bold">{t("servicesHeading")}</h2>
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {services.map((s) => (
@@ -260,7 +260,7 @@ export default async function WorkshopPage({
 
       {/* Opening hours — 7-day table (today highlighted) + live open-now badge */}
       {w.opening_hours && (
-        <section className="mt-4 rounded-xl border border-border bg-card p-4">
+        <section className="mt-4 surface rounded-xl p-4">
           <div className="mb-2 flex items-center justify-between gap-2">
             <h2 className="font-bold">{t("hoursHeading")}</h2>
             <OpenNowBadge openingHours={w.opening_hours} />
@@ -295,7 +295,7 @@ export default async function WorkshopPage({
       )}
 
       {/* Reviews — visitor reviews (manually moderated) */}
-      <section className="mt-4 rounded-xl border border-border bg-card p-4">
+      <section className="mt-4 surface rounded-xl p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
           <h2 className="font-bold">{t("reviewsHeading")}</h2>
           {reviewSummary.count > 0 && reviewSummary.avg != null && (
@@ -334,7 +334,7 @@ export default async function WorkshopPage({
       <SimilarWorkshops workshops={similar} />
 
       {/* Report this listing to Degself team via business WhatsApp */}
-      <section className="mt-4 rounded-xl border border-border bg-card p-4">
+      <section className="mt-4 surface rounded-xl p-4">
         <h2 className="mb-2 font-bold">{t("reportHeading")}</h2>
         <p className="mb-3 text-sm text-muted-foreground">{t("reportBody")}</p>
         <a
