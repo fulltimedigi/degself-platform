@@ -38,5 +38,5 @@ data/workshops_master.json.bak_*
 
 # Agent-installed skills (tooling, not product code)
 .agents/
-.claude/
+.claude/skills/
 skills-lock.json
