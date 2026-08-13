@@ -4,8 +4,10 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sendAdminWhatsApp } from "@/lib/callmebot";
 import { adminForwardText, offersUrl } from "@/lib/whatsapp";
 import { parseSettlementButtonReply } from "@/lib/settlement-confirmation";
+import { parseRatingListReply } from "@/lib/settlement-review";
 import {
-  applyCustomerConfirmationByPhone,
+  handleConfirmationReply,
+  handleRatingReply,
   isSettlementEnabled,
 } from "@/lib/settlements";
 
@@ -82,24 +84,37 @@ export async function POST(req: NextRequest) {
 interface WaInboundMessage {
   from?: string;
   type?: string;
-  interactive?: { type?: string; button_reply?: { id?: string } };
+  context?: { id?: string };
+  interactive?: {
+    type?: string;
+    button_reply?: { id?: string };
+    list_reply?: { id?: string };
+  };
   button?: { payload?: string };
 }
 
-/** Route inbound completion-confirmation button taps to the settlement layer. */
+/** Route inbound confirmation taps and rating selections to the settlement layer. */
 async function processSettlementReplies(messages: WaInboundMessage[]) {
   for (const m of messages) {
-    // Interactive reply buttons and template quick-reply buttons differ in shape.
-    const buttonId =
-      m.interactive?.type === "button_reply"
-        ? m.interactive.button_reply?.id
-        : m.button?.payload;
-    const action = parseSettlementButtonReply(buttonId);
-    if (!action) continue;
     try {
-      await applyCustomerConfirmationByPhone(m.from, action === "confirmed");
+      // Rating list selection → verified review.
+      if (m.interactive?.type === "list_reply") {
+        const rating = parseRatingListReply(m.interactive.list_reply?.id);
+        if (rating) await handleRatingReply(m.context?.id, m.from, rating);
+        continue;
+      }
+      // Yes/No confirmation (interactive reply button or template quick-reply).
+      const buttonId =
+        m.interactive?.type === "button_reply"
+          ? m.interactive.button_reply?.id
+          : m.button?.payload;
+      const action = parseSettlementButtonReply(buttonId);
+      if (!action) continue;
+      // Resolve by the message being replied to (context.id) first, so multiple
+      // bookings for the same customer never cross.
+      await handleConfirmationReply(m.context?.id, m.from, action === "confirmed");
     } catch (e) {
-      console.error("settlement confirmation reply failed:", e);
+      console.error("settlement reply handling failed:", e);
     }
   }
 }

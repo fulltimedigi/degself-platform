@@ -1731,6 +1731,8 @@
     "reviewsHeading": "Reviews",
     "visitor": "Visitor",
     "noReviews": "No reviews yet — be the first to review this garage.",
+    "verified": "Verified transaction",
+    "garageReply": "Garage reply",
     "reportHeading": "Report to us",
     "reportBody": "If you notice any error in this garage's data (number, address, working hours, or services), report it via WhatsApp and we'll fix it within hours.",
     "reportButton": "Report via WhatsApp",

@@ -80,6 +80,56 @@ export async function sendWhatsAppTemplate(
   }
 }
 
+/**
+ * Send a free-form INTERACTIVE message (buttons/list). Only valid inside an open
+ * 24h customer-service window (e.g. right after the customer replied to our
+ * confirmation). Same WHATSAPP_ENABLED gate and fail-safe shape as templates.
+ */
+export async function sendWhatsAppInteractive(
+  to: string,
+  interactive: unknown
+): Promise<WaSendResult> {
+  if (!isWhatsAppEnabled()) return { ok: false, skipped: true, reason: "disabled" };
+
+  const token = process.env.WHATSAPP_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  if (!token || !phoneId) return { ok: false, skipped: true, reason: "unconfigured" };
+  if (!to) return { ok: false, skipped: true, reason: "no_recipient" };
+
+  const endpoint = `https://graph.facebook.com/${GRAPH_VERSION}/${phoneId}/messages`;
+  const payload = {
+    messaging_product: "whatsapp",
+    to,
+    type: "interactive",
+    interactive,
+  };
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(WA_TIMEOUT_MS),
+    });
+    const body = (await res.json().catch(() => ({}))) as {
+      messages?: { id: string }[];
+      error?: { message?: string };
+    };
+    const messageId = body?.messages?.[0]?.id;
+    if (res.ok && messageId) return { ok: true, messageId };
+    return {
+      ok: false,
+      skipped: false,
+      status: res.status,
+      error: body?.error?.message ?? `HTTP ${res.status}`,
+    };
+  } catch (e) {
+    return { ok: false, skipped: false, error: e instanceof Error ? e.message : "network error" };
+  }
+}
+
 /** Template body: service, car, area. Dynamic URL button receives only the token. */
 export function garageQuoteTemplateComponents(
   service: string,

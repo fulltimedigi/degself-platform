@@ -6,13 +6,20 @@
 // Server-only in practice: it imports the service-role admin client (which throws
 // if constructed in the browser) and is never imported by a client component.
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { sendWhatsAppTemplate, type WaSendResult } from "@/lib/whatsapp";
+import {
+  sendWhatsAppInteractive,
+  sendWhatsAppTemplate,
+  type WaSendResult,
+} from "@/lib/whatsapp";
 import { kuwaitWhatsAppDigits } from "@/lib/utils";
 import { settlementConfirmationTemplateComponents } from "@/lib/settlement-confirmation";
+import { buildRatingListInteractive } from "@/lib/settlement-review";
+import { createVerifiedReview } from "@/lib/reviews-write";
 import {
   autoConfirmTransition,
   computeAutoConfirmAfter,
   customerReplyTransition,
+  type CompletionSource,
   type SettlementStatus,
 } from "@/lib/settlement-status";
 
@@ -41,11 +48,13 @@ export async function createSettlementForAcceptedOffer(
 ): Promise<void> {
   if (!isSettlementEnabled()) return;
   const admin = getSupabaseAdmin();
+  const workshopId =
+    input.workshopId ?? (await resolveWorkshopIdForOffer(admin, input.offerId));
   const { error } = await admin.from("quote_settlements").upsert(
     {
       quote_id: input.quoteId,
       offer_id: input.offerId,
-      workshop_id: input.workshopId ?? null,
+      workshop_id: workshopId,
       accepted_at: input.acceptedAtIso,
       auto_confirm_after: computeAutoConfirmAfter(input.acceptedAtIso),
       status: "pending_settlement",
@@ -53,6 +62,26 @@ export async function createSettlementForAcceptedOffer(
     { onConflict: "quote_id,offer_id", ignoreDuplicates: true }
   );
   if (error) throw new Error(error.message);
+}
+
+/** Canonical workshop place_id for an accepted offer, via its outreach record. */
+async function resolveWorkshopIdForOffer(
+  admin: ReturnType<typeof getSupabaseAdmin>,
+  offerId: string
+): Promise<string | null> {
+  const { data: offer } = await admin
+    .from("quote_offers")
+    .select("outreach_id")
+    .eq("id", offerId)
+    .maybeSingle();
+  const outreachId = offer?.outreach_id as string | null | undefined;
+  if (!outreachId) return null;
+  const { data: outreach } = await admin
+    .from("quote_workshop_outreach")
+    .select("workshop_id")
+    .eq("id", outreachId)
+    .maybeSingle();
+  return (outreach?.workshop_id as string | null | undefined) ?? null;
 }
 
 export type DueSettlement = {
@@ -119,7 +148,10 @@ export async function runAutoConfirmSweep(limit = 100): Promise<number> {
 
 /**
  * Record the customer's own yes/no confirmation. The customer is the neutral
- * arbiter; a terminal settlement is immutable (returns false).
+ * arbiter: they may act while pending AND may override a silence-presumed
+ * ('auto') completion. A human-settled or disputed row is immutable (returns
+ * false). The UPDATE is guarded on the exact state we read, so it stays atomic
+ * against a concurrent auto-confirm sweep.
  */
 export async function applyCustomerConfirmation(
   settlementId: string,
@@ -128,17 +160,19 @@ export async function applyCustomerConfirmation(
   const admin = getSupabaseAdmin();
   const { data: row, error: readErr } = await admin
     .from("quote_settlements")
-    .select("status")
+    .select("status,completion_source")
     .eq("id", settlementId)
     .maybeSingle();
   if (readErr) throw new Error(readErr.message);
   if (!row) return false;
 
-  const t = customerReplyTransition(row.status as SettlementStatus, confirmed);
+  const status = row.status as SettlementStatus;
+  const source = (row.completion_source as CompletionSource | null) ?? null;
+  const t = customerReplyTransition(status, source, confirmed);
   if (!t) return false;
 
   const now = new Date().toISOString();
-  const { data: updated, error } = await admin
+  let update = admin
     .from("quote_settlements")
     .update({
       status: t.status,
@@ -147,48 +181,221 @@ export async function applyCustomerConfirmation(
       customer_confirmed_at: now,
       updated_at: now,
     })
-    .eq("id", settlementId)
-    .eq("status", "pending_settlement")
-    .select("id")
-    .maybeSingle();
+    .eq("id", settlementId);
+  // Guard on the precise state observed so the transition is atomic.
+  update =
+    status === "pending_settlement"
+      ? update.eq("status", "pending_settlement")
+      : update.eq("status", "completed_confirmed").eq("completion_source", "auto");
+
+  const { data: updated, error } = await update.select("id").maybeSingle();
   if (error) throw new Error(error.message);
   return !!updated;
 }
 
+function digitsOnly(v: string | null | undefined): string {
+  return (v ?? "").replace(/\D/g, "");
+}
+
 /**
- * Resolve an inbound WhatsApp confirmation (from the customer's number) to their
- * most recent pending settlement and apply it. Best-effort suffix match on the
- * Kuwait local 8-digit number. Only ever reached from the webhook behind the flag.
+ * Resolve an inbound confirmation reply to its settlement and apply it. Resolves
+ * by context.id (the wamid of the confirmation message we sent) FIRST, so a
+ * customer with multiple bookings confirms the exact one they replied to. Falls
+ * back to a digit-normalized phone match against the most recent
+ * customer-mutable settlement only when no context is present.
  */
-export async function applyCustomerConfirmationByPhone(
+export async function applyCustomerReply(
+  contextWamid: string | null | undefined,
   waId: string | null | undefined,
   confirmed: boolean
-): Promise<boolean> {
-  const digits = (waId ?? "").replace(/\D/g, "");
-  if (digits.length < 8) return false;
-  const local8 = digits.slice(-8);
+): Promise<string | null> {
+  const settlementId = await resolveSettlementForConfirm(contextWamid, waId);
+  if (!settlementId) return null;
+  const applied = await applyCustomerConfirmation(settlementId, confirmed);
+  return applied ? settlementId : null;
+}
+
+/** Resolve a confirmation reply: by the message it replies to, else by phone. */
+async function resolveSettlementForConfirm(
+  contextWamid: string | null | undefined,
+  waId: string | null | undefined
+): Promise<string | null> {
+  const admin = getSupabaseAdmin();
+  if (contextWamid) {
+    const { data, error } = await admin
+      .from("quote_settlements")
+      .select("id")
+      .eq("confirm_wamid", contextWamid)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (data?.id) return data.id as string;
+  }
+  return resolveByPhone(
+    waId,
+    ["pending_settlement", "completed_confirmed"],
+    (r) =>
+      r.status === "pending_settlement" ||
+      (r.status === "completed_confirmed" && r.completion_source === "auto")
+  );
+}
+
+type SettlementRowLite = {
+  id: string;
+  quote_id: string;
+  status: SettlementStatus;
+  completion_source: CompletionSource | null;
+  review_id?: string | null;
+  workshop_id?: string | null;
+};
+
+/** Most-recent settlement for a phone (digit-normalized) matching a predicate. */
+async function resolveByPhone(
+  waId: string | null | undefined,
+  statuses: SettlementStatus[],
+  predicate: (r: SettlementRowLite) => boolean,
+  select = "id,quote_id,status,completion_source,accepted_at"
+): Promise<string | null> {
+  const local8 = digitsOnly(waId).slice(-8);
+  if (local8.length < 8) return null;
 
   const admin = getSupabaseAdmin();
+  const { data: rows, error } = await admin
+    .from("quote_settlements")
+    .select(select)
+    .in("status", statuses)
+    .order("accepted_at", { ascending: false })
+    .limit(300);
+  if (error) throw new Error(error.message);
+  const candidates = ((rows ?? []) as unknown as SettlementRowLite[]).filter(predicate);
+  if (candidates.length === 0) return null;
+
+  const quoteIds = [...new Set(candidates.map((r) => r.quote_id))];
   const { data: quotes, error: qErr } = await admin
     .from("quotes")
-    .select("id")
-    .ilike("customer_phone", `%${local8}%`);
+    .select("id,customer_phone")
+    .in("id", quoteIds);
   if (qErr) throw new Error(qErr.message);
-  const quoteIds = (quotes ?? []).map((q) => (q as { id: string }).id);
-  if (quoteIds.length === 0) return false;
+  const phoneByQuote = new Map(
+    (quotes ?? []).map((q) => [q.id as string, digitsOnly(q.customer_phone as string)])
+  );
+  const match = candidates.find((r) =>
+    (phoneByQuote.get(r.quote_id) ?? "").endsWith(local8)
+  );
+  return match?.id ?? null;
+}
 
-  const { data: rows, error: sErr } = await admin
+/**
+ * Webhook orchestrator for a yes/no confirmation reply: apply it, and if the
+ * customer confirmed completion, solicit the rating inside the window their tap
+ * just opened. Flag-gated end to end.
+ */
+export async function handleConfirmationReply(
+  contextWamid: string | null | undefined,
+  waId: string | null | undefined,
+  confirmed: boolean
+): Promise<void> {
+  const settlementId = await applyCustomerReply(contextWamid, waId, confirmed);
+  if (settlementId && confirmed) {
+    await sendRatingRequest(settlementId);
+  }
+}
+
+/**
+ * Send the post-service rating LIST to a confirmed-complete settlement, inside the
+ * open 24h window, and persist its wamid. Gated by SETTLEMENT_ENABLED here and by
+ * WHATSAPP_ENABLED inside the sender — inert in production. Skips if the settlement
+ * has no canonical workshop (cannot attribute a review) or already has one.
+ */
+export async function sendRatingRequest(settlementId: string): Promise<WaSendResult | null> {
+  if (!isSettlementEnabled()) return null;
+  const admin = getSupabaseAdmin();
+
+  const { data: s } = await admin
     .from("quote_settlements")
-    .select("id")
-    .in("quote_id", quoteIds)
-    .eq("status", "pending_settlement")
-    .order("accepted_at", { ascending: false })
-    .limit(1);
-  if (sErr) throw new Error(sErr.message);
-  const settlementId = rows?.[0]?.id as string | undefined;
-  if (!settlementId) return false;
+    .select("id,quote_id,offer_id,workshop_id,status,review_id")
+    .eq("id", settlementId)
+    .maybeSingle();
+  if (!s || s.status !== "completed_confirmed" || !s.workshop_id || s.review_id) {
+    return null;
+  }
 
-  return applyCustomerConfirmation(settlementId, confirmed);
+  const { data: q } = await admin
+    .from("quotes")
+    .select("customer_phone")
+    .eq("id", s.quote_id)
+    .maybeSingle();
+  const { data: o } = await admin
+    .from("quote_offers")
+    .select("workshop_name")
+    .eq("id", s.offer_id)
+    .maybeSingle();
+
+  const to = kuwaitWhatsAppDigits((q?.customer_phone as string) ?? null);
+  if (!to) return { ok: false, skipped: true, reason: "no_recipient" };
+
+  const interactive = buildRatingListInteractive((o?.workshop_name as string) ?? "الكراج");
+  const result = await sendWhatsAppInteractive(to, interactive);
+  if (result.ok) {
+    await admin
+      .from("quote_settlements")
+      .update({ rating_wamid: result.messageId, updated_at: new Date().toISOString() })
+      .eq("id", settlementId);
+  }
+  return result;
+}
+
+/**
+ * Webhook orchestrator for a rating list reply: resolve the settlement (by the
+ * rating message it replies to, else by phone), create the verified review, and
+ * mark the settlement as reviewed. One review per job (unique index enforced).
+ */
+export async function handleRatingReply(
+  contextWamid: string | null | undefined,
+  waId: string | null | undefined,
+  rating: number
+): Promise<void> {
+  if (!isSettlementEnabled()) return;
+  const admin = getSupabaseAdmin();
+
+  let settlementId: string | null = null;
+  if (contextWamid) {
+    const { data } = await admin
+      .from("quote_settlements")
+      .select("id")
+      .eq("rating_wamid", contextWamid)
+      .maybeSingle();
+    settlementId = (data?.id as string | undefined) ?? null;
+  }
+  if (!settlementId) {
+    settlementId = await resolveByPhone(
+      waId,
+      ["completed_confirmed"],
+      (r) => !r.review_id && !!r.workshop_id,
+      "id,quote_id,status,completion_source,accepted_at,review_id,workshop_id"
+    );
+  }
+  if (!settlementId) return;
+
+  const { data: s } = await admin
+    .from("quote_settlements")
+    .select("quote_id,workshop_id,review_id")
+    .eq("id", settlementId)
+    .maybeSingle();
+  if (!s || !s.workshop_id || s.review_id) return;
+
+  const reviewId = await createVerifiedReview({
+    quoteId: s.quote_id as string,
+    settlementId,
+    placeId: s.workshop_id as string,
+    rating,
+  });
+  if (reviewId) {
+    await admin
+      .from("quote_settlements")
+      .update({ review_id: reviewId, updated_at: new Date().toISOString() })
+      .eq("id", settlementId)
+      .is("review_id", null);
+  }
 }
 
 /**
@@ -230,7 +437,15 @@ export async function sendSettlementConfirmation(
     service: (q.service as string) ?? "",
     workshopName: (o?.workshop_name as string) ?? "الكراج",
   });
-  return sendWhatsAppTemplate(to, template, components);
+  const result = await sendWhatsAppTemplate(to, template, components);
+  // Persist the wamid so the customer's reply resolves back to THIS settlement.
+  if (result.ok) {
+    await admin
+      .from("quote_settlements")
+      .update({ confirm_wamid: result.messageId, updated_at: new Date().toISOString() })
+      .eq("id", settlementId);
+  }
+  return result;
 }
 
 export type SettlementRow = {

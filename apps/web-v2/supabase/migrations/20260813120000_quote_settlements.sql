@@ -22,6 +22,14 @@ create table if not exists public.quote_settlements (
   -- accepted_at + auto-confirm window. Silence past this ⇒ presumed completed.
   auto_confirm_after     timestamptz not null,
 
+  -- wamids of the outbound confirmation / rating-request messages, so an inbound
+  -- reply resolves by context.id back to THIS settlement (not "latest for phone").
+  confirm_wamid          text,
+  rating_wamid           text,
+  -- Set once a verified review has been recorded for this settlement (Phase B),
+  -- so we never solicit or create a second review for the same job.
+  review_id              uuid,
+
   status                 text not null default 'pending_settlement'
                            check (status in (
                              'pending_settlement',
@@ -70,6 +78,14 @@ create index if not exists quote_settlements_due_idx
 
 create index if not exists quote_settlements_quote_idx
   on public.quote_settlements (quote_id);
+
+-- Resolve an inbound reply by the message it replies to (context.id).
+create index if not exists quote_settlements_confirm_wamid_idx
+  on public.quote_settlements (confirm_wamid)
+  where confirm_wamid is not null;
+create index if not exists quote_settlements_rating_wamid_idx
+  on public.quote_settlements (rating_wamid)
+  where rating_wamid is not null;
 
 -- Per-garage completion/anomaly analytics.
 create index if not exists quote_settlements_workshop_idx

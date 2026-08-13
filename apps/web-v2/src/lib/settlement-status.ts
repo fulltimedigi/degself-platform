@@ -59,15 +59,32 @@ export type SettlementTransition = {
 };
 
 /**
- * Apply the customer's own confirmation. The customer is neutral, so "yes"
- * completes and "no" is a no-show — regardless of anything the garage claims.
- * A terminal settlement is immutable (idempotent replay returns null).
+ * Whether a CUSTOMER reply may still change this settlement. The customer is the
+ * neutral arbiter, so they may act while pending, and they may also OVERRIDE a
+ * completion that was reached only by the silence presumption (source 'auto').
+ * A customer-, garage-, or admin-sourced terminal — and any 'disputed' row — is
+ * NOT customer-mutable (dispute resolution is admin-only).
+ */
+export function isCustomerMutable(
+  status: SettlementStatus,
+  completionSource: CompletionSource | null
+): boolean {
+  if (status === "pending_settlement") return true;
+  return status === "completed_confirmed" && completionSource === "auto";
+}
+
+/**
+ * Apply the customer's own confirmation. "yes" completes, "no" is a no-show —
+ * regardless of anything the garage claims. Returns null when the customer may
+ * not change the row (see isCustomerMutable), so replays and late taps on a
+ * human-settled row are no-ops.
  */
 export function customerReplyTransition(
   current: SettlementStatus,
+  completionSource: CompletionSource | null,
   confirmed: boolean
 ): SettlementTransition | null {
-  if (isTerminalSettlement(current)) return null;
+  if (!isCustomerMutable(current, completionSource)) return null;
   return confirmed
     ? { status: "completed_confirmed", completion_source: "customer" }
     : { status: "no_show", completion_source: "customer" };
@@ -92,6 +109,8 @@ export function reconcileGarageReport(
   customerConfirmed: boolean | null,
   garage: GarageReport
 ): SettlementTransition | null {
+  // A row already under dispute only moves via admin resolution.
+  if (current === "disputed") return null;
   if (isTerminalSettlement(current)) {
     // Garage contradicting a settled customer confirmation → dispute for review.
     if (

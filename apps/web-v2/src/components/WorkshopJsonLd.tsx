@@ -78,7 +78,9 @@ export function WorkshopJsonLd({
         worstRating: 1,
       },
       author: { "@type": "Person", name: r.author_name || "زائر" },
-      reviewBody: r.body,
+      // Verified rating-only reviews carry no comment — omit reviewBody rather
+      // than emit null, which is invalid Review markup.
+      ...(r.body ? { reviewBody: r.body } : {}),
       datePublished: r.created_at.slice(0, 10),
     }));
   }
