@@ -20,11 +20,12 @@ export function SpecialtyCover({
 
   return (
     <div
-      className="relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl"
+      className="relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl ring-1 ring-inset ring-white/10"
       style={{
         width: size,
         height: size,
-        backgroundColor: bg,
+        // Soft top-lit tint of the specialty accent for a finished avatar feel.
+        background: `linear-gradient(160deg, ${color}26, ${bg} 70%)`,
       }}
       aria-label={label || "تخصص"}
     >

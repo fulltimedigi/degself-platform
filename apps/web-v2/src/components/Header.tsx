@@ -113,9 +113,9 @@ export function Header() {
             rel="noopener noreferrer"
             aria-label={t("contactWhatsApp")}
             title={t("contactWhatsApp")}
-            className="hidden items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90 md:inline-flex"
+            className="hidden items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-sm font-bold text-foreground/90 transition hover:border-emerald-500/40 hover:text-foreground md:inline-flex"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-emerald-500" aria-hidden>
               <path d="M12 2C7.6 2 4 5.6 4 10c0 2.4 1 4.5 2.7 6L4 22l6.3-2.1c.5.1 1.1.1 1.7.1 4.4 0 8-3.6 8-8s-3.6-8-8-8zm0 14c-1 0-1.9-.2-2.8-.5l-3 1 .9-2.9c-1.3-1.2-2.1-2.9-2.1-4.6 0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6z" />
             </svg>
             {t("whatsapp")}

@@ -55,7 +55,7 @@ export function WorkshopCard({
   const effectiveSpecialty = reviewed_specialty || specialty;
 
   return (
-    <div className={`group relative overflow-hidden rounded-2xl border bg-card shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${is_partner ? "order-first border-[#FFD60A]/60 shadow-[#FFD60A]/10 hover:border-[#FFD60A]" : "border-border hover:border-primary/60 hover:shadow-primary/10"}`}>
+    <div className={`surface surface-interactive group relative overflow-hidden rounded-2xl ${is_partner ? "order-first !border-[#FFD60A]/55" : ""}`}>
       <Link href={`/workshop/${place_id}`} className="block">
         <div className="flex items-stretch gap-3 p-3">
           <SpecialtyCover specialty={effectiveSpecialty} size={80} />
@@ -85,8 +85,9 @@ export function WorkshopCard({
 
             <div className="flex flex-wrap items-center gap-2 text-xs">
               {enrichment ? (
-                <span className="inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/15 px-2 py-0.5 font-bold text-primary shadow-[0_0_10px_rgba(255,214,10,0.35)]">
-                  ⭐ {Math.round(enrichment.smart_score)}
+                <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 font-bold text-primary">
+                  <span aria-hidden>★</span>
+                  {Math.round(enrichment.smart_score)}
                 </span>
               ) : (
                 <span className="rounded-md border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
@@ -111,7 +112,7 @@ export function WorkshopCard({
       </div>
 
       {(tel || waDigits) && (
-        <div className="border-t border-border/60 px-3 py-2">
+        <div className="border-t border-white/[0.06] px-3 py-2">
           <CardActions tel={tel} waDigits={waDigits} placeId={place_id} />
         </div>
       )}
