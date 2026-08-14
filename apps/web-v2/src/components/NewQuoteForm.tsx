@@ -227,6 +227,7 @@ export function NewQuoteForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (uploading) return; // don't submit with a photo still uploading
     setError("");
     if (customerName.trim().length < 2) return setError(t("errName"));
     if (!/^\d{8}$/.test(customerPhone.trim())) return setError(t("errPhone"));
