@@ -9,7 +9,9 @@ import assert from "node:assert/strict";
 // no user — without hard-coding any Supabase cookie name and without depending
 // on the swallowed client-side signOut.
 //
-// signOut({scope:"local"}) makes no network call, so this runs offline in CI.
+// This asserts the cookie-clearing contract only. supabase-js may issue a
+// local-scope /logout call, but the removals it emits into the sink (and thus
+// this assertion) do not depend on that call, so the test needs no network.
 
 test("delete route clears Supabase session cookies from the jar deterministically", async () => {
   const ref = "unittestref";
