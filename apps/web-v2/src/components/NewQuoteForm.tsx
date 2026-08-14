@@ -72,6 +72,36 @@ const FLOW_COPY = {
   },
 } as const;
 
+const MAX_PHOTOS = 3;
+
+/**
+ * Downscale a photo to a web-friendly JPEG before upload. Phone photos are often
+ * 5-12MB and HEIC; drawing through a canvas both shrinks them and normalizes the
+ * format (Safari decodes HEIC), so uploads stay small and pass the server's
+ * JPEG/PNG/WEBP gate. Falls back to the original file if the browser can't decode.
+ */
+async function downscaleToJpeg(file: File, maxDim = 1600, quality = 0.82): Promise<Blob> {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const w = Math.max(1, Math.round(bitmap.width * scale));
+    const h = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob((b) => resolve(b), "image/jpeg", quality)
+    );
+    return blob ?? file;
+  } catch {
+    return file;
+  }
+}
+
 export type QuoteMatchedWorkshop = {
   place_id: string;
   name: string;
@@ -127,6 +157,53 @@ export function NewQuoteForm({
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
   const [quoteId, setQuoteId] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function onPickPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    markStarted();
+    setPhotoError("");
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = ""; // allow re-selecting the same file after a remove
+    if (!files.length) return;
+    if (photos.length >= MAX_PHOTOS) {
+      setPhotoError(t("photoMax"));
+      return;
+    }
+    const batch = files.slice(0, MAX_PHOTOS - photos.length);
+    setUploading(true);
+    try {
+      for (const f of batch) {
+        if (!f.type.startsWith("image/")) {
+          setPhotoError(t("photoErrType"));
+          continue;
+        }
+        const blob = await downscaleToJpeg(f);
+        const fd = new FormData();
+        fd.append("file", new File([blob], "fault.jpg", { type: blob.type || "image/jpeg" }));
+        try {
+          const res = await fetch("/api/quote-photos", { method: "POST", body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || typeof data.url !== "string") {
+            setPhotoError(data.error ?? t("photoErrUpload"));
+            continue;
+          }
+          setPhotos((prev) => (prev.length < MAX_PHOTOS ? [...prev, data.url] : prev));
+        } catch {
+          setPhotoError(t("photoErrUpload"));
+        }
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removePhoto(url: string) {
+    setPhotoError("");
+    setPhotos((prev) => prev.filter((u) => u !== url));
+  }
 
   useEffect(() => {
     track("quote_form_view", {
@@ -144,7 +221,7 @@ export function NewQuoteForm({
       source,
       locale,
       service: service || undefined,
-      with_image: false,
+      with_image: photos.length > 0,
     });
   }
 
@@ -176,6 +253,7 @@ export function NewQuoteForm({
           urgency,
           source,
           matched_workshops: initialMatchedWorkshops ?? [],
+          photos,
           website,
         }),
       });
@@ -185,7 +263,7 @@ export function NewQuoteForm({
         setError(data.error ?? t("errSend"));
         return;
       }
-      track("quote_submit", { service, source, locale, with_image: false });
+      track("quote_submit", { service, source, locale, with_image: photos.length > 0 });
       const id = typeof data.id === "string" ? data.id : "";
       setQuoteId(id);
       setStatus("done");
@@ -230,6 +308,61 @@ export function NewQuoteForm({
           <label className={labelCls}>{t("problemLabel")} {req}</label>
           <textarea value={problem} onChange={(e) => setProblem(e.target.value)} placeholder={t("problemPlaceholder")} className={inputCls} rows={compact ? 3 : 4} maxLength={1000} />
         </div>
+
+        {/* Optional fault photos — documents the problem for a more accurate quote. */}
+        <div>
+          <label className={labelCls}>{t("photoLabel")}</label>
+          <div className="flex flex-wrap items-center gap-2">
+            {photos.map((url) => (
+              <div key={url} className="relative h-16 w-16 overflow-hidden rounded-lg border border-border">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="" className="h-full w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removePhoto(url)}
+                  aria-label={t("photoRemove")}
+                  className="absolute end-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+            {photos.length < MAX_PHOTOS && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className={`flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed transition hover:border-[#FFD60A] disabled:opacity-60 ${compact ? "border-neutral-700 text-neutral-300" : "border-border text-muted-foreground"}`}
+              >
+                {uploading ? (
+                  <span className="px-1 text-center text-[10px] leading-tight">{t("photoUploading")}</span>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                      <circle cx="12" cy="13" r="3" />
+                    </svg>
+                    <span className="text-[10px] font-bold">{t("photoAdd")}</span>
+                  </>
+                )}
+              </button>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={onPickPhotos}
+              className="hidden"
+              tabIndex={-1}
+            />
+          </div>
+          {photoError && <p className="mt-1 text-xs text-red-400">{photoError}</p>}
+          {!compact && <p className="mt-1 text-xs text-muted-foreground">{t("photoHint")}</p>}
+        </div>
       </section>
 
       <section className={`flex flex-col ${compact ? "gap-3" : "gap-4"}`}>
@@ -272,8 +405,8 @@ export function NewQuoteForm({
 
       {error && <div className={compact ? "rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300" : "rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700"}>{error}</div>}
 
-      <button type="submit" disabled={status === "sending"} className={`rounded-lg bg-[#FFD60A] font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60 ${compact ? "px-4 py-3 text-sm" : "px-4 py-4 text-base"}`}>
-        {status === "sending" ? t("submitting") : t("submit")}
+      <button type="submit" disabled={status === "sending" || uploading} className={`rounded-lg bg-[#FFD60A] font-extrabold text-[#0A0A0A] transition hover:brightness-95 disabled:opacity-60 ${compact ? "px-4 py-3 text-sm" : "px-4 py-4 text-base"}`}>
+        {status === "sending" ? t("submitting") : uploading ? t("photoUploading") : t("submit")}
       </button>
 
       {!compact && <><p className="text-center text-xs text-muted-foreground">{t("footerFree")}</p><p className="text-center text-[11px] leading-relaxed text-muted-foreground">{t("consent")}</p></>}
