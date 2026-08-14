@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
-const EMAIL = "fulltimedigi@gmail.com";
+const EMAIL = "info@degself.com";
 
 export async function generateMetadata({
   params,
