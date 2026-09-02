@@ -32,7 +32,9 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-border bg-[#0A0A0A]/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="me-2 text-sm font-extrabold text-[#FFD60A]">لوحة دق سلف</span>
+            <Link href="/admin" className="me-2 text-sm font-extrabold text-[#FFD60A]">
+              لوحة دق سلف
+            </Link>
             {NAV.map((item) => {
               const active =
                 logical === item.href || logical.startsWith(`${item.href}/`);
