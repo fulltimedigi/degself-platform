@@ -92,7 +92,7 @@ function parseHours(hours: string): Array<[number, number]> | "24" | "closed" {
     if (sap === "AM" && sh === 12) sh = 0;
     if (eap === "PM" && eh < 12) eh += 12;
     if (eap === "AM" && eh === 12) eh = 0;
-    let start = sh * 60 + sm;
+    const start = sh * 60 + sm;
     let end = eh * 60 + em;
     if (end <= start) end += 24 * 60; // overnight
     ranges.push([start, end]);
