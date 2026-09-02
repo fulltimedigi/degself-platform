@@ -32,6 +32,7 @@ function stripLocale(pathname: string): string {
 // locally and always sees the decoded `nextUrl.pathname`, so the rewrite is applied
 // consistently and the CI smoke test exercises the same code path as production.
 const KARAJ = "كراج";
+const KARAJI = "كراجي"; // per-garage self-serve portal (distinct from /كراج/)
 const MARKA = "ماركة";
 
 function safeDecodePath(pathname: string): string {
@@ -44,6 +45,10 @@ function safeDecodePath(pathname: string): string {
 
 function vanityRewrite(pathname: string): string | null {
   const p = safeDecodePath(pathname);
+  // /كراجي/<token> is the per-garage self-serve portal. Checked before /كراج/
+  // even though the two never collide (/كراجي/… does not start with /كراج/,
+  // since the char after كراج is ي, not /).
+  if (p.startsWith(`/${KARAJI}/`)) return `/garage-portal/${p.slice(KARAJI.length + 2)}`;
   if (p.startsWith(`/${KARAJ}/`)) return `/garage/${p.slice(KARAJ.length + 2)}`;
   if (p === `/${MARKA}`) return "/make";
   if (p.startsWith(`/${MARKA}/`)) return `/make/${p.slice(MARKA.length + 2)}`;
