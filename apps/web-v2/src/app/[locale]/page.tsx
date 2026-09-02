@@ -10,6 +10,7 @@ import { GovernorateGrid } from "@/components/GovernorateGrid";
 import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
 import { SOCIAL_SAME_AS } from "@/lib/brand";
+import { COMPANY_LEGAL_NAME } from "@/lib/constants";
 import { DEFAULT_LOCALE, LOCALE_HREFLANG, type Locale } from "@/i18n/routing";
 
 const SITE = "https://degself.com";
@@ -76,6 +77,7 @@ export default async function Home() {
     "@type": "Organization",
     "@id": `${SITE}/#organization`,
     name: "دق سلف",
+    legalName: COMPANY_LEGAL_NAME,
     alternateName: ["Degself", "degself", "Deg Self", "دقسلف"],
     url: SITE,
     logo: LOGO,

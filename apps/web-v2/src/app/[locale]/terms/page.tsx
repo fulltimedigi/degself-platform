@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { COMPANY_LEGAL_NAME } from "@/lib/constants";
 
 export async function generateMetadata({
   params,
@@ -50,6 +51,7 @@ export default async function TermsPage({
       <div className="flex flex-col gap-6 text-sm leading-relaxed text-foreground/90">
         <section>
           <p>{t("terms.intro")}</p>
+          <p className="mt-2 font-medium text-foreground">{t("terms.operator", { company: COMPANY_LEGAL_NAME })}</p>
         </section>
 
         <section>

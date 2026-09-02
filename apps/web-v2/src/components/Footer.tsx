@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { BUSINESS_PHONE_DISPLAY, BUSINESS_WA_URL, BUSINESS_PHONE_TEL } from "@/lib/constants";
+import { BUSINESS_PHONE_DISPLAY, BUSINESS_WA_URL, BUSINESS_PHONE_TEL, COMPANY_LEGAL_NAME } from "@/lib/constants";
 
 export async function Footer() {
   const t = await getTranslations();
@@ -177,7 +177,8 @@ export async function Footer() {
       </div>
 
       <div className="border-t border-border px-6 py-4 text-center text-xs text-muted-foreground">
-        © {year} {t("footer.brand")}. {t("footer.rights")}.
+        © {year} {t("footer.brand")} — <span dir="ltr" className="font-en">{COMPANY_LEGAL_NAME}</span>. {t("footer.rights")}.
+        <span className="mt-1 block">{t("footer.operatedBy", { company: COMPANY_LEGAL_NAME })}</span>
       </div>
     </footer>
   );

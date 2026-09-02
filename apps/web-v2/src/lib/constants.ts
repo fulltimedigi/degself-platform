@@ -1,5 +1,11 @@
 // Shared static data for Home enrichment (Phase 5.1).
 
+// Legal entity that owns and operates the degself brand. "degself" / "دق سلف" is a
+// trade name; this is the registered company shown in the footer, legal pages, and
+// Organization schema so the domain is clearly associated with the organization
+// (required by app-store / developer-program org verification).
+export const COMPANY_LEGAL_NAME = "Ahmed Amer LLC";
+
 // Official Degself business WhatsApp line (Ooredoo postpaid eSIM, activated 2026-06-20).
 export const BUSINESS_PHONE_DISPLAY = "+965 6579 9195";
 export const BUSINESS_PHONE_TEL = "+96565799195";

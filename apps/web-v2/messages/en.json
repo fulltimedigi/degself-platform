@@ -90,7 +90,8 @@
     "trustFreeHint": "No subscription",
     "trustFair": "No paid ranking",
     "trustFairHint": "Fair results",
-    "brand": "Degself"
+    "brand": "Degself",
+    "operatedBy": "degself is a trade name owned and operated by {company}."
   },
   "common": {
     "loading": "Loading...",
@@ -1645,7 +1646,8 @@
     ],
     "madeIn": "Made with pride in Kuwait — for the Kuwaiti driver.",
     "ctaSearch": "Start searching",
-    "ctaEmergency": "Emergency — tow truck & mobile mechanic"
+    "ctaEmergency": "Emergency — tow truck & mobile mechanic",
+    "operatedBy": "degself is a trade name owned and operated by {company}."
   },
   "legal": {
     "lastUpdated": "Last updated: June 2026",
@@ -1670,7 +1672,8 @@
       "deleteBody1": "Since the site requires no account, the only data associated with you may be a review you added. To request deletion of any review or data concerning you, email us at:",
       "deleteBody2": "State in your message what you want deleted (e.g. the review text and garage name), and we'll carry out the request within a reasonable time. To delete garages saved on your device, clear the site data from your browser settings.",
       "contactHeading": "Contact us",
-      "contactIntro": "For any privacy inquiry, email us at"
+      "contactIntro": "For any privacy inquiry, email us at",
+      "controller": "Data controller: the entity responsible for processing your data on degself (degself.com) is {company}."
     },
     "terms": {
       "metaTitle": "Terms of Use | Degself",
@@ -1711,7 +1714,8 @@
       "s10h": "10. Governing law",
       "s10body": "These terms are subject to the laws of the State of Kuwait, and any dispute arising from them is resolved before the competent Kuwaiti courts.",
       "s11h": "11. Contact",
-      "s11body": "For any inquiry about these terms, contact us at <mail>info@degself.com</mail> or via the official WhatsApp shown on the <about>\"About Degself\" page</about>."
+      "s11body": "For any inquiry about these terms, contact us at <mail>info@degself.com</mail> or via the official WhatsApp shown on the <about>\"About Degself\" page</about>.",
+      "operator": "Operator: degself (degself.com) and its services are operated by {company}."
     }
   },
   "workshop": {

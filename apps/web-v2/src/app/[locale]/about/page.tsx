@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { COMPANY_LEGAL_NAME } from "@/lib/constants";
 import {
   ShieldCheck,
   Bot,
@@ -97,6 +98,7 @@ export default async function AboutPage({
         "@type": "Organization",
         "@id": `${SITE}/#organization`,
         name: "دق سلف",
+        legalName: COMPANY_LEGAL_NAME,
         alternateName: "Deg Self",
         url: SITE,
         logo: `${SITE}/brand/logo-arabic-badge.png?v=2`,
@@ -138,6 +140,9 @@ export default async function AboutPage({
         <h1 className="text-3xl font-extrabold sm:text-4xl">{t("h1")}</h1>
         <p className="text-xl font-bold text-primary">{t("tagline")}</p>
         <p className="leading-loose text-foreground/85">{t.rich("heroBody", bold)}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("operatedBy", { company: COMPANY_LEGAL_NAME })}
+        </p>
       </header>
 
       {/* Stats */}
