@@ -6,6 +6,7 @@ import {
   verifyAdminSessionToken,
 } from "@/lib/admin-session";
 import { copyCookies, updateSession } from "@/lib/supabase/middleware";
+import { parseBlockedCountries, shouldBlockRequest } from "@/lib/geo-block";
 
 // Responsibilities, composed:
 //  1) Refresh end-user Supabase Auth cookies
@@ -50,6 +51,23 @@ function vanityRewrite(pathname: string): string | null {
 }
 
 export async function proxy(req: NextRequest) {
+  // Drop pure data-center bot traffic (e.g. mainland-China cloud crawlers) at the
+  // edge before any work runs — no page render, no analytics beacon, no Supabase
+  // Auth round-trip. Real search-engine crawlers are always let through. Geo comes
+  // from Vercel's `x-vercel-ip-country`; absent locally, so dev/CI are unaffected.
+  if (
+    shouldBlockRequest(
+      req.headers.get("x-vercel-ip-country"),
+      req.headers.get("user-agent"),
+      parseBlockedCountries(process.env.BLOCKED_COUNTRIES)
+    )
+  ) {
+    return new NextResponse("Not available in your region.", {
+      status: 403,
+      headers: { "cache-control": "private, no-store" },
+    });
+  }
+
   // Rewrite Arabic vanity URLs up front by mutating the request URL the rest of
   // the pipeline reads (session refresh, admin gate, and next-intl locale
   // routing). next-intl then internally rewrites /garage/… to the default-locale
