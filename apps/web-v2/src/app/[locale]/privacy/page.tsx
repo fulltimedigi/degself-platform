@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { COMPANY_LEGAL_NAME } from "@/lib/constants";
 
 const EMAIL = "fulltimedigi@gmail.com";
 
@@ -46,6 +47,7 @@ export default async function PrivacyPage({
       <div className="flex flex-col gap-6 text-sm leading-relaxed text-foreground/90">
         <section>
           <p>{t("privacy.intro")}</p>
+          <p className="mt-2 font-medium text-foreground">{t("privacy.controller", { company: COMPANY_LEGAL_NAME })}</p>
         </section>
 
         <section>
