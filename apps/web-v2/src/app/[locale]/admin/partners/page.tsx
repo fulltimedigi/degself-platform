@@ -18,6 +18,26 @@ export default function AdminPartnersPage() {
           قائمة كراجات دق سلف الموثقة. أضف الكراج من رابط صفحته في المنصة، والشبكة تظل مفتوحة بدون حد أقصى وتكون مصدر الأولوية والتوجيه الآلي لطلبات عروض الأسعار.
         </p>
       </div>
+
+      {/* Garage self-serve outreach: download the per-garage portal links. */}
+      <section className="mb-6 rounded-2xl border border-[#FFD60A]/40 bg-[#FFD60A]/5 p-5">
+        <h2 className="mb-1 text-lg font-extrabold">روابط صفحات الكراجات (لحملة الواتساب)</h2>
+        <p className="mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          ملف CSV فيه كل كراج يمكن الوصول له عبر واتساب مع رابطه الخاص لتفعيل استقبال طلبات
+          الأسعار (الاسم، المنطقة، رقم الواتساب، الرابط). كل رابط بمثابة مفتاح خاص — تعامل مع
+          الملف كأنه سرّي ولا تشاركه.
+        </p>
+        {/* Plain <a>: this is a file-download API route (content-disposition),
+            not a page — next/link would hijack it into client-side navigation. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
+          href="/api/admin/garage-portal-export"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FFD60A] px-5 py-3 text-base font-extrabold text-[#0A0A0A] transition hover:brightness-95"
+        >
+          ⬇️ تحميل ملف روابط الكراجات (CSV)
+        </a>
+      </section>
+
       <RfqOperationsStatus />
       <AdminPartnersClient />
     </main>
