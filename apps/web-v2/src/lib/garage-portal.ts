@@ -384,6 +384,34 @@ function portalBaseUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://degself.com";
 }
 
+/**
+ * First-contact WhatsApp outreach message for one garage. Kept identical to the
+ * runbook in docs/garage-self-serve-portal.md — it explains who degself is
+ * (garages hear about it for the first time), states the service is free and
+ * stoppable, and drives to the garage's own portal link.
+ */
+export function buildOutreachMessage(name: string, portalUrl: string): string {
+  return (
+    `مرحبا ${name} 👋\n\n` +
+    `معاك فريق «دق سلف» 🔧 — منصة كويتية تجمع أصحاب السيارات بالكراجات الموثوقة.\n\n` +
+    `فكرتنا بسيطة: صاحب السيارة يكتب مشكلته مرة وحدة، واحنا نوصّلها للكراجات ` +
+    `المتخصصة في المنطقة، فترجع له كذا عرض سعر ويختار الأنسب — من دون ما يلف ` +
+    `على الكراجات بنفسه.\n\n` +
+    `كراجك موجود عندنا في الدليل، وجهّزنا لك صفحة خاصة تقدر منها:\n` +
+    `✅ تفعّل استقبال طلبات عروض الأسعار بضغطة وحدة — الخدمة مجانية.\n` +
+    `✏️ تراجع بيانات كراجك وتعدّل أي شي ناقص أو غير دقيق.\n\n` +
+    `رابط صفحتك 👇\n${portalUrl}\n\n` +
+    `الرابط خاص فيك وحدك، لا تشاركه مع أحد. وتقدر توقف الخدمة بأي وقت.\n` +
+    `أي استفسار؟ رد على هالرسالة ونساعدك 🌟`
+  );
+}
+
+/** Build a click-to-chat wa.me link with the outreach message pre-filled. */
+export function outreachWaLink(name: string, whatsappIntl: string, portalUrl: string): string {
+  const num = whatsappIntl.replace(/[^0-9]/g, "");
+  return `https://wa.me/${num}?text=${encodeURIComponent(buildOutreachMessage(name, portalUrl))}`;
+}
+
 /** Build the pretty per-garage portal URL: <site>/كراجي/<token>. */
 export function portalUrlForToken(token: string): string {
   return `${portalBaseUrl()}/كراجي/${token}`;

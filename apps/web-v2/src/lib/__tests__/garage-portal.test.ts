@@ -6,6 +6,8 @@ import {
   validateGarageEdit,
   portalExportToCsv,
   portalUrlForToken,
+  buildOutreachMessage,
+  outreachWaLink,
   type PortalExportRow,
 } from "../garage-portal";
 
@@ -78,6 +80,23 @@ test("portalUrlForToken builds the vanity URL", () => {
     portalUrlForToken("f8d77ea1d4eb849f0be30f7f34da1b8d4cb01149"),
     "https://degself.com/كراجي/f8d77ea1d4eb849f0be30f7f34da1b8d4cb01149"
   );
+});
+
+test("buildOutreachMessage includes garage name, link, and identity", () => {
+  const msg = buildOutreachMessage("كراج النور", "https://degself.com/كراجي/abc123");
+  assert.ok(msg.includes("كراج النور"));
+  assert.ok(msg.includes("https://degself.com/كراجي/abc123"));
+  assert.ok(msg.includes("دق سلف")); // explains who we are
+  assert.ok(msg.includes("مجانية")); // states it's free
+});
+
+test("outreachWaLink builds a wa.me link with digits-only number and encoded text", () => {
+  const link = outreachWaLink("كراج النور", "+96555123456", "https://degself.com/كراجي/abc123");
+  assert.ok(link.startsWith("https://wa.me/96555123456?text="));
+  assert.ok(!link.includes("+965")); // number is digits only
+  const text = decodeURIComponent(link.split("?text=")[1]);
+  assert.ok(text.includes("كراج النور"));
+  assert.ok(text.includes("https://degself.com/كراجي/abc123"));
 });
 
 test("portalExportToCsv escapes and BOM-prefixes", () => {
