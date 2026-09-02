@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AdminLogoutButton } from "@/components/AdminLogoutButton";
 
 const NAV = [
+  { href: "/admin", label: "الرئيسية" },
   { href: "/admin/quotes", label: "الطلبات" },
   { href: "/admin/analytics", label: "التحويلات" },
   { href: "/admin/partners", label: "الشبكة" },
@@ -37,7 +38,9 @@ export function AdminChrome({ children }: { children: React.ReactNode }) {
             </Link>
             {NAV.map((item) => {
               const active =
-                logical === item.href || logical.startsWith(`${item.href}/`);
+                item.href === "/admin"
+                  ? logical === "/admin"
+                  : logical === item.href || logical.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}
