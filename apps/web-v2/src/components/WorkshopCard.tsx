@@ -46,7 +46,11 @@ export function WorkshopCard({
     specialty,
     reviewed_specialty,
     is_partner,
+    main_image,
   } = workshop;
+
+  // Curated partner photo (uploaded to our storage) — never a Google photo.
+  const photo = typeof main_image === "string" && /^https:\/\//.test(main_image) ? main_image : null;
 
   const volumeKey = reviewVolumeKey(google_reviews_count);
   const location = [neighborhood ?? area, governorate].filter(Boolean).join(" · ");
@@ -58,7 +62,19 @@ export function WorkshopCard({
     <div className={`surface surface-interactive group relative overflow-hidden rounded-2xl ${is_partner ? "order-first !border-[#FFD60A]/55" : ""}`}>
       <Link href={`/workshop/${place_id}`} className="block">
         <div className="flex items-stretch gap-3 p-3">
-          <SpecialtyCover specialty={effectiveSpecialty} size={80} />
+          {photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photo}
+              alt={name}
+              loading="lazy"
+              width={80}
+              height={80}
+              className="h-20 w-20 shrink-0 rounded-xl object-cover ring-1 ring-inset ring-white/10"
+            />
+          ) : (
+            <SpecialtyCover specialty={effectiveSpecialty} size={80} />
+          )}
 
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <div className="flex items-start justify-between gap-2">
