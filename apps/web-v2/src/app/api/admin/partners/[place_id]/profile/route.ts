@@ -6,9 +6,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const BASE_COLUMNS =
-  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,is_partner,active,permanently_closed,rfq_dispatch_enabled,rfq_opt_in_at,rfq_opt_in_source,rfq_phone_verified_at";
+  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,map_url,is_partner,active,permanently_closed,rfq_dispatch_enabled,rfq_opt_in_at,rfq_opt_in_source,rfq_phone_verified_at";
 const OVERRIDE_COLUMNS =
-  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,hero_image_url,gallery_image_urls,custom_sections,updated_at";
+  "place_id,name,phone,phone_intl,website,address,area,reviewed_specialty,map_url,hero_image_url,gallery_image_urls,custom_sections,updated_at";
 
 function clean(v: unknown, max: number): string | null | undefined {
   if (v === undefined) return undefined;
@@ -133,6 +133,19 @@ export async function PATCH(
     }
     values.website = website;
   }
+  if (Object.prototype.hasOwnProperty.call(body, "map_url")) {
+    // Empty clears it; otherwise must be a valid http(s) URL (a Google Maps link).
+    const raw = clean(body.map_url, 500);
+    if (raw == null || raw === "") {
+      values.map_url = raw;
+    } else {
+      const mapUrl = cleanWebsite(raw);
+      if (mapUrl === undefined) {
+        return NextResponse.json({ error: "رابط الموقع (خرائط جوجل) غير صالح." }, { status: 400 });
+      }
+      values.map_url = mapUrl;
+    }
+  }
   if (Object.prototype.hasOwnProperty.call(body, "custom_sections")) {
     const customSections = cleanCustomSections(body.custom_sections);
     if (customSections === undefined) {
@@ -152,7 +165,7 @@ export async function PATCH(
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const liveFields = ["name", "phone", "phone_intl", "website", "address", "area", "reviewed_specialty"];
+  const liveFields = ["name", "phone", "phone_intl", "website", "address", "area", "reviewed_specialty", "map_url"];
   const workshopUpdates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   for (const field of liveFields) {
     if (Object.prototype.hasOwnProperty.call(values, field)) workshopUpdates[field] = values[field];
