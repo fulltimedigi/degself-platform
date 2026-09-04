@@ -269,22 +269,27 @@ export default async function WorkshopPage({
         </section>
       )}
 
-      {/* Map */}
-      {w.lat != null && w.lng != null && (
+      {/* Map — shown when an admin-set maps link OR catalog coordinates exist */}
+      {(w.map_url || (w.lat != null && w.lng != null)) && (
         <section className="mt-4">
           <h2 className="mb-2 font-bold">{t("mapHeading")}</h2>
-          {/* No-API-key embed (output=embed) — geographic pin only, no place photos */}
-          <iframe
-            src={`https://www.google.com/maps?q=${w.lat},${w.lng}&output=embed&hl=${locale}`}
-            width="100%"
-            height="400"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="rounded-2xl border border-border"
-            title={t("mapTitle")}
-          />
+          {/* Embedded pin needs coordinates; a short maps link can't be embedded */}
+          {w.lat != null && w.lng != null && (
+            <iframe
+              src={`https://www.google.com/maps?q=${w.lat},${w.lng}&output=embed&hl=${locale}`}
+              width="100%"
+              height="400"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="rounded-2xl border border-border"
+              title={t("mapTitle")}
+            />
+          )}
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=${w.lat},${w.lng}&query_place_id=${encodeURIComponent(w.place_id)}`}
+            href={
+              w.map_url ||
+              `https://www.google.com/maps/search/?api=1&query=${w.lat},${w.lng}&query_place_id=${encodeURIComponent(w.place_id)}`
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-block rounded-xl border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"

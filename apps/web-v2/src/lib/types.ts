@@ -20,6 +20,7 @@ export interface Workshop {
   street: string | null;
   lat: number | null;
   lng: number | null;
+  map_url: string | null; // optional Google Maps link (admin-editable)
 
   // contact
   phone: string | null;

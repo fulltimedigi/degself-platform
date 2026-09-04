@@ -16,6 +16,7 @@ type Base = {
   address: string | null;
   area: string | null;
   reviewed_specialty: string | null;
+  map_url: string | null;
 };
 
 type Override = {
@@ -26,6 +27,7 @@ type Override = {
   address: string | null;
   area: string | null;
   reviewed_specialty: string | null;
+  map_url: string | null;
   hero_image_url: string | null;
   gallery_image_urls: string[] | null;
   custom_sections: CustomSection[] | null;
@@ -39,6 +41,7 @@ type FormState = {
   address: string;
   area: string;
   reviewed_specialty: string;
+  map_url: string;
 };
 
 function initialForm(base: Base, override: Override | null): FormState {
@@ -50,6 +53,7 @@ function initialForm(base: Base, override: Override | null): FormState {
     address: override?.address ?? base.address ?? "",
     area: override?.area ?? base.area ?? "",
     reviewed_specialty: override?.reviewed_specialty ?? base.reviewed_specialty ?? "",
+    map_url: override?.map_url ?? base.map_url ?? "",
   };
 }
 
@@ -145,6 +149,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
           address: null,
           area: null,
           reviewed_specialty: null,
+          map_url: null,
           hero_image_url: null,
           gallery_image_urls: [],
           custom_sections: sections,
@@ -195,6 +200,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
     { key: "website", label: "الموقع الإلكتروني", placeholder: "https://..." },
     { key: "area", label: "المنطقة" },
     { key: "address", label: "العنوان" },
+    { key: "map_url", label: "رابط الموقع (خرائط جوجل)", placeholder: "https://maps.app.goo.gl/..." },
     { key: "reviewed_specialty", label: "التخصص الظاهر" },
   ];
   const gallery = override?.gallery_image_urls ?? [];
@@ -211,7 +217,7 @@ export function AdminWorkshopProfileEditor({ placeId }: { placeId: string }) {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {fields.map((f) => (
-            <label key={f.key} className={f.key === "address" ? "sm:col-span-2" : ""}>
+            <label key={f.key} className={f.key === "address" || f.key === "map_url" ? "sm:col-span-2" : ""}>
               <span className="mb-1 block text-sm font-bold">{f.label}</span>
               <input
                 value={form[f.key]}
