@@ -27,6 +27,19 @@ export type AccountDeleteCode =
   | "ACCOUNT_HAS_CLAIMED_WORKSHOP"
   | "SERVER_ERROR";
 
+/**
+ * Extract a non-empty Bearer token from an Authorization header, else null.
+ * The presence of a Bearer token selects the native transport in the deletion
+ * route; a cookie request carries no such header and takes the web transport.
+ */
+export function parseBearerToken(
+  header: string | null | undefined
+): string | null {
+  if (typeof header !== "string") return null;
+  const match = /^Bearer\s+(.+)$/i.exec(header.trim());
+  return match ? match[1]!.trim() || null : null;
+}
+
 /** Exact confirmation match — whitespace-trimmed, case-sensitive to the token. */
 export function isValidConfirmation(
   input: unknown,

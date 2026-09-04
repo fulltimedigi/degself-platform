@@ -1,9 +1,11 @@
-# apps/mobile — DEGSELF native app (M0 foundation)
+# apps/mobile — DEGSELF native app (M2 + Android store preparation)
 
-Native Android + iOS app for DEGSELF / دق سلف, built with **Expo SDK 57 + Expo Router + TypeScript**. This is the **M0 foundation only** — navigation shell, localization/RTL, and build/test config. **No product features** (see non-scope). Architecture and decisions live in [`docs/mobile/`](../../docs/mobile/).
+Native Android + iOS app for DEGSELF / دق سلف, built with **Expo SDK 57 + Expo Router + TypeScript**. M0 shipped the foundation; M1 added auth, favorites, and deletion; M2 adds production workshop discovery and detail. Architecture and decisions live in [`docs/mobile/`](../../docs/mobile/).
 
-## Status: M0 (foundation)
-Proves the app builds, boots, localizes (ar/en/hi/ur with correct RTL/LTR), and navigates as a real Expo app inside this repo. It does **not** implement any product functionality yet.
+## Status: M2 — Discovery + Auth + Favorites + Account Deletion
+Supabase-native auth (Google everywhere, Sign in with Apple on iOS), secure session persistence, profile access, favorites via RLS with a loss-safe guest→auth handoff, and in-app account deletion through the canonical server operation. See ADRs [0005](../../docs/mobile/adr/0005-mobile-auth-and-session-storage.md) (auth/session), [0006](../../docs/mobile/adr/0006-account-deletion-auth-transport.md) (deletion transport / OD-02), [0007](../../docs/mobile/adr/0007-sign-in-with-apple.md) (Sign in with Apple / OD-03).
+
+M2 adds featured workshops, debounced/paginated Arabic-aware search, unbounded saved-workshop hydration through bounded GET chunks, and native detail/contact actions. The app consumes the canonical bounded server read API from [ADR-0008](../../docs/mobile/adr/0008-mobile-search-read-api.md), so ranking and audited catalog filtering cannot drift from web.
 
 ## Identifiers (owner-approved, permanent)
 - iOS `bundleIdentifier`: `com.degself.app`
@@ -13,49 +15,69 @@ Proves the app builds, boots, localizes (ar/en/hi/ur with correct RTL/LTR), and 
 ## Structure
 ```
 app/
-  _layout.tsx            # providers + headerless stack
+  _layout.tsx            # providers: I18n → Auth → Favorites → stack
   (tabs)/
     _layout.tsx          # 4 tabs (localized labels)
-    index.tsx            # Home placeholder
-    search.tsx saved.tsx account.tsx   # placeholders (account hosts the locale switcher)
+    index.tsx            # featured workshop discovery
+    search.tsx           # canonical paginated search results
+    saved.tsx            # hydrated guest + authenticated favorites
+    account.tsx          # sign-in / signed-in profile + Danger Zone + locale switcher
+  workshop/[placeId].tsx # details, save, call, WhatsApp, maps, safe website
 src/
-  i18n/                  # owned, dependency-free i18n (direction.ts is pure + unit-tested)
-  components/primitives  # Screen/ThemedText/Surface/ChoiceButton (owned; no UI kit)
-  theme/tokens.ts        # minimal DEGSELF brand tokens
-  config/env.ts          # env model (PUBLIC values only)
+  lib/
+    supabase.ts          # persistent PKCE client + isolated reauth client
+    auth/                # AuthProvider, google/apple auth, same-user guard, secure-store
+    favorites/           # loss-safe handoff + bounded retries + persistence rollback
+    account/             # account-deletion contract + Bearer transport
+    workshops/           # public API client, DTOs, safe contact/map links
+  components/            # primitives, auth/AuthPanel, account/DangerZone
+  config/env.ts          # PUBLIC-only runtime config (EXPO_PUBLIC_*)
+  i18n/ · theme/ · types/aes-js.d.ts
 ```
 Native `ios/` and `android/` are **not committed** — Continuous Native Generation (`expo prebuild`) regenerates them (gitignored).
 
-**Dependency resolution:** installs use **strict** npm peer enforcement (no global `legacy-peer-deps`), so real conflicts in future PRs surface. Two SDK-consistent transitive pins live in `package.json > overrides`, each documented:
-- `react-dom: 19.2.3` — `expo-router` pulls Expo-Web-only UI deps (`vaul`, `@radix-ui/*`) that peer-require `react-dom`; the default `react-dom@19.2.8` wants `react ^19.2.8` while the SDK pins `react@19.2.3`. DEGSELF ships **no Expo Web**, so this pins that web-only package to the SDK's React version.
-- `react-native-worklets: 0.10.1` — `expo-modules-core@57` requires worklets `^0.10.0` (< 0.11) but `@expo/ui`/`react-native-reanimated` resolve `0.11.3`; `0.10.1` is Expo's expected version (`expo install --check`) and satisfies every consumer.
+## Auth (same Supabase Auth as web)
+- **Google** — Supabase `signInWithOAuth` + system auth session (`expo-web-browser` + `expo-auth-session`). The Supabase client explicitly uses **PKCE**; the callback accepts only a short-lived `?code=` and exchanges it with the locally stored verifier. There is no implicit-flow fallback and no access/refresh token is accepted from the deep-link URL. Redirect is `degself://` (register `degself://**` in Supabase Auth URL Configuration). Google client id/secret remain only in the Supabase provider configuration; none is bundled into the app.
+- **Apple (iOS, REQUIRED)** — `expo-apple-authentication` native → `signInWithIdToken({ provider:'apple', nonce })`. The entitlement is generated by `ios.usesAppleSignIn`.
+- **Destructive reauthentication** — `AUTH_TOO_OLD` runs the provider flow against a separate in-memory Supabase client. The candidate session is promoted to the app only when its exact Supabase user id matches the user who initiated deletion, then verified again after promotion. A wrong Google/Apple account never becomes app-wide auth state.
+- **Session** — Supabase LargeSecureStore pattern: AES-256 key in Keychain/Keystore at rest; encrypted session ciphertext in AsyncStorage; refresh tied to `AppState`. Custom auth locks are intentionally omitted because the installed auth-js line treats them as a deprecated legacy path.
 
-Neither disables peer enforcement elsewhere; a future M1/M2 conflict still fails `npm ci`.
+Requires a **custom dev build** — this native stack does not run in Expo Go.
+
+## Favorites
+Authenticated favorites go directly to `public.user_favorites` through the user's session + RLS. Guest favorites use AsyncStorage. The guest→auth handoff is **durable and account-isolated** (see [ADR-0009](../../docs/mobile/adr/0009-durable-favorites-handoff.md)): before any server write it records a per-user claim in storage, validates guest ids against the canonical public read path so one stale/hard-deleted id can never abort the transfer, inserts the eligible subset (idempotent UNION-upsert), then loss-safely clears only the accounted snapshot. A snapshot claimed by one identity is excluded from every other user's absorbable set, so a crash/kill/account-switch between the server write and the guest clear can never let a second account inherit the first user's favorites. Failed handoffs keep the claim + snapshot and resume with bounded backoff. Guest storage writes report success so an optimistic star is rolled back if persistence fails instead of falsely appearing saved.
+
+Saved-workshop hydration is not capped at 100 in the UI: the client splits ids by both encoded URL size and a per-request id ceiling, fetches chunks sequentially (one failed chunk no longer discards the rest), then reconstructs the global newest-first order.
+
+## Account deletion
+The Danger Zone posts `Authorization: Bearer <access token>` to `/api/account/delete`. The server verifies the token and runs the same canonical sequence as web: exact typed confirmation → 10-minute recent-auth → fail-closed per-user rate limit → admin/claimed-workshop blockers → `auth.admin.deleteUser`. The client never sends a user id. On success local session and guest state are cleared.
+
+## Environment model
+PUBLIC values only, via `EXPO_PUBLIC_*` (see [`.env.example`](.env.example)): Supabase URL + publishable key and API base URL. No service-role key, provider secret, WABA secret, admin credential, or Google client id is bundled. Only the Production Supabase project exists today; dev/preview target it with controlled test users — never real customer data.
 
 ## Commands
 ```
-npm run start        # Expo dev server (use a development build, not Expo Go, long-term)
+npm run start        # Expo dev server (use a dev build, not Expo Go)
 npm run typecheck    # tsc --noEmit
-npm test             # pure locale/direction tests (tsx --test)
-npm run doctor       # expo-doctor (pinned 1.20.1 — same version in CI)
-npx expo config      # resolved app config
+npm test             # pure logic tests via tsx --test
+npm run doctor       # expo-doctor (pinned 1.20.1)
+npx expo prebuild    # config → native projects (ios/android, gitignored)
 ```
 
-## Localization / RTL
-Owned minimal i18n (next-intl is web-only and is not imported). `src/i18n/direction.ts` is the pure source of truth (ar/ur → RTL, en/hi → LTR) and is unit-tested. The Account tab has a live language switcher; text direction updates immediately, but **full native layout mirroring (`I18nManager.forceRTL`) requires an app restart** in React Native — this is surfaced to the user, not faked.
+## Dependency resolution
+Installs use strict npm peer enforcement. Two SDK-consistent transitive pins remain in `package.json > overrides` (`react-dom@19.2.3`, `react-native-worklets@0.10.1`). Auth/session decisions are documented in ADR-0005.
 
-## Environment model
-Three logical envs (development/preview/production) via app config `extra.appEnv`. **Every value bundled into a mobile app is PUBLIC** — no secrets here or in `extra` (no service-role key, DB URL, Anthropic/WABA/admin/Vercel secrets). Public runtime config (Supabase URL + publishable key) is added in **M1** when auth/data land, not preemptively.
+## Build & verification
+- CONFIG VERIFIED · TYPECHECK VERIFIED · UNIT TESTS VERIFIED (82 tests, incl. durable handoff crash/account-switch, PKCE code-only callback, reauth rollback, saved chunking, search pagination, deletion timeout) · EXPO DOCTOR VERIFIED · EXPO CONFIG VERIFIED · `npm ci` VERIFIED in CI after the 2026-08-12 hardening changes.
+- PREBUILD previously verified for Android and iOS; Apple `com.apple.developer.applesignin` entitlement generation verified; identifiers remain `com.degself.app` + scheme `degself`.
+- RLS previously verified live/rolled-back: own-only reads, cross-user insert/read/delete blocked, authenticated-only, anon denied, no UPDATE grant.
+- **ANDROID REAL-DEVICE BASELINE (2026-08-09):** preview build previously passed Google OAuth, persisted session, favorites add/delete, logout/re-login, and typed account deletion on a Samsung Galaxy S25 Ultra. **This baseline predates the 2026-08-12 hardening (explicit PKCE, isolated same-user reauth, and the durable/account-isolated favorites handoff), so it is NOT valid evidence for the current code. Google login, deletion reauth, AND the guest→account favorites handoff (including the different-account and crash/restart cases) MUST be re-tested on a fresh Android build before release. REQUIRES FRESH DEVICE RETEST.**
+- **iOS simulator binary baseline (2026-08-11):** build succeeded; signed real-device/TestFlight and Apple provider login still wait for Apple Developer enrollment.
 
-## Build verification (this environment)
-- CONFIG VERIFIED · PREBUILD VERIFIED (android, config→native generation) · TYPECHECK VERIFIED · TESTS VERIFIED · EXPO DOCTOR VERIFIED (20/20) · EXPO CONFIG VERIFIED
-- **ANDROID BINARY: NOT VERIFIED — ENVIRONMENT/CREDENTIAL BLOCKER** (no Android SDK / EAS credentials)
-- **iOS BINARY: NOT VERIFIED — ENVIRONMENT/CREDENTIAL BLOCKER** (no macOS / Apple credentials)
+A production AAB profile and draft Internal-track submit profile are configured; production OTA remains disabled. Do not treat the branch as store-release verified until the post-hardening Android device test, signed production AAB, Play Internal upload, Data safety review, and pre-launch report are complete.
 
-Real device binaries build via **EAS** with owner credentials — not created in PR CI, and no store submission / production OTA is configured in M0.
-
-## Non-scope (M0)
-No auth / Google / Apple Sign In, no favorites/profile/Supabase business access, no search business logic, no `packages/domain`, no Ask DEGSELF, no quotes/offers, no WABA, no admin, no push/device tokens, no Universal/App Links, no analytics identity, no review UI, no production OTA. Deferred deps: NativeWind (gated), Zustand, MMKV, TanStack Query, expo-secure-store, expo-notifications, PostHog RN, ESLint (blank template ships none; see the M0 PR).
+## Non-scope
+No Ask DEGSELF, quotes/offers, WABA, admin, push/device tokens, Universal/App Links, analytics SDK, location permission, or review UI. Deferred deps remain NativeWind, Zustand, MMKV, TanStack Query, expo-notifications, and PostHog RN.
 
 ## Next
-**M1 — Auth + Profile + Favorites + Account Deletion** (Supabase native auth incl. Sign in with Apple, secure token storage, favorites via RLS, and the Bearer-adapter to the canonical account-deletion operation). See [`docs/mobile/OPEN_DECISIONS.md`](../../docs/mobile/OPEN_DECISIONS.md).
+Build a fresh Android preview/production candidate, re-test PKCE Google login plus same-user deletion reauthentication on device, then generate the signed production AAB, upload to Play Internal testing, capture real screenshots, complete Data safety, and run the Play pre-launch report.

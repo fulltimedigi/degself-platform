@@ -9,18 +9,43 @@
     "backgroundColor": "#0A0A0A",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.degself.app"
+      "bundleIdentifier": "com.degself.app",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.degself.app",
+      "permissions": [],
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE"
+      ],
+      "allowBackup": false,
+      "predictiveBackGestureEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#0A0A0A"
       }
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-dev-client",
+        {
+          "addGeneratedScheme": false
+        }
+      ],
+      "expo-secure-store",
+      "expo-apple-authentication"
+    ],
     "extra": {
-      "appEnv": "development"
-    }
+      "appEnv": "development",
+      "router": {},
+      "eas": {
+        "projectId": "9d8287ca-1482-4569-98bf-a447e982ccb9"
+      }
+    },
+    "owner": "fulltimedigi-apps"
   }
 }

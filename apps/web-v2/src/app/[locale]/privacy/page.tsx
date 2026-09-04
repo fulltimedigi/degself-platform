@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { COMPANY_LEGAL_NAME } from "@/lib/constants";
 
-const EMAIL = "fulltimedigi@gmail.com";
+const EMAIL = "info@degself.com";
 
 export async function generateMetadata({
   params,
