@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Download, X, Share, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { track } from "@/lib/track";
+import { isNativeShell } from "@/lib/shell";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -29,6 +30,9 @@ export function PWAInstallBanner() {
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
+    // Inside the native shell the user already has the app — never nag to install.
+    if (isNativeShell()) return;
+
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;

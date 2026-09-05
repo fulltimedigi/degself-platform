@@ -11,7 +11,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const URGENCY = ["عادي", "مستعجل", "طارئ"] as const;
-const SOURCES = ["quote_bar", "translator", "asaali", "concierge"] as const;
+const SOURCES = ["quote_bar", "translator", "asaali", "concierge", "mobile"] as const;
 const RATE_LIMIT_PER_HOUR = 5;
 
 type MatchedWorkshop = {

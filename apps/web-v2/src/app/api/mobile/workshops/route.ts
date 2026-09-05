@@ -101,6 +101,8 @@ export async function GET(request: NextRequest) {
 
     const result = await searchWorkshops({
       query: parsed.query || undefined,
+      service_mode: parsed.serviceMode,
+      specialty: parsed.specialty,
       limit: parsed.limit,
       offset: parsed.offset,
     });

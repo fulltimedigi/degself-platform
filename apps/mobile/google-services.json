@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769431210110",
+    "project_id": "degself",
+    "storage_bucket": "degself.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769431210110:android:d3e2103e949a36dda7f02f",
+        "android_client_info": {
+          "package_name": "com.degself.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARKQt1EMDgYyBqqlbacYBx0wy36MQ6wQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

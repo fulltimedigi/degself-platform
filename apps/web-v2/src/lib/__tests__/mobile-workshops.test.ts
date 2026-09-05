@@ -30,6 +30,30 @@ test("mobile workshop offset supports deep pagination but stays bounded", () => 
   }
 });
 
+test("emergency filters: known service_mode and specialty pass through", () => {
+  const parsed = parseMobileWorkshopRequest(
+    new URL(
+      "https://degself.com/api/mobile/workshops?service_mode=mobile&specialty=%D8%AA%D9%88%D8%A7%D9%8A%D8%B1%20%D9%88%D8%A8%D9%86%D8%B4%D8%B1"
+    )
+  );
+  assert.equal(parsed.kind, "search");
+  if (parsed.kind === "search") {
+    assert.equal(parsed.serviceMode, "mobile");
+    assert.equal(parsed.specialty, "تواير وبنشر");
+  }
+});
+
+test("emergency filters: unknown service_mode is dropped, not forwarded", () => {
+  const parsed = parseMobileWorkshopRequest(
+    new URL("https://degself.com/api/mobile/workshops?service_mode=bogus")
+  );
+  assert.equal(parsed.kind, "search");
+  if (parsed.kind === "search") {
+    assert.equal(parsed.serviceMode, undefined);
+    assert.equal(parsed.specialty, undefined);
+  }
+});
+
 test("saved workshop ids are deduped without changing case", () => {
   const parsed = parseMobileWorkshopRequest(
     new URL("https://degself.com/api/mobile/workshops?ids=AbC,xyz,AbC")

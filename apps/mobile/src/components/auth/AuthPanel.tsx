@@ -57,6 +57,7 @@ export function AuthPanel() {
       <View style={{ gap: tokens.space.sm, marginTop: tokens.space.sm }}>
         <Button
           label={t.auth.continueWithGoogle}
+          icon="logo-google"
           onPress={() =>
             run("google", signInWithGoogle, GoogleSignInCancelled)
           }

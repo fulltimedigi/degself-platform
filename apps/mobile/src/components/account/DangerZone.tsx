@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Button, Surface, ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 import { useAuth } from "@/lib/auth/auth-context";
 import { useFavorites } from "@/lib/favorites/favorites-context";
 import { requestAccountDeletion } from "@/lib/account/delete-account";
@@ -24,6 +26,8 @@ type Phase = "idle" | "confirm" | "deleting" | "done";
 
 export function DangerZone() {
   const { t } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const { getAccessToken, reauthenticate, clearLocalSession } = useAuth();
   const { resetAfterDeletion } = useFavorites();
   const [phase, setPhase] = useState<Phase>("idle");
@@ -85,7 +89,7 @@ export function DangerZone() {
 
   return (
     <Surface>
-      <ThemedText size="lg" bold style={{ color: "#FF6B6B" }}>
+      <ThemedText size="lg" bold style={{ color: colors.danger }}>
         {t.danger.title}
       </ThemedText>
       <ThemedText muted size="sm">
@@ -109,7 +113,7 @@ export function DangerZone() {
             onChangeText={setText}
             editable={phase !== "deleting"}
             placeholder={t.danger.confirmPlaceholder}
-            placeholderTextColor={tokens.color.muted}
+            placeholderTextColor={colors.muted}
             autoCapitalize="characters"
             autoCorrect={false}
             accessibilityLabel={t.danger.confirmPlaceholder}
@@ -117,7 +121,7 @@ export function DangerZone() {
           />
 
           {error ? (
-            <ThemedText size="sm" style={{ color: "#FF6B6B" }}>
+            <ThemedText size="sm" style={{ color: colors.danger }}>
               {error}
             </ThemedText>
           ) : null}
@@ -156,17 +160,19 @@ export function DangerZone() {
   );
 }
 
-const styles = StyleSheet.create({
-  input: {
-    borderColor: tokens.color.border,
-    borderWidth: 1,
-    borderRadius: tokens.radius.md,
-    paddingVertical: tokens.space.sm,
-    paddingHorizontal: tokens.space.md,
-    color: tokens.color.foreground,
-    fontSize: tokens.font.md,
-  },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    input: {
+      borderColor: c.border,
+      borderWidth: 1,
+      borderRadius: tokens.radius.md,
+      paddingVertical: tokens.space.sm,
+      paddingHorizontal: tokens.space.md,
+      color: c.foreground,
+      fontSize: tokens.font.md,
+    },
+  });
+}
 
 // Re-exported so a screen/test can reference the canonical token if needed.
 export { ACCOUNT_DELETE_CONFIRMATION };

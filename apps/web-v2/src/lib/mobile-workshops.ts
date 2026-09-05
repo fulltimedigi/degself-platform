@@ -4,6 +4,16 @@ export const MOBILE_WORKSHOP_LIMIT_MAX = 30;
 export const MOBILE_WORKSHOP_IDS_MAX = 100;
 export const MOBILE_WORKSHOP_OFFSET_MAX = 10_000;
 
+// The only service_mode values the catalog carries (see web-v2 migrations). An
+// unknown value is dropped rather than passed to the DB filter, so a bad query
+// param can never turn into an empty/garbage `.eq()` match.
+export const MOBILE_SERVICE_MODES = ["fixed", "mobile", "tow"] as const;
+export type MobileServiceMode = (typeof MOBILE_SERVICE_MODES)[number];
+
+// reviewed_specialty is a short curated Arabic label ("تواير وبنشر", …). Bound
+// the length so an oversized value can't bloat the DB query string.
+const MOBILE_SPECIALTY_MAX = 60;
+
 export type MobileWorkshop = Pick<
   Workshop,
   | "place_id"
@@ -31,7 +41,14 @@ export type MobileWorkshop = Pick<
 export type MobileWorkshopRequest =
   | { kind: "detail"; placeId: string }
   | { kind: "saved"; ids: string[] }
-  | { kind: "search"; query: string; limit: number; offset: number };
+  | {
+      kind: "search";
+      query: string;
+      limit: number;
+      offset: number;
+      serviceMode?: MobileServiceMode;
+      specialty?: string;
+    };
 
 function boundedInteger(value: string | null, fallback: number, min: number, max: number) {
   const parsed = Number.parseInt(value ?? "", 10);
@@ -54,6 +71,14 @@ export function parseMobileWorkshopRequest(url: URL): MobileWorkshopRequest {
   }
 
   const query = (url.searchParams.get("q") ?? "").trim().slice(0, 100);
+  const rawMode = (url.searchParams.get("service_mode") ?? "").trim();
+  const serviceMode = (MOBILE_SERVICE_MODES as readonly string[]).includes(rawMode)
+    ? (rawMode as MobileServiceMode)
+    : undefined;
+  const rawSpecialty = (url.searchParams.get("specialty") ?? "")
+    .trim()
+    .slice(0, MOBILE_SPECIALTY_MAX);
+  const specialty = rawSpecialty || undefined;
   return {
     kind: "search",
     query,
@@ -64,6 +89,8 @@ export function parseMobileWorkshopRequest(url: URL): MobileWorkshopRequest {
       0,
       MOBILE_WORKSHOP_OFFSET_MAX
     ),
+    ...(serviceMode ? { serviceMode } : {}),
+    ...(specialty ? { specialty } : {}),
   };
 }
 
