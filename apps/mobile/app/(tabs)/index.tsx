@@ -5,6 +5,7 @@ import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { quoteCopy } from "@/features/quote/copy";
+import { asaaliCopy } from "@/features/asaali/copy";
 import { fetchWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 import { useFavorites } from "@/lib/favorites/favorites-context";
@@ -13,6 +14,7 @@ import { tokens } from "@/theme/tokens";
 export default function HomeScreen() {
   const { t, locale } = useI18n();
   const qc = quoteCopy(locale);
+  const ac = asaaliCopy(locale);
   const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
@@ -57,6 +59,11 @@ export default function HomeScreen() {
               <ThemedText muted size="sm">{qc.subtitle}</ThemedText>
               <Button label={qc.submit} onPress={() => router.push("/(tabs)/quote")} />
             </View>
+            <View style={styles.asaaliCta}>
+              <ThemedText size="lg" bold>{ac.title}</ThemedText>
+              <ThemedText muted size="sm">{ac.subtitle}</ThemedText>
+              <Button label={ac.ask} variant="secondary" onPress={() => router.push("/(tabs)/asaali")} />
+            </View>
             <Button label={t.workshops.searchAction} variant="secondary" onPress={() => router.push("/(tabs)/search")} />
             <ThemedText size="lg" bold>{t.workshops.featured}</ThemedText>
           </View>
@@ -95,6 +102,14 @@ const styles = StyleSheet.create({
     backgroundColor: tokens.color.surface,
     borderColor: tokens.color.primary,
     borderWidth: 1.5,
+    borderRadius: tokens.radius.lg,
+    padding: tokens.space.lg,
+    gap: tokens.space.sm,
+  },
+  asaaliCta: {
+    backgroundColor: tokens.color.surface,
+    borderColor: tokens.color.border,
+    borderWidth: 1,
     borderRadius: tokens.radius.lg,
     padding: tokens.space.lg,
     gap: tokens.space.sm,

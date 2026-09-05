@@ -19,6 +19,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: t.tabs.home }} />
+      <Tabs.Screen name="asaali" options={{ title: t.tabs.asaali }} />
       <Tabs.Screen name="search" options={{ title: t.tabs.search }} />
       <Tabs.Screen name="quote" options={{ title: t.tabs.quote }} />
       <Tabs.Screen name="saved" options={{ title: t.tabs.saved }} />
