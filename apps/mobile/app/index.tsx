@@ -115,17 +115,10 @@ export default function ShellScreen() {
               hideSplash();
             }
           }}
-          // Native feel
-          allowsBackForwardNavigationGestures
-          decelerationRate="normal"
-          pullToRefreshEnabled
           domStorageEnabled
           javaScriptEnabled
           allowsInlineMediaPlayback
-          mediaPlaybackRequiresUserAction={false}
-          setSupportMultipleWindows={false}
           style={styles.web}
-          containerStyle={styles.web}
         />
       )}
 
