@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
 
@@ -18,6 +18,10 @@ const ICONS: Record<string, { on: IoniconName; off: IoniconName }> = {
 
 export default function TabsLayout() {
   const { t } = useI18n();
+  // Add the device's bottom inset (Android gesture/3-button bar, iOS home
+  // indicator) so the bar never sits under the system navigation.
+  const insets = useSafeAreaInsets();
+  const bottomInset = Math.max(insets.bottom, 8);
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -27,9 +31,9 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: tokens.color.surface,
           borderTopColor: tokens.color.border,
-          height: Platform.OS === "ios" ? 88 : 64,
+          height: 58 + bottomInset,
           paddingTop: 6,
-          paddingBottom: Platform.OS === "ios" ? 28 : 8,
+          paddingBottom: bottomInset,
         },
         tabBarLabelStyle: { fontSize: 10, fontWeight: "700" },
         tabBarIcon: ({ color, focused, size }) => {

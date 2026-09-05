@@ -3,6 +3,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
+import { BrandLogo } from "@/components/BrandLogo";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { quoteCopy } from "@/features/quote/copy";
@@ -54,7 +55,9 @@ export default function HomeScreen() {
         }
         ListHeaderComponent={
           <View style={styles.header}>
-            <ThemedText size="xxl" bold>{t.appName}</ThemedText>
+            <View style={{ alignSelf: dir === "rtl" ? "flex-end" : "flex-start" }}>
+              <BrandLogo size={72} />
+            </View>
             <ThemedText muted>{t.workshops.homeIntro}</ThemedText>
             <View style={styles.quoteCta}>
               <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
