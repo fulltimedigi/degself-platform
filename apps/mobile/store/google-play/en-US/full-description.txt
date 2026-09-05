@@ -1,0 +1,16 @@
+DEGSELF helps you find car garages, workshops, and automotive services across Kuwait.
+
+Search by workshop name, service, or area and review available business details and ratings before getting in touch.
+
+Key features:
+• Search automotive workshops across Kuwait.
+• View specialty, location, address, rating, and available review count.
+• Call or open WhatsApp when a workshop phone number is available.
+• Open the workshop location and directions in Google Maps.
+• Save favorites locally without creating an account.
+• Optionally sign in to sync favorites across devices.
+• Delete your account and associated data directly in the app.
+
+You can browse and use the core directory features without creating an account. Always contact the workshop to confirm hours, services, and prices before visiting.
+
+DEGSELF does not perform repairs and does not guarantee the work of listed businesses. The app helps users discover and contact them.

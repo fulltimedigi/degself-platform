@@ -78,7 +78,16 @@ export default async function Home() {
     "@id": `${SITE}/#organization`,
     name: "دق سلف",
     legalName: COMPANY_LEGAL_NAME,
-    alternateName: ["Degself", "degself", "Deg Self", "دقسلف"],
+    alternateName: [
+      "Degself",
+      "degself",
+      "Degself Kuwait",
+      "Deg Self",
+      "دقسلف",
+      "دق سلف الكويت",
+      "منصة دق سلف",
+      "موقع دق سلف",
+    ],
     url: SITE,
     logo: LOGO,
     description:
