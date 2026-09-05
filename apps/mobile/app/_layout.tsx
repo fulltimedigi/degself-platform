@@ -1,48 +1,21 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import * as SplashScreen from "expo-splash-screen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { I18nProvider } from "@/i18n";
-import { ThemeProvider, useTheme } from "@/theme/theme-context";
-import { AuthProvider } from "@/lib/auth/auth-context";
-import { FavoritesProvider } from "@/lib/favorites/favorites-context";
 
-// Root layout: providers + a headerless stack. ThemeProvider is outermost so
-// every screen can read the live palette; StatusBar bar-style and the stack
-// background follow the resolved scheme (light|dark).
-function ThemedStack() {
-  const { scheme, colors } = useTheme();
-  return (
-    <>
-      <StatusBar style={scheme === "light" ? "dark" : "light"} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.background },
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="workshop/[placeId]" />
-        <Stack.Screen name="emergency" />
-        <Stack.Screen name="saved" />
-        <Stack.Screen name="my-quotes" />
-        <Stack.Screen name="auth/callback" />
-      </Stack>
-    </>
-  );
-}
+// DEGSELF is a WebView shell around the full web platform (degself.com). The
+// heavy product UI lives on the web; this native app adds the shell + native
+// affordances (external-link handling, offline, splash, and — phase 2 — push).
+// Keep the splash up until the WebView paints its first frame (see app/index).
+void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <ThemeProvider>
-        <I18nProvider>
-          <AuthProvider>
-            <FavoritesProvider>
-              <ThemedStack />
-            </FavoritesProvider>
-          </AuthProvider>
-        </I18nProvider>
-      </ThemeProvider>
+      <StatusBar style="light" />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#0A0A0A" } }}>
+        <Stack.Screen name="index" />
+      </Stack>
     </SafeAreaProvider>
   );
 }

@@ -38,7 +38,16 @@
       ],
       "expo-secure-store",
       "expo-apple-authentication",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/logo-badge.png",
+          "backgroundColor": "#0A0A0A",
+          "imageWidth": 180,
+          "dark": { "image": "./assets/logo-badge.png", "backgroundColor": "#0A0A0A" }
+        }
+      ]
     ],
     "extra": {
       "appEnv": "development",
