@@ -21,6 +21,8 @@ export function buildWorkshopListUrl(params: {
   ids?: readonly string[];
   limit?: number;
   offset?: number;
+  serviceMode?: string;
+  specialty?: string;
 }): string {
   return buildWorkshopListUrlFromBase(requireApiBaseUrl(), params);
 }
@@ -65,6 +67,8 @@ export async function fetchWorkshops(
     ids?: readonly string[];
     limit?: number;
     offset?: number;
+    serviceMode?: string;
+    specialty?: string;
   },
   signal?: AbortSignal
 ): Promise<WorkshopListResponse> {

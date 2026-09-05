@@ -4,13 +4,24 @@ const ENDPOINT = "/api/mobile/workshops";
 
 export function buildWorkshopListUrlFromBase(
   apiBaseUrl: string,
-  params: { query?: string; ids?: readonly string[]; limit?: number; offset?: number }
+  params: {
+    query?: string;
+    ids?: readonly string[];
+    limit?: number;
+    offset?: number;
+    serviceMode?: string;
+    specialty?: string;
+  }
 ): string {
   if (!apiBaseUrl) throw new Error("Missing API base URL.");
   const search = new URLSearchParams();
   if (params.ids) search.set("ids", params.ids.join(","));
   else {
     if (params.query?.trim()) search.set("q", params.query.trim());
+    // Emergency filters — the mobile API maps these onto service_mode / specialty
+    // (tow = سطحة, mobile = كراج متنقل, mobile+تواير وبنشر = بنشر متنقل).
+    if (params.serviceMode?.trim()) search.set("service_mode", params.serviceMode.trim());
+    if (params.specialty?.trim()) search.set("specialty", params.specialty.trim());
     if (params.limit != null) search.set("limit", String(params.limit));
     if (params.offset != null) search.set("offset", String(params.offset));
   }

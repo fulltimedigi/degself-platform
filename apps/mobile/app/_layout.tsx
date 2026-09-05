@@ -22,6 +22,7 @@ function ThemedStack() {
       >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="workshop/[placeId]" />
+        <Stack.Screen name="emergency" />
         <Stack.Screen name="saved" />
         <Stack.Screen name="my-quotes" />
         <Stack.Screen name="auth/callback" />

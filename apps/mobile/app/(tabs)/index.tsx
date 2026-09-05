@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
@@ -9,6 +9,7 @@ import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { quoteCopy } from "@/features/quote/copy";
 import { asaaliCopy } from "@/features/asaali/copy";
+import { emergencyCopy, EMERGENCY_SERVICES } from "@/features/emergency/copy";
 import { fetchWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 import { useFavorites } from "@/lib/favorites/favorites-context";
@@ -22,6 +23,8 @@ export default function HomeScreen() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const qc = quoteCopy(locale);
   const ac = asaaliCopy(locale);
+  const ec = emergencyCopy(locale);
+  const emergencyServices = EMERGENCY_SERVICES.map((s) => ec.services[s.key].label).join(" · ");
   const rowDir = dir === "rtl" ? "row-reverse" : "row";
   const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
@@ -64,6 +67,26 @@ export default function HomeScreen() {
               <BrandLogo size={72} />
             </View>
             <ThemedText muted>{t.workshops.homeIntro}</ThemedText>
+            <FadeInView delay={40}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={ec.open}
+                onPress={() => router.push("/emergency")}
+                style={({ pressed }) => [
+                  styles.emergencyCta,
+                  { flexDirection: rowDir },
+                  pressed && { opacity: 0.9 },
+                ]}
+              >
+                <Ionicons name="alert-circle" size={26} color={colors.danger} />
+                <View style={styles.emergencyBody}>
+                  <ThemedText size="sm" bold style={{ color: colors.danger }}>{ec.badge}</ThemedText>
+                  <ThemedText bold>{ec.title}</ThemedText>
+                  <ThemedText muted size="sm">{emergencyServices}</ThemedText>
+                </View>
+                <Ionicons name={dir === "rtl" ? "chevron-back" : "chevron-forward"} size={20} color={colors.muted} />
+              </Pressable>
+            </FadeInView>
             <FadeInView delay={80} style={styles.quoteCta}>
               <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
                 <Ionicons name="pricetags" size={20} color={colors.primary} />
@@ -133,5 +156,15 @@ function makeStyles(c: Palette) {
     },
     separator: { height: tokens.space.md },
     ctaHead: { alignItems: "center", gap: tokens.space.sm },
+    emergencyCta: {
+      alignItems: "center",
+      gap: tokens.space.md,
+      backgroundColor: c.surface,
+      borderColor: c.danger,
+      borderWidth: 1.5,
+      borderRadius: tokens.radius.lg,
+      padding: tokens.space.lg,
+    },
+    emergencyBody: { flex: 1, gap: tokens.space.xs },
   });
 }
