@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Download, Share, Plus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { isNativeShell } from "@/lib/shell";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -29,7 +30,9 @@ export function InstallApp({
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
+    // Inside the native shell there's nothing to install — hide the menu item.
     const standalone =
+      isNativeShell() ||
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;
     if (standalone) {
