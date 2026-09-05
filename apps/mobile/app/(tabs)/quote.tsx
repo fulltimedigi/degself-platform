@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { Field, SelectField, ChipGroup } from "@/components/form";
 import { useI18n } from "@/i18n";
@@ -70,7 +71,7 @@ export default function QuoteScreen() {
     return (
       <Screen>
         <View style={styles.success}>
-          <View style={styles.check}><ThemedText style={styles.checkMark}>✓</ThemedText></View>
+          <View style={styles.check}><Ionicons name="checkmark-sharp" size={52} color={tokens.color.primaryForeground} /></View>
           <ThemedText size="xxl" bold style={styles.center}>{c.successTitle}</ThemedText>
           <ThemedText muted style={styles.center}>{c.successBody}</ThemedText>
           <View style={{ height: tokens.space.md }} />
@@ -131,9 +132,8 @@ const styles = StyleSheet.create({
   hero: { gap: tokens.space.sm, marginBottom: tokens.space.xs },
   freeChip: { alignSelf: "flex-start", backgroundColor: tokens.color.primary, borderRadius: tokens.radius.pill, paddingVertical: 4, paddingHorizontal: tokens.space.md, marginTop: tokens.space.xs },
   section: { gap: tokens.space.md },
-  err: { color: "#E4795C" },
+  err: { color: tokens.color.danger },
   success: { flex: 1, alignItems: "center", justifyContent: "center", gap: tokens.space.sm, paddingHorizontal: tokens.space.lg },
   center: { textAlign: "center" },
   check: { width: 96, height: 96, borderRadius: 48, backgroundColor: tokens.color.primary, alignItems: "center", justifyContent: "center", marginBottom: tokens.space.md },
-  checkMark: { color: tokens.color.primaryForeground, fontSize: 54, fontWeight: "900", lineHeight: 60 },
 });

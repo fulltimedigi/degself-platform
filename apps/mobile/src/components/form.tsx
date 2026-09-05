@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   FlatList, Modal, Pressable, StyleSheet, TextInput, View, type KeyboardTypeOptions,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
@@ -61,7 +62,7 @@ export function SelectField({
         onPress={() => setOpen(true)}
         style={({ pressed }) => [styles.input, styles.select, error && styles.inputError, pressed && { opacity: 0.85 }]}
       >
-        <ThemedText style={{ color: tokens.color.muted }}>▾</ThemedText>
+        <Ionicons name="chevron-down" size={18} color={tokens.color.muted} />
         <ThemedText style={{ flex: 1, color: value ? tokens.color.foreground : tokens.color.muted, textAlign: dir === "rtl" ? "right" : "left" }}>
           {value ? show(value) : placeholder}
         </ThemedText>
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     color: tokens.color.foreground, fontSize: tokens.font.md,
   },
   inputMultiline: { minHeight: 110, textAlignVertical: "top" },
-  inputError: { borderColor: "#E4795C" },
+  inputError: { borderColor: tokens.color.danger },
   select: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.6)", justifyContent: "flex-end" },
   sheet: {
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   sheetTitle: { marginBottom: tokens.space.md },
   option: { paddingVertical: tokens.space.md, borderBottomColor: tokens.color.border, borderBottomWidth: StyleSheet.hairlineWidth },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: tokens.space.sm },
-  chipsError: { borderColor: "#E4795C", borderWidth: 1, borderRadius: tokens.radius.md, padding: tokens.space.sm },
+  chipsError: { borderColor: tokens.color.danger, borderWidth: 1, borderRadius: tokens.radius.md, padding: tokens.space.sm },
   chip: {
     borderColor: tokens.color.border, borderWidth: 1, borderRadius: tokens.radius.pill,
     paddingVertical: tokens.space.sm, paddingHorizontal: tokens.space.md, backgroundColor: tokens.color.surface,

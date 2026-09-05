@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -8,6 +9,7 @@ import {
   type ViewProps,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import { tokens } from "../theme/tokens";
 import { useI18n } from "../i18n";
 
@@ -87,14 +89,22 @@ export function Button({
   variant = "primary",
   disabled,
   loading,
+  icon,
 }: {
   label: string;
   onPress?: () => void;
   variant?: "primary" | "secondary" | "danger";
   disabled?: boolean;
   loading?: boolean;
+  icon?: keyof typeof Ionicons.glyphMap;
 }) {
   const isDisabled = disabled || loading;
+  const contentColor =
+    variant === "primary"
+      ? tokens.color.primaryForeground
+      : variant === "danger"
+        ? "#FFFFFF"
+        : tokens.color.foreground;
   return (
     <Pressable
       accessibilityRole="button"
@@ -110,16 +120,14 @@ export function Button({
         pressed && !isDisabled && { opacity: 0.85 },
       ]}
     >
-      <Text
-        style={[
-          styles.buttonText,
-          variant === "primary" && { color: tokens.color.primaryForeground },
-          variant === "secondary" && { color: tokens.color.foreground },
-          variant === "danger" && { color: "#FFFFFF" },
-        ]}
-      >
-        {loading ? "…" : label}
-      </Text>
+      {loading ? (
+        <ActivityIndicator color={contentColor} />
+      ) : (
+        <View style={styles.buttonInner}>
+          {icon ? <Ionicons name={icon} size={17} color={contentColor} /> : null}
+          <Text style={[styles.buttonText, { color: contentColor }]}>{label}</Text>
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -159,5 +167,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonDanger: { backgroundColor: "#B00020" },
+  buttonInner: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
   buttonText: { fontSize: tokens.font.md, fontWeight: "800" },
 });

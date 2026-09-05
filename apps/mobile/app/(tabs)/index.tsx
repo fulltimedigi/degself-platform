@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
@@ -12,9 +13,10 @@ import { useFavorites } from "@/lib/favorites/favorites-context";
 import { tokens } from "@/theme/tokens";
 
 export default function HomeScreen() {
-  const { t, locale } = useI18n();
+  const { t, locale, dir } = useI18n();
   const qc = quoteCopy(locale);
   const ac = asaaliCopy(locale);
+  const rowDir = dir === "rtl" ? "row-reverse" : "row";
   const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
@@ -55,16 +57,22 @@ export default function HomeScreen() {
             <ThemedText size="xxl" bold>{t.appName}</ThemedText>
             <ThemedText muted>{t.workshops.homeIntro}</ThemedText>
             <View style={styles.quoteCta}>
-              <ThemedText size="lg" bold>{qc.title}</ThemedText>
+              <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
+                <Ionicons name="pricetags" size={20} color={tokens.color.primary} />
+                <ThemedText size="lg" bold>{qc.title}</ThemedText>
+              </View>
               <ThemedText muted size="sm">{qc.subtitle}</ThemedText>
               <Button label={qc.submit} onPress={() => router.push("/(tabs)/quote")} />
             </View>
             <View style={styles.asaaliCta}>
-              <ThemedText size="lg" bold>{ac.title}</ThemedText>
+              <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
+                <Ionicons name="sparkles" size={20} color={tokens.color.primary} />
+                <ThemedText size="lg" bold>{ac.title}</ThemedText>
+              </View>
               <ThemedText muted size="sm">{ac.subtitle}</ThemedText>
               <Button label={ac.ask} variant="secondary" onPress={() => router.push("/(tabs)/asaali")} />
             </View>
-            <Button label={t.workshops.searchAction} variant="secondary" onPress={() => router.push("/(tabs)/search")} />
+            <Button label={t.workshops.searchAction} icon="search" variant="secondary" onPress={() => router.push("/(tabs)/search")} />
             <ThemedText size="lg" bold>{t.workshops.featured}</ThemedText>
           </View>
         }
@@ -115,4 +123,5 @@ const styles = StyleSheet.create({
     gap: tokens.space.sm,
   },
   separator: { height: tokens.space.md },
+  ctaHead: { alignItems: "center", gap: tokens.space.sm },
 });

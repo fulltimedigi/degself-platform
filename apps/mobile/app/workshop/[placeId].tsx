@@ -95,15 +95,16 @@ export default function WorkshopDetailScreen() {
 
         <Button
           label={isFavorite(workshop.place_id) ? t.workshops.removeSaved : t.workshops.save}
+          icon={isFavorite(workshop.place_id) ? "heart" : "heart-outline"}
           variant="secondary"
           onPress={() => void toggle(workshop.place_id)}
         />
         <View style={[styles.actions, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}>
-          {phone ? <View style={styles.action}><Button label={t.workshops.call} onPress={() => void openUrl(phone)} /></View> : null}
-          {whatsapp ? <View style={styles.action}><Button label={t.workshops.whatsapp} onPress={() => void openUrl(whatsapp)} /></View> : null}
+          {phone ? <View style={styles.action}><Button label={t.workshops.call} icon="call" onPress={() => void openUrl(phone)} /></View> : null}
+          {whatsapp ? <View style={styles.action}><Button label={t.workshops.whatsapp} icon="logo-whatsapp" onPress={() => void openUrl(whatsapp)} /></View> : null}
         </View>
-        <Button label={t.workshops.directions} variant="secondary" onPress={() => void openUrl(mapUrl(workshop))} />
-        {website ? <Button label={t.workshops.website} variant="secondary" onPress={() => void openUrl(website)} /> : null}
+        <Button label={t.workshops.directions} icon="navigate" variant="secondary" onPress={() => void openUrl(mapUrl(workshop))} />
+        {website ? <Button label={t.workshops.website} icon="globe-outline" variant="secondary" onPress={() => void openUrl(website)} /> : null}
         <ThemedText muted size="sm">{t.workshops.verifyDetails}</ThemedText>
       </ScrollView>
     </Screen>

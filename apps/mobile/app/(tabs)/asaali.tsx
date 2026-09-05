@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { Field, SelectField } from "@/components/form";
 import { useI18n } from "@/i18n";
@@ -206,9 +207,16 @@ export default function AsaaliScreen() {
 
               {showWarning && response.warning ? (
                 <Surface style={[styles.warn, urgent ? styles.warnUrgent : styles.warnCaution]}>
-                  <ThemedText size="sm" bold style={{ color: urgent ? "#F0A58C" : "#E8CE86" }}>
-                    {urgent ? c.warnUrgent : c.warnCaution}
-                  </ThemedText>
+                  <View style={styles.warnHead}>
+                    <Ionicons
+                      name={urgent ? "warning" : "alert-circle"}
+                      size={16}
+                      color={urgent ? tokens.color.danger : tokens.color.warning}
+                    />
+                    <ThemedText size="sm" bold style={{ color: urgent ? tokens.color.danger : tokens.color.warning }}>
+                      {urgent ? c.warnUrgent : c.warnCaution}
+                    </ThemedText>
+                  </View>
                   <ThemedText>{response.warning.message}</ThemedText>
                   <ThemedText bold>→ {response.warning.action}</ThemedText>
                 </Surface>
@@ -255,6 +263,7 @@ export default function AsaaliScreen() {
                       onPress={() => void shareMessage(response.whatsapp_message ?? "")}
                       style={({ pressed }) => [styles.shareBtn, pressed && { opacity: 0.85 }]}
                     >
+                      <Ionicons name="paper-plane" size={14} color={tokens.color.primaryForeground} />
                       <ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>{c.shareBtn}</ThemedText>
                     </Pressable>
                   </View>
@@ -307,16 +316,20 @@ function WorkshopRow({
         <View style={styles.wsActions}>
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={waLabel}
             onPress={() => onWhatsApp(workshop.phone!)}
             style={({ pressed }) => [styles.wsBtn, styles.wsWa, pressed && { opacity: 0.85 }]}
           >
+            <Ionicons name="logo-whatsapp" size={14} color="#FFFFFF" />
             <ThemedText size="sm" bold style={{ color: "#FFFFFF" }}>{waLabel}</ThemedText>
           </Pressable>
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={callLabel}
             onPress={() => onCall(workshop.phone!)}
             style={({ pressed }) => [styles.wsBtn, styles.wsCall, pressed && { opacity: 0.85 }]}
           >
+            <Ionicons name="call" size={14} color={tokens.color.primaryForeground} />
             <ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>{callLabel}</ThemedText>
           </Pressable>
         </View>
@@ -338,7 +351,7 @@ const styles = StyleSheet.create({
   section: { gap: tokens.space.md },
   actions: { flexDirection: "row", gap: tokens.space.sm },
   flex: { flex: 1 },
-  err: { color: "#E4795C" },
+  err: { color: tokens.color.danger },
   examples: { gap: tokens.space.sm },
   example: {
     borderColor: tokens.color.border,
@@ -346,17 +359,21 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.md,
     paddingVertical: tokens.space.sm,
     paddingHorizontal: tokens.space.md,
-    backgroundColor: tokens.color.background,
+    backgroundColor: tokens.color.surfaceRaised,
   },
   accentCard: { borderColor: tokens.color.primary, borderWidth: 1 },
   warn: { borderWidth: 1 },
-  warnUrgent: { borderColor: "#E4795C", backgroundColor: "rgba(228,121,92,0.10)" },
-  warnCaution: { borderColor: "#E0B84D", backgroundColor: "rgba(224,184,77,0.10)" },
+  warnHead: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
+  warnUrgent: { borderColor: tokens.color.danger, backgroundColor: "rgba(228,121,92,0.10)" },
+  warnCaution: { borderColor: tokens.color.warning, backgroundColor: "rgba(224,184,77,0.10)" },
   waHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: tokens.space.sm },
   shareBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     backgroundColor: tokens.color.primary,
     borderRadius: tokens.radius.sm,
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: tokens.space.md,
   },
   termRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: tokens.space.sm },
@@ -364,13 +381,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: tokens.space.sm,
-    backgroundColor: tokens.color.background,
+    backgroundColor: tokens.color.surfaceRaised,
     borderRadius: tokens.radius.md,
     padding: tokens.space.md,
   },
   wsActions: { flexDirection: "row", gap: tokens.space.sm },
-  wsBtn: { borderRadius: tokens.radius.sm, paddingVertical: 6, paddingHorizontal: tokens.space.md },
-  wsWa: { backgroundColor: "#25D366" },
+  wsBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    borderRadius: tokens.radius.sm,
+    paddingVertical: 8,
+    paddingHorizontal: tokens.space.md,
+  },
+  wsWa: { backgroundColor: tokens.color.whatsapp },
   wsCall: { backgroundColor: tokens.color.primary },
   disclaimer: { textAlign: "center", marginTop: tokens.space.sm },
 });

@@ -1,4 +1,5 @@
 import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
@@ -45,7 +46,7 @@ export function WorkshopCard({
         />
       ) : (
         <View style={[styles.image, styles.imageFallback]}>
-          <ThemedText size="xl">🔧</ThemedText>
+          <Ionicons name="construct-outline" size={34} color={tokens.color.muted} />
         </View>
       )}
       <View style={styles.body}>
@@ -66,7 +67,11 @@ export function WorkshopCard({
             }}
             style={styles.saveButton}
           >
-            <ThemedText size="lg">{saved ? "★" : "☆"}</ThemedText>
+            <Ionicons
+              name={saved ? "heart" : "heart-outline"}
+              size={22}
+              color={saved ? tokens.color.primary : tokens.color.muted}
+            />
           </Pressable>
         </View>
         {workshop.reviewed_specialty ? (
@@ -81,12 +86,15 @@ export function WorkshopCard({
         ) : null}
         <View style={[styles.meta, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}>
           {workshop.google_rating != null ? (
-            <ThemedText size="sm">
-              ⭐ {workshop.google_rating.toFixed(1)}
-              {workshop.google_reviews_count != null
-                ? ` (${workshop.google_reviews_count})`
-                : ""}
-            </ThemedText>
+            <View style={[styles.rating, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}>
+              <Ionicons name="star" size={13} color={tokens.color.primary} />
+              <ThemedText size="sm">
+                {workshop.google_rating.toFixed(1)}
+                {workshop.google_reviews_count != null
+                  ? ` (${workshop.google_reviews_count})`
+                  : ""}
+              </ThemedText>
+            </View>
           ) : null}
           {workshop.is_partner ? (
             <View style={styles.partnerBadge}>
@@ -117,6 +125,7 @@ const styles = StyleSheet.create({
   title: { flex: 1 },
   saveButton: { minWidth: 36, minHeight: 36, alignItems: "center", justifyContent: "center" },
   meta: { alignItems: "center", flexWrap: "wrap", gap: tokens.space.sm, marginTop: tokens.space.xs },
+  rating: { alignItems: "center", gap: 4 },
   partnerBadge: {
     backgroundColor: tokens.color.primary,
     borderRadius: tokens.radius.pill,
