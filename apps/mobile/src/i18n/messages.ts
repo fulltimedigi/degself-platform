@@ -9,7 +9,7 @@ import type { Locale } from "./direction";
 export type Dict = {
   appName: string;
   foundation: string;
-  tabs: { home: string; search: string; saved: string; account: string };
+  tabs: { home: string; search: string; quote: string; saved: string; account: string };
   placeholder: string;
   languageLabel: string;
   directionLabel: string;
@@ -91,7 +91,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ar: {
     appName: "دق سلف",
     foundation: "تطبيق الموبايل الأصلي",
-    tabs: { home: "الرئيسية", search: "البحث", saved: "المحفوظة", account: "حسابي" },
+    tabs: { home: "الرئيسية", search: "البحث", quote: "عرض سعر", saved: "المحفوظة", account: "حسابي" },
     placeholder: "شاشة مبدئية — بلا بيانات إنتاج بعد.",
     languageLabel: "اللغة",
     directionLabel: "الاتجاه",
@@ -181,7 +181,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   en: {
     appName: "DEGSELF",
     foundation: "Native mobile app",
-    tabs: { home: "Home", search: "Search", saved: "Saved", account: "Account" },
+    tabs: { home: "Home", search: "Search", quote: "Get quotes", saved: "Saved", account: "Account" },
     placeholder: "Placeholder screen — no production data yet.",
     languageLabel: "Language",
     directionLabel: "Direction",
@@ -270,7 +270,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   hi: {
     appName: "DEGSELF",
     foundation: "नेटिव मोबाइल ऐप",
-    tabs: { home: "होम", search: "खोज", saved: "सहेजे", account: "खाता" },
+    tabs: { home: "होम", search: "खोज", quote: "कोटेशन", saved: "सहेजे", account: "खाता" },
     placeholder: "प्लेसहोल्डर स्क्रीन — अभी कोई प्रोडक्शन डेटा नहीं।",
     languageLabel: "भाषा",
     directionLabel: "दिशा",
@@ -359,7 +359,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ur: {
     appName: "دق سلف",
     foundation: "نیٹو موبائل ایپ",
-    tabs: { home: "ہوم", search: "تلاش", saved: "محفوظ", account: "اکاؤنٹ" },
+    tabs: { home: "ہوم", search: "تلاش", quote: "قیمت", saved: "محفوظ", account: "اکاؤنٹ" },
     placeholder: "پلیس ہولڈر اسکرین — ابھی کوئی پروڈکشن ڈیٹا نہیں۔",
     languageLabel: "زبان",
     directionLabel: "سمت",

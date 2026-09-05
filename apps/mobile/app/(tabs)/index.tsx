@@ -4,13 +4,15 @@ import { useRouter } from "expo-router";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
+import { quoteCopy } from "@/features/quote/copy";
 import { fetchWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 import { useFavorites } from "@/lib/favorites/favorites-context";
 import { tokens } from "@/theme/tokens";
 
 export default function HomeScreen() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const qc = quoteCopy(locale);
   const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
@@ -50,7 +52,12 @@ export default function HomeScreen() {
           <View style={styles.header}>
             <ThemedText size="xxl" bold>{t.appName}</ThemedText>
             <ThemedText muted>{t.workshops.homeIntro}</ThemedText>
-            <Button label={t.workshops.searchAction} onPress={() => router.push("/(tabs)/search")} />
+            <View style={styles.quoteCta}>
+              <ThemedText size="lg" bold>{qc.title}</ThemedText>
+              <ThemedText muted size="sm">{qc.subtitle}</ThemedText>
+              <Button label={qc.submit} onPress={() => router.push("/(tabs)/quote")} />
+            </View>
+            <Button label={t.workshops.searchAction} variant="secondary" onPress={() => router.push("/(tabs)/search")} />
             <ThemedText size="lg" bold>{t.workshops.featured}</ThemedText>
           </View>
         }
@@ -84,5 +91,13 @@ const styles = StyleSheet.create({
   list: { flex: 1 },
   content: { paddingBottom: tokens.space.xl },
   header: { gap: tokens.space.md, marginBottom: tokens.space.md },
+  quoteCta: {
+    backgroundColor: tokens.color.surface,
+    borderColor: tokens.color.primary,
+    borderWidth: 1.5,
+    borderRadius: tokens.radius.lg,
+    padding: tokens.space.lg,
+    gap: tokens.space.sm,
+  },
   separator: { height: tokens.space.md },
 });
