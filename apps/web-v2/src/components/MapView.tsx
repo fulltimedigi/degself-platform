@@ -33,12 +33,15 @@ export default function MapView({ points }: { points: MapPoint[] }) {
       className="h-full w-full"
       style={{ background: "#e5e7eb" }}
     >
-      {/* Light basemap (CARTO Positron) — clean, makes yellow pins clear. No Google. */}
+      {/* OpenStreetMap standard tiles — keyless and free (no watermark). CARTO's
+          basemaps now require an API key and serve an "API KEY REQUIRED" watermark
+          for anonymous use, so we use OSM. The dark-bordered yellow pin still pops.
+          If we later want the clean light look back, add a free key (MapTiler/CARTO). */}
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        subdomains="abcd"
-        maxZoom={20}
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        subdomains="abc"
+        maxZoom={19}
       />
       <MarkerClusterGroup chunkedLoading>
         {points.map((p) => (
