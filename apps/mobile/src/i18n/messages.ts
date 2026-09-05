@@ -1,11 +1,10 @@
 import type { Locale } from "./direction";
 
-// Minimal, OWNED placeholder strings for the M0 foundation only. This is not the
-// product's translation system — it deliberately duplicates a handful of strings
-// (per the architecture contract: do not over-engineer web↔mobile translation
-// sharing in M0). Long-term translation-data ownership: reuse the canonical
-// message data from the web catalog once real shared product screens exist
-// (evaluated no earlier than M1/M2), not before.
+// OWNED strings for the mobile app. M0 shipped the foundation copy; M1 adds
+// auth, favorites, and the account-deletion Danger Zone. next-intl is web-bound
+// and intentionally not imported. Long-term translation-data ownership (reusing
+// the canonical web catalog) is still deferred until real shared product screens
+// exist — this remains a small, owned surface.
 
 export type Dict = {
   appName: string;
@@ -15,48 +14,285 @@ export type Dict = {
   languageLabel: string;
   directionLabel: string;
   rtlReloadNote: string;
+  auth: {
+    signedOutTitle: string;
+    signedOutBody: string;
+    continueWithGoogle: string;
+    continueWithApple: string;
+    appleIosOnly: string;
+    signOut: string;
+    signedInAs: string;
+    cancelled: string;
+    genericError: string;
+  };
+  saved: {
+    guestTitle: string;
+    guestBody: string;
+    authTitle: string;
+    empty: string;
+    count: string; // "%d saved"
+    remove: string;
+    devAddSample: string;
+  };
+  danger: {
+    title: string;
+    intro: string;
+    consequences: string;
+    deleteButton: string;
+    step1Continue: string;
+    typeToConfirm: string; // instructs typing the literal token DELETE
+    confirmPlaceholder: string;
+    confirmDelete: string;
+    cancel: string;
+    deleting: string;
+    reauthNeeded: string;
+    reauthButton: string;
+    success: string;
+  };
+  errors: {
+    deleteErrNotAuthenticated: string;
+    deleteErrInvalidConfirmation: string;
+    deleteErrAuthTooOld: string;
+    deleteErrRateLimited: string;
+    deleteErrPrivilegedRole: string;
+    deleteErrClaimedWorkshop: string;
+    deleteErrGeneric: string;
+  };
 };
 
 export const MESSAGES: Record<Locale, Dict> = {
   ar: {
     appName: "دق سلف",
-    foundation: "الأساس الأصلي لتطبيق الموبايل (M0)",
+    foundation: "تطبيق الموبايل الأصلي",
     tabs: { home: "الرئيسية", search: "البحث", saved: "المحفوظة", account: "حسابي" },
     placeholder: "شاشة مبدئية — بلا بيانات إنتاج بعد.",
     languageLabel: "اللغة",
     directionLabel: "الاتجاه",
     rtlReloadNote:
       "قلب اتجاه التخطيط بالكامل (RTL/LTR) يتطلب إعادة تشغيل التطبيق في React Native.",
+    auth: {
+      signedOutTitle: "سجّل الدخول",
+      signedOutBody: "سجّل الدخول لحفظ ورش السيارات ومزامنتها عبر أجهزتك.",
+      continueWithGoogle: "المتابعة عبر Google",
+      continueWithApple: "المتابعة عبر Apple",
+      appleIosOnly: "تسجيل الدخول عبر Apple متاح على أجهزة iOS فقط.",
+      signOut: "تسجيل الخروج",
+      signedInAs: "مُسجّل الدخول باسم",
+      cancelled: "أُلغِي تسجيل الدخول.",
+      genericError: "تعذّر تسجيل الدخول. حاول مرة أخرى.",
+    },
+    saved: {
+      guestTitle: "المحفوظة (كضيف)",
+      guestBody: "محفوظاتك على هذا الجهاز فقط. سجّل الدخول لمزامنتها.",
+      authTitle: "المحفوظة",
+      empty: "لا توجد ورش محفوظة بعد.",
+      count: "%d محفوظة",
+      remove: "إزالة",
+      devAddSample: "إضافة عنصر تجريبي (تطوير)",
+    },
+    danger: {
+      title: "منطقة الخطر",
+      intro: "حذف الحساب إجراء دائم لا يمكن التراجع عنه.",
+      consequences:
+        "سيتم حذف هويتك وملفك الشخصي وكل ورشك المحفوظة نهائيًا. لا يمكن استرجاع الحساب.",
+      deleteButton: "حذف الحساب",
+      step1Continue: "متابعة الحذف",
+      typeToConfirm: "اكتب DELETE للتأكيد.",
+      confirmPlaceholder: "اكتب DELETE",
+      confirmDelete: "حذف حسابي نهائيًا",
+      cancel: "إلغاء",
+      deleting: "جارٍ الحذف…",
+      reauthNeeded:
+        "لأمانك، أعد تسجيل الدخول ثم أعد المحاولة لتأكيد الحذف.",
+      reauthButton: "إعادة تسجيل الدخول",
+      success: "تم حذف حسابك.",
+    },
+    errors: {
+      deleteErrNotAuthenticated: "انتهت الجلسة. سجّل الدخول من جديد.",
+      deleteErrInvalidConfirmation: "نص التأكيد غير صحيح. اكتب DELETE تمامًا.",
+      deleteErrAuthTooOld:
+        "يجب تسجيل دخول حديث. أعد تسجيل الدخول ثم أعد المحاولة.",
+      deleteErrRateLimited: "محاولات كثيرة. حاول لاحقًا.",
+      deleteErrPrivilegedRole:
+        "لا يمكن حذف حساب مشرف ذاتيًا. تواصل مع الدعم.",
+      deleteErrClaimedWorkshop:
+        "حسابك مرتبط بورشة مُطالَب بها. أزِل الارتباط أولًا.",
+      deleteErrGeneric: "تعذّر حذف الحساب. حاول مرة أخرى.",
+    },
   },
   en: {
     appName: "DEGSELF",
-    foundation: "Native mobile foundation (M0)",
+    foundation: "Native mobile app",
     tabs: { home: "Home", search: "Search", saved: "Saved", account: "Account" },
     placeholder: "Placeholder screen — no production data yet.",
     languageLabel: "Language",
     directionLabel: "Direction",
     rtlReloadNote:
       "Full RTL/LTR layout mirroring requires an app restart in React Native.",
+    auth: {
+      signedOutTitle: "Sign in",
+      signedOutBody: "Sign in to save workshops and sync them across your devices.",
+      continueWithGoogle: "Continue with Google",
+      continueWithApple: "Continue with Apple",
+      appleIosOnly: "Sign in with Apple is available on iOS devices only.",
+      signOut: "Sign out",
+      signedInAs: "Signed in as",
+      cancelled: "Sign-in cancelled.",
+      genericError: "Couldn't sign in. Please try again.",
+    },
+    saved: {
+      guestTitle: "Saved (guest)",
+      guestBody: "Saved on this device only. Sign in to sync them.",
+      authTitle: "Saved",
+      empty: "No saved workshops yet.",
+      count: "%d saved",
+      remove: "Remove",
+      devAddSample: "Add sample item (dev)",
+    },
+    danger: {
+      title: "Danger zone",
+      intro: "Deleting your account is permanent and cannot be undone.",
+      consequences:
+        "Your identity, profile, and all saved workshops are permanently deleted. The account cannot be recovered.",
+      deleteButton: "Delete account",
+      step1Continue: "Continue to delete",
+      typeToConfirm: "Type DELETE to confirm.",
+      confirmPlaceholder: "Type DELETE",
+      confirmDelete: "Permanently delete my account",
+      cancel: "Cancel",
+      deleting: "Deleting…",
+      reauthNeeded:
+        "For your security, sign in again and retry to confirm deletion.",
+      reauthButton: "Sign in again",
+      success: "Your account has been deleted.",
+    },
+    errors: {
+      deleteErrNotAuthenticated: "Your session expired. Please sign in again.",
+      deleteErrInvalidConfirmation: "Confirmation text is incorrect. Type DELETE exactly.",
+      deleteErrAuthTooOld: "A recent sign-in is required. Sign in again and retry.",
+      deleteErrRateLimited: "Too many attempts. Please try again later.",
+      deleteErrPrivilegedRole:
+        "An admin account can't be self-deleted. Contact support.",
+      deleteErrClaimedWorkshop:
+        "Your account is linked to a claimed workshop. Unlink it first.",
+      deleteErrGeneric: "Couldn't delete the account. Please try again.",
+    },
   },
   hi: {
     appName: "DEGSELF",
-    foundation: "नेटिव मोबाइल फ़ाउंडेशन (M0)",
+    foundation: "नेटिव मोबाइल ऐप",
     tabs: { home: "होम", search: "खोज", saved: "सहेजे", account: "खाता" },
     placeholder: "प्लेसहोल्डर स्क्रीन — अभी कोई प्रोडक्शन डेटा नहीं।",
     languageLabel: "भाषा",
     directionLabel: "दिशा",
     rtlReloadNote:
       "पूर्ण RTL/LTR लेआउट मिररिंग के लिए React Native में ऐप रीस्टार्ट ज़रूरी है।",
+    auth: {
+      signedOutTitle: "साइन इन करें",
+      signedOutBody: "वर्कशॉप सहेजने और डिवाइसों में सिंक करने के लिए साइन इन करें।",
+      continueWithGoogle: "Google से जारी रखें",
+      continueWithApple: "Apple से जारी रखें",
+      appleIosOnly: "Apple से साइन इन केवल iOS डिवाइस पर उपलब्ध है।",
+      signOut: "साइन आउट",
+      signedInAs: "साइन इन:",
+      cancelled: "साइन-इन रद्द किया गया।",
+      genericError: "साइन इन नहीं हो सका। पुनः प्रयास करें।",
+    },
+    saved: {
+      guestTitle: "सहेजे (अतिथि)",
+      guestBody: "केवल इस डिवाइस पर सहेजे गए। सिंक के लिए साइन इन करें।",
+      authTitle: "सहेजे",
+      empty: "अभी कोई वर्कशॉप सहेजी नहीं गई।",
+      count: "%d सहेजे",
+      remove: "हटाएँ",
+      devAddSample: "नमूना आइटम जोड़ें (dev)",
+    },
+    danger: {
+      title: "खतरा क्षेत्र",
+      intro: "खाता हटाना स्थायी है और वापस नहीं किया जा सकता।",
+      consequences:
+        "आपकी पहचान, प्रोफ़ाइल और सभी सहेजी वर्कशॉप स्थायी रूप से हट जाएँगी। खाता वापस नहीं मिलेगा।",
+      deleteButton: "खाता हटाएँ",
+      step1Continue: "हटाना जारी रखें",
+      typeToConfirm: "पुष्टि के लिए DELETE टाइप करें।",
+      confirmPlaceholder: "DELETE टाइप करें",
+      confirmDelete: "मेरा खाता स्थायी रूप से हटाएँ",
+      cancel: "रद्द करें",
+      deleting: "हटाया जा रहा है…",
+      reauthNeeded:
+        "आपकी सुरक्षा के लिए, फिर से साइन इन करें और पुनः प्रयास करें।",
+      reauthButton: "फिर से साइन इन करें",
+      success: "आपका खाता हटा दिया गया है।",
+    },
+    errors: {
+      deleteErrNotAuthenticated: "सत्र समाप्त हो गया। फिर से साइन इन करें।",
+      deleteErrInvalidConfirmation: "पुष्टि पाठ ग़लत है। बिलकुल DELETE टाइप करें।",
+      deleteErrAuthTooOld: "हाल का साइन-इन आवश्यक है। फिर साइन इन करके पुनः प्रयास करें।",
+      deleteErrRateLimited: "बहुत अधिक प्रयास। बाद में प्रयास करें।",
+      deleteErrPrivilegedRole:
+        "एडमिन खाता स्वयं नहीं हटाया जा सकता। सहायता से संपर्क करें।",
+      deleteErrClaimedWorkshop:
+        "आपका खाता एक दावाकृत वर्कशॉप से जुड़ा है। पहले उसे अनलिंक करें।",
+      deleteErrGeneric: "खाता नहीं हटाया जा सका। पुनः प्रयास करें।",
+    },
   },
   ur: {
     appName: "دق سلف",
-    foundation: "نیٹو موبائل فاؤنڈیشن (M0)",
+    foundation: "نیٹو موبائل ایپ",
     tabs: { home: "ہوم", search: "تلاش", saved: "محفوظ", account: "اکاؤنٹ" },
     placeholder: "پلیس ہولڈر اسکرین — ابھی کوئی پروڈکشن ڈیٹا نہیں۔",
     languageLabel: "زبان",
     directionLabel: "سمت",
     rtlReloadNote:
       "مکمل RTL/LTR لے آؤٹ مررنگ کے لیے React Native میں ایپ ری اسٹارٹ ضروری ہے۔",
+    auth: {
+      signedOutTitle: "سائن ان کریں",
+      signedOutBody: "ورکشاپس محفوظ کرنے اور آلات کے درمیان سنک کے لیے سائن ان کریں۔",
+      continueWithGoogle: "Google کے ساتھ جاری رکھیں",
+      continueWithApple: "Apple کے ساتھ جاری رکھیں",
+      appleIosOnly: "Apple سے سائن ان صرف iOS آلات پر دستیاب ہے۔",
+      signOut: "سائن آؤٹ",
+      signedInAs: "سائن اِن بطور",
+      cancelled: "سائن اِن منسوخ ہوگیا۔",
+      genericError: "سائن ان نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+    },
+    saved: {
+      guestTitle: "محفوظ (مہمان)",
+      guestBody: "صرف اسی آلے پر محفوظ۔ سنک کے لیے سائن ان کریں۔",
+      authTitle: "محفوظ",
+      empty: "ابھی کوئی ورکشاپ محفوظ نہیں۔",
+      count: "%d محفوظ",
+      remove: "ہٹائیں",
+      devAddSample: "نمونہ آئٹم شامل کریں (dev)",
+    },
+    danger: {
+      title: "خطرے کا زون",
+      intro: "اکاؤنٹ حذف کرنا مستقل ہے اور واپس نہیں ہو سکتا۔",
+      consequences:
+        "آپ کی شناخت، پروفائل اور تمام محفوظ ورکشاپس مستقل طور پر حذف ہو جائیں گی۔ اکاؤنٹ بحال نہیں ہوگا۔",
+      deleteButton: "اکاؤنٹ حذف کریں",
+      step1Continue: "حذف جاری رکھیں",
+      typeToConfirm: "تصدیق کے لیے DELETE لکھیں۔",
+      confirmPlaceholder: "DELETE لکھیں",
+      confirmDelete: "میرا اکاؤنٹ مستقل حذف کریں",
+      cancel: "منسوخ",
+      deleting: "حذف ہو رہا ہے…",
+      reauthNeeded:
+        "آپ کی حفاظت کے لیے، دوبارہ سائن ان کریں اور دوبارہ کوشش کریں۔",
+      reauthButton: "دوبارہ سائن ان کریں",
+      success: "آپ کا اکاؤنٹ حذف کر دیا گیا ہے۔",
+    },
+    errors: {
+      deleteErrNotAuthenticated: "سیشن ختم ہوگیا۔ دوبارہ سائن ان کریں۔",
+      deleteErrInvalidConfirmation: "تصدیقی متن غلط ہے۔ بالکل DELETE لکھیں۔",
+      deleteErrAuthTooOld: "حالیہ سائن اِن ضروری ہے۔ دوبارہ سائن ان کر کے کوشش کریں۔",
+      deleteErrRateLimited: "بہت زیادہ کوششیں۔ بعد میں کوشش کریں۔",
+      deleteErrPrivilegedRole:
+        "ایڈمن اکاؤنٹ خود حذف نہیں ہو سکتا۔ سپورٹ سے رابطہ کریں۔",
+      deleteErrClaimedWorkshop:
+        "آپ کا اکاؤنٹ ایک کلیم شدہ ورکشاپ سے منسلک ہے۔ پہلے اسے الگ کریں۔",
+      deleteErrGeneric: "اکاؤنٹ حذف نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+    },
   },
 };
 

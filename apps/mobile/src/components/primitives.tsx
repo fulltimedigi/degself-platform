@@ -81,6 +81,49 @@ export function ChoiceButton({
   );
 }
 
+export function Button({
+  label,
+  onPress,
+  variant = "primary",
+  disabled,
+  loading,
+}: {
+  label: string;
+  onPress?: () => void;
+  variant?: "primary" | "secondary" | "danger";
+  disabled?: boolean;
+  loading?: boolean;
+}) {
+  const isDisabled = disabled || loading;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!isDisabled, busy: !!loading }}
+      disabled={isDisabled}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.button,
+        variant === "primary" && styles.buttonPrimary,
+        variant === "secondary" && styles.buttonSecondary,
+        variant === "danger" && styles.buttonDanger,
+        isDisabled && { opacity: 0.5 },
+        pressed && !isDisabled && { opacity: 0.85 },
+      ]}
+    >
+      <Text
+        style={[
+          styles.buttonText,
+          variant === "primary" && { color: tokens.color.primaryForeground },
+          variant === "secondary" && { color: tokens.color.foreground },
+          variant === "danger" && { color: "#FFFFFF" },
+        ]}
+      >
+        {loading ? "…" : label}
+      </Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: tokens.color.background },
   screenInner: { flex: 1, padding: tokens.space.lg, gap: tokens.space.md },
@@ -102,4 +145,19 @@ const styles = StyleSheet.create({
   choiceSelected: { backgroundColor: tokens.color.primary, borderColor: tokens.color.primary },
   choiceText: { color: tokens.color.foreground, fontSize: tokens.font.sm, fontWeight: "700" },
   choiceTextSelected: { color: tokens.color.primaryForeground },
+  button: {
+    borderRadius: tokens.radius.md,
+    paddingVertical: tokens.space.md,
+    paddingHorizontal: tokens.space.lg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonPrimary: { backgroundColor: tokens.color.primary },
+  buttonSecondary: {
+    backgroundColor: "transparent",
+    borderColor: tokens.color.border,
+    borderWidth: 1,
+  },
+  buttonDanger: { backgroundColor: "#B00020" },
+  buttonText: { fontSize: tokens.font.md, fontWeight: "800" },
 });
