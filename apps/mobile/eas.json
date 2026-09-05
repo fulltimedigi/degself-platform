@@ -18,7 +18,10 @@
       "distribution": "internal",
       "environment": "preview",
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "preview"
+        "EXPO_PUBLIC_APP_ENV": "preview",
+        "EXPO_PUBLIC_API_BASE_URL": "https://degself.com",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://xqmwhrimxnvqlpvfzcac.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd"
       }
     },
     "production": {
@@ -26,7 +29,10 @@
       "environment": "production",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "production"
+        "EXPO_PUBLIC_APP_ENV": "production",
+        "EXPO_PUBLIC_API_BASE_URL": "https://degself.com",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://xqmwhrimxnvqlpvfzcac.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_LoNhEb3DLP5TkgEjZKkSJQ_Q9MKtqhd"
       },
       "android": {
         "buildType": "app-bundle"
