@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Screen, Surface, ThemedText } from "@/components/primitives";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import { useTheme } from "@/theme/theme-context";
 import { useAuth } from "@/lib/auth/auth-context";
 import { useFavorites } from "@/lib/favorites/favorites-context";
 import { fetchSavedWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 
 export default function SavedScreen() {
-  const { t } = useI18n();
+  const { t, dir } = useI18n();
+  const { colors } = useTheme();
   const router = useRouter();
   const { status } = useAuth();
   const {
@@ -59,6 +62,16 @@ export default function SavedScreen() {
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <View style={styles.header}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t.workshops.back}
+              onPress={() => router.back()}
+              hitSlop={10}
+              style={[styles.backRow, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}
+            >
+              <Ionicons name={dir === "rtl" ? "chevron-forward" : "chevron-back"} size={22} color={colors.foreground} />
+              <ThemedText size="sm">{t.workshops.back}</ThemedText>
+            </Pressable>
             <ThemedText size="xl" bold>
               {signedIn ? t.saved.authTitle : t.saved.guestTitle}
             </ThemedText>
@@ -112,5 +125,6 @@ const styles = StyleSheet.create({
   list: { flex: 1 },
   content: { paddingBottom: tokens.space.xl },
   header: { gap: tokens.space.sm, marginBottom: tokens.space.md },
+  backRow: { alignItems: "center", gap: tokens.space.xs, alignSelf: "flex-start" },
   separator: { height: tokens.space.md },
 });

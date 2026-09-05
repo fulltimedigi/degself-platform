@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
@@ -12,6 +12,8 @@ import {
   QUOTE_SERVICES, QUOTE_SERVICE_SHORT, QUOTE_AREAS, QUOTE_URGENCIES, QUOTE_YEARS,
 } from "@/features/quote/data";
 import { submitQuote, QuoteError } from "@/features/quote/api";
+import { getProfile, setProfile } from "@/lib/prefs/profile";
+import { addQuoteHistory } from "@/lib/prefs/quote-history";
 
 const PHONE_RE = /^[0-9+\s-]{7,15}$/;
 
@@ -36,6 +38,20 @@ export default function QuoteScreen() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
 
+  // Pre-fill name + WhatsApp from the device-local profile (Settings → My
+  // request details) without clobbering anything the user already typed.
+  useEffect(() => {
+    let mounted = true;
+    void getProfile().then((p) => {
+      if (!mounted) return;
+      if (p.name) setName((n) => n || p.name);
+      if (p.whatsapp) setPhone((v) => v || p.whatsapp);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   function reset() {
     setService(null); setMake(""); setModel(""); setYear(null); setArea(null);
     setUrgency("عادي"); setProblem(""); setName(""); setPhone("");
@@ -58,10 +74,20 @@ export default function QuoteScreen() {
     }
     setMsg(null); setBusy(true);
     try {
-      await submitQuote({
+      const res = await submitQuote({
         customer_name: name.trim(), customer_phone: phone.trim(), service: service!,
         car_make: make.trim(), car_model: model.trim(), car_year: year!, area: area!,
         urgency, problem_description: problem.trim(),
+      });
+      // Remember contact details for next time, and record the request locally
+      // (Settings → My quote requests) — best-effort, never blocks success.
+      void setProfile({ name: name.trim(), whatsapp: phone.trim() });
+      void addQuoteHistory({
+        id: res.id,
+        service: service!,
+        car: [make.trim(), model.trim(), year].filter(Boolean).join(" "),
+        area: area!,
+        urgency,
       });
       setDone(true);
     } catch (err) {

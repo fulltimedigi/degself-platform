@@ -9,7 +9,7 @@ import type { Locale } from "./direction";
 export type Dict = {
   appName: string;
   foundation: string;
-  tabs: { home: string; asaali: string; search: string; quote: string; saved: string; account: string };
+  tabs: { home: string; asaali: string; search: string; quote: string; saved: string; account: string; settings: string };
   placeholder: string;
   languageLabel: string;
   directionLabel: string;
@@ -92,7 +92,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ar: {
     appName: "دق سلف",
     foundation: "تطبيق الموبايل الأصلي",
-    tabs: { home: "الرئيسية", asaali: "اسأل", search: "البحث", quote: "عرض سعر", saved: "المحفوظة", account: "حسابي" },
+    tabs: { home: "الرئيسية", asaali: "اسأل", search: "البحث", quote: "عرض سعر", saved: "المحفوظة", account: "حسابي", settings: "الإعدادات" },
     placeholder: "شاشة مبدئية — بلا بيانات إنتاج بعد.",
     languageLabel: "اللغة",
     directionLabel: "الاتجاه",
@@ -183,7 +183,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   en: {
     appName: "DEGSELF",
     foundation: "Native mobile app",
-    tabs: { home: "Home", asaali: "Ask", search: "Search", quote: "Get quotes", saved: "Saved", account: "Account" },
+    tabs: { home: "Home", asaali: "Ask", search: "Search", quote: "Get quotes", saved: "Saved", account: "Account", settings: "Settings" },
     placeholder: "Placeholder screen — no production data yet.",
     languageLabel: "Language",
     directionLabel: "Direction",
@@ -273,7 +273,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   hi: {
     appName: "DEGSELF",
     foundation: "नेटिव मोबाइल ऐप",
-    tabs: { home: "होम", asaali: "पूछें", search: "खोज", quote: "कोटेशन", saved: "सहेजे", account: "खाता" },
+    tabs: { home: "होम", asaali: "पूछें", search: "खोज", quote: "कोटेशन", saved: "सहेजे", account: "खाता", settings: "सेटिंग्स" },
     placeholder: "प्लेसहोल्डर स्क्रीन — अभी कोई प्रोडक्शन डेटा नहीं।",
     languageLabel: "भाषा",
     directionLabel: "दिशा",
@@ -363,7 +363,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ur: {
     appName: "دق سلف",
     foundation: "نیٹو موبائل ایپ",
-    tabs: { home: "ہوم", asaali: "پوچھیں", search: "تلاش", quote: "قیمت", saved: "محفوظ", account: "اکاؤنٹ" },
+    tabs: { home: "ہوم", asaali: "پوچھیں", search: "تلاش", quote: "قیمت", saved: "محفوظ", account: "اکاؤنٹ", settings: "ترتیبات" },
     placeholder: "پلیس ہولڈر اسکرین — ابھی کوئی پروڈکشن ڈیٹا نہیں۔",
     languageLabel: "زبان",
     directionLabel: "سمت",

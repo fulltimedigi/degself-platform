@@ -12,8 +12,7 @@ const ICONS: Record<string, { on: IoniconName; off: IoniconName }> = {
   asaali: { on: "sparkles", off: "sparkles-outline" },
   search: { on: "search", off: "search-outline" },
   quote: { on: "pricetags", off: "pricetags-outline" },
-  saved: { on: "heart", off: "heart-outline" },
-  account: { on: "person-circle", off: "person-circle-outline" },
+  account: { on: "settings", off: "settings-outline" },
 };
 
 export default function TabsLayout() {
@@ -50,8 +49,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="asaali" options={{ title: t.tabs.asaali }} />
       <Tabs.Screen name="search" options={{ title: t.tabs.search }} />
       <Tabs.Screen name="quote" options={{ title: t.tabs.quote }} />
-      <Tabs.Screen name="saved" options={{ title: t.tabs.saved }} />
-      <Tabs.Screen name="account" options={{ title: t.tabs.account }} />
+      <Tabs.Screen name="account" options={{ title: t.tabs.settings }} />
     </Tabs>
   );
 }
