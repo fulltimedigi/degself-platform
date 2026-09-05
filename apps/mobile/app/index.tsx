@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -12,10 +12,12 @@ import {
 import { useFocusEffect } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as WebBrowser from "expo-web-browser";
+import * as Notifications from "expo-notifications";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView, type WebViewNavigation } from "react-native-webview";
 import { APP_UA_MARKER, WEB_URL, webHost } from "@/shell/config";
 import { classifyUrl } from "@/shell/navigation";
+import { registerForPush, resolveNotificationUrl } from "@/shell/push";
 
 const BRAND_BG = "#0A0A0A";
 const BRAND_YELLOW = "#FFD60A";
@@ -50,6 +52,33 @@ export default function ShellScreen() {
   const onNavChange = useCallback((nav: WebViewNavigation) => {
     canGoBack.current = nav.canGoBack;
   }, []);
+
+  // Drive the WebView to a URL (same-origin) without a hard reload.
+  const navigateTo = useCallback((url: string) => {
+    webRef.current?.injectJavaScript(`window.location.href=${JSON.stringify(url)};true;`);
+  }, []);
+
+  // Once the site is up, ask for push permission and register this device's token
+  // with the backend. Defensive inside registerForPush — never throws.
+  useEffect(() => {
+    if (firstLoadDone) void registerForPush();
+  }, [firstLoadDone]);
+
+  // A tapped notification carrying a same-origin { url | path } deep-links into
+  // the WebView — both while running and on a cold start from a tapped push.
+  useEffect(() => {
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const url = resolveNotificationUrl(response.notification.request.content.data);
+      if (url) navigateTo(url);
+    });
+    Notifications.getLastNotificationResponseAsync()
+      .then((response) => {
+        const url = response && resolveNotificationUrl(response.notification.request.content.data);
+        if (url) navigateTo(url);
+      })
+      .catch(() => {});
+    return () => sub.remove();
+  }, [navigateTo]);
 
   // Every navigation the WebView is about to start is classified: keep our own
   // site inside the app, hand phone/WhatsApp/maps to the OS, and open other

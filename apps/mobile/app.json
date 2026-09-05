@@ -47,6 +47,12 @@
           "imageWidth": 180,
           "dark": { "image": "./assets/logo-badge.png", "backgroundColor": "#0A0A0A" }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#FFD60A"
+        }
       ]
     ],
     "extra": {
