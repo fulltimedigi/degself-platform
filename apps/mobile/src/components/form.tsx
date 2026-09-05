@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   FlatList, Modal, Pressable, StyleSheet, TextInput, View, type KeyboardTypeOptions,
 } from "react-native";
@@ -6,12 +6,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 
 function Label({ text, required }: { text: string; required?: boolean }) {
+  const { colors } = useTheme();
   return (
     <View style={styles.labelRow}>
-      <ThemedText size="sm" bold style={styles.label}>{text}</ThemedText>
-      {required ? <ThemedText size="sm" style={styles.req}> *</ThemedText> : null}
+      <ThemedText size="sm" bold>{text}</ThemedText>
+      {required ? <ThemedText size="sm" style={{ color: colors.primary }}> *</ThemedText> : null}
     </View>
   );
 }
@@ -23,6 +26,8 @@ export function Field({
   required?: boolean; error?: boolean; multiline?: boolean; keyboardType?: KeyboardTypeOptions; maxLength?: number;
 }) {
   const { dir } = useI18n();
+  const { colors } = useTheme();
+  const ts = useMemo(() => themed(colors), [colors]);
   return (
     <View style={styles.group}>
       <Label text={label} required={required} />
@@ -30,14 +35,15 @@ export function Field({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={tokens.color.muted}
+        placeholderTextColor={colors.muted}
         multiline={multiline}
         keyboardType={keyboardType}
         maxLength={maxLength}
         style={[
-          styles.input,
+          ts.input,
+          styles.inputBase,
           multiline && styles.inputMultiline,
-          error && styles.inputError,
+          error && { borderColor: colors.danger },
           { textAlign: dir === "rtl" ? "right" : "left", writingDirection: dir },
         ]}
       />
@@ -52,6 +58,8 @@ export function SelectField({
   onSelect: (v: string) => void; required?: boolean; error?: boolean; renderLabel?: (v: string) => string;
 }) {
   const { dir } = useI18n();
+  const { colors } = useTheme();
+  const ts = useMemo(() => themed(colors), [colors]);
   const [open, setOpen] = useState(false);
   const show = (v: string) => (renderLabel ? renderLabel(v) : v);
   return (
@@ -60,16 +68,16 @@ export function SelectField({
       <Pressable
         accessibilityRole="button"
         onPress={() => setOpen(true)}
-        style={({ pressed }) => [styles.input, styles.select, error && styles.inputError, pressed && { opacity: 0.85 }]}
+        style={({ pressed }) => [ts.input, styles.inputBase, styles.select, error && { borderColor: colors.danger }, pressed && { opacity: 0.85 }]}
       >
-        <Ionicons name="chevron-down" size={18} color={tokens.color.muted} />
-        <ThemedText style={{ flex: 1, color: value ? tokens.color.foreground : tokens.color.muted, textAlign: dir === "rtl" ? "right" : "left" }}>
+        <Ionicons name="chevron-down" size={18} color={colors.muted} />
+        <ThemedText style={{ flex: 1, color: value ? colors.foreground : colors.muted, textAlign: dir === "rtl" ? "right" : "left" }}>
           {value ? show(value) : placeholder}
         </ThemedText>
       </Pressable>
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable style={styles.backdrop} onPress={() => setOpen(false)}>
-          <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
+          <Pressable style={[styles.sheet, { backgroundColor: colors.surface }]} onPress={(e) => e.stopPropagation()}>
             <ThemedText size="lg" bold style={styles.sheetTitle}>{label}</ThemedText>
             <FlatList
               data={options as string[]}
@@ -77,9 +85,9 @@ export function SelectField({
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => { onSelect(item); setOpen(false); }}
-                  style={({ pressed }) => [styles.option, pressed && { backgroundColor: tokens.color.border }]}
+                  style={({ pressed }) => [styles.option, { borderBottomColor: colors.border }, pressed && { backgroundColor: colors.border }]}
                 >
-                  <ThemedText style={{ color: item === value ? tokens.color.primary : tokens.color.foreground }}>
+                  <ThemedText style={{ color: item === value ? colors.primary : colors.foreground }}>
                     {show(item)}
                   </ThemedText>
                 </Pressable>
@@ -98,10 +106,11 @@ export function ChipGroup({
   label: string; options: readonly string[]; value: string | null; onSelect: (v: string) => void;
   required?: boolean; error?: boolean; renderLabel?: (v: string) => string;
 }) {
+  const { colors } = useTheme();
   return (
     <View style={styles.group}>
       <Label text={label} required={required} />
-      <View style={[styles.chips, error && styles.chipsError]}>
+      <View style={[styles.chips, error && { borderColor: colors.danger, borderWidth: 1, borderRadius: tokens.radius.md, padding: tokens.space.sm }]}>
         {options.map((opt) => {
           const sel = opt === value;
           return (
@@ -110,9 +119,13 @@ export function ChipGroup({
               accessibilityRole="button"
               accessibilityState={{ selected: sel }}
               onPress={() => onSelect(opt)}
-              style={({ pressed }) => [styles.chip, sel && styles.chipSel, pressed && { opacity: 0.85 }]}
+              style={({ pressed }) => [
+                styles.chip,
+                { borderColor: sel ? colors.primary : colors.border, backgroundColor: sel ? colors.primary : colors.surface },
+                pressed && { opacity: 0.85 },
+              ]}
             >
-              <ThemedText size="sm" bold style={{ color: sel ? tokens.color.primaryForeground : tokens.color.foreground }}>
+              <ThemedText size="sm" bold style={{ color: sel ? colors.primaryForeground : colors.foreground }}>
                 {renderLabel ? renderLabel(opt) : opt}
               </ThemedText>
             </Pressable>
@@ -123,30 +136,39 @@ export function ChipGroup({
   );
 }
 
+// Themed (color-bearing) styles, recomputed when the palette changes.
+function themed(c: Palette) {
+  return StyleSheet.create({
+    input: {
+      backgroundColor: c.surface,
+      borderColor: c.border,
+      color: c.foreground,
+    },
+  });
+}
+
 const styles = StyleSheet.create({
   group: { gap: tokens.space.sm },
   labelRow: { flexDirection: "row", alignItems: "center" },
-  label: {}, req: { color: tokens.color.primary },
-  input: {
-    backgroundColor: tokens.color.surface, borderColor: tokens.color.border, borderWidth: 1,
-    borderRadius: tokens.radius.md, paddingHorizontal: tokens.space.md, paddingVertical: tokens.space.md,
-    color: tokens.color.foreground, fontSize: tokens.font.md,
+  inputBase: {
+    borderWidth: 1,
+    borderRadius: tokens.radius.md,
+    paddingHorizontal: tokens.space.md,
+    paddingVertical: tokens.space.md,
+    fontSize: tokens.font.md,
   },
   inputMultiline: { minHeight: 110, textAlignVertical: "top" },
-  inputError: { borderColor: tokens.color.danger },
   select: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.6)", justifyContent: "flex-end" },
   sheet: {
-    backgroundColor: tokens.color.surface, borderTopLeftRadius: tokens.radius.lg, borderTopRightRadius: tokens.radius.lg,
+    borderTopLeftRadius: tokens.radius.lg, borderTopRightRadius: tokens.radius.lg,
     paddingTop: tokens.space.lg, paddingHorizontal: tokens.space.lg, paddingBottom: tokens.space.xl, maxHeight: "70%",
   },
   sheetTitle: { marginBottom: tokens.space.md },
-  option: { paddingVertical: tokens.space.md, borderBottomColor: tokens.color.border, borderBottomWidth: StyleSheet.hairlineWidth },
+  option: { paddingVertical: tokens.space.md, borderBottomWidth: StyleSheet.hairlineWidth },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: tokens.space.sm },
-  chipsError: { borderColor: tokens.color.danger, borderWidth: 1, borderRadius: tokens.radius.md, padding: tokens.space.sm },
   chip: {
-    borderColor: tokens.color.border, borderWidth: 1, borderRadius: tokens.radius.pill,
-    paddingVertical: tokens.space.sm, paddingHorizontal: tokens.space.md, backgroundColor: tokens.color.surface,
+    borderWidth: 1, borderRadius: tokens.radius.pill,
+    paddingVertical: tokens.space.sm, paddingHorizontal: tokens.space.md,
   },
-  chipSel: { backgroundColor: tokens.color.primary, borderColor: tokens.color.primary },
 });

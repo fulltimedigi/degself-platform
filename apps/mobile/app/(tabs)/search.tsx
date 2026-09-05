@@ -14,11 +14,16 @@ import {
 } from "@/lib/workshops/search-pagination";
 import type { Workshop } from "@/lib/workshops/types";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
+import { useMemo } from "react";
 
 const PAGE_SIZE = 24;
 
 export default function SearchScreen() {
   const { t, dir } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const { isFavorite, toggle } = useFavorites();
   const [query, setQuery] = useState("");
@@ -154,7 +159,7 @@ export default function SearchScreen() {
               value={query}
               onChangeText={setQuery}
               placeholder={t.workshops.searchPlaceholder}
-              placeholderTextColor={tokens.color.muted}
+              placeholderTextColor={colors.muted}
               returnKeyType="search"
               autoCorrect={false}
               maxLength={100}
@@ -233,20 +238,22 @@ export default function SearchScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { flex: 1 },
-  content: { paddingBottom: tokens.space.xl },
-  header: { gap: tokens.space.md, marginBottom: tokens.space.md },
-  input: {
-    minHeight: 50,
-    borderRadius: tokens.radius.md,
-    borderColor: tokens.color.border,
-    borderWidth: 1,
-    backgroundColor: tokens.color.surface,
-    color: tokens.color.foreground,
-    paddingHorizontal: tokens.space.md,
-    fontSize: tokens.font.md,
-  },
-  separator: { height: tokens.space.md },
-  footer: { paddingVertical: tokens.space.md, alignItems: "center", gap: tokens.space.sm },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    list: { flex: 1 },
+    content: { paddingBottom: tokens.space.xl },
+    header: { gap: tokens.space.md, marginBottom: tokens.space.md },
+    input: {
+      minHeight: 50,
+      borderRadius: tokens.radius.md,
+      borderColor: c.border,
+      borderWidth: 1,
+      backgroundColor: c.surface,
+      color: c.foreground,
+      paddingHorizontal: tokens.space.md,
+      fontSize: tokens.font.md,
+    },
+    separator: { height: tokens.space.md },
+    footer: { paddingVertical: tokens.space.md, alignItems: "center", gap: tokens.space.sm },
+  });
+}

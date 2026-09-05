@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { BrandLogo } from "@/components/BrandLogo";
+import { FadeInView } from "@/components/FadeInView";
 import { WorkshopCard } from "@/components/workshops/WorkshopCard";
 import { useI18n } from "@/i18n";
 import { quoteCopy } from "@/features/quote/copy";
@@ -12,9 +13,13 @@ import { fetchWorkshops } from "@/lib/workshops/api";
 import type { Workshop } from "@/lib/workshops/types";
 import { useFavorites } from "@/lib/favorites/favorites-context";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 
 export default function HomeScreen() {
   const { t, locale, dir } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const qc = quoteCopy(locale);
   const ac = asaaliCopy(locale);
   const rowDir = dir === "rtl" ? "row-reverse" : "row";
@@ -54,30 +59,30 @@ export default function HomeScreen() {
           <RefreshControl refreshing={loading && workshops.length > 0} onRefresh={() => void load()} />
         }
         ListHeaderComponent={
-          <View style={styles.header}>
+          <FadeInView style={styles.header}>
             <View style={{ alignSelf: dir === "rtl" ? "flex-end" : "flex-start" }}>
               <BrandLogo size={72} />
             </View>
             <ThemedText muted>{t.workshops.homeIntro}</ThemedText>
-            <View style={styles.quoteCta}>
+            <FadeInView delay={80} style={styles.quoteCta}>
               <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
-                <Ionicons name="pricetags" size={20} color={tokens.color.primary} />
+                <Ionicons name="pricetags" size={20} color={colors.primary} />
                 <ThemedText size="lg" bold>{qc.title}</ThemedText>
               </View>
               <ThemedText muted size="sm">{qc.subtitle}</ThemedText>
               <Button label={qc.submit} onPress={() => router.push("/(tabs)/quote")} />
-            </View>
-            <View style={styles.asaaliCta}>
+            </FadeInView>
+            <FadeInView delay={160} style={styles.asaaliCta}>
               <View style={[styles.ctaHead, { flexDirection: rowDir }]}>
-                <Ionicons name="sparkles" size={20} color={tokens.color.primary} />
+                <Ionicons name="sparkles" size={20} color={colors.primary} />
                 <ThemedText size="lg" bold>{ac.title}</ThemedText>
               </View>
               <ThemedText muted size="sm">{ac.subtitle}</ThemedText>
               <Button label={ac.ask} variant="secondary" onPress={() => router.push("/(tabs)/asaali")} />
-            </View>
+            </FadeInView>
             <Button label={t.workshops.searchAction} icon="search" variant="secondary" onPress={() => router.push("/(tabs)/search")} />
             <ThemedText size="lg" bold>{t.workshops.featured}</ThemedText>
-          </View>
+          </FadeInView>
         }
         ListEmptyComponent={
           loading ? (
@@ -105,26 +110,28 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { flex: 1 },
-  content: { paddingBottom: tokens.space.xl },
-  header: { gap: tokens.space.md, marginBottom: tokens.space.md },
-  quoteCta: {
-    backgroundColor: tokens.color.surface,
-    borderColor: tokens.color.primary,
-    borderWidth: 1.5,
-    borderRadius: tokens.radius.lg,
-    padding: tokens.space.lg,
-    gap: tokens.space.sm,
-  },
-  asaaliCta: {
-    backgroundColor: tokens.color.surface,
-    borderColor: tokens.color.border,
-    borderWidth: 1,
-    borderRadius: tokens.radius.lg,
-    padding: tokens.space.lg,
-    gap: tokens.space.sm,
-  },
-  separator: { height: tokens.space.md },
-  ctaHead: { alignItems: "center", gap: tokens.space.sm },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    list: { flex: 1 },
+    content: { paddingBottom: tokens.space.xl },
+    header: { gap: tokens.space.md, marginBottom: tokens.space.md },
+    quoteCta: {
+      backgroundColor: c.surface,
+      borderColor: c.primary,
+      borderWidth: 1.5,
+      borderRadius: tokens.radius.lg,
+      padding: tokens.space.lg,
+      gap: tokens.space.sm,
+    },
+    asaaliCta: {
+      backgroundColor: c.surface,
+      borderColor: c.border,
+      borderWidth: 1,
+      borderRadius: tokens.radius.lg,
+      padding: tokens.space.lg,
+      gap: tokens.space.sm,
+    },
+    separator: { height: tokens.space.md },
+    ctaHead: { alignItems: "center", gap: tokens.space.sm },
+  });
+}

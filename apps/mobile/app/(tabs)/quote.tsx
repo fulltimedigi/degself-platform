@@ -5,6 +5,8 @@ import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { Field, SelectField, ChipGroup } from "@/components/form";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 import { quoteCopy } from "@/features/quote/copy";
 import {
   QUOTE_SERVICES, QUOTE_SERVICE_SHORT, QUOTE_AREAS, QUOTE_URGENCIES, QUOTE_YEARS,
@@ -15,6 +17,8 @@ const PHONE_RE = /^[0-9+\s-]{7,15}$/;
 
 export default function QuoteScreen() {
   const { locale } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const c = useMemo(() => quoteCopy(locale), [locale]);
 
   const [service, setService] = useState<string | null>(null);
@@ -71,7 +75,7 @@ export default function QuoteScreen() {
     return (
       <Screen>
         <View style={styles.success}>
-          <View style={styles.check}><Ionicons name="checkmark-sharp" size={52} color={tokens.color.primaryForeground} /></View>
+          <View style={styles.check}><Ionicons name="checkmark-sharp" size={52} color={colors.primaryForeground} /></View>
           <ThemedText size="xxl" bold style={styles.center}>{c.successTitle}</ThemedText>
           <ThemedText muted style={styles.center}>{c.successBody}</ThemedText>
           <View style={{ height: tokens.space.md }} />
@@ -88,7 +92,7 @@ export default function QuoteScreen() {
           <View style={styles.hero}>
             <ThemedText size="xxl" bold>{c.title}</ThemedText>
             <ThemedText muted>{c.subtitle}</ThemedText>
-            <View style={styles.freeChip}><ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>{c.free}</ThemedText></View>
+            <View style={styles.freeChip}><ThemedText size="sm" bold style={{ color: colors.primaryForeground }}>{c.free}</ThemedText></View>
           </View>
 
           <Surface style={styles.section}>
@@ -127,13 +131,15 @@ export default function QuoteScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: { gap: tokens.space.md, paddingBottom: tokens.space.xl },
-  hero: { gap: tokens.space.sm, marginBottom: tokens.space.xs },
-  freeChip: { alignSelf: "flex-start", backgroundColor: tokens.color.primary, borderRadius: tokens.radius.pill, paddingVertical: 4, paddingHorizontal: tokens.space.md, marginTop: tokens.space.xs },
-  section: { gap: tokens.space.md },
-  err: { color: tokens.color.danger },
-  success: { flex: 1, alignItems: "center", justifyContent: "center", gap: tokens.space.sm, paddingHorizontal: tokens.space.lg },
-  center: { textAlign: "center" },
-  check: { width: 96, height: 96, borderRadius: 48, backgroundColor: tokens.color.primary, alignItems: "center", justifyContent: "center", marginBottom: tokens.space.md },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    content: { gap: tokens.space.md, paddingBottom: tokens.space.xl },
+    hero: { gap: tokens.space.sm, marginBottom: tokens.space.xs },
+    freeChip: { alignSelf: "flex-start", backgroundColor: c.primary, borderRadius: tokens.radius.pill, paddingVertical: 4, paddingHorizontal: tokens.space.md, marginTop: tokens.space.xs },
+    section: { gap: tokens.space.md },
+    err: { color: c.danger },
+    success: { flex: 1, alignItems: "center", justifyContent: "center", gap: tokens.space.sm, paddingHorizontal: tokens.space.lg },
+    center: { textAlign: "center" },
+    check: { width: 96, height: 96, borderRadius: 48, backgroundColor: c.primary, alignItems: "center", justifyContent: "center", marginBottom: tokens.space.md },
+  });
+}

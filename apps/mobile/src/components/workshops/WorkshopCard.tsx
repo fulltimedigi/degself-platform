@@ -1,8 +1,11 @@
+import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/primitives";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 import type { Workshop } from "@/lib/workshops/types";
 
 export function WorkshopCard({
@@ -17,6 +20,8 @@ export function WorkshopCard({
   onToggleSaved: () => void;
 }) {
   const { t, dir } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const location = [workshop.neighborhood, workshop.area, workshop.governorate]
     .filter(Boolean)
     .join(" · ");
@@ -25,9 +30,6 @@ export function WorkshopCard({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${t.workshops.openDetails}: ${workshop.name}`}
-      // Expose "save/remove" as a screen-reader custom action on the card. The
-      // card is one accessibility element (its role absorbs children), so without
-      // this the visible star toggle is unreachable to VoiceOver/TalkBack.
       accessibilityActions={[
         { name: "toggleSave", label: saved ? t.workshops.removeSaved : t.workshops.save },
       ]}
@@ -46,7 +48,7 @@ export function WorkshopCard({
         />
       ) : (
         <View style={[styles.image, styles.imageFallback]}>
-          <Ionicons name="construct-outline" size={34} color={tokens.color.muted} />
+          <Ionicons name="construct-outline" size={34} color={colors.muted} />
         </View>
       )}
       <View style={styles.body}>
@@ -55,9 +57,6 @@ export function WorkshopCard({
             {workshop.name}
           </ThemedText>
           <Pressable
-            // The card exposes save/remove as an accessibility action; hide this
-            // visible affordance from the a11y tree so it is not an unreachable,
-            // duplicate button. Touch users still tap it directly.
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
             hitSlop={10}
@@ -70,7 +69,7 @@ export function WorkshopCard({
             <Ionicons
               name={saved ? "heart" : "heart-outline"}
               size={22}
-              color={saved ? tokens.color.primary : tokens.color.muted}
+              color={saved ? colors.primary : colors.muted}
             />
           </Pressable>
         </View>
@@ -87,7 +86,7 @@ export function WorkshopCard({
         <View style={[styles.meta, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}>
           {workshop.google_rating != null ? (
             <View style={[styles.rating, { flexDirection: dir === "rtl" ? "row-reverse" : "row" }]}>
-              <Ionicons name="star" size={13} color={tokens.color.primary} />
+              <Ionicons name="star" size={13} color={colors.primary} />
               <ThemedText size="sm">
                 {workshop.google_rating.toFixed(1)}
                 {workshop.google_reviews_count != null
@@ -109,28 +108,30 @@ export function WorkshopCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    overflow: "hidden",
-    backgroundColor: tokens.color.surface,
-    borderColor: tokens.color.border,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: tokens.radius.lg,
-  },
-  pressed: { opacity: 0.88 },
-  image: { width: "100%", height: 150, backgroundColor: tokens.color.border },
-  imageFallback: { alignItems: "center", justifyContent: "center" },
-  body: { padding: tokens.space.md, gap: tokens.space.xs },
-  headingRow: { alignItems: "flex-start", gap: tokens.space.sm },
-  title: { flex: 1 },
-  saveButton: { minWidth: 36, minHeight: 36, alignItems: "center", justifyContent: "center" },
-  meta: { alignItems: "center", flexWrap: "wrap", gap: tokens.space.sm, marginTop: tokens.space.xs },
-  rating: { alignItems: "center", gap: 4 },
-  partnerBadge: {
-    backgroundColor: tokens.color.primary,
-    borderRadius: tokens.radius.pill,
-    paddingHorizontal: tokens.space.sm,
-    paddingVertical: tokens.space.xs,
-  },
-  partnerText: { color: tokens.color.primaryForeground, fontWeight: "800" },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    card: {
+      overflow: "hidden",
+      backgroundColor: c.surface,
+      borderColor: c.border,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderRadius: tokens.radius.lg,
+    },
+    pressed: { opacity: 0.88 },
+    image: { width: "100%", height: 150, backgroundColor: c.border },
+    imageFallback: { alignItems: "center", justifyContent: "center" },
+    body: { padding: tokens.space.md, gap: tokens.space.xs },
+    headingRow: { alignItems: "flex-start", gap: tokens.space.sm },
+    title: { flex: 1 },
+    saveButton: { minWidth: 36, minHeight: 36, alignItems: "center", justifyContent: "center" },
+    meta: { alignItems: "center", flexWrap: "wrap", gap: tokens.space.sm, marginTop: tokens.space.xs },
+    rating: { alignItems: "center", gap: 4 },
+    partnerBadge: {
+      backgroundColor: c.primary,
+      borderRadius: tokens.radius.pill,
+      paddingHorizontal: tokens.space.sm,
+      paddingVertical: tokens.space.xs,
+    },
+    partnerText: { color: c.primaryForeground, fontWeight: "800" },
+  });
+}

@@ -8,6 +8,8 @@ import {
 } from "@/components/primitives";
 import { LOCALE_LABEL, LOCALES, useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import { useTheme } from "@/theme/theme-context";
+import type { ThemeMode } from "@/theme/palettes";
 import { useAuth } from "@/lib/auth/auth-context";
 import { AuthPanel } from "@/components/auth/AuthPanel";
 import { DangerZone } from "@/components/account/DangerZone";
@@ -18,7 +20,11 @@ import { DangerZone } from "@/components/account/DangerZone";
 // profile table.
 export default function AccountScreen() {
   const { t, locale, dir, setLocale } = useI18n();
+  const { mode, setMode } = useTheme();
   const { status, user, signOut } = useAuth();
+  const THEME_MODES: ThemeMode[] = ["system", "light", "dark"];
+  const themeLabel = (m: ThemeMode) =>
+    m === "system" ? t.theme.system : m === "light" ? t.theme.light : t.theme.dark;
 
   return (
     <Screen>
@@ -76,6 +82,26 @@ export default function AccountScreen() {
           <ThemedText muted size="sm">
             {t.rtlReloadNote}
           </ThemedText>
+        </Surface>
+
+        <Surface>
+          <ThemedText bold>{t.theme.title}</ThemedText>
+          <View
+            style={{
+              flexDirection: dir === "rtl" ? "row-reverse" : "row",
+              flexWrap: "wrap",
+              gap: tokens.space.sm,
+            }}
+          >
+            {THEME_MODES.map((m) => (
+              <ChoiceButton
+                key={m}
+                label={themeLabel(m)}
+                selected={m === mode}
+                onPress={() => setMode(m)}
+              />
+            ))}
+          </View>
         </Surface>
 
         <Surface>

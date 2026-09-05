@@ -8,12 +8,14 @@ import { fetchWorkshop } from "@/lib/workshops/api";
 import { callUrl, mapUrl, safeWebsiteUrl, whatsappUrl } from "@/lib/workshops/links";
 import type { Workshop } from "@/lib/workshops/types";
 import { tokens } from "@/theme/tokens";
+import { useTheme } from "@/theme/theme-context";
 
 export default function WorkshopDetailScreen() {
   const { placeId: rawPlaceId } = useLocalSearchParams<{ placeId?: string | string[] }>();
   const placeId = Array.isArray(rawPlaceId) ? rawPlaceId[0] : rawPlaceId;
   const router = useRouter();
   const { t, dir } = useI18n();
+  const { colors } = useTheme();
   const { isFavorite, toggle } = useFavorites();
   const [workshop, setWorkshop] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ export default function WorkshopDetailScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Button label={t.workshops.back} variant="secondary" onPress={() => router.back()} />
         {workshop.main_image ? (
-          <Image source={{ uri: workshop.main_image }} style={styles.hero} resizeMode="cover" />
+          <Image source={{ uri: workshop.main_image }} style={[styles.hero, { backgroundColor: colors.border }]} resizeMode="cover" />
         ) : null}
         <ThemedText size="xl" bold>{workshop.name}</ThemedText>
         {workshop.reviewed_specialty ? <ThemedText muted>{workshop.reviewed_specialty}</ThemedText> : null}
@@ -113,7 +115,7 @@ export default function WorkshopDetailScreen() {
 
 const styles = StyleSheet.create({
   content: { gap: tokens.space.md, paddingBottom: tokens.space.xl },
-  hero: { width: "100%", height: 220, borderRadius: tokens.radius.lg, backgroundColor: tokens.color.border },
+  hero: { width: "100%", height: 220, borderRadius: tokens.radius.lg },
   metaRow: { flexWrap: "wrap", justifyContent: "space-between", gap: tokens.space.sm },
   actions: { gap: tokens.space.sm },
   action: { flex: 1 },

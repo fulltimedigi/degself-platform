@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { AccessibilityInfo, Animated, Easing, StyleSheet, View } from "react-native";
-import { tokens } from "@/theme/tokens";
+import { AccessibilityInfo, Animated, Easing, StyleSheet } from "react-native";
+import { useTheme } from "@/theme/theme-context";
 
 const LOGO = require("../../assets/logo-badge.png");
 
@@ -10,6 +10,7 @@ const LOGO = require("../../assets/logo-badge.png");
 // Respects the OS "reduce motion" setting (renders a still badge).
 export function BrandLogo({ size = 64 }: { size?: number }) {
   const t = useRef(new Animated.Value(0)).current;
+  const { colors } = useTheme();
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export function BrandLogo({ size = 64 }: { size?: number }) {
       style={[
         box,
         styles.badge,
-        { transform: [{ perspective: 320 }, { rotateY }] },
+        { backgroundColor: colors.background, transform: [{ perspective: 320 }, { rotateY }] },
       ]}
     >
       <Animated.Image source={LOGO} style={[box, styles.image]} resizeMode="cover" />
@@ -82,7 +83,6 @@ export function BrandLogo({ size = 64 }: { size?: number }) {
 const styles = StyleSheet.create({
   badge: {
     overflow: "hidden",
-    backgroundColor: tokens.color.background,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -15,6 +15,8 @@ import { Button, Screen, Surface, ThemedText } from "@/components/primitives";
 import { Field, SelectField } from "@/components/form";
 import { useI18n } from "@/i18n";
 import { tokens } from "@/theme/tokens";
+import type { Palette } from "@/theme/palettes";
+import { useTheme } from "@/theme/theme-context";
 import { asaaliCopy } from "@/features/asaali/copy";
 import { whatsAppUrl } from "@/features/asaali/wa";
 import { QUOTE_YEARS } from "@/features/quote/data";
@@ -30,6 +32,8 @@ const MAX_HISTORY = 6;
 
 export default function AsaaliScreen() {
   const { locale } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const c = useMemo(() => asaaliCopy(locale), [locale]);
 
@@ -118,7 +122,7 @@ export default function AsaaliScreen() {
           {/* Hero */}
           <View style={styles.hero}>
             <View style={styles.badge}>
-              <ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>
+              <ThemedText size="sm" bold style={{ color: colors.primaryForeground }}>
                 {c.badge}
               </ThemedText>
             </View>
@@ -128,7 +132,7 @@ export default function AsaaliScreen() {
 
           {/* Optional vehicle */}
           <Pressable onPress={() => setVehicleOpen((v) => !v)} accessibilityRole="button">
-            <ThemedText size="sm" bold style={{ color: tokens.color.primary }}>
+            <ThemedText size="sm" bold style={{ color: colors.primary }}>
               {vehicleOpen ? c.vehicleToggleHide : c.vehicleToggleShow}
             </ThemedText>
           </Pressable>
@@ -193,7 +197,7 @@ export default function AsaaliScreen() {
 
               {response.follow_up_question ? (
                 <Surface style={styles.accentCard}>
-                  <ThemedText size="sm" style={{ color: tokens.color.primary }}>{c.followUpLabel}</ThemedText>
+                  <ThemedText size="sm" style={{ color: colors.primary }}>{c.followUpLabel}</ThemedText>
                   <ThemedText>{response.follow_up_question}</ThemedText>
                 </Surface>
               ) : null}
@@ -211,9 +215,9 @@ export default function AsaaliScreen() {
                     <Ionicons
                       name={urgent ? "warning" : "alert-circle"}
                       size={16}
-                      color={urgent ? tokens.color.danger : tokens.color.warning}
+                      color={urgent ? colors.danger : colors.warning}
                     />
-                    <ThemedText size="sm" bold style={{ color: urgent ? tokens.color.danger : tokens.color.warning }}>
+                    <ThemedText size="sm" bold style={{ color: urgent ? colors.danger : colors.warning }}>
                       {urgent ? c.warnUrgent : c.warnCaution}
                     </ThemedText>
                   </View>
@@ -247,7 +251,7 @@ export default function AsaaliScreen() {
                     ))}
                   </View>
                   <Pressable onPress={() => router.push("/(tabs)/search")} accessibilityRole="button">
-                    <ThemedText size="sm" style={{ color: tokens.color.primary, textAlign: "center", marginTop: tokens.space.sm }}>
+                    <ThemedText size="sm" style={{ color: colors.primary, textAlign: "center", marginTop: tokens.space.sm }}>
                       {c.viewAllWorkshops}
                     </ThemedText>
                   </Pressable>
@@ -257,14 +261,14 @@ export default function AsaaliScreen() {
               {response.whatsapp_message ? (
                 <Surface style={styles.accentCard}>
                   <View style={styles.waHeader}>
-                    <ThemedText size="sm" style={{ color: tokens.color.primary }}>{c.whatsappLabel}</ThemedText>
+                    <ThemedText size="sm" style={{ color: colors.primary }}>{c.whatsappLabel}</ThemedText>
                     <Pressable
                       accessibilityRole="button"
                       onPress={() => void shareMessage(response.whatsapp_message ?? "")}
                       style={({ pressed }) => [styles.shareBtn, pressed && { opacity: 0.85 }]}
                     >
-                      <Ionicons name="paper-plane" size={14} color={tokens.color.primaryForeground} />
-                      <ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>{c.shareBtn}</ThemedText>
+                      <Ionicons name="paper-plane" size={14} color={colors.primaryForeground} />
+                      <ThemedText size="sm" bold style={{ color: colors.primaryForeground }}>{c.shareBtn}</ThemedText>
                     </Pressable>
                   </View>
                   <ThemedText>{response.whatsapp_message}</ThemedText>
@@ -306,6 +310,8 @@ function WorkshopRow({
   onCall: (phone: string) => void;
   onWhatsApp: (phone: string) => void;
 }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   return (
     <View style={styles.wsRow}>
       <View style={styles.flex}>
@@ -329,8 +335,8 @@ function WorkshopRow({
             onPress={() => onCall(workshop.phone!)}
             style={({ pressed }) => [styles.wsBtn, styles.wsCall, pressed && { opacity: 0.85 }]}
           >
-            <Ionicons name="call" size={14} color={tokens.color.primaryForeground} />
-            <ThemedText size="sm" bold style={{ color: tokens.color.primaryForeground }}>{callLabel}</ThemedText>
+            <Ionicons name="call" size={14} color={colors.primaryForeground} />
+            <ThemedText size="sm" bold style={{ color: colors.primaryForeground }}>{callLabel}</ThemedText>
           </Pressable>
         </View>
       ) : null}
@@ -338,63 +344,65 @@ function WorkshopRow({
   );
 }
 
-const styles = StyleSheet.create({
-  content: { gap: tokens.space.md, paddingBottom: tokens.space.xl },
-  hero: { gap: tokens.space.sm },
-  badge: {
-    alignSelf: "flex-start",
-    backgroundColor: tokens.color.primary,
-    borderRadius: tokens.radius.pill,
-    paddingVertical: 4,
-    paddingHorizontal: tokens.space.md,
-  },
-  section: { gap: tokens.space.md },
-  actions: { flexDirection: "row", gap: tokens.space.sm },
-  flex: { flex: 1 },
-  err: { color: tokens.color.danger },
-  examples: { gap: tokens.space.sm },
-  example: {
-    borderColor: tokens.color.border,
-    borderWidth: 1,
-    borderRadius: tokens.radius.md,
-    paddingVertical: tokens.space.sm,
-    paddingHorizontal: tokens.space.md,
-    backgroundColor: tokens.color.surfaceRaised,
-  },
-  accentCard: { borderColor: tokens.color.primary, borderWidth: 1 },
-  warn: { borderWidth: 1 },
-  warnHead: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
-  warnUrgent: { borderColor: tokens.color.danger, backgroundColor: "rgba(228,121,92,0.10)" },
-  warnCaution: { borderColor: tokens.color.warning, backgroundColor: "rgba(224,184,77,0.10)" },
-  waHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: tokens.space.sm },
-  shareBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: tokens.color.primary,
-    borderRadius: tokens.radius.sm,
-    paddingVertical: 8,
-    paddingHorizontal: tokens.space.md,
-  },
-  termRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: tokens.space.sm },
-  wsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: tokens.space.sm,
-    backgroundColor: tokens.color.surfaceRaised,
-    borderRadius: tokens.radius.md,
-    padding: tokens.space.md,
-  },
-  wsActions: { flexDirection: "row", gap: tokens.space.sm },
-  wsBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    borderRadius: tokens.radius.sm,
-    paddingVertical: 8,
-    paddingHorizontal: tokens.space.md,
-  },
-  wsWa: { backgroundColor: tokens.color.whatsapp },
-  wsCall: { backgroundColor: tokens.color.primary },
-  disclaimer: { textAlign: "center", marginTop: tokens.space.sm },
-});
+function makeStyles(c: Palette) {
+  return StyleSheet.create({
+    content: { gap: tokens.space.md, paddingBottom: tokens.space.xl },
+    hero: { gap: tokens.space.sm },
+    badge: {
+      alignSelf: "flex-start",
+      backgroundColor: c.primary,
+      borderRadius: tokens.radius.pill,
+      paddingVertical: 4,
+      paddingHorizontal: tokens.space.md,
+    },
+    section: { gap: tokens.space.md },
+    actions: { flexDirection: "row", gap: tokens.space.sm },
+    flex: { flex: 1 },
+    err: { color: c.danger },
+    examples: { gap: tokens.space.sm },
+    example: {
+      borderColor: c.border,
+      borderWidth: 1,
+      borderRadius: tokens.radius.md,
+      paddingVertical: tokens.space.sm,
+      paddingHorizontal: tokens.space.md,
+      backgroundColor: c.surfaceRaised,
+    },
+    accentCard: { borderColor: c.primary, borderWidth: 1 },
+    warn: { borderWidth: 1 },
+    warnHead: { flexDirection: "row", alignItems: "center", gap: tokens.space.sm },
+    warnUrgent: { borderColor: c.danger, backgroundColor: "rgba(228,121,92,0.10)" },
+    warnCaution: { borderColor: c.warning, backgroundColor: "rgba(224,184,77,0.10)" },
+    waHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: tokens.space.sm },
+    shareBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+      backgroundColor: c.primary,
+      borderRadius: tokens.radius.sm,
+      paddingVertical: 8,
+      paddingHorizontal: tokens.space.md,
+    },
+    termRow: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: tokens.space.sm },
+    wsRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: tokens.space.sm,
+      backgroundColor: c.surfaceRaised,
+      borderRadius: tokens.radius.md,
+      padding: tokens.space.md,
+    },
+    wsActions: { flexDirection: "row", gap: tokens.space.sm },
+    wsBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      borderRadius: tokens.radius.sm,
+      paddingVertical: 8,
+      paddingHorizontal: tokens.space.md,
+    },
+    wsWa: { backgroundColor: c.whatsapp },
+    wsCall: { backgroundColor: c.primary },
+    disclaimer: { textAlign: "center", marginTop: tokens.space.sm },
+  });
+}

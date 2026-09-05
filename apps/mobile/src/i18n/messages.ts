@@ -14,6 +14,7 @@ export type Dict = {
   languageLabel: string;
   directionLabel: string;
   rtlReloadNote: string;
+  theme: { title: string; system: string; light: string; dark: string };
   auth: {
     signedOutTitle: string;
     signedOutBody: string;
@@ -97,6 +98,7 @@ export const MESSAGES: Record<Locale, Dict> = {
     directionLabel: "الاتجاه",
     rtlReloadNote:
       "قلب اتجاه التخطيط بالكامل (RTL/LTR) يتطلب إعادة تشغيل التطبيق في React Native.",
+    theme: { title: "المظهر", system: "تلقائي", light: "فاتح", dark: "داكن" },
     auth: {
       signedOutTitle: "سجّل الدخول",
       signedOutBody: "سجّل الدخول لحفظ ورش السيارات ومزامنتها عبر أجهزتك.",
@@ -187,6 +189,7 @@ export const MESSAGES: Record<Locale, Dict> = {
     directionLabel: "Direction",
     rtlReloadNote:
       "Full RTL/LTR layout mirroring requires an app restart in React Native.",
+    theme: { title: "Appearance", system: "System", light: "Light", dark: "Dark" },
     auth: {
       signedOutTitle: "Sign in",
       signedOutBody: "Sign in to save workshops and sync them across your devices.",
@@ -276,6 +279,7 @@ export const MESSAGES: Record<Locale, Dict> = {
     directionLabel: "दिशा",
     rtlReloadNote:
       "पूर्ण RTL/LTR लेआउट मिररिंग के लिए React Native में ऐप रीस्टार्ट ज़रूरी है।",
+    theme: { title: "थीम", system: "स्वचालित", light: "लाइट", dark: "डार्क" },
     auth: {
       signedOutTitle: "साइन इन करें",
       signedOutBody: "वर्कशॉप सहेजने और डिवाइसों में सिंक करने के लिए साइन इन करें।",
@@ -365,6 +369,7 @@ export const MESSAGES: Record<Locale, Dict> = {
     directionLabel: "سمت",
     rtlReloadNote:
       "مکمل RTL/LTR لے آؤٹ مررنگ کے لیے React Native میں ایپ ری اسٹارٹ ضروری ہے۔",
+    theme: { title: "تھیم", system: "خودکار", light: "روشن", dark: "گہرا" },
     auth: {
       signedOutTitle: "سائن ان کریں",
       signedOutBody: "ورکشاپس محفوظ کرنے اور آلات کے درمیان سنک کے لیے سائن ان کریں۔",

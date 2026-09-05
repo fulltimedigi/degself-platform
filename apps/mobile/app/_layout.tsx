@@ -2,34 +2,44 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { I18nProvider } from "@/i18n";
-import { tokens } from "@/theme/tokens";
+import { ThemeProvider, useTheme } from "@/theme/theme-context";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import { FavoritesProvider } from "@/lib/favorites/favorites-context";
 
-// Root layout: providers + a headerless stack. M1 adds AuthProvider (Supabase
-// session authority) and FavoritesProvider (auth-aware favorites + handoff)
-// around the (tabs) group. FavoritesProvider is nested inside AuthProvider
-// because it reacts to auth state.
+// Root layout: providers + a headerless stack. ThemeProvider is outermost so
+// every screen can read the live palette; StatusBar bar-style and the stack
+// background follow the resolved scheme (light|dark).
+function ThemedStack() {
+  const { scheme, colors } = useTheme();
+  return (
+    <>
+      <StatusBar style={scheme === "light" ? "dark" : "light"} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="workshop/[placeId]" />
+        <Stack.Screen name="auth/callback" />
+      </Stack>
+    </>
+  );
+}
+
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <I18nProvider>
-        <AuthProvider>
-          <FavoritesProvider>
-            <StatusBar style="light" />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: tokens.color.background },
-              }}
-            >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="workshop/[placeId]" />
-              <Stack.Screen name="auth/callback" />
-            </Stack>
-          </FavoritesProvider>
-        </AuthProvider>
-      </I18nProvider>
+      <ThemeProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <FavoritesProvider>
+              <ThemedStack />
+            </FavoritesProvider>
+          </AuthProvider>
+        </I18nProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
