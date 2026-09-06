@@ -10,7 +10,6 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.degself.app",
-      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -41,7 +40,6 @@
         }
       ],
       "expo-secure-store",
-      "expo-apple-authentication",
       "expo-font",
       [
         "expo-splash-screen",
