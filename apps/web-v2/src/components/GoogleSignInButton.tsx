@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { isNativeShell } from "@/lib/shell";
+
+// Inside the native shell, Google/Apple refuse embedded-WebView OAuth, so the
+// shell runs the flow in a real browser and returns to this custom scheme; the
+// shell then loads the https callback inside the WebView to finish the PKCE
+// exchange. Must match NATIVE_AUTH_REDIRECT_URL in the mobile shell and be
+// allow-listed in Supabase Auth → URL Configuration → Redirect URLs.
+const NATIVE_AUTH_REDIRECT_URL = "degself://auth/callback";
 
 type Props = {
   next?: string;
@@ -27,7 +35,10 @@ export function GoogleSignInButton({
     try {
       const supabase = createBrowserSupabaseClient();
       const origin = window.location.origin;
-      const redirectTo = `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+      const base = isNativeShell()
+        ? NATIVE_AUTH_REDIRECT_URL
+        : `${origin}/auth/callback`;
+      const redirectTo = `${base}?next=${encodeURIComponent(next)}`;
       const { error: err } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: { redirectTo },
