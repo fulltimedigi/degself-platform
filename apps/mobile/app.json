@@ -7,10 +7,17 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "backgroundColor": "#0A0A0A",
+    "runtimeVersion": { "policy": "appVersion" },
+    "updates": {
+      "url": "https://u.expo.dev/9d8287ca-1482-4569-98bf-a447e982ccb9",
+      "fallbackToCacheTimeout": 0
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.degself.app",
-      "usesAppleSignIn": true
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.degself.app",
@@ -38,7 +45,6 @@
         }
       ],
       "expo-secure-store",
-      "expo-apple-authentication",
       "expo-font",
       [
         "expo-splash-screen",

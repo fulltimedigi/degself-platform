@@ -42,6 +42,55 @@ function hostMatches(host: string, base: string): boolean {
   return host === base || host.endsWith(`.${base}`);
 }
 
+// Custom-scheme URL the OAuth flow returns to. Google/Apple refuse to complete
+// OAuth inside an embedded WebView, so the shell runs the flow in a real browser
+// (ASWebAuthenticationSession) and catches this return, then hands the ?code=…
+// back to the WebView so the PKCE exchange runs in the WebView's own cookie
+// context (where signInWithOAuth stored the verifier). The web build must set
+// this exact string as its Supabase `redirectTo` when running inside the shell,
+// and it must be allow-listed in the Supabase Auth redirect URLs.
+export const NATIVE_AUTH_REDIRECT_URL = "degself://auth/callback";
+
+/**
+ * True when a navigation kicks off an OAuth flow that must run in a real system
+ * browser and return via the custom scheme — the Supabase authorize endpoint or
+ * an identity provider's own domain.
+ */
+export function isAuthStartUrl(rawUrl: string): boolean {
+  const url = (rawUrl ?? "").trim();
+  if (!url) return false;
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return false;
+  }
+  const host = u.hostname.toLowerCase();
+  if (host === "accounts.google.com" || host === "appleid.apple.com") return true;
+  if (host.endsWith(".supabase.co") && u.pathname.startsWith("/auth/v1/authorize")) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Convert the native-scheme auth return URL
+ * (degself://auth/callback?code=…&next=…) into the WebView https URL that
+ * completes the code→session exchange inside the WebView. Returns null for any
+ * URL that is not our expected auth return.
+ */
+export function nativeAuthReturnToWebUrl(
+  returnUrl: string,
+  webUrl: string
+): string | null {
+  const url = (returnUrl ?? "").trim();
+  if (!url.startsWith(NATIVE_AUTH_REDIRECT_URL)) return null;
+  const q = url.indexOf("?");
+  const query = q >= 0 ? url.slice(q) : "";
+  const base = webUrl.replace(/\/+$/, "");
+  return `${base}/auth/callback${query}`;
+}
+
 /**
  * @param rawUrl   the URL the WebView is about to load
  * @param appHost  our own web origin host (e.g. "degself.com")
