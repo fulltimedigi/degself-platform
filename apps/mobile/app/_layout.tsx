@@ -1,18 +1,34 @@
 import "react-native-url-polyfill/auto";
+import { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
-import { Stack, type ErrorBoundaryProps } from "expo-router";
+import { Stack, router, type ErrorBoundaryProps } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
+import * as Notifications from "expo-notifications";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { I18nProvider } from "@/i18n";
+import { ThemeProvider } from "@/theme/theme-context";
+import { tokens } from "@/theme/tokens";
+import { AuthProvider } from "@/lib/auth/auth-context";
+import { FavoritesProvider } from "@/lib/favorites/favorites-context";
+import { registerForPush, resolveNotificationUrl } from "@/shell/push";
 
-// DEGSELF is a WebView shell around the full web platform (degself.com). The
-// heavy product UI lives on the web; this native app adds the shell + native
-// affordances (external-link handling, offline, splash, and — phase 2 — push).
-// Keep the splash up until the WebView paints its first frame (see app/index).
+// Root layout: providers + a headerless stack around the native (tabs) group,
+// the native workshop detail, the OAuth callback, and the WebView surface used
+// for the rich web-only flows (Ask degself, price calculator). The heavy
+// product still lives on the web; the native tabs add the device-level
+// experiences (maps + Core Location, emergency, camera, saved/offline) that
+// make this a real app, not a web wrapper.
 void SplashScreen.preventAutoHideAsync();
 
-// Surface any startup/render error on-screen instead of a bare native crash, so
-// issues are legible on a real device (and screenshot-able) rather than silent.
+// A tapped push carrying a same-origin { url | path } opens the WebView surface
+// at that address (both while running and on a cold start from a tapped push).
+function openPushUrl(data: unknown) {
+  const url = resolveNotificationUrl(data);
+  if (url) router.push({ pathname: "/web", params: { url } });
+}
+
+// Surface any startup/render error on-screen instead of a bare native crash.
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
     <View style={{ flex: 1, backgroundColor: "#0A0A0A", alignItems: "center", justifyContent: "center", padding: 24 }}>
@@ -28,12 +44,49 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 }
 
 export default function RootLayout() {
+  // Native shell is ready immediately; hide the splash once mounted.
+  useEffect(() => {
+    void SplashScreen.hideAsync().catch(() => {});
+    void registerForPush();
+  }, []);
+
+  // A tapped notification deep-links into the WebView surface, both while
+  // running and on a cold start.
+  useEffect(() => {
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      openPushUrl(response.notification.request.content.data);
+    });
+    Notifications.getLastNotificationResponseAsync()
+      .then((response) => {
+        if (response) openPushUrl(response.notification.request.content.data);
+      })
+      .catch(() => {});
+    return () => sub.remove();
+  }, []);
+
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#0A0A0A" } }}>
-        <Stack.Screen name="index" />
-      </Stack>
+      <I18nProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <FavoritesProvider>
+              <StatusBar style="light" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: tokens.color.background },
+                }}
+              >
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="workshop/[placeId]" />
+                <Stack.Screen name="auth/callback" />
+                <Stack.Screen name="quote" options={{ presentation: "modal" }} />
+                <Stack.Screen name="web" options={{ presentation: "modal" }} />
+              </Stack>
+            </FavoritesProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </I18nProvider>
     </SafeAreaProvider>
   );
 }

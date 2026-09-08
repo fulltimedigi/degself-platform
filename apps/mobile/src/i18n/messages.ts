@@ -9,7 +9,7 @@ import type { Locale } from "./direction";
 export type Dict = {
   appName: string;
   foundation: string;
-  tabs: { home: string; asaali: string; search: string; quote: string; saved: string; account: string; settings: string };
+  tabs: { home: string; asaali: string; search: string; quote: string; saved: string; account: string; settings: string; emergency: string; map: string };
   placeholder: string;
   languageLabel: string;
   directionLabel: string;
@@ -92,7 +92,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ar: {
     appName: "دق سلف",
     foundation: "تطبيق الموبايل الأصلي",
-    tabs: { home: "الرئيسية", asaali: "اسأل", search: "البحث", quote: "عرض سعر", saved: "المحفوظة", account: "حسابي", settings: "الإعدادات" },
+    tabs: { home: "الرئيسية", asaali: "اسأل", search: "الكراجات", quote: "عرض سعر", saved: "المحفوظة", account: "حسابي", settings: "الإعدادات", emergency: "الطوارئ", map: "الخريطة" },
     placeholder: "شاشة مبدئية — بلا بيانات إنتاج بعد.",
     languageLabel: "اللغة",
     directionLabel: "الاتجاه",
@@ -183,7 +183,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   en: {
     appName: "DEGSELF",
     foundation: "Native mobile app",
-    tabs: { home: "Home", asaali: "Ask", search: "Search", quote: "Get quotes", saved: "Saved", account: "Account", settings: "Settings" },
+    tabs: { home: "Home", asaali: "Ask", search: "Garages", quote: "Get quotes", saved: "Saved", account: "Account", settings: "Settings", emergency: "Emergency", map: "Map" },
     placeholder: "Placeholder screen — no production data yet.",
     languageLabel: "Language",
     directionLabel: "Direction",
@@ -273,7 +273,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   hi: {
     appName: "DEGSELF",
     foundation: "नेटिव मोबाइल ऐप",
-    tabs: { home: "होम", asaali: "पूछें", search: "खोज", quote: "कोटेशन", saved: "सहेजे", account: "खाता", settings: "सेटिंग्स" },
+    tabs: { home: "होम", asaali: "पूछें", search: "गैराज", quote: "कोटेशन", saved: "सहेजे", account: "खाता", settings: "सेटिंग्स", emergency: "आपातकाल", map: "मानचित्र" },
     placeholder: "प्लेसहोल्डर स्क्रीन — अभी कोई प्रोडक्शन डेटा नहीं।",
     languageLabel: "भाषा",
     directionLabel: "दिशा",
@@ -363,7 +363,7 @@ export const MESSAGES: Record<Locale, Dict> = {
   ur: {
     appName: "دق سلف",
     foundation: "نیٹو موبائل ایپ",
-    tabs: { home: "ہوم", asaali: "پوچھیں", search: "تلاش", quote: "قیمت", saved: "محفوظ", account: "اکاؤنٹ", settings: "ترتیبات" },
+    tabs: { home: "ہوم", asaali: "پوچھیں", search: "گیراج", quote: "قیمت", saved: "محفوظ", account: "اکاؤنٹ", settings: "ترتیبات", emergency: "ہنگامی", map: "نقشہ" },
     placeholder: "پلیس ہولڈر اسکرین — ابھی کوئی پروڈکشن ڈیٹا نہیں۔",
     languageLabel: "زبان",
     directionLabel: "سمت",

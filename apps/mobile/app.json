@@ -16,18 +16,28 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.degself.app",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "نستخدم موقعك لعرض أقرب الكراجات وخدمات الطوارئ إليك على الخريطة.",
+        "NSCameraUsageDescription": "نستخدم الكاميرا لتصوير مشكلة سيارتك وإرفاقها بطلب عرض السعر.",
+        "NSPhotoLibraryUsageDescription": "نستخدم مكتبة الصور لإرفاق صورة لمشكلة سيارتك بطلب عرض السعر.",
+        "NSFaceIDUsageDescription": "نستخدم Face ID لتأمين حسابك وكراجاتك المحفوظة."
       }
     },
     "android": {
       "package": "com.degself.app",
       "googleServicesFile": "./google-services.json",
-      "permissions": [],
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.VIBRATE"
+      ],
       "blockedPermissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW",
-        "android.permission.VIBRATE"
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "allowBackup": false,
       "predictiveBackGestureEnabled": true,
@@ -59,6 +69,25 @@
         "expo-notifications",
         {
           "color": "#FFD60A"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "نستخدم موقعك لعرض أقرب الكراجات وخدمات الطوارئ إليك."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "نستخدم مكتبة الصور لإرفاق صورة لمشكلة سيارتك بطلب عرض السعر.",
+          "cameraPermission": "نستخدم الكاميرا لتصوير مشكلة سيارتك وإرفاقها بطلب عرض السعر."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "نستخدم Face ID لتأمين حسابك وكراجاتك المحفوظة."
         }
       ]
     ],

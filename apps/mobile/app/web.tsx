@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -9,10 +9,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { useFocusEffect } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import * as Notifications from "expo-notifications";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView, type WebViewNavigation } from "react-native-webview";
 import { APP_UA_MARKER, WEB_URL, webHost } from "@/shell/config";
@@ -22,13 +20,30 @@ import {
   nativeAuthReturnToWebUrl,
   NATIVE_AUTH_REDIRECT_URL,
 } from "@/shell/navigation";
-import { registerForPush, resolveNotificationUrl } from "@/shell/push";
 
 const BRAND_BG = "#0A0A0A";
 const BRAND_YELLOW = "#FFD60A";
 const HOST = webHost();
 
+// Only ever open our own origin in this surface; anything else falls back to the
+// site root. Callers pass known same-origin paths (Ask degself, calculator) or a
+// same-host push URL.
+function safeStartUrl(raw: string | undefined): string {
+  if (!raw) return WEB_URL;
+  try {
+    const u = new URL(raw);
+    if ((u.protocol === "https:" || u.protocol === "http:") && classifyUrl(raw, HOST) === "webview") {
+      return raw;
+    }
+  } catch {
+    /* fall through */
+  }
+  return WEB_URL;
+}
+
 export default function ShellScreen() {
+  const { url } = useLocalSearchParams<{ url?: string }>();
+  const startUrl = safeStartUrl(typeof url === "string" ? url : undefined);
   const webRef = useRef<WebView>(null);
   const canGoBackRef = useRef(false);
   const authInFlight = useRef(false);
@@ -36,10 +51,6 @@ export default function ShellScreen() {
   const [firstLoadDone, setFirstLoadDone] = useState(false);
   const [error, setError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
-
-  const hideSplash = useCallback(() => {
-    void SplashScreen.hideAsync().catch(() => {});
-  }, []);
 
   // Android hardware back → walk WebView history before leaving the app.
   useFocusEffect(
@@ -99,28 +110,6 @@ export default function ShellScreen() {
     [navigateTo]
   );
 
-  // Once the site is up, ask for push permission and register this device's token
-  // with the backend. Defensive inside registerForPush — never throws.
-  useEffect(() => {
-    if (firstLoadDone) void registerForPush();
-  }, [firstLoadDone]);
-
-  // A tapped notification carrying a same-origin { url | path } deep-links into
-  // the WebView — both while running and on a cold start from a tapped push.
-  useEffect(() => {
-    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
-      const url = resolveNotificationUrl(response.notification.request.content.data);
-      if (url) navigateTo(url);
-    });
-    Notifications.getLastNotificationResponseAsync()
-      .then((response) => {
-        const url = response && resolveNotificationUrl(response.notification.request.content.data);
-        if (url) navigateTo(url);
-      })
-      .catch(() => {});
-    return () => sub.remove();
-  }, [navigateTo]);
-
   // Every navigation the WebView is about to start is classified: keep our own
   // site inside the app, hand phone/WhatsApp/maps to the OS, and open other
   // sites (and OAuth) in a real system browser tab.
@@ -170,27 +159,20 @@ export default function ShellScreen() {
         <WebView
           key={reloadKey}
           ref={webRef}
-          source={{ uri: WEB_URL }}
+          source={{ uri: startUrl }}
           originWhitelist={["http://*", "https://*"]}
           applicationNameForUserAgent={APP_UA_MARKER}
           onNavigationStateChange={onNavChange}
           onShouldStartLoadWithRequest={onShouldStart}
           onLoadEnd={() => {
-            if (!firstLoadDone) {
-              setFirstLoadDone(true);
-              hideSplash();
-            }
+            if (!firstLoadDone) setFirstLoadDone(true);
           }}
-          onError={() => {
-            setError(true);
-            hideSplash();
-          }}
+          onError={() => setError(true)}
           onHttpError={(e) => {
             // Only the main document failing is a real error; sub-resource 4xx/5xx
             // (analytics, images) must not blank the whole app.
-            if (e.nativeEvent.url?.replace(/\/+$/, "") === WEB_URL) {
+            if (e.nativeEvent.url?.replace(/\/+$/, "") === startUrl.replace(/\/+$/, "")) {
               setError(true);
-              hideSplash();
             }
           }}
           domStorageEnabled
@@ -223,6 +205,16 @@ export default function ShellScreen() {
           <ActivityIndicator size="large" color={BRAND_YELLOW} />
         </View>
       ) : null}
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="إغلاق"
+        onPress={() => router.back()}
+        hitSlop={10}
+        style={({ pressed }) => [styles.closeBtn, pressed && { opacity: 0.6 }]}
+      >
+        <Text style={styles.closeText}>✕</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -277,4 +269,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   retryText: { color: BRAND_BG, fontSize: 15, fontWeight: "800" },
+  closeBtn: {
+    position: "absolute",
+    top: 8,
+    insetInlineEnd: 10,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(10,10,10,0.6)",
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#2E2E2E",
+  },
+  closeText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800", lineHeight: 18 },
 });
