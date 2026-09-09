@@ -6,6 +6,7 @@ import { ClipboardList } from "lucide-react";
 import { QuickFilterPills } from "@/components/QuickFilterPills";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
 import { PriceCalculatorBanner } from "@/components/PriceCalculatorBanner";
+import { AppDownloadBanner } from "@/components/AppDownloadBanner";
 import { GovernorateGrid } from "@/components/GovernorateGrid";
 import { TopRatedCarousel } from "@/components/TopRatedCarousel";
 import { JsonLd } from "@/components/JsonLd";
@@ -392,6 +393,9 @@ export default async function Home() {
 
         {/* Price Calculator CTA */}
         <PriceCalculatorBanner />
+
+        {/* Get the app (Google Play live; App Store shown when iOS is live) */}
+        <AppDownloadBanner />
 
         {/* Browse by governorate */}
         <section className="flex flex-col gap-5">
