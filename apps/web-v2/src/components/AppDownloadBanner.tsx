@@ -12,7 +12,7 @@ const APP_STORE_URL = "https://apps.apple.com/app/id6809207250";
 
 // Flip to true the moment the iOS app is approved and live on the App Store.
 // Until then the App Store badge is hidden so we never show a dead link.
-const IOS_LIVE = false;
+const IOS_LIVE = true;
 
 function GooglePlayGlyph() {
   return (
