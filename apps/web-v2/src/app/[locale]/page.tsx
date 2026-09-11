@@ -92,7 +92,7 @@ export default async function Home() {
     url: SITE,
     logo: LOGO,
     description:
-      "أول دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات، دون ترتيب مدفوع.",
+      "دليل ذكي لكراجات الكويت — مجاناً، دون إعلانات، دون ترتيب مدفوع.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "KW",
