@@ -304,7 +304,7 @@
     "metaDescription": "Describe your car problem and get quotes from specialized garages in Kuwait — free, no commitment."
   },
   "home": {
-    "badge": "Kuwait's first smart garage guide",
+    "badge": "Kuwait's smart garage guide",
     "heroTitle": "Degself — describe your <hl>car's</hl> problem and we'll match you with the right garage in Kuwait",
     "heroSubtitle": "Describe the problem in your own words — we'll match you with a trusted garage and prepare a ready-to-send message.",
     "askTitle": "Ask Degself",
@@ -529,7 +529,7 @@
         "items": [
           {
             "q": "What exactly is Degself?",
-            "a": "Degself is the first smart, comprehensive directory of car garages and mechanics in Kuwait. We provide accurate information on 1,757 garages across all of Kuwait's governorates, with search by specialty and area, an interactive map, and a smart translator that helps you describe your car's problem."
+            "a": "Degself is a smart, comprehensive directory of car garages and mechanics in Kuwait. We provide accurate information on 1,757 garages across all of Kuwait's governorates, with search by specialty and area, an interactive map, and a smart translator that helps you describe your car's problem."
           },
           {
             "q": "Is Degself free to use?",
@@ -1495,17 +1495,17 @@
   },
   "about": {
     "metaTitle": "About Degself — your guide to garages, mechanics and car services in Kuwait",
-    "metaDescription": "Kuwait's first smart garage directory — free, no ads, no paid ranking. Meet our team and our methodology for cleaning the data of 1,757 garages.",
+    "metaDescription": "Kuwait's smart garage directory — free, no ads, no paid ranking. Meet our team and our methodology for cleaning the data of 1,757 garages.",
     "ogTitle": "About Degself — your guide to garages, mechanics and car services in Kuwait",
-    "ogDescription": "Kuwait's first smart garage directory — free, no ads, no paid ranking.",
+    "ogDescription": "Kuwait's smart garage directory — free, no ads, no paid ranking.",
     "twTitle": "About Degself — your guide to Kuwait's garages",
-    "twDescription": "Kuwait's first smart garage directory — free, no ads.",
-    "orgDescription": "The first smart, comprehensive directory of car garages and mechanics in Kuwait — free, no ads.",
+    "twDescription": "Kuwait's smart garage directory — free, no ads.",
+    "orgDescription": "A smart, comprehensive directory of car garages and mechanics in Kuwait — free, no ads.",
     "breadcrumbHome": "Home",
     "breadcrumbSelf": "About Degself",
     "h1": "About Degself",
     "tagline": "Your guide to garages, mechanics and car services in Kuwait",
-    "heroBody": "<b>Degself</b> is the first smart, comprehensive directory of car garages and mechanics in Kuwait. Kuwait has thousands of garages, but when your car breaks down you need to know who's trustworthy, who specializes in your problem, and who's open now. Google Maps shows thousands of results with no classification — and we solve that.",
+    "heroBody": "<b>Degself</b> is a smart, comprehensive directory of car garages and mechanics in Kuwait. Kuwait has thousands of garages, but when your car breaks down you need to know who's trustworthy, who specializes in your problem, and who's open now. Google Maps shows thousands of results with no classification — and we solve that.",
     "stats": [
       {
         "value": "1,757",
